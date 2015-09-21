@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+  <schema-selection match-schema="GESCON"/>
+  <table-filter match-name="TCONOCIMIENTO"/>
+  <table-filter match-name="TPOLITICA_PERFIL"/>
+  <table-filter match-name="TCATEGORIA_HIST"/>
+  <table-filter match-name="TMAESTRODETALLE"/>
+  <table-filter match-name="TPASS"/>
+  <table-filter match-name="TVINC_HIST"/>
+  <table-filter match-name="TCOMENTARIO"/>
+  <table-filter match-name="TCOMENT_HIST"/>
+  <table-filter match-name="MTPERFIL"/>
+  <table-filter match-name="TUSER_PERFIL"/>
+  <table-filter match-name="TVINCULO"/>
+  <table-filter match-name="TCALIFICACION"/>
+  <table-filter match-name="MTUSER"/>
+  <table-filter match-name="MTCATEGORIA"/>
+  <table-filter match-name="MTMAESTRO"/>
+  <table-filter match-name="MTTIPO_CONOCIMIENTO"/>
+  <table-filter match-name="MTPOLITICA"/>
+  <table-filter match-name="TCATEGORIA_CONOCIMIENTO"/>
+  <table-filter match-name="TDISCUSION"/>
+</hibernate-reverse-engineering>

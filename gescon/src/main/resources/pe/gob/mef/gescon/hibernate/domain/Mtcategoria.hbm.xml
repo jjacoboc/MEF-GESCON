@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 11/09/2015 05:20:11 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" table="MTCATEGORIA" schema="GESCON">
+        <id name="ncategoriaid" type="big_decimal">
+            <column name="NCATEGORIAID" precision="22" scale="0" />
+            <generator class="assigned"></generator>
+        </id>
+        <property name="vdescripcion" type="string">
+            <column name="VDESCRIPCION" length="400" />
+        </property>
+        <property name="nestado" type="big_decimal">
+            <column name="NESTADO" precision="22" scale="0" />
+        </property>
+        <property name="ncategoriasup" type="big_decimal">
+            <column name="NCATEGORIASUP" precision="22" scale="0" />
+        </property>
+        <property name="nnivel" type="big_decimal">
+            <column name="NNIVEL" precision="22" scale="0" />
+        </property>
+        <property name="vnombre" type="string">
+            <column name="VNOMBRE" length="25" />
+        </property>
+        <property name="vusuariomod" type="string">
+            <column name="VUSUARIOMOD" length="20" />
+        </property>
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="20" />
+        </property>
+        <property name="dfechacreacion" type="date">
+            <column name="DFECHACREACION" length="7" />
+        </property>
+        <property name="dfechamod" type="date">
+            <column name="DFECHAMOD" length="7" />
+        </property>
+        <property name="nflagwiki" type="big_decimal">
+            <column name="NFLAGWIKI" precision="22" scale="0" />
+        </property>
+        <property name="nflagbl" type="big_decimal">
+            <column name="NFLAGBL" precision="22" scale="0" />
+        </property>
+        <property name="nflagpr" type="big_decimal">
+            <column name="NFLAGPR" precision="22" scale="0" />
+        </property>
+        <property name="nflagct" type="big_decimal">
+            <column name="NFLAGCT" precision="22" scale="0" />
+        </property>
+        <property name="nflagbp" type="big_decimal">
+            <column name="NFLAGBP" precision="22" scale="0" />
+        </property>
+        <property name="nflagom" type="big_decimal">
+            <column name="NFLAGOM" precision="22" scale="0" />
+        </property>
+        <set name="tcategoriaConocimientos" table="TCATEGORIA_CONOCIMIENTO" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NCATEGORIAID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TcategoriaConocimiento" />
+        </set>
+    </class>
+</hibernate-mapping>

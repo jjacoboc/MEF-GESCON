@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <h:head>
+        <title>Gescon - Inicio</title>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
+        <h:outputStylesheet library="css" name="style.css" />
+    </h:head>
+    <h:body>
+        <f:view>
+            <pe:layout fullPage="true">
+                <pe:layoutPane position="north" size="80" resizable="true" closable="true" styleContent="font-size: 10px;">
+                    <ui:include src="pages/header.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="south" size="50" closable="true" >
+                    <h:panelGrid columns="1" width="100%" style="text-align: center; font-size: 10px;">
+                        <h:outputText value="Ministerio de Economía y Finanzas - Jr. Junín 319, Cercado de Lima, Lima 1-Perú Telf: (51 1) 311 5930 - (CENTRAL TELEFÓNICA)"/>
+                        <h:outputText value="Copyright © 2014 - ® Todos los Derechos Reservados"/>
+                    </h:panelGrid>
+                </pe:layoutPane>
+
+                <pe:layoutPane position="west" size="175" >
+                    <p:menu style="font-size: 11px;">
+                        <p:submenu label="Menú Principal">
+                            <p:menuitem value="Inicio" url="/index.xhtml" />
+                            <p:menuitem value="Maestro" url="/pages/maestro.xhtml" />
+                            <p:menuitem value="Categoría" url="/pages/categoria.xhtml" />
+                            <p:menuitem value="Base Legal" url="/pages/baseLegal.xhtml" />
+                            <p:menuitem value="Parametro" url="/pages/parametro.xhtml" />
+                            <p:menuitem value="Alerta" url="/pages/alerta.xhtml" />
+                        </p:submenu>
+                    </p:menu>
+                </pe:layoutPane>
+
+                <pe:layoutPane position="center" styleContent="font-size: 11px;">
+                    <h:form id="f">
+                        <h:panelGrid columns="1" width="100%">
+                            <p:carousel value="#{administracionMB.listaAdministracion}" 
+                                        var="admin" headerText="Administración"
+                                        circular="true" style="width: 100%;" numVisible="6"
+                                        itemStyle="border:0px;height:90px;width:160px;" >
+                                <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
+                                    <p:spacer/>
+                                    <p:graphicImage library="images" name="#{admin.imagen}" style="border: 0px;"/>
+                                    <p:spacer/>
+                                    <h:outputText value="#{admin.nombre}"/>
+                                    <p:spacer/>
+                                </p:panelGrid>
+                            </p:carousel>
+                            <p:carousel value="#{administracionMB.listaCategoria}" 
+                                        var="cat" headerText="Categorías"
+                                        circular="true" style="width: 100%;" numVisible="6"
+                                        itemStyle="border:0px;height:90px;width:160px;" >
+                                <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
+                                    <p:spacer/>
+                                    <p:graphicImage library="images" name="#{cat.imagen}" style="border: 0px;"/>
+                                    <p:spacer/>
+                                    <h:outputText value="#{cat.vnombre}"/>
+                                    <p:spacer/>
+                                </p:panelGrid>
+                            </p:carousel>
+                            <p:carousel value="#{administracionMB.listaPerfil}" 
+                                        var="per" headerText="Perfiles"
+                                        circular="true" style="width: 100%;" numVisible="6"
+                                        itemStyle="border:0px;height:90px;width:160px;" >
+                                <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
+                                    <p:spacer/>
+                                    <p:graphicImage library="images" name="#{per.imagen}" style="border: 0px;"/>
+                                    <p:spacer/>
+                                    <h:outputText value="#{per.vdescripcion}"/>
+                                    <p:spacer/>
+                                </p:panelGrid>
+                            </p:carousel>
+                        </h:panelGrid>
+                    </h:form>
+                </pe:layoutPane>
+            </pe:layout>
+        </f:view>
+    </h:body>
+</html>
+

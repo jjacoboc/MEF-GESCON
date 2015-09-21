@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 10/09/2015 10:47:35 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pe.gob.mef.gescon.hibernate.domain.Mtalerta" table="MTALERTA" schema="GESCON" optimistic-lock="version">
+        <id name="nalertaid" type="big_decimal">
+            <column name="NALERTAID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="vnombre" type="string">
+            <column name="VNOMBRE" length="25" />
+        </property>
+        <property name="vdescripcion" type="string">
+            <column name="VDESCRIPCION" length="400" />
+        </property>
+        <property name="vusucrea" type="string">
+            <column name="VUSUCREA" length="25" />
+        </property>
+        <property name="dfechcrea" type="date">
+            <column name="DFECHCREA" length="7" />
+        </property>
+        <property name="vusumod" type="string">
+            <column name="VUSUMOD" length="25" />
+        </property>
+        <property name="dfechmod" type="date">
+            <column name="DFECHMOD" length="7" />
+        </property>
+        <property name="nactivo" type="big_decimal">
+            <column name="NACTIVO" precision="22" scale="0" />
+        </property>
+    </class>
+</hibernate-mapping>

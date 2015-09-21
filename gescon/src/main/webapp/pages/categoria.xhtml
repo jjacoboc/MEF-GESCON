@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+
+    <pe:head title="GesCon - Categorías">
+        <f:facet name="first">
+            <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+            <meta http-equiv="pragma" content="no-cache"/>
+            <meta http-equiv="cache-control" content="no-cache"/>
+            <meta http-equiv="expires" content="0"/>
+            <h:outputStylesheet library="css" name="style.css" />
+        </f:facet>
+    </pe:head>
+    <h:body>            
+        <f:view>
+            <pe:layout fullPage="true" >
+                <pe:layoutPane position="north" size="80" resizable="false" closable="false" styleContent="font-size: 10px;" > 
+                    <ui:include src="header.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="south" size="50" closable="true" >
+                    <h:panelGrid columns="1" width="100%" style="text-align: center; font-size: 10px;">
+                        <h:outputText value="Ministerio de Economía y Finanzas - Jr. Junín 319, Cercado de Lima, Lima 1-Perú Telf: (51 1) 311 5930 - (CENTRAL TELEFÓNICA)"/>
+                        <h:outputText value="Copyright © 2014 - ® Todos los Derechos Reservados"/>
+                    </h:panelGrid>
+                </pe:layoutPane>
+
+                <pe:layoutPane position="west" size="175" >
+                    <p:menu style="font-size: 11px;">
+                        <p:submenu label="Menú Principal">
+                            <p:menuitem value="Inicio" url="/index.xhtml" />
+                            <p:menuitem value="Maestro" url="/pages/maestro.xhtml" />
+                            <p:menuitem value="Categoría" url="/pages/categoria.xhtml" />
+                            <p:menuitem value="Base Legal" url="/pages/baseLegal.xhtml" />
+                            <p:menuitem value="Parametro" url="/pages/parametro.xhtml" />
+                            <p:menuitem value="Alerta" url="/pages/alerta.xhtml" />
+                        </p:submenu>
+                    </p:menu>
+                </pe:layoutPane>
+
+                <pe:layoutPane position="center" styleContent="font-size: 10px;">
+                    <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+                    <h:form id="f">
+                        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
+                        <p:panel header="Administración de Categorías" >
+                            <h:panelGrid columns="1">
+                                <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
+                                <p:tree id="cats" value="#{categoriaMB.tree}" var="node" animate="true" cache="true" highlight="true" 
+                                        selectionMode="single" selection="#{categoriaMB.selectedNode}" style="width: 100%;border: 0;" dynamic="true">
+                                    <p:ajax event="select" listener="#{categoriaMB.onNodeSelect}" />
+                                    <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
+                                        <h:outputText value="#{node.vnombre}"/>
+                                    </p:treeNode>
+                                </p:tree>
+                                <p:contextMenu for="cats" style="font-size: 10px; width: 200px;">
+                                    <p:menuitem value="Agregar Categoría" oncomplete="PF('newDialog').show();" disabled="#{categoriaMB.selectedCategoria.nestado eq 0}" icon="ui-icon-plus" />
+                                    <p:menuitem value="Editar Categoría" actionListener="#{categoriaMB.toUpdate}" oncomplete="PF('editDialog').show();" update=":editDialogForm:pgEdit" icon="ui-icon-plus" />
+                                    <p:menuitem value="Activar Categoría" oncomplete="PF('confirmActDlg').show();" icon="ui-icon-plus"/>
+                                    <p:menuitem value="Desactivar Categoría" oncomplete="PF('confirmDesDlg').show();" icon="ui-icon-plus"/>
+                                </p:contextMenu>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+                    
+                    <p:dialog id="newDlg" header="Nueva Categoría" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="newDialogForm">
+                            <h:panelGrid id="pgNew" columns="3" style="text-align: left;width: 100%">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Nombre:"/>
+                                <p:inputText size="50" value="#{categoriaMB.nombre}" style="text-transform: uppercase;" maxlength="25"/> 
+                                
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Descripción:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:inputTextarea value="#{categoriaMB.descripcion}" rows="4" cols="36" style="font-weight: normal;"
+                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                    <h:outputText id="display"/>
+                                </h:panelGrid>
+                                
+                                <p:spacer/>
+                                <h:outputLabel value="Verificación:"/>
+                                <h:panelGrid columns="4" border="0" >
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagbl}"/>
+                                    <h:outputText value="Base legal"/>
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagpr}"/>
+                                    <h:outputText value="Preguntas y Respuestas"/>
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagwiki}"/>
+                                    <h:outputText value="Wiki"/>
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagct}"/>
+                                    <h:outputText value="Contenido"/>
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagbp}"/>
+                                    <h:outputText value="Buenas Prácticas"/>
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagom}"/>
+                                    <h:outputText value="Oportunidad de Mejoras"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <p:commandButton value="Registrar" actionListener="#{categoriaMB.save}" update=":f:growl, :f:cats"/>
+                        </h:form>
+                    </p:dialog>
+                    
+                    <p:dialog id="editDlg" header="Actualizar Categoría" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="editDialogForm">
+                            <h:panelGrid id="pgEdit" columns="3" style="text-align: left;width: 100%">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Nombre:"/>
+                                <p:inputText size="50" value="#{categoriaMB.selectedCategoria.vnombre}" style="text-transform: uppercase;" maxlength="25"/> 
+                                
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Descripción:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:inputTextarea value="#{categoriaMB.selectedCategoria.vdescripcion}" rows="4" cols="36" style="font-weight: normal;"
+                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                    <h:outputText id="display"/>
+                                </h:panelGrid>
+                                
+                                <p:spacer/>
+                                <h:outputLabel value="Verificación:"/>
+                                <h:panelGrid columns="4" border="0" >
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagbl}"/>
+                                    <h:outputText value="Base legal"/>
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagpr}"/>
+                                    <h:outputText value="Preguntas y Respuestas"/>
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagwiki}"/>
+                                    <h:outputText value="Wiki"/>
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagct}"/>
+                                    <h:outputText value="Contenido"/>
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagbp}"/>
+                                    <h:outputText value="Buenas Prácticas"/>
+                                    <p:selectBooleanCheckbox value="#{categoriaMB.flagom}"/>
+                                    <h:outputText value="Oportunidad de Mejoras"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <p:commandButton value="Actualizar" actionListener="#{categoriaMB.update}" update=":f:growl, :f:cats"/>
+                        </h:form>
+                    </p:dialog>
+                    
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la categoría. \nDesea Continuar?" header="ACTIVAR CATEGORÍA" widgetVar="confirmActDlg" style="font-size: 10px;">
+                        <h:form id="confirmActDlgForm">
+                            <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:cats, :f:growl" actionListener="#{categoriaMB.activar}"/>
+                            <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
+                        </h:form>
+                    </p:confirmDialog>
+                    
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la categoría. \nDesea Continuar?" header="DESACTIVAR CATEGORÍA" widgetVar="confirmDesDlg" style="font-size: 10px;">
+                        <h:form id="confirmDesDlgForm">
+                            <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:cats, :f:growl" actionListener="#{categoriaMB.desactivar}"/>
+                            <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />
+                        </h:form>
+                    </p:confirmDialog>
+                    
+                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)"  draggable="false" closable="false" resizable="false" showHeader="false">
+                        <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
+                    </p:dialog>
+                </pe:layoutPane>
+            </pe:layout>
+        </f:view>
+    </h:body>
+</html>
+

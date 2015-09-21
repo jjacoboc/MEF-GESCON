@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+   <context-root>/gescon</context-root>
+   <!--
+   <resource-ref>
+        <res-ref-name>jdbc/gesconDS</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <jndi-name>java:jdbc/gesconDS</jndi-name>
+    </resource-ref>
+    -->
+</jboss-web>
+

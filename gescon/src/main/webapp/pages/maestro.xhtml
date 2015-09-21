@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <h:head>
+        <title>GesCon - Maestros</title>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
+        <h:outputStylesheet library="css" name="style.css" />
+    </h:head>
+    <h:body>            
+        <f:view>
+            <pe:layout fullPage="true" >
+                <pe:layoutPane position="north" size="80" resizable="false" closable="false" styleContent="font-size: 10px;"> 
+                    <ui:include src="header.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="south" size="50" closable="true" >
+                    <h:panelGrid columns="1" width="100%" style="text-align: center; font-size: 10px;">
+                        <h:outputText value="Ministerio de Economía y Finanzas - Jr. Junín 319, Cercado de Lima, Lima 1-Perú Telf: (51 1) 311 5930 - (CENTRAL TELEFÓNICA)"/>
+                        <h:outputText value="Copyright © 2014 - ® Todos los Derechos Reservados"/>
+                    </h:panelGrid>
+                </pe:layoutPane>
+
+                <pe:layoutPane position="west" size="175" >
+                    <p:menu style="font-size: 11px;">
+                        <p:submenu label="Menú Principal">
+                            <p:menuitem value="Inicio" url="/index.xhtml" />
+                            <p:menuitem value="Maestro" url="/pages/maestro.xhtml" />
+                            <p:menuitem value="Categoría" url="/pages/categoria.xhtml" />
+                            <p:menuitem value="Base Legal" url="/pages/baseLegal.xhtml" />
+                            <p:menuitem value="Parametro" url="/pages/parametro.xhtml" />
+                            <p:menuitem value="Alerta" url="/pages/alerta.xhtml" />
+                        </p:submenu>
+                    </p:menu>
+                </pe:layoutPane>
+
+                <pe:layoutPane position="center" styleContent="font-size: 10px;">
+                    <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+                    <h:form id="f">
+                        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
+                        <p:panel header="Administración de Maestros" >
+                            <h:panelGrid columns="1">
+                                <p:commandButton  value="Nuevo" actionListener="#{maestroMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
+                                <p:dataTable id="tbl" value="#{maestroMB.listaMaestro}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                    <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
+                                        <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>
+                                        <h:outputText value="#{row.vnombre}" />
+                                    </p:column>
+                                    <p:column width="250px;" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                        <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
+                                        <h:outputText value="#{row.vdescripcion}" />
+                                    </p:column>
+                                    <p:column style="text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" priority="3">
+                                        <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
+                                        <h:outputText value="#{row.nactivo}" >
+                                            <f:converter converterId="converterSiNo"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center;" sortBy="#{row.vusucrea}" filterBy="#{row.vusucrea}" filterMatchMode="contains" priority="4">
+                                        <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
+                                        <h:outputText value="#{row.vusucrea}" />
+                                    </p:column>
+                                    <p:column style="text-align: center;" sortBy="#{row.dfechcrea}" filterBy="#{row.dfechcrea}" filterMatchMode="contains" priority="5">
+                                        <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                        <h:outputText value="#{row.dfechcrea}" >
+                                            <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 60px;">
+                                        <p:commandLink actionListener="#{maestroMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Parámetro">
+                                            <p:graphicImage library="images" name="pencil.png" style="border: 0px;"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{maestroMB.selectedMaestro}" />
+                                        </p:commandLink>
+                                        <p:spacer width="5px;"/>
+                                        <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Maestro" rendered="#{row.nactivo eq 0}">
+                                            <p:graphicImage library="images" name="active.png" style="border: 0px; width: 16px; height: 16px;"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{maestroMB.selectedMaestro}" />
+                                        </p:commandLink>
+                                        <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Maestro" rendered="#{row.nactivo eq 1}">
+                                            <p:graphicImage library="images" name="inactive.png" style="border: 0px; width: 16px; height: 16px;"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{maestroMB.selectedMaestro}" />
+                                        </p:commandLink>
+                                        <p:spacer width="5px;"/>
+                                        <p:commandLink actionListener="#{maestroMB.getDetalles}" update="f:growl, :detailDialogForm:pgDetail" oncomplete="PF('detailDialog').show();" title="Editar Parámetro">
+                                            <p:graphicImage library="images" name="detail.png" style="border: 0px;"/>
+                                            <f:param name="rowIndex" value="#{rowIndex}"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+
+                    <p:dialog id="newDlg" header="Nuevo Maestro" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="newDialogForm">
+                            <h:panelGrid id="pgNew" columns="3" cellpadding="5" style="text-align: left;width: 100%">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Nombre:"/>
+                                <p:inputText size="50" value="#{maestroMB.nombre}" style="text-transform: uppercase;" maxlength="25" /> 
+
+                                <p:spacer/>
+                                <h:outputLabel value="Descripción:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:inputTextarea value="#{maestroMB.descripcion}" rows="4" cols="36" style="font-weight: normal;"
+                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                    <h:outputText id="display"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <p:commandButton  value="Registrar" actionListener="#{maestroMB.save}" update=":f:growl, :f:tbl"/>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog id="editDlg" header="Actualizar Maestro" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="editDialogForm">
+                            <p:messages id="msgs" showSummary="true" showDetail="true" />
+                            <h:panelGrid id="pgEdit" columns="3" cellpadding="5" style="text-align: left;width: 100%">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Nombre:"/>
+                                <p:inputText size="50" value="#{maestroMB.selectedMaestro.vnombre}" style="text-transform: uppercase;" maxlength="25" />
+
+                                <p:spacer/>
+                                <h:outputLabel value="Descripción:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:inputTextarea value="#{maestroMB.selectedMaestro.vdescripcion}" rows="4" cols="36" style="font-weight: normal;"
+                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                    <h:outputText id="display"/>
+                                </h:panelGrid>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Activo:"/>
+                                <p:selectOneMenu value="#{maestroMB.selectedMaestro.nactivo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
+                                    <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <p:commandButton  value="Actualizar" actionListener="#{maestroMB.update}" update=":f:growl, :f:tbl"/>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar el maestro. \nDesea Continuar?" header="ACTIVAR MAESTRO" widgetVar="confirmActDlg" style="font-size: 10px;">
+                        <h:form id="confirmActDlgForm">
+                            <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{maestroMB.activar}"/>
+                            <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
+                        </h:form>
+                    </p:confirmDialog>
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar el maestro. \nDesea Continuar?" header="DESACTIVAR MAESTRO" widgetVar="confirmDesDlg" style="font-size: 10px;">
+                        <h:form id="confirmDesDlgForm">
+                            <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{maestroMB.desactivar}"/>
+                            <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />
+                        </h:form>
+                    </p:confirmDialog>
+                    
+                    <p:dialog id="detailDlg" header="Detalle Maestro" widgetVar="detailDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="detailDialogForm">
+                            <h:panelGrid id="pgDetail" columns="1" width="100%">
+                                <p:commandButton  value="Nuevo" actionListener="#{maestroMB.toSave}" update=":newdDialogForm:pgNewd" oncomplete="PF('newdDialog').show();" icon="ui-icon-plus" />
+                                <p:dataTable id="tbl" value="#{maestroMB.listaMaestroDetalle}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" tableStyle="width: 1250px;" emptyMessage="Ningún registro encontrado.">
+                                    <p:column style="width: 100px;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
+                                        <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>
+                                        <h:outputText value="#{row.vnombre}" />
+                                    </p:column>
+                                    <p:column style="width: 250px;" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                        <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
+                                        <h:outputText value="#{row.vdescripcion}" />
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 70px;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" priority="3">
+                                        <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
+                                        <h:outputText value="#{row.nactivo}" >
+                                            <f:converter converterId="converterSiNo"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 90px;" sortBy="#{row.vusucrea}" filterBy="#{row.vusucrea}" filterMatchMode="contains" priority="4">
+                                        <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
+                                        <h:outputText value="#{row.vusucrea}" />
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 80px;" sortBy="#{row.dfechcrea}" filterBy="#{row.dfechcrea}" filterMatchMode="contains" priority="5">
+                                        <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                        <h:outputText value="#{row.dfechcrea}" >
+                                            <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 50px;">
+                                        <p:commandLink actionListener="#{maestroMB.toUpdate}" update="f:growl, :editdDialogForm:pgEditd" oncomplete="PF('editdDialog').show();" title="Editar Detalle">
+                                            <p:graphicImage library="images" name="pencil.png" style="border: 0px;"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{maestroMB.selectedMaestroDetalle}" />
+                                        </p:commandLink>
+                                        <p:commandLink oncomplete="PF('confirmActdDlg').show();" title="Activar Detalle" rendered="#{row.nactivo eq 0}">
+                                            <p:graphicImage library="images" name="tick.png" style="border: 0px;"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{maestroMB.selectedMaestroDetalle}" />
+                                        </p:commandLink>
+                                        <p:commandLink oncomplete="PF('confirmDesdDlg').show();" title="Desactivar Detalle" rendered="#{row.nactivo eq 1}">
+                                            <p:graphicImage library="images" name="cross.png" style="border: 0px;"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{maestroMB.selectedMaestroDetalle}" />
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                    
+                    <p:dialog id="newdDlg" header="Nuevo Detalle" widgetVar="newdDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="newdDialogForm">
+                            <h:panelGrid id="pgNewd" columns="3" cellpadding="5" style="text-align: left;width: 100%">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Nombre:"/>
+                                <p:inputText size="50" value="#{maestroMB.nombre}" style="text-transform: uppercase;" maxlength="25" /> 
+
+                                <p:spacer/>
+                                <h:outputLabel value="Descripción:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:inputTextarea value="#{maestroMB.descripcion}" rows="4" cols="36" style="font-weight: normal;"
+                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                    <h:outputText id="display"/>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <p:commandButton  value="Registrar" actionListener="#{maestroMB.saveDetail}" update=":f:growl, :detailDialogForm:pgDetail"/>
+                        </h:form>
+                    </p:dialog>
+                    
+                    <p:dialog id="editdDlg" header="Actualizar Detalle" widgetVar="editdDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="editdDialogForm">
+                            <p:messages id="msgs" showSummary="true" showDetail="true" />
+                            <h:panelGrid id="pgEditd" columns="3" cellpadding="5" style="text-align: left;width: 100%">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Nombre:"/>
+                                <p:inputText size="50" value="#{maestroMB.selectedMaestroDetalle.vnombre}" style="text-transform: uppercase;" maxlength="25" />
+
+                                <p:spacer/>
+                                <h:outputLabel value="Descripción:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:inputTextarea value="#{maestroMB.selectedMaestroDetalle.vdescripcion}" rows="4" cols="36" style="font-weight: normal;"
+                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                    <h:outputText id="display"/>
+                                </h:panelGrid>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Activo:"/>
+                                <p:selectOneMenu value="#{maestroMB.selectedMaestroDetalle.nactivo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
+                                    <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <p:commandButton  value="Actualizar" actionListener="#{maestroMB.updateDetail}" update=":f:growl, :detailDialogForm:pgDetail"/>
+                        </h:form>
+                    </p:dialog>
+                    
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar el detalle. \nDesea Continuar?" header="ACTIVAR DETALLE" widgetVar="confirmActdDlg" style="font-size: 10px;">
+                        <h:form id="confirmActdDlgForm">
+                            <p:commandButton value="SI" oncomplete="PF('confirmActdDlg').hide()" update=":detailDialogForm:pgDetail, :f:growl" actionListener="#{maestroMB.activarDetalle}"/>
+                            <p:commandButton value="NO" onclick="PF('confirmActdDlg').hide()" type="button" />
+                        </h:form>
+                    </p:confirmDialog>
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar el detalle. \nDesea Continuar?" header="DESACTIVAR DETALLE" widgetVar="confirmDesdDlg" style="font-size: 10px;">
+                        <h:form id="confirmDesdDlgForm">
+                            <p:commandButton value="SI" oncomplete="PF('confirmDesdDlg').hide()" update=":detailDialogForm:pgDetail, :f:growl" actionListener="#{maestroMB.desactivarDetalle}"/>
+                            <p:commandButton value="NO" onclick="PF('confirmDesdDlg').hide()" type="button" />
+                        </h:form>
+                    </p:confirmDialog>
+
+                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)"  draggable="false" closable="false" resizable="false" showHeader="false">
+                        <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
+                    </p:dialog>
+                </pe:layoutPane>
+            </pe:layout>
+        </f:view>
+    </h:body>
+</html>
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    
+    <import resource="applicationContext.xml"/>
+        
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location"><value>classpath:pe/gob/mef/gescon/jdbc.properties</value></property>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName"><value>${driver}</value></property>
+        <property name="url"><value>${url}</value></property>
+        <property name="username"><value>${username}</value></property>
+        <property name="password"><value>${password}</value></property>
+    </bean>
+    
+    <!--
+    <bean id="jndiDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/jdbc/gesconDS" />
+    </bean>
+    -->
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtalerta.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtcategoria.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtmaestro.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtparametro.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtperfil.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtpolitica.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/MttipoConocimiento.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtuser.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tcalificacion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcategoriaConocimiento.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcategoriaHist.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcomentHist.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tcomentario.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tconocimiento.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tdiscusion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tmaestrodetalle.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tpass.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TpoliticaPerfil.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TuserPerfil.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvincHist.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tvinculo.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <value>
+                hibernate.dialect       = org.hibernate.dialect.Oracle10gDialect
+                hibernate.format_sql    = true
+                hibernate.show_sql      = true
+            </value>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    
+    
+</beans>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 11/09/2015 05:20:11 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pe.gob.mef.gescon.hibernate.domain.TvincHist" table="TVINC_HIST" schema="GESCON">
+        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TvincHistId">
+            <key-property name="nvinculohid" type="big_decimal">
+                <column name="NVINCULOHID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="nhistorialid" type="big_decimal">
+                <column name="NHISTORIALID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="nconocimientoid" type="big_decimal">
+                <column name="NCONOCIMIENTOID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="ntpoconocimientoid" type="big_decimal">
+                <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <property name="nconocimientovinc" type="big_decimal">
+            <column name="NCONOCIMIENTOVINC" precision="22" scale="0" />
+        </property>
+        <property name="nusuariomod" type="big_decimal">
+            <column name="NUSUARIOMOD" precision="22" scale="0" />
+        </property>
+        <property name="nusuariocreacion" type="big_decimal">
+            <column name="NUSUARIOCREACION" precision="22" scale="0" />
+        </property>
+        <property name="dfechacreacion" type="date">
+            <column name="DFECHACREACION" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

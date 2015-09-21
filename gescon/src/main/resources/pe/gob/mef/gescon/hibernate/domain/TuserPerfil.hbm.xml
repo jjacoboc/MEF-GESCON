@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 11/09/2015 05:20:11 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pe.gob.mef.gescon.hibernate.domain.TuserPerfil" table="TUSER_PERFIL" schema="GESCON">
+        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TuserPerfilId">
+            <key-property name="nperfilid" type="big_decimal">
+                <column name="NPERFILID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="nusuarioid" type="big_decimal">
+                <column name="NUSUARIOID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="mtperfil" class="pe.gob.mef.gescon.hibernate.domain.Mtperfil" update="false" insert="false" fetch="select">
+            <column name="NPERFILID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="mtuser" class="pe.gob.mef.gescon.hibernate.domain.Mtuser" update="false" insert="false" fetch="select">
+            <column name="NUSUARIOID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="nusuariomod" type="big_decimal">
+            <column name="NUSUARIOMOD" precision="22" scale="0" />
+        </property>
+        <property name="nusuariocreacion" type="string">
+            <column name="NUSUARIOCREACION" length="18" />
+        </property>
+        <property name="dfechacreacion" type="date">
+            <column name="DFECHACREACION" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>
