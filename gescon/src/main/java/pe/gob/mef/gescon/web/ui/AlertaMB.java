@@ -48,6 +48,16 @@ public class AlertaMB implements Serializable{
     private List<Alerta> listaAlerta;
     private Alerta selectedAlerta;
     private BigDecimal selectedParametro;
+    private BigDecimal useraplica;
+    private Date fechini;
+    private Date fechfin;
+    private String condicion1;
+    private String condicion2;
+    private BigDecimal tipo1;
+    private BigDecimal valor1;
+    private BigDecimal tipo2;
+    private BigDecimal valor2;
+            
     private List<SelectItem> listaParametro;
     
     /**
@@ -155,6 +165,132 @@ public class AlertaMB implements Serializable{
     }
 
     /**
+     * @return the useraplica
+     */
+    public BigDecimal getUseraplica() {
+        return useraplica;
+    }
+
+    /**
+     * @param useraplica the useraplica to set
+     */
+    public void setUseraplica(BigDecimal useraplica) {
+        this.useraplica = useraplica;
+    }
+
+    /**
+     * @return the fechini
+     */
+    public Date getFechini() {
+        return fechini;
+    }
+
+    /**
+     * @param fechini the fechini to set
+     */
+    public void setFechini(Date fechini) {
+        this.fechini = fechini;
+    }
+
+    /**
+     * @return the fechfin
+     */
+    public Date getFechfin() {
+        return fechfin;
+    }
+
+    /**
+     * @param fechfin the fechfin to set
+     */
+    public void setFechfin(Date fechfin) {
+        this.fechfin = fechfin;
+    }
+
+    /**
+     * @return the condicion1
+     */
+    public String getCondicion1() {
+        return condicion1;
+    }
+
+    /**
+     * @param condicion1 the condicion1 to set
+     */
+    public void setCondicion1(String condicion1) {
+        this.condicion1 = condicion1;
+    }
+
+    /**
+     * @return the condicion2
+     */
+    public String getCondicion2() {
+        return condicion2;
+    }
+
+    /**
+     * @param condicion2 the condicion2 to set
+     */
+    public void setCondicion2(String condicion2) {
+        this.condicion2 = condicion2;
+    }
+
+    /**
+     * @return the tipo1
+     */
+    public BigDecimal getTipo1() {
+        return tipo1;
+    }
+
+    /**
+     * @param tipo1 the tipo1 to set
+     */
+    public void setTipo1(BigDecimal tipo1) {
+        this.tipo1 = tipo1;
+    }
+
+    /**
+     * @return the valor1
+     */
+    public BigDecimal getValor1() {
+        return valor1;
+    }
+
+    /**
+     * @param valor1 the valor1 to set
+     */
+    public void setValor1(BigDecimal valor1) {
+        this.valor1 = valor1;
+    }
+
+    /**
+     * @return the tipo2
+     */
+    public BigDecimal getTipo2() {
+        return tipo2;
+    }
+
+    /**
+     * @param tipo2 the tipo2 to set
+     */
+    public void setTipo2(BigDecimal tipo2) {
+        this.tipo2 = tipo2;
+    }
+
+    /**
+     * @return the valor2
+     */
+    public BigDecimal getValor2() {
+        return valor2;
+    }
+
+    /**
+     * @param valor2 the valor2 to set
+     */
+    public void setValor2(BigDecimal valor2) {
+        this.valor2 = valor2;
+    }
+
+    /**
      * @return the listaParametro
      */
     public List<SelectItem> getListaParametro() throws Exception {
@@ -188,6 +324,10 @@ public class AlertaMB implements Serializable{
         this.setDescripcion(StringUtils.EMPTY);
         this.setNombre(StringUtils.EMPTY);
         this.setActivo(BigDecimal.ONE);
+        this.setSelectedParametro(BigDecimal.ZERO);
+        this.setCondicion1(StringUtils.EMPTY);
+        
+        
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {
             iter.remove();
@@ -213,6 +353,15 @@ public class AlertaMB implements Serializable{
             alerta.setVnombre(this.getNombre().trim().toUpperCase());
             alerta.setVdescripcion(this.getDescripcion().trim());
             alerta.setNparametroid(this.getSelectedParametro());
+            alerta.setDfechini(this.getFechfin());
+            alerta.setDfechfin(this.getFechfin());
+            alerta.setNcondicion1(this.getCondicion1());
+            alerta.setNcondicion2(this.getCondicion2());
+            alerta.setNtipo1(this.getTipo1());
+            alerta.setNtipo2(this.getTipo2());
+            alerta.setNuseraplica(this.getUseraplica());
+            alerta.setNvalor1(this.getValor1());
+            alerta.setNvalor2(this.getValor2());
             if (!errorValidation(alerta)) {
 //                UsuarioMB usuarioMB = (UsuarioMB) JSFUtils.getSession().getAttribute("usuarioMB");
 //                Usuario usuario = usuarioMB.getUsuario();
@@ -262,6 +411,16 @@ public class AlertaMB implements Serializable{
                 this.getSelectedAlerta().setVdescripcion(this.getSelectedAlerta().getVdescripcion().toUpperCase());
 //                this.getSelectedMestro().setIdUsuaModi(user.getUsuario());
                 this.getSelectedAlerta().setDfechmod(new Date());
+                this.getSelectedAlerta().setDfechini(this.getSelectedAlerta().getDfechini());
+                this.getSelectedAlerta().setDfechfin(this.getSelectedAlerta().getDfechfin());
+                this.getSelectedAlerta().setNuseraplica(this.getSelectedAlerta().getNuseraplica());
+                this.getSelectedAlerta().setNcondicion1(this.getSelectedAlerta().getNcondicion1());
+                this.getSelectedAlerta().setNcondicion2(this.getSelectedAlerta().getNcondicion2());
+                this.getSelectedAlerta().setNtipo1(this.getSelectedAlerta().getNtipo1());
+                this.getSelectedAlerta().setNtipo2(this.getSelectedAlerta().getNtipo2());
+                this.getSelectedAlerta().setNvalor1(this.getSelectedAlerta().getNvalor1());
+                this.getSelectedAlerta().setNvalor2(this.getSelectedAlerta().getNvalor2());
+                
                 AlertaService service = (AlertaService) ServiceFinder.findBean("AlertaService");
                 service.saveOrUpdate(this.getSelectedAlerta());
                 this.setListaAlerta(service.getAlertas());
