@@ -92,6 +92,12 @@
                                                      counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                     <h:outputText id="display"/>
                                 </h:panelGrid>
+                                
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Parametro:"/>
+                                <p:selectOneMenu value="#{alertaMB.selectedParametro}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
+                                    <f:selectItems value="#{alertaMB.listaParametro}"/>
+                                </p:selectOneMenu>
                             </h:panelGrid>
                             <p:commandButton  value="Registrar" actionListener="#{alertaMB.save}" update=":f:growl, :f:tbl"/>
                         </h:form>
@@ -117,6 +123,12 @@
                                 <h:outputLabel value="Activo:"/>
                                 <p:selectOneMenu value="#{alertaMB.selectedAlerta.nactivo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
                                     <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
+                                </p:selectOneMenu>
+                                
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Parametro:"/>
+                                <p:selectOneMenu value="#{alertaMB.selectedAlerta.nparametroid}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
+                                    <f:selectItems value="#{alertaMB.listaParametro}"/>
                                 </p:selectOneMenu>
                             </h:panelGrid>
                             <p:commandButton  value="Actualizar" actionListener="#{alertaMB.update}" update=":f:growl, :f:tbl"/>

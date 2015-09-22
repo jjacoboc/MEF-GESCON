@@ -18,13 +18,16 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.primefaces.context.RequestContext;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.service.AlertaService;
+import pe.gob.mef.gescon.service.ParametroService;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Alerta;
 
@@ -44,6 +47,8 @@ public class AlertaMB implements Serializable{
     private BigDecimal activo;
     private List<Alerta> listaAlerta;
     private Alerta selectedAlerta;
+    private BigDecimal selectedParametro;
+    private List<SelectItem> listaParametro;
     
     /**
      * Creates a new instance of MaestroMB
@@ -134,6 +139,38 @@ public class AlertaMB implements Serializable{
     public void setSelectedAlerta(Alerta selectedAlerta) {
         this.selectedAlerta = selectedAlerta;
     }
+
+    /**
+     * @return the selectedParametro
+     */
+    public BigDecimal getSelectedParametro() {
+        return selectedParametro;
+    }
+
+    /**
+     * @param selectedParametro the selectedParametro to set
+     */
+    public void setSelectedParametro(BigDecimal selectedParametro) {
+        this.selectedParametro = selectedParametro;
+    }
+
+    /**
+     * @return the listaParametro
+     */
+    public List<SelectItem> getListaParametro() throws Exception {
+        if(listaParametro == null){
+            ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
+            listaParametro =  new Items(service.getParametros(), null, "nparametroid","vnombre").getItems();
+        }
+        return listaParametro;
+    }
+
+    /**
+     * @param listaParametro the listaParametro to set
+     */
+    public void setListaParametro(List<SelectItem> listaParametro) {
+        this.listaParametro = listaParametro;
+    }
     
     @PostConstruct
     public void init() {
@@ -151,7 +188,6 @@ public class AlertaMB implements Serializable{
         this.setDescripcion(StringUtils.EMPTY);
         this.setNombre(StringUtils.EMPTY);
         this.setActivo(BigDecimal.ONE);
-        this.setSelectedAlerta(null);
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {
             iter.remove();
@@ -176,6 +212,7 @@ public class AlertaMB implements Serializable{
             Alerta alerta = new Alerta();
             alerta.setVnombre(this.getNombre().trim().toUpperCase());
             alerta.setVdescripcion(this.getDescripcion().trim());
+            alerta.setNparametroid(this.getSelectedParametro());
             if (!errorValidation(alerta)) {
 //                UsuarioMB usuarioMB = (UsuarioMB) JSFUtils.getSession().getAttribute("usuarioMB");
 //                Usuario usuario = usuarioMB.getUsuario();
