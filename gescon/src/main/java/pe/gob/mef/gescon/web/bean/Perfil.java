@@ -17,10 +17,11 @@ public class Perfil implements Serializable{
     
     private BigDecimal nperfilid;
     private String vdescripcion;
-    private Character nestado;
-    private BigDecimal nusuariomod;
-    private BigDecimal nusuariocreacion;
+    private BigDecimal nactivo;
+    private String vusuariomodificacion;
+    private String vusuariocreacion;    
     private Date dfechacreacion;
+    private String vnombre;
     private String imagen;
     
     public Perfil(){
@@ -58,43 +59,43 @@ public class Perfil implements Serializable{
     /**
      * @return the nestado
      */
-    public Character getNestado() {
-        return nestado;
+    public BigDecimal getNactivo() {
+        return nactivo;
     }
 
     /**
-     * @param nestado the nestado to set
+     * @param nactivo the nestado to set
      */
-    public void setNestado(Character nestado) {
-        this.nestado = nestado;
+    public void setNactivo(BigDecimal nactivo) {
+        this.nactivo = nactivo;
     }
 
     /**
-     * @return the nusuariomod
+     * @return the vusuariomodificacion
      */
-    public BigDecimal getNusuariomod() {
-        return nusuariomod;
+    public String getVusuariomodificacion() {
+        return vusuariomodificacion;
     }
 
     /**
-     * @param nusuariomod the nusuariomod to set
+     * @param vusuariomodificacion the vusuariomodificacion to set
      */
-    public void setNusuariomod(BigDecimal nusuariomod) {
-        this.nusuariomod = nusuariomod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
     /**
-     * @return the nusuariocreacion
+     * @return the vusuariocreacion
      */
-    public BigDecimal getNusuariocreacion() {
-        return nusuariocreacion;
+    public String getVusuariocreacion() {
+        return vusuariocreacion;
     }
 
     /**
-     * @param nusuariocreacion the nusuariocreacion to set
+     * @param vusuariocreacion the vusuariocreacion to set
      */
-    public void setNusuariocreacion(BigDecimal nusuariocreacion) {
-        this.nusuariocreacion = nusuariocreacion;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     /**
@@ -109,6 +110,18 @@ public class Perfil implements Serializable{
      */
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
+    }
+    
+    
+      public String getVnombre() {
+        return vnombre;
+    }
+
+    /**
+     * @param vnombre the vdescripcion to set
+     */
+    public void setVnombre(String vnombre) {
+        this.vnombre = vnombre;
     }
 
     /**

@@ -7,14 +7,15 @@
       xmlns:pe="http://primefaces.org/ui/extensions">
 
     <h:head>
-        <title>GesCon - Alertas</title>
+        <title>GesCon - Politicas
+        </title>
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
         <h:outputStylesheet library="css" name="style.css" />
     </h:head>
     <h:body>            
         <f:view>
             <pe:layout fullPage="true" >
-                <pe:layoutPane position="north" size="80" resizable="false" closable="false" styleContent="font-size: 10px;"> 
+                <pe:layoutPane position="north" size="80" resizable="false" closable="false" > 
                     <ui:include src="header.xhtml" />
                 </pe:layoutPane>
 
@@ -30,10 +31,10 @@
                     <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
                     <h:form id="f">
                         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
-                        <p:panel header="Administración de Alertas" >
+                        <p:panel header="Administración de Politicas" >
                             <h:panelGrid columns="1">
-                                <p:commandButton  value="Nuevo" actionListener="#{alertaMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
-                                <p:dataTable id="tbl" value="#{alertaMB.listaAlerta}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
+                                <p:commandButton  value="Nuevo" actionListener="#{politicaMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
+                                <p:dataTable id="tbl" value="#{politicaMB.listaPolitica}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
                                              rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
                                     <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
                                         <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>
@@ -60,17 +61,17 @@
                                         </h:outputText>
                                     </p:column>
                                     <p:column style="text-align: center; width: 50px;">
-                                        <p:commandLink actionListener="#{alertaMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Alerta">
+                                        <p:commandLink actionListener="#{politicaMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Parámetro">
                                             <h:outputText styleClass="ui-icon ui-icon-pencil"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{alertaMB.selectedAlerta}" />
+                                            <f:setPropertyActionListener value="#{row}" target="#{politicaMB.selectedPolitica}" />
                                         </p:commandLink>
-                                        <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Alerta" rendered="#{row.nactivo eq 0}">
+                                        <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Politica" rendered="#{row.nactivo eq 0}">
                                             <h:outputText styleClass="ui-icon ui-icon-check"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{alertaMB.selectedAlerta}" />
+                                            <f:setPropertyActionListener value="#{row}" target="#{politicaMB.selectedPolitica}" />
                                         </p:commandLink>
-                                        <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Alerta" rendered="#{row.nactivo eq 1}">
+                                        <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Politica" rendered="#{row.nactivo eq 1}">
                                             <h:outputText styleClass="ui-icon ui-icon-close"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{alertaMB.selectedAlerta}" />
+                                            <f:setPropertyActionListener value="#{row}" target="#{politicaMB.selectedPolitica}" />
                                         </p:commandLink>
                                     </p:column>
                                 </p:dataTable>
@@ -78,60 +79,60 @@
                         </p:panel>
                     </h:form>
 
-                    <p:dialog id="newDlg" header="Nuevo Alerta" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                    <p:dialog id="newDlg" header="Nueva Politica" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                         <h:form id="newDialogForm">
                             <h:panelGrid id="pgNew" columns="3" cellpadding="5" style="text-align: left;width: 100%">
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Nombre:"/>
-                                <p:inputText size="50" value="#{alertaMB.nombre}" style="text-transform: uppercase;" maxlength="25" /> 
+                                <p:inputText size="50" value="#{politicaMB.nombre}" style="text-transform: uppercase;" maxlength="25" /> 
 
                                 <p:spacer/>
                                 <h:outputLabel value="Descripción:"/>
                                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{alertaMB.descripcion}" rows="4" cols="36" style="font-weight: normal;"
+                                    <p:inputTextarea value="#{politicaMB.descripcion}" rows="4" cols="36" style="font-weight: normal;"
                                                      counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                     <h:outputText id="display"/>
                                 </h:panelGrid>
                             </h:panelGrid>
-                            <p:commandButton  value="Registrar" actionListener="#{alertaMB.save}" update=":f:growl, :f:tbl"/>
+                            <p:commandButton  value="Registrar" actionListener="#{politicaMB.save}" update=":f:growl, :f:tbl"/>
                         </h:form>
                     </p:dialog>
 
-                    <p:dialog id="editDlg" header="Actualizar Alerta" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                    <p:dialog id="editDlg" header="Actualizar Politica" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                         <h:form id="editDialogForm">
                             <p:messages id="msgs" showSummary="true" showDetail="true" />
                             <h:panelGrid id="pgEdit" columns="3" cellpadding="5" style="text-align: left;width: 100%">
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Nombre:"/>
-                                <p:inputText size="50" value="#{alertaMB.selectedAlerta.vnombre}" style="text-transform: uppercase;" maxlength="25" />
+                                <p:inputText size="50" value="#{politicaMB.selectedPolitica.vnombre}" style="text-transform: uppercase;" maxlength="25" />
 
                                 <p:spacer/>
                                 <h:outputLabel value="Descripción:"/>
                                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{alertaMB.selectedAlerta.vdescripcion}" rows="4" cols="36" style="font-weight: normal;"
+                                    <p:inputTextarea value="#{politicaMB.selectedPolitica.vdescripcion}" rows="4" cols="36" style="font-weight: normal;"
                                                      counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                     <h:outputText id="display"/>
                                 </h:panelGrid>
 
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Activo:"/>
-                                <p:selectOneMenu value="#{alertaMB.selectedAlerta.nactivo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
+                                <p:selectOneMenu value="#{politicaMB.selectedPolitica.nactivo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
                                     <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
                                 </p:selectOneMenu>
                             </h:panelGrid>
-                            <p:commandButton  value="Actualizar" actionListener="#{alertaMB.update}" update=":f:growl, :f:tbl"/>
+                            <p:commandButton  value="Actualizar" actionListener="#{politicaMB.update}" update=":f:growl, :f:tbl"/>
                         </h:form>
                     </p:dialog>
 
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la alerta. \nDesea Continuar?" header="ACTIVAR Alerta" widgetVar="confirmActDlg" style="font-size: 10px;">
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la politica. \nDesea Continuar?" header="ACTIVAR Politica" widgetVar="confirmActDlg" style="font-size: 10px;">
                         <h:form id="confirmActDlgForm">
-                            <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{alertaMB.activar}"/>
+                            <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{politicaMB.activar}"/>
                             <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
                         </h:form>
                     </p:confirmDialog>
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la alerta. \nDesea Continuar?" header="DESACTIVAR Alerta" widgetVar="confirmDesDlg" style="font-size: 10px;">
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la politica. \nDesea Continuar?" header="DESACTIVAR Politica" widgetVar="confirmDesDlg" style="font-size: 10px;">
                         <h:form id="confirmDesDlgForm">
-                            <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{alertaMB.desactivar}"/>
+                            <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{politicaMB.desactivar}"/>
                             <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />
                         </h:form>
                     </p:confirmDialog>

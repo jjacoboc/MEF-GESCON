@@ -8,17 +8,20 @@
             <column name="NPERFILID" precision="22" scale="0" />
             <generator class="assigned"></generator>
         </id>
+        <property name="vnombre" type="string">
+            <column name="VNOMBRE" length="25" />
+        </property>
         <property name="vdescripcion" type="string">
-            <column name="VDESCRIPCION" length="25" />
+            <column name="VDESCRIPCION" length="400" />
         </property>
-        <property name="nestado" type="java.lang.Character">
-            <column name="NESTADO" length="1" />
+        <property name="nactivo" type="big_decimal">
+            <column name="NACTIVO" precision="22" scale="0" />
         </property>
-        <property name="nusuariomod" type="big_decimal">
-            <column name="NUSUARIOMOD" precision="22" scale="0" />
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
-        <property name="nusuariocreacion" type="big_decimal">
-            <column name="NUSUARIOCREACION" precision="22" scale="0" />
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
         </property>
         <property name="dfechacreacion" type="date">
             <column name="DFECHACREACION" length="7" />

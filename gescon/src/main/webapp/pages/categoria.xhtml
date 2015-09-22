@@ -24,23 +24,11 @@
                 </pe:layoutPane>
 
                 <pe:layoutPane position="south" size="50" closable="true" >
-                    <h:panelGrid columns="1" width="100%" style="text-align: center; font-size: 10px;">
-                        <h:outputText value="Ministerio de Economía y Finanzas - Jr. Junín 319, Cercado de Lima, Lima 1-Perú Telf: (51 1) 311 5930 - (CENTRAL TELEFÓNICA)"/>
-                        <h:outputText value="Copyright © 2014 - ® Todos los Derechos Reservados"/>
-                    </h:panelGrid>
+                    <ui:include src="footer.xhtml" />
                 </pe:layoutPane>
 
-                <pe:layoutPane position="west" size="175" >
-                    <p:menu style="font-size: 11px;">
-                        <p:submenu label="Menú Principal">
-                            <p:menuitem value="Inicio" url="/index.xhtml" />
-                            <p:menuitem value="Maestro" url="/pages/maestro.xhtml" />
-                            <p:menuitem value="Categoría" url="/pages/categoria.xhtml" />
-                            <p:menuitem value="Base Legal" url="/pages/baseLegal.xhtml" />
-                            <p:menuitem value="Parametro" url="/pages/parametro.xhtml" />
-                            <p:menuitem value="Alerta" url="/pages/alerta.xhtml" />
-                        </p:submenu>
-                    </p:menu>
+                <pe:layoutPane position="west" size="165" >
+                    <ui:include src="menu.xhtml" />
                 </pe:layoutPane>
 
                 <pe:layoutPane position="center" styleContent="font-size: 10px;">
