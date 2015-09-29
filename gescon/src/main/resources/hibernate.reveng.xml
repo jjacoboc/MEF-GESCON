@@ -21,4 +21,7 @@
   <table-filter match-name="MTPOLITICA"/>
   <table-filter match-name="TCATEGORIA_CONOCIMIENTO"/>
   <table-filter match-name="TDISCUSION"/>
+  <table-filter match-name="MTRANGO"/>
+  <table-filter match-name="TBASELEGAL"/>
+  <table-filter match-name="TARCHIVO"/>
 </hibernate-reverse-engineering>

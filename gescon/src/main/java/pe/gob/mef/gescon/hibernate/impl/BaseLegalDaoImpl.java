@@ -18,23 +18,23 @@ import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import pe.gob.mef.gescon.hibernate.dao.MaestroDao;
-import pe.gob.mef.gescon.hibernate.domain.Mtmaestro;
+import pe.gob.mef.gescon.hibernate.dao.BaseLegalDao;
+import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 
 /**
  *
  * @author JJacobo
  */
-@Repository(value = "MaestroDao")
-public class MaestroDaoImpl extends HibernateDaoSupport implements MaestroDao{
+@Repository(value = "BaseLegalDao")
+public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDao{
 
     /**
-     * Crea una nueva instancia de MaestroDaoImpl
+     * Crea una nueva instancia de BaseLegalDaoImpl
      *
      * @param sessionFactory
      */
     @Autowired
-    public MaestroDaoImpl(SessionFactory sessionFactory) {
+    public BaseLegalDaoImpl(SessionFactory sessionFactory) {
         this.setSessionFactory(sessionFactory);
     }
     
@@ -44,23 +44,23 @@ public class MaestroDaoImpl extends HibernateDaoSupport implements MaestroDao{
             new HibernateCallback() {
                 @Override
                 public Object doInHibernate(Session session) throws HibernateException {
-                    Query query = session.createSQLQuery("SELECT SEQ_MTMAESTRO.NEXTVAL FROM DUAL");
+                    Query query = session.createSQLQuery("SELECT SEQ_TBASELEGAL.NEXTVAL FROM DUAL");
                     return query.uniqueResult();
                 }
             });
     }
-    
+
     @Override
-    public List<Mtmaestro> getMtmaestros() throws Exception {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Mtmaestro.class);
-        criteria.addOrder(Order.asc("vnombre"));
-        return (List<Mtmaestro>) getHibernateTemplate().findByCriteria(criteria);
+    public List<Tbaselegal> getTbaselegales() throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tbaselegal.class);
+        criteria.addOrder(Order.desc("dfechacreacion"));
+        return (List<Tbaselegal>) getHibernateTemplate().findByCriteria(criteria);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public void saveOrUpdate(Mtmaestro mtmaestro) throws Exception {
-        getHibernateTemplate().saveOrUpdate(mtmaestro);
+    public void saveOrUpdate(Tbaselegal tbaselegal) throws Exception {
+        getHibernateTemplate().saveOrUpdate(tbaselegal);
     }
     
 }

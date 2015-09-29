@@ -67,6 +67,15 @@ public class CategoriaDaoImpl extends HibernateDaoSupport implements CategoriaDa
     }
     
     @Override
+    public List<Mtcategoria> getMtcategoriaHijos(Mtcategoria mtcategoria) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Mtcategoria.class);
+        criteria.add(Restrictions.eq("ncategoriasup", mtcategoria.getNcategoriasup()));
+        criteria.addOrder(Order.asc("nnivel"));
+        criteria.addOrder(Order.asc("ncategoriaid"));
+        return (List<Mtcategoria>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
     @Transactional(readOnly = false)
     public void saveOrUpdate(Mtcategoria mtcategoria) throws Exception {
         getHibernateTemplate().saveOrUpdate(mtcategoria);

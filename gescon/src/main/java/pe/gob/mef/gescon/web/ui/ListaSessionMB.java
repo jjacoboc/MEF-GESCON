@@ -13,6 +13,9 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.model.SelectItem;
 import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.common.Parameters;
+import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.RangoService;
+import pe.gob.mef.gescon.util.ServiceFinder;
 
 /**
  *
@@ -23,6 +26,7 @@ import pe.gob.mef.gescon.common.Parameters;
 public class ListaSessionMB implements Serializable{
 
     private List<SelectItem> listaSiNo;
+    private List<SelectItem> listaCategoria;
     private List<SelectItem> listaRangoBaseLegal;
     private List<SelectItem> filterEstado;
     
@@ -50,11 +54,32 @@ public class ListaSessionMB implements Serializable{
     }
 
     /**
-     * @return the listaRangoBaseLegal
+     * @return the listaCategoria
+     * @throws java.lang.Exception
      */
-    public List<SelectItem> getListaRangoBaseLegal() {
+    public List<SelectItem> getListaCategoria() throws Exception {
+        if(listaCategoria == null){
+            CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            listaCategoria =  new Items(service.getCategoria(), null, "ncategoriaid","vnombre").getItems();
+        }
+        return listaCategoria;
+    }
+
+    /**
+     * @param listaCategoria the listaCategoria to set
+     */
+    public void setListaCategoria(List<SelectItem> listaCategoria) {
+        this.listaCategoria = listaCategoria;
+    }
+
+    /**
+     * @return the listaRangoBaseLegal
+     * @throws java.lang.Exception
+     */
+    public List<SelectItem> getListaRangoBaseLegal() throws Exception {
         if(listaRangoBaseLegal == null){
-            listaRangoBaseLegal =  new Items(Parameters.getListaRangoBaseLegal(), null, "codigo","descripcion").getItems();
+            RangoService service = (RangoService) ServiceFinder.findBean("RangoService");
+            listaRangoBaseLegal =  new Items(service.getRangos(), null, "nrangoid","vnombre").getItems();
         }
         return listaRangoBaseLegal;
     }

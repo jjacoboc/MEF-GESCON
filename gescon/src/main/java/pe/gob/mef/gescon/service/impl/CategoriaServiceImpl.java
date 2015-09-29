@@ -11,7 +11,6 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.CategoriaDao;
-import pe.gob.mef.gescon.hibernate.dao.MaestroDao;
 import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.util.ServiceFinder;
@@ -52,6 +51,21 @@ public class CategoriaServiceImpl implements CategoriaService {
             Categoria categoria = new Categoria();
             BeanUtils.copyProperties(categoria, mtcategoria);
             categorias.add(categoria);
+        }
+        return categorias;
+    }
+    
+    @Override
+    public List<Categoria> getCategoriaHijos(Categoria categoria) throws Exception {
+        List<Categoria> categorias = new ArrayList<Categoria>();
+        CategoriaDao categoriaDao = (CategoriaDao) ServiceFinder.findBean("CategoriaDao");
+        Mtcategoria mtcategoria = new Mtcategoria();
+        BeanUtils.copyProperties(mtcategoria, categoria);
+        List<Mtcategoria> lista = categoriaDao.getMtcategoriaHijos(mtcategoria);
+        for(Mtcategoria ele : lista) {
+            Categoria bean = new Categoria();
+            BeanUtils.copyProperties(bean, ele);
+            categorias.add(bean);
         }
         return categorias;
     }
