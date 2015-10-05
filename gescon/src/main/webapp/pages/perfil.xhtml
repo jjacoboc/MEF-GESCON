@@ -73,6 +73,10 @@
                                             <h:outputText styleClass="ui-icon ui-icon-close"/>
                                             <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
                                         </p:commandLink>
+                                        <p:commandLink  actionListener="#{perfilMB.toAsig}" update="f:growl, :asigDialogForm:pgAsig" oncomplete="PF('asigDialog').show();" title="Asignar Politicas">
+                                            <h:outputText styleClass="ui-icon ui-icon-clipboard"/>
+                                            <f:param name="index" value="#{rowIndex}"/>
+                                        </p:commandLink>
                                     </p:column>
                                 </p:dataTable>
                             </h:panelGrid>
@@ -121,6 +125,18 @@
                                 </p:selectOneMenu>
                             </h:panelGrid>
                             <p:commandButton  value="Actualizar" actionListener="#{perfilMB.update}" update=":f:growl, :f:tbl"/>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog id="asigDlg" header="Asignar Politicas" widgetVar="asigDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="asigDialogForm">
+                            <p:messages id="msgs" showSummary="true" showDetail="true" />
+                            <h:panelGrid id="pgAsig" columns="3" cellpadding="5" style="text-align: left;width: 100%">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Politicas:"/>
+                                <p:pickList id="pickList" value="#{perfilMB.listaPoliticas}" var="politica" itemLabel="#{politica.label}" itemValue="#{politica.value}" />
+                            </h:panelGrid>
+                            <p:commandButton  value="Asignar" actionListener="#{perfilMB.asignar}" update=":f:growl, :f:tbl"/>
                         </h:form>
                     </p:dialog>
 

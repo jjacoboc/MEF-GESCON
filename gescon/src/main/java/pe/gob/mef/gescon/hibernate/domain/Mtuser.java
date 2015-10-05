@@ -17,11 +17,23 @@ public class Mtuser  implements java.io.Serializable {
      private String vlogin;
      private String vnombres;
      private String vapellidos;
-     private String vcorreo;
-     private Character nestado;
+     private Date dfechanacimiento;
+     private BigDecimal nestado;
      private BigDecimal nusuariomod;
      private BigDecimal nusuariocreacion;
      private Date dfechacreacion;
+     private String vsexo;
+     private String vdni;
+     private String vdpto;
+     private String vprov;
+     private String vdist;
+     private String vprofesion;
+     private String ventidad;
+     private String vpliego;
+     private String vcargo;
+     private String varea;
+     private String vsector;
+     private String vgobierno;
      private Set<TuserPerfil> tuserPerfils = new HashSet<TuserPerfil>(0);
      private Set<Tpass> tpasses = new HashSet<Tpass>(0);
 
@@ -32,16 +44,28 @@ public class Mtuser  implements java.io.Serializable {
     public Mtuser(BigDecimal nusuarioid) {
         this.nusuarioid = nusuarioid;
     }
-    public Mtuser(BigDecimal nusuarioid, String vlogin, String vnombres, String vapellidos, String vcorreo, Character nestado, BigDecimal nusuariomod, BigDecimal nusuariocreacion, Date dfechacreacion, Set<TuserPerfil> tuserPerfils, Set<Tpass> tpasses) {
+    public Mtuser(BigDecimal nusuarioid, String vlogin, String vnombres, String vapellidos, Date dfechanacimiento, BigDecimal nestado, BigDecimal nusuariomod, BigDecimal nusuariocreacion, Date dfechacreacion, String vsexo, String vdni, String vdpto, String vprov, String vdist, String vprofesion, String ventidad, String vpliego, String vcargo, String varea, String vsector, String vgobierno, Set<TuserPerfil> tuserPerfils, Set<Tpass> tpasses) {
        this.nusuarioid = nusuarioid;
        this.vlogin = vlogin;
        this.vnombres = vnombres;
        this.vapellidos = vapellidos;
-       this.vcorreo = vcorreo;
+       this.dfechanacimiento = dfechanacimiento;
        this.nestado = nestado;
        this.nusuariomod = nusuariomod;
        this.nusuariocreacion = nusuariocreacion;
        this.dfechacreacion = dfechacreacion;
+       this.vsexo = vsexo;
+       this.vdni = vdni;
+       this.vdpto = vdpto;
+       this.vprov = vprov;
+       this.vdist = vdist;
+       this.vprofesion = vprofesion;
+       this.ventidad = ventidad;
+       this.vpliego = vpliego;
+       this.vcargo = vcargo;
+       this.varea = varea;
+       this.vsector = vsector;
+       this.vgobierno = vgobierno;
        this.tuserPerfils = tuserPerfils;
        this.tpasses = tpasses;
     }
@@ -74,18 +98,11 @@ public class Mtuser  implements java.io.Serializable {
     public void setVapellidos(String vapellidos) {
         this.vapellidos = vapellidos;
     }
-    public String getVcorreo() {
-        return this.vcorreo;
-    }
-    
-    public void setVcorreo(String vcorreo) {
-        this.vcorreo = vcorreo;
-    }
-    public Character getNestado() {
+    public BigDecimal getNestado() {
         return this.nestado;
     }
     
-    public void setNestado(Character nestado) {
+    public void setNestado(BigDecimal nestado) {
         this.nestado = nestado;
     }
     public BigDecimal getNusuariomod() {
@@ -122,6 +139,188 @@ public class Mtuser  implements java.io.Serializable {
     
     public void setTpasses(Set<Tpass> tpasses) {
         this.tpasses = tpasses;
+    }
+
+    /**
+     * @return the dfechanacimiento
+     */
+    public Date getDfechanacimiento() {
+        return dfechanacimiento;
+    }
+
+    /**
+     * @param dfechanacimiento the dfechanacimiento to set
+     */
+    public void setDfechanacimiento(Date dfechanacimiento) {
+        this.dfechanacimiento = dfechanacimiento;
+    }
+
+    /**
+     * @return the vsexo
+     */
+    public String getVsexo() {
+        return vsexo;
+    }
+
+    /**
+     * @param vsexo the vsexo to set
+     */
+    public void setVsexo(String vsexo) {
+        this.vsexo = vsexo;
+    }
+
+    /**
+     * @return the vdni
+     */
+    public String getVdni() {
+        return vdni;
+    }
+
+    /**
+     * @param vdni the vdni to set
+     */
+    public void setVdni(String vdni) {
+        this.vdni = vdni;
+    }
+
+    /**
+     * @return the vdpto
+     */
+    public String getVdpto() {
+        return vdpto;
+    }
+
+    /**
+     * @param vdpto the vdpto to set
+     */
+    public void setVdpto(String vdpto) {
+        this.vdpto = vdpto;
+    }
+
+    /**
+     * @return the vprov
+     */
+    public String getVprov() {
+        return vprov;
+    }
+
+    /**
+     * @param vprov the vprov to set
+     */
+    public void setVprov(String vprov) {
+        this.vprov = vprov;
+    }
+
+    /**
+     * @return the vdist
+     */
+    public String getVdist() {
+        return vdist;
+    }
+
+    /**
+     * @param vdist the vdist to set
+     */
+    public void setVdist(String vdist) {
+        this.vdist = vdist;
+    }
+
+    /**
+     * @return the vprofesion
+     */
+    public String getVprofesion() {
+        return vprofesion;
+    }
+
+    /**
+     * @param vprofesion the vprofesion to set
+     */
+    public void setVprofesion(String vprofesion) {
+        this.vprofesion = vprofesion;
+    }
+
+    /**
+     * @return the ventidad
+     */
+    public String getVentidad() {
+        return ventidad;
+    }
+
+    /**
+     * @param ventidad the ventidad to set
+     */
+    public void setVentidad(String ventidad) {
+        this.ventidad = ventidad;
+    }
+
+    /**
+     * @return the vpliego
+     */
+    public String getVpliego() {
+        return vpliego;
+    }
+
+    /**
+     * @param vpliego the vpliego to set
+     */
+    public void setVpliego(String vpliego) {
+        this.vpliego = vpliego;
+    }
+
+    /**
+     * @return the vcargo
+     */
+    public String getVcargo() {
+        return vcargo;
+    }
+
+    /**
+     * @param vcargo the vcargo to set
+     */
+    public void setVcargo(String vcargo) {
+        this.vcargo = vcargo;
+    }
+
+    /**
+     * @return the varea
+     */
+    public String getVarea() {
+        return varea;
+    }
+
+    /**
+     * @param varea the varea to set
+     */
+    public void setVarea(String varea) {
+        this.varea = varea;
+    }
+
+    /**
+     * @return the vsector
+     */
+    public String getVsector() {
+        return vsector;
+    }
+
+    /**
+     * @param vsector the vsector to set
+     */
+    public void setVsector(String vsector) {
+        this.vsector = vsector;
+    }
+
+    /**
+     * @return the vgobierno
+     */
+    public String getVgobierno() {
+        return vgobierno;
+    }
+
+    /**
+     * @param vgobierno the vgobierno to set
+     */
+    public void setVgobierno(String vgobierno) {
+        this.vgobierno = vgobierno;
     }
 
 
