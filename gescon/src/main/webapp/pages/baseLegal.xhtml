@@ -32,8 +32,53 @@
                     <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
                     <h:form id="f">
                         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
-                        <p:panel id="pnNew" header="Registro de Base Legal" >
-                            <h:panelGrid columns="3">
+                        <p:panel header="Administración de Base Legal" >
+                            <h:panelGrid columns="1">
+                                <p:commandButton  value="Nuevo" actionListener="#{baseLegalMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
+                                <p:dataTable id="tbl" value="#{baseLegalMB.listaBaseLegal}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                    <p:column sortBy="#{row.vnumero}" filterBy="#{row.vnumero}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;">
+                                        <f:facet name="header"><h:outputText value="NÚMERO" style="font-size: 11px;"/></f:facet>
+                                        <h:outputText value="#{row.vnumero}" />
+                                    </p:column>
+                                    <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
+                                        <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>
+                                        <h:outputText value="#{row.vnombre}" />
+                                    </p:column>
+                                    <p:column width="250px;" sortBy="#{row.vsumilla}" filterBy="#{row.vsumilla}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                        <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
+                                        <h:outputText value="#{row.vsumilla}" />
+                                    </p:column>
+                                    <p:column style="text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" priority="3">
+                                        <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
+                                        <h:outputText value="#{row.nactivo}" >
+                                            <f:converter converterId="converterSiNo"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center;" sortBy="#{row.dfechapublicacion}" filterBy="#{row.dfechapublicacion}" filterMatchMode="contains" priority="5">
+                                        <f:facet name="header"><h:outputText value="FECHA PUBLICACIÓN"/></f:facet>
+                                        <h:outputText value="#{row.dfechapublicacion}" >
+                                            <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 60px;">
+                                        <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Base Legal" rendered="#{row.nactivo eq 0}">
+                                            <p:graphicImage library="images" name="active.png" style="border: 0px; width: 16px; height: 16px;"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{baseLegalMB.selectedBaseLegal}" />
+                                        </p:commandLink>
+                                        <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Base Legal" rendered="#{row.nactivo eq 1}">
+                                            <p:graphicImage library="images" name="inactive.png" style="border: 0px; width: 16px; height: 16px;"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{baseLegalMB.selectedBaseLegal}" />
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+
+                    <p:dialog id="newDlg" header="Nueva Base Legal" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="newDialogForm">
+                            <h:panelGrid id="pgNew"  columns="3">
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Categoría:"/>
                                 <h:panelGroup>
@@ -45,21 +90,16 @@
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Archivo:"/>
                                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:fileUpload value="#{baseLegalMB.uploadFile}" skinSimple="true" update=":f:pnNew" fileUploadListener="#{baseLegalMB.handleUploadFile}" 
+                                    <p:fileUpload value="#{baseLegalMB.uploadFile}" skinSimple="true" update=":newDialogForm:pgNew" fileUploadListener="#{baseLegalMB.handleUploadFile}" 
                                                   cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
-                                    <!--
                                     <p:lightBox>
                                         <h:outputLink value="#">
                                             <h:outputText id="fileName" value="#{baseLegalMB.uploadFile.fileName}"/>
                                         </h:outputLink>
                                         <f:facet name="inline">
-                                            <p:media player="pdf" value="#{baseLegalMB.content}"/>
+                                            <p:media player="pdf" cache="false" value="#{baseLegalMB.content}" width="700" height="400"/>
                                         </f:facet>
                                     </p:lightBox>
-                                    -->
-                                    <h:outputLink value="#{baseLegalMB.file.path}" target="_blank" >
-                                        <h:outputText id="fileName" value="#{baseLegalMB.uploadFile.fileName}"/>
-                                    </h:outputLink>
                                 </h:panelGrid>
 
                                 <h:outputLabel value="*"/>
@@ -72,11 +112,11 @@
 
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Rango de Norma:"/>
-                                <p:selectOneMenu id="codcese" value="#{baseLegalMB.rango}" >
+                                <p:selectOneMenu id="codcese" value="#{baseLegalMB.rangoId}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;">
                                     <f:selectItem itemValue="" itemLabel="Seleccione" />
                                     <f:selectItems value="#{listaSessionMB.listaRangoBaseLegal}"/>
                                 </p:selectOneMenu>
-                                
+
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Ambito:"/>                                
                                 <h:panelGrid columns="4">
@@ -89,15 +129,15 @@
                                 <p:spacer/>
                                 <h:outputLabel value="Sumilla:"/>
                                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea rows="4" cols="66" style="font-weight: normal;"
+                                    <p:inputTextarea value="#{baseLegalMB.sumilla}" rows="4" cols="66" style="font-weight: normal;"
                                                      counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                     <h:outputText id="display"/>
                                 </h:panelGrid>
-                                
+
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Fecha Publicación:"/>
                                 <p:calendar id="fcese" locale="es" value="#{baseLegalMB.fechaPublicacion}" pattern="dd/MM/yyyy" showOn="button" readonlyInput="true" showButtonPanel="true"/>
-                                
+
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Tema:"/>
                                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
@@ -106,11 +146,12 @@
                                     <p:watermark for="tema" value="Ej: servir, mef, pcm, regional"/>
                                 </h:panelGrid>
                             </h:panelGrid>
-                            <h:panelGrid columns="1" width="100%">
+                            <h:panelGrid columns="2" width="100%">
+                                <p:commandButton value="Registrar" actionListener="#{baseLegalMB.save}" update=":f:growl"/>
                                 <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
                             </h:panelGrid>
-                        </p:panel>
-                    </h:form>
+                        </h:form>
+                    </p:dialog>
 
                     <p:dialog id="catDlg" header="Seleccionar Categoría" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                         <h:form id="catDialogForm">
@@ -118,7 +159,7 @@
                                 <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
                                 <p:tree id="cats" value="#{baseLegalMB.tree}" var="node" animate="true" cache="true"  
                                         selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                    <p:ajax event="select" listener="#{baseLegalMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pnNew" />
+                                    <p:ajax event="select" listener="#{baseLegalMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":newDialogForm:pgNew" />
                                     <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                         <h:outputText value="#{node.vnombre}"/>
                                     </p:treeNode>
@@ -126,6 +167,20 @@
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>
+                    
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la base legal. \nDesea Continuar?" header="ACTIVAR BASE LEGAL" widgetVar="confirmActDlg" style="font-size: 10px;">
+                        <h:form id="confirmActDlgForm">
+                            <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{baseLegalMB.activar}"/>
+                            <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
+                        </h:form>
+                    </p:confirmDialog>
+                    
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la base legal. \nDesea Continuar?" header="DESACTIVAR BASE LEGAL" widgetVar="confirmDesDlg" style="font-size: 10px;">
+                        <h:form id="confirmDesDlgForm">
+                            <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{baseLegalMB.desactivar}"/>
+                            <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />
+                        </h:form>
+                    </p:confirmDialog>
 
                     <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)"  draggable="false" closable="false" resizable="false" showHeader="false">
                         <h:graphicImage library="images" name="loading.gif" style="border: 0;" />

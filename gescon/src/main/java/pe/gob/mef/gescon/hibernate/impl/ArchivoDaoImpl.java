@@ -13,28 +13,29 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-import pe.gob.mef.gescon.hibernate.dao.MaestroDao;
-import pe.gob.mef.gescon.hibernate.domain.Mtmaestro;
+import pe.gob.mef.gescon.hibernate.dao.ArchivoDao;
+import pe.gob.mef.gescon.hibernate.domain.Tarchivo;
+import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 
 /**
  *
  * @author JJacobo
  */
-@Repository(value = "MaestroDao")
-public class MaestroDaoImpl extends HibernateDaoSupport implements MaestroDao{
+@Repository(value = "ArchivoDao")
+public class ArchivoDaoImpl extends HibernateDaoSupport implements ArchivoDao{
 
     /**
-     * Crea una nueva instancia de MaestroDaoImpl
+     * Crea una nueva instancia de ArchivoDaoImpl
      *
      * @param sessionFactory
      */
     @Autowired
-    public MaestroDaoImpl(SessionFactory sessionFactory) {
+    public ArchivoDaoImpl(SessionFactory sessionFactory) {
         this.setSessionFactory(sessionFactory);
     }
     
@@ -44,23 +45,23 @@ public class MaestroDaoImpl extends HibernateDaoSupport implements MaestroDao{
             new HibernateCallback() {
                 @Override
                 public Object doInHibernate(Session session) throws HibernateException {
-                    Query query = session.createSQLQuery("SELECT SEQ_MTMAESTRO.NEXTVAL FROM DUAL");
+                    Query query = session.createSQLQuery("SELECT SEQ_TARCHIVO.NEXTVAL FROM DUAL");
                     return query.uniqueResult();
                 }
             });
     }
-    
+
     @Override
-    public List<Mtmaestro> getMtmaestros() throws Exception {
-        DetachedCriteria criteria = DetachedCriteria.forClass(Mtmaestro.class);
-        criteria.addOrder(Order.asc("vnombre"));
-        return (List<Mtmaestro>) getHibernateTemplate().findByCriteria(criteria);
+    public List<Tarchivo> getTarchivosByTbaselegal(Tbaselegal tbaselegal) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tarchivo.class);
+        criteria.add(Restrictions.eq("id.nbaselegalid", tbaselegal.getNbaselegalid()));
+        criteria.addOrder(Order.asc("nversion"));
+        return (List<Tarchivo>) getHibernateTemplate().findByCriteria(criteria);
     }
 
     @Override
-    @Transactional(readOnly = false)
-    public void saveOrUpdate(Mtmaestro mtmaestro) throws Exception {
-        getHibernateTemplate().saveOrUpdate(mtmaestro);
+    public void saveOrUpdate(Tarchivo tarchivo) throws Exception {
+        getHibernateTemplate().saveOrUpdate(tarchivo);
     }
     
 }

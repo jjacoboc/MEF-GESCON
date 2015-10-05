@@ -26,13 +26,13 @@
                     <ui:include src="pages/menu.xhtml" />
                 </pe:layoutPane>
 
-                <pe:layoutPane position="center" styleContent="font-size: 11px;">
+                <pe:layoutPane position="center" styleContent="font-size: 10px;">
                     <h:form id="f">
                         <h:panelGrid columns="1" width="100%">
                             <p:carousel value="#{administracionMB.listaAdministracion}" 
                                         var="admin" headerText="Administración"
                                         circular="true" style="width: 100%;" numVisible="6"
-                                        itemStyle="border:0px;height:90px;width:160px;" >
+                                        itemStyle="border:0px;height:92px;width:160px;" >
                                 <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
                                     <p:spacer/>
                                     <p:graphicImage library="images" name="#{admin.imagen}" style="border: 0px;"/>
@@ -44,7 +44,7 @@
                             <p:carousel value="#{administracionMB.listaCategoria}" 
                                         var="cat" headerText="Categorías"
                                         circular="true" style="width: 100%;" numVisible="6"
-                                        itemStyle="border:0px;height:90px;width:160px;" >
+                                        itemStyle="border:0px;height:92px;width:160px;" >
                                 <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
                                     <p:spacer/>
                                     <p:graphicImage library="images" name="#{cat.imagen}" style="border: 0px;"/>
@@ -56,7 +56,7 @@
                             <p:carousel value="#{administracionMB.listaPerfil}" 
                                         var="per" headerText="Perfiles"
                                         circular="true" style="width: 100%;" numVisible="6"
-                                        itemStyle="border:0px;height:90px;width:160px;" >
+                                        itemStyle="border:0px;height:92px;width:160px;" >
                                 <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
                                     <p:spacer/>
                                     <p:graphicImage library="images" name="#{per.imagen}" style="border: 0px;"/>

@@ -18,24 +18,16 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.PerfilDao;
-//import pe.gob.mef.gescon.hibernate.dao.PoliticaDao;
 import pe.gob.mef.gescon.hibernate.domain.Mtperfil;
-
-//import pe.gob.mef.gescon.hibernate.domain.Mtpolitica;
 
 /**
  *
  * @author SOPORTE
  */
-
-
-
 @Repository(value = "PerfilDao")
+public class PerfilDaoImpl extends HibernateDaoSupport implements PerfilDao {
 
-public class PerfilDaoImpl extends HibernateDaoSupport implements PerfilDao{
-    
-    
-     @Autowired
+    @Autowired
     public PerfilDaoImpl(SessionFactory sessionFactory) {
         this.setSessionFactory(sessionFactory);
     }
@@ -43,13 +35,13 @@ public class PerfilDaoImpl extends HibernateDaoSupport implements PerfilDao{
     @Override
     public BigDecimal getNextPK() throws Exception {
         return (BigDecimal) getHibernateTemplate().execute(
-            new HibernateCallback() {
-                @Override
-                public Object doInHibernate(Session session) throws HibernateException {
-                    Query query = session.createSQLQuery("SELECT SEQ_MTPERFIL.NEXTVAL FROM DUAL");
-                    return query.uniqueResult();
-                }
-            });
+                new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws HibernateException {
+                        Query query = session.createSQLQuery("SELECT SEQ_MTPERFIL.NEXTVAL FROM DUAL");
+                        return query.uniqueResult();
+                    }
+                });
     }
 
     @Override
@@ -63,5 +55,5 @@ public class PerfilDaoImpl extends HibernateDaoSupport implements PerfilDao{
     public void saveOrUpdate(Mtperfil mtperfil) throws Exception {
         getHibernateTemplate().saveOrUpdate(mtperfil);
     }
-    
+
 }

@@ -373,8 +373,8 @@ public class CategoriaMB implements Serializable{
                 CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                 categoria.setNcategoriaid(service.getNextPK());
                 service.saveOrUpdate(categoria);
-//                this.getTree().clearParent();
-//                createTree(service.getCategoria());
+                this.setTree(null);
+                createTree(service.getCategoria());
                 RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
             }
         } catch(Exception e) {
@@ -414,8 +414,8 @@ public class CategoriaMB implements Serializable{
                 this.getSelectedCategoria().setDfechamod(new Date());
                 CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                 service.saveOrUpdate(this.getSelectedCategoria());
-//                this.getTree().clearParent();
-//                createTree(service.getCategoria());
+                this.setTree(null);
+                createTree(service.getCategoria());
                 RequestContext.getCurrentInstance().execute("PF('editDialog').hide();");
             }
         } catch(Exception e) {
