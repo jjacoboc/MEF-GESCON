@@ -16,8 +16,9 @@ import pe.gob.mef.gescon.web.bean.Categoria;
 public interface CategoriaService {
     
     public BigDecimal getNextPK() throws Exception;
-    public List<Categoria> getCategoria() throws Exception;
-    public List<Categoria> getCategoriaPrimerNivel() throws Exception;
+    public List<Categoria> getCategorias() throws Exception;
+    public List<Categoria> getCategoriasPrimerNivel() throws Exception;
     public List<Categoria> getCategoriaHijos(Categoria categoria) throws Exception;
+    public Categoria getCategoriaById(BigDecimal id) throws Exception;
     public void saveOrUpdate(Categoria categoria) throws Exception;
 }

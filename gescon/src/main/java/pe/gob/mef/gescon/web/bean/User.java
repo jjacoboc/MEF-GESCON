@@ -15,17 +15,29 @@ import java.util.Date;
  */
 public class User implements Serializable{
     
-    private BigDecimal nusuarioid;
-    private String vlogin;
-    private String vnombres;
-    private String vapellidos;
-    private String vcorreo;
-    private Character nestado;
-    private BigDecimal nusuariomod;
-    private BigDecimal nusuariocreacion;
-    private Date dfechacreacion;
+     private BigDecimal nusuarioid;
+     private String vlogin;
+     private String vnombres;
+     private String vapellidos;
+     private Date dfechanacimiento;
+     private BigDecimal nestado;
+     private BigDecimal nusuariomod;
+     private BigDecimal nusuariocreacion;
+     private Date dfechacreacion;
+     private String vsexo;
+     private String vdni;
+     private String vdpto;
+     private String vprov;
+     private String vdist;
+     private String vprofesion;
+     private String ventidad;
+     private String vpliego;
+     private String vcargo;
+     private String varea;
+     private String vsector;
+     private String vgobierno;
     
-    public User() {
+    public void User(){
         
     }
 
@@ -86,30 +98,16 @@ public class User implements Serializable{
     }
 
     /**
-     * @return the vcorreo
-     */
-    public String getVcorreo() {
-        return vcorreo;
-    }
-
-    /**
-     * @param vcorreo the vcorreo to set
-     */
-    public void setVcorreo(String vcorreo) {
-        this.vcorreo = vcorreo;
-    }
-
-    /**
      * @return the nestado
      */
-    public Character getNestado() {
+    public BigDecimal getNestado() {
         return nestado;
     }
 
     /**
      * @param nestado the nestado to set
      */
-    public void setNestado(Character nestado) {
+    public void setNestado(BigDecimal nestado) {
         this.nestado = nestado;
     }
 
@@ -153,5 +151,187 @@ public class User implements Serializable{
      */
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
+    }
+
+    /**
+     * @return the dfechanacimiento
+     */
+    public Date getDfechanacimiento() {
+        return dfechanacimiento;
+    }
+
+    /**
+     * @param dfechanacimiento the dfechanacimiento to set
+     */
+    public void setDfechanacimiento(Date dfechanacimiento) {
+        this.dfechanacimiento = dfechanacimiento;
+    }
+
+    /**
+     * @return the vsexo
+     */
+    public String getVsexo() {
+        return vsexo;
+    }
+
+    /**
+     * @param vsexo the vsexo to set
+     */
+    public void setVsexo(String vsexo) {
+        this.vsexo = vsexo;
+    }
+
+    /**
+     * @return the vdni
+     */
+    public String getVdni() {
+        return vdni;
+    }
+
+    /**
+     * @param vdni the vdni to set
+     */
+    public void setVdni(String vdni) {
+        this.vdni = vdni;
+    }
+
+    /**
+     * @return the vdpto
+     */
+    public String getVdpto() {
+        return vdpto;
+    }
+
+    /**
+     * @param vdpto the vdpto to set
+     */
+    public void setVdpto(String vdpto) {
+        this.vdpto = vdpto;
+    }
+
+    /**
+     * @return the vprov
+     */
+    public String getVprov() {
+        return vprov;
+    }
+
+    /**
+     * @param vprov the vprov to set
+     */
+    public void setVprov(String vprov) {
+        this.vprov = vprov;
+    }
+
+    /**
+     * @return the vdist
+     */
+    public String getVdist() {
+        return vdist;
+    }
+
+    /**
+     * @param vdist the vdist to set
+     */
+    public void setVdist(String vdist) {
+        this.vdist = vdist;
+    }
+
+    /**
+     * @return the vprofesion
+     */
+    public String getVprofesion() {
+        return vprofesion;
+    }
+
+    /**
+     * @param vprofesion the vprofesion to set
+     */
+    public void setVprofesion(String vprofesion) {
+        this.vprofesion = vprofesion;
+    }
+
+    /**
+     * @return the ventidad
+     */
+    public String getVentidad() {
+        return ventidad;
+    }
+
+    /**
+     * @param ventidad the ventidad to set
+     */
+    public void setVentidad(String ventidad) {
+        this.ventidad = ventidad;
+    }
+
+    /**
+     * @return the vpliego
+     */
+    public String getVpliego() {
+        return vpliego;
+    }
+
+    /**
+     * @param vpliego the vpliego to set
+     */
+    public void setVpliego(String vpliego) {
+        this.vpliego = vpliego;
+    }
+
+    /**
+     * @return the vcargo
+     */
+    public String getVcargo() {
+        return vcargo;
+    }
+
+    /**
+     * @param vcargo the vcargo to set
+     */
+    public void setVcargo(String vcargo) {
+        this.vcargo = vcargo;
+    }
+
+    /**
+     * @return the varea
+     */
+    public String getVarea() {
+        return varea;
+    }
+
+    /**
+     * @param varea the varea to set
+     */
+    public void setVarea(String varea) {
+        this.varea = varea;
+    }
+
+    /**
+     * @return the vsector
+     */
+    public String getVsector() {
+        return vsector;
+    }
+
+    /**
+     * @param vsector the vsector to set
+     */
+    public void setVsector(String vsector) {
+        this.vsector = vsector;
+    }
+
+    /**
+     * @return the vgobierno
+     */
+    public String getVgobierno() {
+        return vgobierno;
+    }
+
+    /**
+     * @param vgobierno the vgobierno to set
+     */
+    public void setVgobierno(String vgobierno) {
+        this.vgobierno = vgobierno;
     }
 }

@@ -385,7 +385,7 @@ public class BaseLegalMB implements Serializable {
         try {
             if (this.getTree() == null) {
                 CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-                createTree(service.getCategoria());
+                createTree(service.getCategorias());
             }
         } catch (Exception e) {
             e.getMessage();

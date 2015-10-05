@@ -4,7 +4,8 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions">
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <h:head>
         <title>Gescon - Inicio</title>
@@ -22,50 +23,58 @@
                     <ui:include src="pages/footer.xhtml" />
                 </pe:layoutPane>
 
-                <pe:layoutPane position="west" size="165" >
-                    <ui:include src="pages/menu.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="center" styleContent="font-size: 10px;">
+                <pe:layoutPane position="center" >
                     <h:form id="f">
-                        <h:panelGrid columns="1" width="100%">
-                            <p:carousel value="#{administracionMB.listaAdministracion}" 
-                                        var="admin" headerText="Administración"
-                                        circular="true" style="width: 100%;" numVisible="6"
-                                        itemStyle="border:0px;height:92px;width:160px;" >
-                                <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
-                                    <p:spacer/>
-                                    <p:graphicImage library="images" name="#{admin.imagen}" style="border: 0px;"/>
-                                    <p:spacer/>
-                                    <h:outputText value="#{admin.nombre}"/>
-                                    <p:spacer/>
-                                </p:panelGrid>
-                            </p:carousel>
-                            <p:carousel value="#{administracionMB.listaCategoria}" 
-                                        var="cat" headerText="Categorías"
-                                        circular="true" style="width: 100%;" numVisible="6"
-                                        itemStyle="border:0px;height:92px;width:160px;" >
-                                <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
-                                    <p:spacer/>
-                                    <p:graphicImage library="images" name="#{cat.imagen}" style="border: 0px;"/>
-                                    <p:spacer/>
-                                    <h:outputText value="#{cat.vnombre}"/>
-                                    <p:spacer/>
-                                </p:panelGrid>
-                            </p:carousel>
-                            <p:carousel value="#{administracionMB.listaPerfil}" 
-                                        var="per" headerText="Perfiles"
-                                        circular="true" style="width: 100%;" numVisible="6"
-                                        itemStyle="border:0px;height:92px;width:160px;" >
-                                <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
-                                    <p:spacer/>
-                                    <p:graphicImage library="images" name="#{per.imagen}" style="border: 0px;"/>
-                                    <p:spacer/>
-                                    <h:outputText value="#{per.vdescripcion}"/>
-                                    <p:spacer/>
-                                </p:panelGrid>
-                            </p:carousel>
-                        </h:panelGrid>
+                        <center>
+                            <h:panelGrid columns="2">
+                                <ui:repeat value="#{administracionMB.listaCategoria}" var="c" step="2">
+                                    <h:panelGrid columns="2">
+                                        <h:panelGrid columns="1">
+                                            <h:panelGrid columns="2">
+                                                <p:graphicImage value="#{categoriaImages.image}">
+                                                    <f:param name="id" value="#{c.ncategoriaid}"/>
+                                                </p:graphicImage>
+                                                <h:outputText value="#{c.vnombre}" style="font-family: Tahoma;font-size: 14px;font-weight: bold;"/>
+                                            </h:panelGrid>
+                                            <ui:repeat value="#{c.children}" var="ch">
+                                                <h:panelGrid columns="3" style="font-family: Arial;font-size: 12px;">
+                                                    <p:spacer width="30" height="10"/>
+                                                    <h:outputText class="fa fa-fw fa-circle"/>
+                                                    <p:commandLink action="#{administracionMB.onClickSubCategoriesFilter}" ajax="false">
+                                                        <f:param name="idparent" value="#{c.ncategoriaid}"/>
+                                                        <f:param name="idchild" value="#{ch.ncategoriaid}"/>
+                                                        <h:outputText value="#{ch.vnombre}"/>
+                                                    </p:commandLink>
+                                                </h:panelGrid>
+                                            </ui:repeat>
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                </ui:repeat>
+                                <ui:repeat value="#{administracionMB.listaCategoria}" var="c" offset="1" step="2">
+                                    <h:panelGrid columns="2">
+                                        <h:panelGrid columns="1">
+                                            <h:panelGrid columns="2">
+                                                <p:graphicImage value="#{categoriaImages.image}">
+                                                    <f:param name="id" value="#{c.ncategoriaid}"/>
+                                                </p:graphicImage>
+                                                <h:outputText value="#{c.vnombre}" style="font-family: Tahoma;font-size: 14px;font-weight: bold;"/>
+                                            </h:panelGrid>
+                                            <ui:repeat value="#{c.children}" var="ch">
+                                                <h:panelGrid columns="3" style="font-family: Arial;font-size: 12px;">
+                                                    <p:spacer width="30" height="10"/>
+                                                    <h:outputText class="fa fa-fw fa-circle"/>
+                                                    <p:commandLink action="#{administracionMB.onClickSubCategoriesFilter}" ajax="false">
+                                                        <f:param name="idparent" value="#{c.ncategoriaid}"/>
+                                                        <f:param name="idchild" value="#{ch.ncategoriaid}"/>
+                                                        <h:outputText value="#{ch.vnombre}"/>
+                                                    </p:commandLink>
+                                                </h:panelGrid>
+                                            </ui:repeat>
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                </ui:repeat>
+                            </h:panelGrid>
+                        </center>
                     </h:form>
                 </pe:layoutPane>
             </pe:layout>

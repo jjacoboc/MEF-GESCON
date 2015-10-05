@@ -46,7 +46,7 @@
                                     </p:treeNode>
                                 </p:tree>
                                 <p:contextMenu for="cats" style="font-size: 10px; width: 200px;">
-                                    <p:menuitem value="Agregar Categoría" oncomplete="PF('newDialog').show();" disabled="#{categoriaMB.selectedCategoria.nestado eq 0}" icon="ui-icon-plus" />
+                                    <p:menuitem value="Agregar Categoría" actionListener="#{categoriaMB.toSave}"  oncomplete="PF('newDialog').show();" update=":newDialogForm:pgNew" disabled="#{categoriaMB.selectedCategoria.nestado eq 0}" icon="ui-icon-plus" />
                                     <p:menuitem value="Editar Categoría" actionListener="#{categoriaMB.toUpdate}" oncomplete="PF('editDialog').show();" update=":editDialogForm:pgEdit" icon="ui-icon-plus" />
                                     <p:menuitem value="Activar Categoría" oncomplete="PF('confirmActDlg').show();" icon="ui-icon-plus"/>
                                     <p:menuitem value="Desactivar Categoría" oncomplete="PF('confirmDesDlg').show();" icon="ui-icon-plus"/>
@@ -60,7 +60,7 @@
                             <h:panelGrid id="pgNew" columns="3" style="text-align: left;width: 100%">
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Nombre:"/>
-                                <p:inputText size="50" value="#{categoriaMB.nombre}" style="text-transform: uppercase;" maxlength="25"/> 
+                                <p:inputText size="50" value="#{categoriaMB.nombre}" maxlength="25"/> 
                                 
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Descripción:"/>
@@ -70,7 +70,7 @@
                                     <h:outputText id="display"/>
                                 </h:panelGrid>
                                 
-                                <p:spacer/>
+                                <h:outputLabel value="*"/>
                                 <h:outputLabel value="Verificación:"/>
                                 <h:panelGrid columns="4" border="0" >
                                     <p:selectBooleanCheckbox value="#{categoriaMB.flagbl}"/>
@@ -85,6 +85,17 @@
                                     <h:outputText value="Buenas Prácticas"/>
                                     <p:selectBooleanCheckbox value="#{categoriaMB.flagom}"/>
                                     <h:outputText value="Oportunidad de Mejoras"/>
+                                </h:panelGrid>
+                                
+                                <p:spacer/>
+                                <h:outputLabel value="Imagen:"/>
+                                <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                    <h:panelGrid columns="2">
+                                        <p:fileUpload value="#{categoriaMB.uploadFile}" skinSimple="true" update=":newDialogForm:pgNew, :f:growl" fileUploadListener="#{categoriaMB.handleUploadFile}" 
+                                                      cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
+                                        <p:graphicImage cache="false" value="#{categoriaMB.content}"/>
+                                    </h:panelGrid>
+                                    <h:outputText value="Nota: La imagen debe tener un tamaño no mayor a 20KB y una dimensión de 32x32." style="font-size: 9px;"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <p:commandButton value="Registrar" actionListener="#{categoriaMB.save}" update=":f:growl, :f:cats"/>
@@ -96,7 +107,7 @@
                             <h:panelGrid id="pgEdit" columns="3" style="text-align: left;width: 100%">
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Nombre:"/>
-                                <p:inputText size="50" value="#{categoriaMB.selectedCategoria.vnombre}" style="text-transform: uppercase;" maxlength="25"/> 
+                                <p:inputText size="50" value="#{categoriaMB.selectedCategoria.vnombre}" maxlength="25"/> 
                                 
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Descripción:"/>
@@ -106,7 +117,7 @@
                                     <h:outputText id="display"/>
                                 </h:panelGrid>
                                 
-                                <p:spacer/>
+                                <h:outputLabel value="*"/>
                                 <h:outputLabel value="Verificación:"/>
                                 <h:panelGrid columns="4" border="0" >
                                     <p:selectBooleanCheckbox value="#{categoriaMB.flagbl}"/>
@@ -121,6 +132,17 @@
                                     <h:outputText value="Buenas Prácticas"/>
                                     <p:selectBooleanCheckbox value="#{categoriaMB.flagom}"/>
                                     <h:outputText value="Oportunidad de Mejoras"/>
+                                </h:panelGrid>
+                                
+                                <p:spacer/>
+                                <h:outputLabel value="Imagen:"/>
+                                <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                    <h:panelGrid columns="2">
+                                        <p:fileUpload value="#{categoriaMB.uploadFile}" skinSimple="true" update=":editDialogForm:pgEdit, :f:growl" fileUploadListener="#{categoriaMB.handleUploadFile}" 
+                                                      cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
+                                        <p:graphicImage cache="false" value="#{categoriaMB.content}"/>
+                                    </h:panelGrid>
+                                    <h:outputText value="Nota: La imagen debe tener un tamaño no mayor a 20KB y una dimensión de 32x32." style="font-size: 9px;"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <p:commandButton value="Actualizar" actionListener="#{categoriaMB.update}" update=":f:growl, :f:cats"/>

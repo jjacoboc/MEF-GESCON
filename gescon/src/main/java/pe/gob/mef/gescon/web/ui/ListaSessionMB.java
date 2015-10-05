@@ -60,7 +60,7 @@ public class ListaSessionMB implements Serializable{
     public List<SelectItem> getListaCategoria() throws Exception {
         if(listaCategoria == null){
             CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-            listaCategoria =  new Items(service.getCategoria(), null, "ncategoriaid","vnombre").getItems();
+            listaCategoria =  new Items(service.getCategorias(), null, "ncategoriaid","vnombre").getItems();
         }
         return listaCategoria;
     }

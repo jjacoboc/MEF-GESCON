@@ -53,6 +53,12 @@
         <property name="nflagom" type="big_decimal">
             <column name="NFLAGOM" precision="22" scale="0" />
         </property>
+        <property name="bimagen" type="blob">
+            <column name="BIMAGEN" />
+        </property>
+        <property name="vimagennombre" type="string">
+            <column name="VIMAGENNOMBRE" length="100" />
+        </property>
         <set name="tcategoriaConocimientos" table="TCATEGORIA_CONOCIMIENTO" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NCATEGORIAID" precision="22" scale="0" not-null="true" />

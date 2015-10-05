@@ -17,5 +17,6 @@ public interface BaseLegalService {
     
     public BigDecimal getNextPK() throws Exception;
     public List<BaseLegal> getBaselegales() throws Exception;
+    public BaseLegal getBaselegalById(BigDecimal id) throws Exception;
     public void saveOrUpdate(BaseLegal baseLegal) throws Exception;
 }

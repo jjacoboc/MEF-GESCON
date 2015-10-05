@@ -7,13 +7,17 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Blob;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
  * @author JJacobo
  */
-public class Categoria implements Serializable{
+public class Categoria implements Serializable, Comparable<Categoria>{
     
     private BigDecimal ncategoriaid;
     private String vdescripcion;
@@ -31,7 +35,11 @@ public class Categoria implements Serializable{
     private BigDecimal nflagct;
     private BigDecimal nflagbp;
     private BigDecimal nflagom;
+    private Blob bimagen;
+    private String vimagennombre;
     private String imagen;
+    private StreamedContent content;
+    private List<Categoria> children;
     
     public Categoria(){
         
@@ -262,6 +270,34 @@ public class Categoria implements Serializable{
     }
 
     /**
+     * @return the bimagen
+     */
+    public Blob getBimagen() {
+        return bimagen;
+    }
+
+    /**
+     * @param bimagen the bimagen to set
+     */
+    public void setBimagen(Blob bimagen) {
+        this.bimagen = bimagen;
+    }
+
+    /**
+     * @return the vimagennombre
+     */
+    public String getVimagennombre() {
+        return vimagennombre;
+    }
+
+    /**
+     * @param vimagennombre the vimagennombre to set
+     */
+    public void setVimagennombre(String vimagennombre) {
+        this.vimagennombre = vimagennombre;
+    }
+
+    /**
      * @return the imagen
      */
     public String getImagen() {
@@ -273,5 +309,47 @@ public class Categoria implements Serializable{
      */
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    /**
+     * @return the content
+     */
+    public StreamedContent getContent() {
+        return content;
+    }
+
+    /**
+     * @param content the content to set
+     */
+    public void setContent(StreamedContent content) {
+        this.content = content;
+    }
+
+    /**
+     * @return the children
+     */
+    public List<Categoria> getChildren() {
+        return children;
+    }
+
+    /**
+     * @param children the children to set
+     */
+    public void setChildren(List<Categoria> children) {
+        this.children = children;
+    }
+    
+    @Override
+    public int compareTo(Categoria o) {
+        return Comparators.ID.compare(this, o);
+    }
+    
+    public static class Comparators {
+        public static Comparator<Categoria> ID = new Comparator<Categoria>() {
+            @Override
+            public int compare(Categoria o1, Categoria o2) {
+                return o1.getNcategoriaid().intValue() - o2.getNcategoriaid().intValue();
+            }
+        };
     }
 }

@@ -2,6 +2,7 @@ package pe.gob.mef.gescon.hibernate.domain;
 // Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
 
 import java.math.BigDecimal;
+import java.sql.Blob;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,6 +28,8 @@ public class Mtcategoria implements java.io.Serializable {
     private BigDecimal nflagct;
     private BigDecimal nflagbp;
     private BigDecimal nflagom;
+    private Blob bimagen;
+    private String vimagennombre;
     private Set<TcategoriaConocimiento> tcategoriaConocimientos = new HashSet<TcategoriaConocimiento>(0);
 
     public Mtcategoria() {
@@ -36,7 +39,7 @@ public class Mtcategoria implements java.io.Serializable {
         this.ncategoriaid = ncategoriaid;
     }
 
-    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomod, String vusuariocreacion, Date dfechacreacion, Date dfechamod, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Set<TcategoriaConocimiento> tcategoriaConocimientos) {
+    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomod, String vusuariocreacion, Date dfechacreacion, Date dfechamod, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Blob bimagen, String vimagennombre, Set<TcategoriaConocimiento> tcategoriaConocimientos) {
         this.ncategoriaid = ncategoriaid;
         this.vdescripcion = vdescripcion;
         this.nestado = nestado;
@@ -53,6 +56,8 @@ public class Mtcategoria implements java.io.Serializable {
         this.nflagct = nflagct;
         this.nflagbp = nflagbp;
         this.nflagom = nflagom;
+        this.bimagen = bimagen;
+        this.vimagennombre = vimagennombre;
         this.tcategoriaConocimientos = tcategoriaConocimientos;
     }
 
@@ -182,6 +187,34 @@ public class Mtcategoria implements java.io.Serializable {
 
     public void setNflagom(BigDecimal nflagom) {
         this.nflagom = nflagom;
+    }
+
+    /**
+     * @return the bimagen
+     */
+    public Blob getBimagen() {
+        return bimagen;
+    }
+
+    /**
+     * @param bimagen the bimagen to set
+     */
+    public void setBimagen(Blob bimagen) {
+        this.bimagen = bimagen;
+    }
+
+    /**
+     * @return the vimagennombre
+     */
+    public String getVimagennombre() {
+        return vimagennombre;
+    }
+
+    /**
+     * @param vimagennombre the vimagennombre to set
+     */
+    public void setVimagennombre(String vimagennombre) {
+        this.vimagennombre = vimagennombre;
     }
 
     public Set<TcategoriaConocimiento> getTcategoriaConocimientos() {

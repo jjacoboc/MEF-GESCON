@@ -17,5 +17,6 @@ public interface BaseLegalDao {
     
     public BigDecimal getNextPK() throws Exception;
     public List<Tbaselegal> getTbaselegales() throws Exception;
+    public Tbaselegal getTbaselegalById(BigDecimal id) throws Exception;
     public void saveOrUpdate(Tbaselegal tbaselegal) throws Exception;
 }

@@ -13,7 +13,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -55,6 +57,13 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
         DetachedCriteria criteria = DetachedCriteria.forClass(Tbaselegal.class);
         criteria.addOrder(Order.desc("dfechacreacion"));
         return (List<Tbaselegal>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public Tbaselegal getTbaselegalById(BigDecimal id) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tbaselegal.class);
+        criteria.add(Restrictions.eq("nbaselegalid", id));
+        return (Tbaselegal) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
 
     @Override

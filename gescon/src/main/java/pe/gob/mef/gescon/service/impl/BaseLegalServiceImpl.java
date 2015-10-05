@@ -41,6 +41,15 @@ public class BaseLegalServiceImpl implements BaseLegalService{
         }
         return baseLegales;
     }
+    
+    @Override
+    public BaseLegal getBaselegalById(BigDecimal id) throws Exception {
+        BaseLegalDao baseLegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
+        Tbaselegal tbaselegal = baseLegalDao.getTbaselegalById(id);
+        BaseLegal baseLegal = new BaseLegal();
+        BeanUtils.copyProperties(baseLegal, tbaselegal);
+        return baseLegal;
+    }
 
     @Override
     public void saveOrUpdate(BaseLegal baseLegal) throws Exception {

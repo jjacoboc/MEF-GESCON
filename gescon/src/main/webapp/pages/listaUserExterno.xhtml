@@ -1,0 +1,426 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <h:head>
+        <title>GesCon - Usuario Externo</title>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
+        <h:outputStylesheet library="css" name="style.css" />
+    </h:head>
+    <h:body>            
+        <f:view>
+            <pe:layout fullPage="true" >
+                <pe:layoutPane position="north" size="80" resizable="false" closable="false" styleContent="font-size: 10px;"> 
+                    <ui:include src="header.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="south" size="50" closable="true" >
+                    <ui:include src="footer.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="west" size="165" >
+                    <ui:include src="menu.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="center" styleContent="font-size: 10px;">
+                    <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+                    <h:form id="f">
+                        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
+                        <p:panel header="Administración de Usuario Externo" >
+                            <h:panelGrid columns="1">
+                                
+                                <p:dataTable id="tbl" value="#{userMB.listaUser}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
+                                             rowStyleClass="#{row.nestado eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                    <p:column sortBy="#{row.vlogin}" filterBy="#{row.vlogin}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
+                                        <f:facet name="header"><h:outputText value="LOGIN" style="font-size: 11px;"/></f:facet>
+                                        <h:outputText value="#{row.vlogin}" />
+                                    </p:column>
+                                    <p:column width="250px;" sortBy="#{row.vnombres}" filterBy="#{row.vnombres}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;">
+                                        <f:facet name="header"><h:outputText value="NOMBRES"/></f:facet>
+                                        <h:outputText value="#{row.vnombres}" />
+                                    </p:column>
+                                    <p:column style="text-align: center;" sortBy="#{row.nestado}" filterBy="#{row.nestado}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact">
+                                        <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
+                                        <h:outputText value="#{row.nestado}" >
+                                            <f:converter converterId="converterSiNo"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains">
+                                        <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                        <h:outputText value="#{row.dfechacreacion}" >
+                                            <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 50px;">
+                                        <p:commandLink actionListener="#{userMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Usuario Externo">
+                                            <h:outputText styleClass="ui-icon ui-icon-pencil"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{userMB.selectedUser}" />
+                                        </p:commandLink>
+                                        <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Usuario Externo" rendered="#{row.nestado eq 0}">
+                                            <h:outputText styleClass="ui-icon ui-icon-check"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{userMB.selectedUser}" />
+                                        </p:commandLink>
+                                        <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Usuario Externo" rendered="#{row.nestado eq 1}">
+                                            <h:outputText styleClass="ui-icon ui-icon-close"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{userMB.selectedUser}" />
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+
+                    <p:dialog id="newDlg" header="Nuevo Usuario Externo" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="newDialogForm">
+                            <h:panelGrid id="pgNew" columns="2" cellpadding="5" style="text-align: left;width: 100%">
+
+                                <h:outputLabel value="Nombres: "/>
+                                <p:inputText size="50" value="#{userMB.nombres}"  maxlength="25" />
+
+                                <h:outputLabel value="Apellidos: "/>
+                                <p:inputText size="50" value="#{userMB.apellidos}"  maxlength="25" />
+
+                                <h:outputLabel value="Nombre de Usuario: "/>
+                                <p:inputText size="50" value="#{userMB.login}"  maxlength="25" />
+
+                                <h:outputLabel for="pwd1" value="Contraseña: " />
+                                <p:password id="pwd1" value="#{userMB.pass}" match="pwd2" label="Password 1" required="true" />
+
+                                <h:outputLabel for="pwd2" value="Confirmar contraseña: " />
+                                <p:password id="pwd2" value="#{userMB.pass}" label="Password 2" required="true" />
+
+                                <h:outputLabel value="Fecha de nacimiento: "/>
+                                <h:panelGrid columns="3">
+                                    <p:selectOneMenu id="console1" value="#{userMB.dia}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:60px">
+                                        <f:selectItems value="#{userMB.dias}" />
+                                    </p:selectOneMenu>
+                                    <p:selectOneMenu id="console2" value="#{userMB.mes}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Enero" itemValue="1" />
+                                        <f:selectItem itemLabel="Febrero" itemValue="2" />
+                                        <f:selectItem itemLabel="Marzo" itemValue="3" />
+                                        <f:selectItem itemLabel="Abril" itemValue="4" />
+                                        <f:selectItem itemLabel="Mayo" itemValue="5" />
+                                        <f:selectItem itemLabel="Junio" itemValue="6" />
+                                        <f:selectItem itemLabel="Julio" itemValue="7" />
+                                        <f:selectItem itemLabel="Agosto" itemValue="8" />
+                                        <f:selectItem itemLabel="Setiembre" itemValue="9" />
+                                        <f:selectItem itemLabel="Octubre" itemValue="10" />
+                                        <f:selectItem itemLabel="Noviembre" itemValue="11" />
+                                        <f:selectItem itemLabel="Diciembre" itemValue="12" />
+                                    </p:selectOneMenu>
+                                    <p:selectOneMenu id="console3" value="#{userMB.año}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:80px">
+                                        <f:selectItems value="#{userMB.años}" />
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+
+                                <h:outputLabel value="Sexo: "/>
+                                <p:selectOneMenu id="console4" value="#{userMB.sexo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                    <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                    <f:selectItem itemLabel="Femenino" itemValue="F" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="DNI: "/>
+                                <p:inputText size="50" value="#{userMB.dni}"  maxlength="8" />
+
+                                <h:outputLabel value="Departamento: "/>
+                                <p:selectOneMenu id="console5" value="#{userMB.departamento}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                    <f:selectItem itemLabel="Lima" itemValue="1" />
+                                    <f:selectItem itemLabel="La Libertad" itemValue="2" />
+                                    <f:selectItem itemLabel="Ancash" itemValue="3" />
+                                    <f:selectItem itemLabel="Arequipa" itemValue="4" />
+                                    <f:selectItem itemLabel="Ica" itemValue="5" />
+                                    <f:selectItem itemLabel="Tumbes" itemValue="6" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="Provincia: "/>
+                                <p:selectOneMenu id="console6" value="#{userMB.provincia}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                    <f:selectItem itemLabel="Lima" itemValue="1" />
+                                    <f:selectItem itemLabel="Provincia 1" itemValue="2" />
+                                    <f:selectItem itemLabel="Provincia 2" itemValue="3" />
+                                    <f:selectItem itemLabel="Provincia 3" itemValue="4" />
+                                    <f:selectItem itemLabel="Provincia 4" itemValue="5" />
+                                    <f:selectItem itemLabel="Provincia 5" itemValue="6" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="Distrito: "/>
+                                <p:selectOneMenu id="console7" value="#{userMB.distrito}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                    <f:selectItem itemLabel="Lima" itemValue="1" />
+                                    <f:selectItem itemLabel="Pueblo Libre" itemValue="2" />
+                                    <f:selectItem itemLabel="Lince" itemValue="3" />
+                                    <f:selectItem itemLabel="Magdalena" itemValue="4" />
+                                    <f:selectItem itemLabel="Jesus Maria" itemValue="5" />
+                                    <f:selectItem itemLabel="San Isidro" itemValue="6" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="Profesion: "/>
+                                <p:selectOneMenu id="console8" value="#{userMB.profesion}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                    <f:selectItem itemLabel="Profesion 1" itemValue="1" />
+                                    <f:selectItem itemLabel="Profesion 2" itemValue="2" />
+                                    <f:selectItem itemLabel="Profesion 3" itemValue="3" />
+                                    <f:selectItem itemLabel="Profesion 4" itemValue="4" />
+                                    <f:selectItem itemLabel="Profesion 5" itemValue="5" />
+                                    <f:selectItem itemLabel="Profesion 6" itemValue="6" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="Trabaja en el Ministerio"/>
+                                <p:spacer/>
+                                <h:outputLabel value="de Economiay Finanzas?"/>
+                                <p:selectOneRadio id="console9" value="#{userMB.trabajaMef}">
+                                    <f:selectItem itemLabel="SI" itemValue="1" />
+                                    <f:selectItem itemLabel="NO" itemValue="0" />
+                                </p:selectOneRadio>
+
+                                <p:spacer/>
+                                <h:panelGrid columns="4">
+                                    <h:outputLabel value="Entidad "/>
+                                    <p:selectOneMenu id="console10" value="#{userMB.entidad}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Entidad 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Entidad 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Entidad 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Entidad 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Entidad 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Entidad 6" itemValue="6" />
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Cargo "/>
+                                    <p:selectOneMenu id="console11" value="#{userMB.cargo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Cargo 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Cargo 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Cargo 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Cargo 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Cargo 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Cargo 6" itemValue="6" />
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Pliego "/>
+                                    <p:selectOneMenu id="console12" value="#{userMB.pliego}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Pliego 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Pliego 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Pliego 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Pliego 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Pliego 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Pliego 6" itemValue="6" />
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Area "/>
+                                    <p:selectOneMenu id="console13" value="#{userMB.area}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Area 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Area 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Area 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Area 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Area 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Area 6" itemValue="6" />
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Sector "/>
+                                    <p:selectOneMenu id="console14" value="#{userMB.sector}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Sector 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Sector 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Sector 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Sector 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Sector 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Sector 6" itemValue="6" />
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Gobierno "/>
+                                    <p:selectOneMenu id="console15" value="#{userMB.gobierno}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Gobierno 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Gobierno 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Gobierno 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Gobierno 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Gobierno 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Gobierno 6" itemValue="6" />
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <p:commandButton  value="Registrar" actionListener="#{userMB.saveadm}" update=":f:growl, :f:tbl"/>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog id="editDlg" header="Actualizar Usuario Externo" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="editDialogForm">
+                            <p:messages id="msgs" showSummary="true" showDetail="true" />
+                            <h:panelGrid id="pgEdit" columns="2" cellpadding="5" style="text-align: left;width: 100%">
+                                <h:outputLabel value="Nombres: "/>
+                                <p:inputText size="50" value="#{userMB.selectedUser.vnombres}"  maxlength="25" />
+
+                                <h:outputLabel value="Apellidos: "/>
+                                <p:inputText size="50" value="#{userMB.selectedUser.vapellidos}"  maxlength="25" />
+
+                                <h:outputLabel value="Nombre de Usuario: "/>
+                                <h:outputLabel value="#{userMB.selectedUser.vlogin}"/>
+
+                                <h:outputLabel value="Fecha de nacimiento: "/>
+                                <h:panelGrid columns="3">
+                                    <p:selectOneMenu id="console1" value="#{userMB.dia}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:60px">
+                                        <f:selectItems value="#{userMB.dias}" />
+                                    </p:selectOneMenu>
+                                    <p:selectOneMenu id="console2" value="#{userMB.mes}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Enero" itemValue="1" />
+                                        <f:selectItem itemLabel="Febrero" itemValue="2" />
+                                        <f:selectItem itemLabel="Marzo" itemValue="3" />
+                                        <f:selectItem itemLabel="Abril" itemValue="4" />
+                                        <f:selectItem itemLabel="Mayo" itemValue="5" />
+                                        <f:selectItem itemLabel="Junio" itemValue="6" />
+                                        <f:selectItem itemLabel="Julio" itemValue="7" />
+                                        <f:selectItem itemLabel="Agosto" itemValue="8" />
+                                        <f:selectItem itemLabel="Setiembre" itemValue="9" />
+                                        <f:selectItem itemLabel="Octubre" itemValue="10" />
+                                        <f:selectItem itemLabel="Noviembre" itemValue="11" />
+                                        <f:selectItem itemLabel="Diciembre" itemValue="12" />
+                                    </p:selectOneMenu>
+                                    <p:selectOneMenu id="console3" value="#{userMB.año}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:80px">
+                                        <f:selectItems value="#{userMB.años}" />
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+
+                                <h:outputLabel value="Sexo: "/>
+                                <p:selectOneMenu id="console4" value="#{userMB.selectedUser.vsexo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                    <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                    <f:selectItem itemLabel="Femenino" itemValue="F" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="DNI: "/>
+                                <p:inputText size="50" value="#{userMB.selectedUser.vdni}"  maxlength="8" />
+
+                                <h:outputLabel value="Departamento: "/>
+                                <p:selectOneMenu id="console5" value="#{userMB.selectedUser.vdpto}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                    <f:selectItem itemLabel="Lima" itemValue="1" />
+                                    <f:selectItem itemLabel="La Libertad" itemValue="2" />
+                                    <f:selectItem itemLabel="Ancash" itemValue="3" />
+                                    <f:selectItem itemLabel="Arequipa" itemValue="4" />
+                                    <f:selectItem itemLabel="Ica" itemValue="5" />
+                                    <f:selectItem itemLabel="Tumbes" itemValue="6" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="Provincia: "/>
+                                <p:selectOneMenu id="console6" value="#{userMB.selectedUser.vprov}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                    <f:selectItem itemLabel="Lima" itemValue="1" />
+                                    <f:selectItem itemLabel="Provincia 1" itemValue="2" />
+                                    <f:selectItem itemLabel="Provincia 2" itemValue="3" />
+                                    <f:selectItem itemLabel="Provincia 3" itemValue="4" />
+                                    <f:selectItem itemLabel="Provincia 4" itemValue="5" />
+                                    <f:selectItem itemLabel="Provincia 5" itemValue="6" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="Distrito: "/>
+                                <p:selectOneMenu id="console7" value="#{userMB.selectedUser.vdist}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                    <f:selectItem itemLabel="Lima" itemValue="1" />
+                                    <f:selectItem itemLabel="Pueblo Libre" itemValue="2" />
+                                    <f:selectItem itemLabel="Lince" itemValue="3" />
+                                    <f:selectItem itemLabel="Magdalena" itemValue="4" />
+                                    <f:selectItem itemLabel="Jesus Maria" itemValue="5" />
+                                    <f:selectItem itemLabel="San Isidro" itemValue="6" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="Profesion: "/>
+                                <p:selectOneMenu id="console8" value="#{userMB.selectedUser.vprofesion}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                    <f:selectItem itemLabel="Profesion 1" itemValue="1" />
+                                    <f:selectItem itemLabel="Profesion 2" itemValue="2" />
+                                    <f:selectItem itemLabel="Profesion 3" itemValue="3" />
+                                    <f:selectItem itemLabel="Profesion 4" itemValue="4" />
+                                    <f:selectItem itemLabel="Profesion 5" itemValue="5" />
+                                    <f:selectItem itemLabel="Profesion 6" itemValue="6" />
+                                </p:selectOneMenu>
+
+                                <h:outputLabel value="Trabaja en el Ministerio"/>
+                                <p:spacer/>
+                                <h:outputLabel value="de Economiay Finanzas?"/>
+                                <p:selectOneRadio id="console9" value="#{userMB.trabajaMef}">
+                                    <f:selectItem itemLabel="SI" itemValue="1" />
+                                    <f:selectItem itemLabel="NO" itemValue="0" />
+                                </p:selectOneRadio>
+
+                                <p:spacer/>
+                                <h:panelGrid columns="4">
+                                    <h:outputLabel value="Entidad "/>
+                                    <p:selectOneMenu id="console10" value="#{userMB.selectedUser.ventidad}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Entidad 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Entidad 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Entidad 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Entidad 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Entidad 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Entidad 6" itemValue="6" />
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Cargo "/>
+                                    <p:selectOneMenu id="console11" value="#{userMB.selectedUser.vcargo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Cargo 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Cargo 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Cargo 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Cargo 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Cargo 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Cargo 6" itemValue="6" />
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Pliego "/>
+                                    <p:selectOneMenu id="console12" value="#{userMB.selectedUser.vpliego}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Pliego 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Pliego 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Pliego 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Pliego 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Pliego 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Pliego 6" itemValue="6" />
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Area "/>
+                                    <p:selectOneMenu id="console13" value="#{userMB.selectedUser.varea}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Area 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Area 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Area 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Area 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Area 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Area 6" itemValue="6" />
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Sector "/>
+                                    <p:selectOneMenu id="console14" value="#{userMB.selectedUser.vsector}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Sector 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Sector 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Sector 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Sector 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Sector 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Sector 6" itemValue="6" />
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="Gobierno "/>
+                                    <p:selectOneMenu id="console15" value="#{userMB.selectedUser.vgobierno}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Gobierno 1" itemValue="1" />
+                                        <f:selectItem itemLabel="Gobierno 2" itemValue="2" />
+                                        <f:selectItem itemLabel="Gobierno 3" itemValue="3" />
+                                        <f:selectItem itemLabel="Gobierno 4" itemValue="4" />
+                                        <f:selectItem itemLabel="Gobierno 5" itemValue="5" />
+                                        <f:selectItem itemLabel="Gobierno 6" itemValue="6" />
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                            </h:panelGrid>
+                            <p:commandButton  value="Actualizar" actionListener="#{userMB.update}" update=":f:growl, :f:tbl"/>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar el usuario externo. \nDesea Continuar?" header="ACTIVAR USUARIO EXTERNO" widgetVar="confirmActDlg" style="font-size: 10px;">
+                        <h:form id="confirmActDlgForm">
+                            <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{userMB.activar}"/>
+                            <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
+                        </h:form>
+                    </p:confirmDialog>
+                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar el usuario externo. \nDesea Continuar?" header="DESACTIVAR USUARIO EXTERNO" widgetVar="confirmDesDlg" style="font-size: 10px;">
+                        <h:form id="confirmDesDlgForm">
+                            <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{userMB.desactivar}"/>
+                            <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />
+                        </h:form>
+                    </p:confirmDialog>
+
+                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)"  draggable="false" closable="false" resizable="false" showHeader="false">
+                        <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
+                    </p:dialog>
+                </pe:layoutPane>
+            </pe:layout>
+        </f:view>
+    </h:body>
+</html>
+

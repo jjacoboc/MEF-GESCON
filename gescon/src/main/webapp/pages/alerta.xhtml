@@ -92,13 +92,71 @@
                                                      counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                     <h:outputText id="display"/>
                                 </h:panelGrid>
-                                
+
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Parametro:"/>
                                 <p:selectOneMenu value="#{alertaMB.selectedParametro}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
                                     <f:selectItems value="#{alertaMB.listaParametro}"/>
                                 </p:selectOneMenu>
+                                <p:spacer/>
+                                <p:spacer/>
+                                <p:fieldset legend="Alerta Via Email" style="margin-bottom:20px">
+                                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                                        <p:outputLabel for="ViaEmail" value="Tipo de Envio:" />
+                                        <p:selectOneRadio id="ViaEmail" value="#{alertaMB.useraplica}">
+                                            <f:selectItem itemLabel="Todos" itemValue="0" />
+                                            <f:selectItem itemLabel="Moderador" itemValue="1" />
+                                            <f:selectItem itemLabel="Especialista" itemValue="2" />
+                                            <f:selectItem itemLabel="Usuario Interno" itemValue="3" />
+                                            <f:selectItem itemLabel="Usuario Externo" itemValue="4" />
+                                        </p:selectOneRadio>
+
+                                        <p:outputLabel for="buttoni" value="Inicio:" />
+                                        <p:calendar id="buttoni" value="#{alertaMB.fechfin}" showOn="button" />
+                                        <p:outputLabel for="buttonf" value="Fin:" />
+                                        <p:calendar id="buttonf" value="#{alertaMB.fechfin}" showOn="button" />
+
+                                    </h:panelGrid>
+                                </p:fieldset>
+                                <p:spacer/>
+                                <p:spacer/>
+                                <p:fieldset legend="Alerta Via Web" style="margin-bottom:20px">
+                                    <h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
+                                        <h:graphicImage library="images" name="BAJO.png" style="border: 0px; " />
+                                        <p:outputLabel  value="Cuando el valor es " />
+                                        <p:selectOneMenu value="#{alertaMB.condicion1}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
+                                            <f:selectItem itemLabel=">" itemValue=">" />
+                                            <f:selectItem itemLabel=">=" itemValue=">=" />
+                                        </p:selectOneMenu>
+                                        <p:outputLabel  value="A: " />
+                                        <p:inputText size="5" value="#{alertaMB.valor1}"  maxlength="5" /> 
+                                        <p:selectOneMenu value="#{alertaMB.tipo1}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
+                                            <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
+                                            <f:selectItem itemLabel="Semanas" itemValue="1" />
+                                            <f:selectItem itemLabel="Meses" itemValue="2" />
+                                        </p:selectOneMenu>
+
+                                        <h:graphicImage library="images" name="MEDIO.png" style="border: 0px; " />
+                                        <p:outputLabel  value="Cuando es menor que A y " />
+                                        <p:selectOneMenu value="#{alertaMB.condicion2}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
+                                            <f:selectItem itemLabel=">" itemValue=">" />
+                                            <f:selectItem itemLabel=">=" itemValue=">=" />
+                                        </p:selectOneMenu>
+                                        <p:outputLabel  value="B: " />
+                                        <p:inputText size="5" value="#{alertaMB.valor2}"  maxlength="5" /> 
+                                        <p:selectOneMenu value="#{alertaMB.tipo2}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
+                                            <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
+                                            <f:selectItem itemLabel="Semanas" itemValue="1" />
+                                            <f:selectItem itemLabel="Meses" itemValue="2" />
+                                        </p:selectOneMenu>
+
+                                        <h:graphicImage library="images" name="ALTO.png" style="border: 0px; " />
+                                        <p:outputLabel  value="Cuando es menor que B " />
+                                    </h:panelGrid>
+                                </p:fieldset>
                             </h:panelGrid>
+
+
                             <p:commandButton  value="Registrar" actionListener="#{alertaMB.save}" update=":f:growl, :f:tbl"/>
                         </h:form>
                     </p:dialog>
@@ -124,13 +182,74 @@
                                 <p:selectOneMenu value="#{alertaMB.selectedAlerta.nactivo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
                                     <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
                                 </p:selectOneMenu>
-                                
+
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Parametro:"/>
                                 <p:selectOneMenu value="#{alertaMB.selectedAlerta.nparametroid}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
                                     <f:selectItems value="#{alertaMB.listaParametro}"/>
                                 </p:selectOneMenu>
+                                <p:spacer/>
+                                <p:spacer/>
+                                <p:fieldset legend="Alerta Via Email" style="margin-bottom:20px">
+                                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                                        <p:outputLabel for="ViaEmail" value="Tipo de Envio:" />
+                                        <p:selectOneRadio id="ViaEmail" value="#{alertaMB.selectedAlerta.nuseraplica}">
+                                            <f:selectItem itemLabel="Todos" itemValue="0" />
+                                            <f:selectItem itemLabel="Moderador" itemValue="1" />
+                                            <f:selectItem itemLabel="Especialista" itemValue="2" />
+                                            <f:selectItem itemLabel="Usuario Interno" itemValue="3" />
+                                            <f:selectItem itemLabel="Usuario Externo" itemValue="4" />
+                                        </p:selectOneRadio>
+
+
+                                        <p:outputLabel for="buttoni" value="Inicio:" />
+                                        <p:calendar id="buttoni" value="#{alertaMB.selectedAlerta.dfechini}" showOn="button" />
+                                        <p:outputLabel for="buttonf" value="Fin:" />
+                                        <p:calendar id="buttonf" value="#{alertaMB.selectedAlerta.dfechfin}" showOn="button" />
+
+                                    </h:panelGrid>
+                                </p:fieldset>
+
+                                <p:spacer/>
+                                <p:spacer/>
+                                <p:fieldset legend="Alerta Via Web" style="margin-bottom:20px">
+                                    <h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
+                                        <h:graphicImage library="images" name="BAJO.png" style="border: 0px; " />
+                                        <p:outputLabel  value="Cuando el valor es " />
+                                        <p:selectOneMenu value="#{alertaMB.selectedAlerta.ncondicion1}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
+                                            <f:selectItem itemLabel=">" itemValue=">" />
+                                            <f:selectItem itemLabel=">=" itemValue=">=" />
+                                        </p:selectOneMenu>
+                                        <p:outputLabel  value="A: " />
+                                        <p:inputText size="5" value="#{alertaMB.selectedAlerta.nvalor1}"  maxlength="5" /> 
+                                        <p:selectOneMenu value="#{alertaMB.selectedAlerta.ntipo1}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
+                                            <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
+                                            <f:selectItem itemLabel="Semanas" itemValue="1" />
+                                            <f:selectItem itemLabel="Meses" itemValue="2" />
+                                        </p:selectOneMenu>
+
+                                        <h:graphicImage library="images" name="MEDIO.png" style="border: 0px; " />
+                                        <p:outputLabel  value="Cuando es menor que A y " />
+                                        <p:selectOneMenu value="#{alertaMB.selectedAlerta.ncondicion2}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
+                                            <f:selectItem itemLabel=">" itemValue=">" />
+                                            <f:selectItem itemLabel=">=" itemValue=">=" />
+                                        </p:selectOneMenu>
+                                        <p:outputLabel  value="B: " />
+                                        <p:inputText size="5" value="#{alertaMB.selectedAlerta.nvalor2}"  maxlength="5" /> 
+                                        <p:selectOneMenu value="#{alertaMB.selectedAlerta.ntipo2}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
+                                            <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
+                                            <f:selectItem itemLabel="Semanas" itemValue="1" />
+                                            <f:selectItem itemLabel="Meses" itemValue="2" />
+                                        </p:selectOneMenu>
+
+                                        <h:graphicImage library="images" name="ALTO.png" style="border: 0px; " />
+                                        <p:outputLabel  value="Cuando es menor que B " />
+                                    </h:panelGrid>
+                                </p:fieldset>
+
                             </h:panelGrid>
+
+
                             <p:commandButton  value="Actualizar" actionListener="#{alertaMB.update}" update=":f:growl, :f:tbl"/>
                         </h:form>
                     </p:dialog>

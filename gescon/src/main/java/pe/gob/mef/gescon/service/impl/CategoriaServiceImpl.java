@@ -30,10 +30,10 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
     
     @Override
-    public List<Categoria> getCategoria() throws Exception {
+    public List<Categoria> getCategorias() throws Exception {
         List<Categoria> categorias = new ArrayList<Categoria>();
         CategoriaDao categoriaDao = (CategoriaDao) ServiceFinder.findBean("CategoriaDao");
-        List<Mtcategoria> lista = categoriaDao.getMtcategoria();
+        List<Mtcategoria> lista = categoriaDao.getMtcategorias();
         for(Mtcategoria mtcategoria : lista) {
             Categoria categoria = new Categoria();
             BeanUtils.copyProperties(categoria, mtcategoria);
@@ -43,10 +43,10 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
     
     @Override
-    public List<Categoria> getCategoriaPrimerNivel() throws Exception {
+    public List<Categoria> getCategoriasPrimerNivel() throws Exception {
         List<Categoria> categorias = new ArrayList<Categoria>();
         CategoriaDao categoriaDao = (CategoriaDao) ServiceFinder.findBean("CategoriaDao");
-        List<Mtcategoria> lista = categoriaDao.getMtcategoriaPrimerNivel();
+        List<Mtcategoria> lista = categoriaDao.getMtcategoriasPrimerNivel();
         for(Mtcategoria mtcategoria : lista) {
             Categoria categoria = new Categoria();
             BeanUtils.copyProperties(categoria, mtcategoria);
@@ -68,6 +68,15 @@ public class CategoriaServiceImpl implements CategoriaService {
             categorias.add(bean);
         }
         return categorias;
+    }
+    
+    @Override
+    public Categoria getCategoriaById(BigDecimal id) throws Exception {
+        Categoria categoria = new Categoria();
+        CategoriaDao categoriaDao = (CategoriaDao) ServiceFinder.findBean("CategoriaDao");
+        Mtcategoria mtcategoria = categoriaDao.getMtcategoriaById(id);
+        BeanUtils.copyProperties(categoria, mtcategoria);
+        return categoria;
     }
 
     @Override

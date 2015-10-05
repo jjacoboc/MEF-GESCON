@@ -96,4 +96,12 @@ and open the template in the editor.
     font-size: 10px;
 }
 
+.ui-datalist .ui-datalist-content {
+    border: none;
+    margin: 0%
+}
+
+.tooltip {
+    font-size: 10px;
+}
 .icon-add{background: url(../images/add.png) no-repeat !important;}

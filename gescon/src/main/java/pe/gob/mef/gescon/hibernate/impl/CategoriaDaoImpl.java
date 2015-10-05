@@ -15,6 +15,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -52,7 +53,7 @@ public class CategoriaDaoImpl extends HibernateDaoSupport implements CategoriaDa
     }
     
     @Override
-    public List<Mtcategoria> getMtcategoria() throws Exception {
+    public List<Mtcategoria> getMtcategorias() throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtcategoria.class);
         criteria.addOrder(Order.asc("nnivel"));
         criteria.addOrder(Order.asc("ncategoriaid"));
@@ -60,19 +61,27 @@ public class CategoriaDaoImpl extends HibernateDaoSupport implements CategoriaDa
     }
     
     @Override
-    public List<Mtcategoria> getMtcategoriaPrimerNivel() throws Exception {
+    public List<Mtcategoria> getMtcategoriasPrimerNivel() throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtcategoria.class);
         criteria.add(Restrictions.eq("nnivel", BigDecimal.ONE));
+        criteria.addOrder(Order.asc("ncategoriaid"));
         return (List<Mtcategoria>) getHibernateTemplate().findByCriteria(criteria);
     }
     
     @Override
     public List<Mtcategoria> getMtcategoriaHijos(Mtcategoria mtcategoria) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtcategoria.class);
-        criteria.add(Restrictions.eq("ncategoriasup", mtcategoria.getNcategoriasup()));
+        criteria.add(Restrictions.eq("ncategoriasup", mtcategoria.getNcategoriaid()));
         criteria.addOrder(Order.asc("nnivel"));
         criteria.addOrder(Order.asc("ncategoriaid"));
         return (List<Mtcategoria>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public Mtcategoria getMtcategoriaById(BigDecimal id) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Mtcategoria.class);
+        criteria.add(Restrictions.eq("ncategoriaid", id));
+        return (Mtcategoria) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
     
     @Override

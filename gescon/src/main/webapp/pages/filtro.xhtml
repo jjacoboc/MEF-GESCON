@@ -24,27 +24,47 @@ and open the template in the editor.
                     <p:spacer height="10"/>
                     <h:outputText value="FILTROS DE BÚSQUEDA" style="font-size: 12px; font-weight: bold; font-family: Arial;" />
                     <p:spacer height="10"/>
-                    <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none" 
-                                itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro eq null}" emptyMessage="No hay más sub categorías">
-                        <f:facet name="header"><h:outputText value="Sub Categorías" style="text-align: left;" /></f:facet>
-                        <h:panelGrid columns="1" style="width: 100%" rendered="#{cat.nnivel eq 1}">
-                            <p:commandLink actionListener="#{consultaMB.onClickSubCategoriesFilter}" update=":fm:pgFiltro, :f:pgConsulta" >
-                                <f:param name="rowIndex" value="#{rowIndex}"/>
-                                <h:outputText value="#{cat.vnombre}" />
-                            </p:commandLink>
+                    <p:fieldset legend="Sub Categorías">
+                        <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none" 
+                                    itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro eq null}" emptyMessage="No hay más sub categorías">
+                            <h:panelGrid columns="1" style="width: 100%" rendered="#{cat.nnivel eq 1}">
+                                <p:commandLink actionListener="#{consultaMB.onClickSubCategoriesFilter}" update=":fm:pgFiltro, :f:pgConsulta" >
+                                    <f:param name="rowIndex" value="#{rowIndex}"/>
+                                    <h:outputText value="#{cat.vnombre}" />
+                                </p:commandLink>
+                            </h:panelGrid>
+                        </p:dataList>
+                        <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none"
+                                    itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro ne null}" emptyMessage="No hay más sub categorías">
+                            <h:panelGrid columns="1" style="width: 100%"
+                                         rendered="#{(cat.nnivel eq (consultaMB.selectedCategoriaFiltro.nnivel + 1) and cat.ncategoriasup eq consultaMB.selectedCategoriaFiltro.ncategoriaid)}">
+                                <p:commandLink actionListener="#{consultaMB.onClickSubCategoriesFilter}" update=":fm:pgFiltro, :f:pgConsulta" >
+                                    <f:param name="rowIndex" value="#{rowIndex}"/>
+                                    <h:outputText value="#{cat.vnombre}" />
+                                </p:commandLink>
+                            </h:panelGrid>
+                        </p:dataList>
+                    </p:fieldset>
+                    <p:spacer height="10"/>
+                    <p:fieldset legend="Rango">
+                        <h:panelGrid columns="4">
+                            <p:calendar id="fromDate" locale="es" value="#{consultaMB.fechaInicio}" maxdate="#{consultaMB.fechaFin}" size="10" pattern="dd/MM/yyyy" readonlyInput="true" showButtonPanel="true" navigator="true" >
+                                <p:ajax event="dateSelect" update=":fm:toDate"/>
+                            </p:calendar>
+                            <h:outputText value="al" />
+                            <p:calendar id="toDate" locale="es" value="#{consultaMB.fechaFin}" mindate="#{consultaMB.fechaInicio}" size="10" pattern="dd/MM/yyyy" readonlyInput="true" showButtonPanel="true" navigator="true" >
+                                <p:ajax event="dateSelect" update=":fm:fromDate"/>
+                            </p:calendar>
+                            <p:commandButton icon="fa fa-fw fa-chevron-right" actionListener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
                         </h:panelGrid>
-                    </p:dataList>
-                    <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none" style="border: none;"
-                                itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro ne null}" emptyMessage="No hay más sub categorías">
-                        <f:facet name="header"><h:outputText value="Sub Categorías" style="text-align: left;" /></f:facet>
-                        <h:panelGrid columns="1" style="width: 100%"
-                                     rendered="#{(cat.nnivel eq (consultaMB.selectedCategoriaFiltro.nnivel + 1) and cat.ncategoriasup eq consultaMB.selectedCategoriaFiltro.ncategoriaid)}">
-                            <p:commandLink actionListener="#{consultaMB.onClickSubCategoriesFilter}" update=":fm:pgFiltro, :f:pgConsulta" >
-                                <f:param name="rowIndex" value="#{rowIndex}"/>
-                                <h:outputText value="#{cat.vnombre}" />
-                            </p:commandLink>
-                        </h:panelGrid>
-                    </p:dataList>
+                    </p:fieldset>
+                    <p:spacer height="10"/>
+                    <p:fieldset legend="Tipo de Contenido">
+                        <p:selectManyCheckbox id="grid" value="#{consultaMB.selectedTipoConocimiento}" layout="grid" columns="1">
+                            <f:selectItems value="#{consultaMB.listaTipoConocimientoFiltro}" var="tc" itemLabel="#{tc.vnombre}" itemValue="#{tc.ntpoconocimientoid}" />
+                            <p:ajax event="change" listener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
+                        </p:selectManyCheckbox>
+                    </p:fieldset>
                 </h:panelGrid>
             </h:form>
         </f:view>

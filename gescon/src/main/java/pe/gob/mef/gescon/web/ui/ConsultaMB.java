@@ -5,37 +5,56 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
+import org.apache.commons.lang3.StringUtils;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
+import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.ConsultaService;
+import pe.gob.mef.gescon.service.TipoConocimientoService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
+import pe.gob.mef.gescon.web.bean.Consulta;
+import pe.gob.mef.gescon.web.bean.TipoConocimiento;
 
 /**
  *
  * @author JJacobo
  */
 @ManagedBean
-@ViewScoped
-public class ConsultaMB implements Serializable{
+@SessionScoped
+public class ConsultaMB implements Serializable {
 
     private TreeNode tree;
     private List<Categoria> listaCategoriaFiltro;
     private Categoria selectedCategoriaFiltro;
     private List<Categoria> listaBreadCrumb;
+    private Date fechaInicio;
+    private Date fechaFin;
+    private List<TipoConocimiento> listaTipoConocimientoFiltro;
+    private List<String> selectedTipoConocimiento;
     private List<BaseLegal> listaBaseLegal;
-    
-    
+    private List<Consulta> listaConsulta;
+    private BaseLegal selectedBaseLegal;
+    private StreamedContent content;
+
     /**
      * Creates a new instance of ConsultaMB
      */
@@ -99,6 +118,62 @@ public class ConsultaMB implements Serializable{
     }
 
     /**
+     * @return the fechaInicio
+     */
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    /**
+     * @param fechaInicio the fechaInicio to set
+     */
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    /**
+     * @return the fechaFin
+     */
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    /**
+     * @param fechaFin the fechaFin to set
+     */
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    /**
+     * @return the listaTipoConocimientoFiltro
+     */
+    public List<TipoConocimiento> getListaTipoConocimientoFiltro() {
+        return listaTipoConocimientoFiltro;
+    }
+
+    /**
+     * @param listaTipoConocimientoFiltro the listaTipoConocimientoFiltro to set
+     */
+    public void setListaTipoConocimientoFiltro(List<TipoConocimiento> listaTipoConocimientoFiltro) {
+        this.listaTipoConocimientoFiltro = listaTipoConocimientoFiltro;
+    }
+
+    /**
+     * @return the selectedTipoConocimiento
+     */
+    public List<String> getSelectedTipoConocimiento() {
+        return selectedTipoConocimiento;
+    }
+
+    /**
+     * @param selectedTipoConocimiento the selectedTipoConocimiento to set
+     */
+    public void setSelectedTipoConocimiento(List<String> selectedTipoConocimiento) {
+        this.selectedTipoConocimiento = selectedTipoConocimiento;
+    }
+
+    /**
      * @return the listaBaseLegal
      */
     public List<BaseLegal> getListaBaseLegal() {
@@ -111,22 +186,63 @@ public class ConsultaMB implements Serializable{
     public void setListaBaseLegal(List<BaseLegal> listaBaseLegal) {
         this.listaBaseLegal = listaBaseLegal;
     }
-    
-    @PostConstruct
+
+    /**
+     * @return the listaConsulta
+     */
+    public List<Consulta> getListaConsulta() {
+        return listaConsulta;
+    }
+
+    /**
+     * @param listaConsulta the listaConsulta to set
+     */
+    public void setListaConsulta(List<Consulta> listaConsulta) {
+        this.listaConsulta = listaConsulta;
+    }
+
+    /**
+     * @return the selectedBaseLegal
+     */
+    public BaseLegal getSelectedBaseLegal() {
+        return selectedBaseLegal;
+    }
+
+    /**
+     * @param selectedBaseLegal the selectedBaseLegal to set
+     */
+    public void setSelectedBaseLegal(BaseLegal selectedBaseLegal) {
+        this.selectedBaseLegal = selectedBaseLegal;
+    }
+
+    /**
+     * @return the content
+     */
+    public StreamedContent getContent() {
+        return content;
+    }
+
+    /**
+     * @param content the content to set
+     */
+    public void setContent(StreamedContent content) {
+        this.content = content;
+    }
+
     public void init() {
         try {
             CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-            this.setListaCategoriaFiltro(catservice.getCategoria());
+            this.setListaCategoriaFiltro(catservice.getCategorias());
             createTree(this.getListaCategoriaFiltro());
             this.setListaBreadCrumb(new ArrayList<Categoria>());
-            BaseLegalService blservice = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
-            this.setListaBaseLegal(blservice.getBaselegales());
-        } catch(Exception e) {
+            TipoConocimientoService tcservice = (TipoConocimientoService) ServiceFinder.findBean("TipoConocimientoService");
+            this.setListaTipoConocimientoFiltro(tcservice.getTipoConocimientos());
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public void createTree(List<Categoria> lista) {
         try {
             for (Categoria ele : lista) {
@@ -144,7 +260,7 @@ public class ConsultaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public TreeNode getNodeByIdCategoria(TreeNode treeNode, String idCategoria) {
         try {
             if (treeNode != null) {
@@ -170,47 +286,50 @@ public class ConsultaMB implements Serializable{
         }
         return null;
     }
-    
-    public String getSubTreeByNode(TreeNode treeNode, Categoria categoria) {
-        StringBuilder str = new StringBuilder();
+
+    public List<String> getIdsSubTreeByNode(TreeNode node, List<String> ids) {
         try {
-            TreeNode node = this.getNodeByIdCategoria(treeNode, categoria.getNcategoriaid().toString());
-            if(node != null) {
+            if (node != null) {
                 List<TreeNode> lista = node.getChildren();
                 if (lista != null && !lista.isEmpty()) {
                     for (TreeNode n : lista) {
-                        Categoria c = (Categoria) n.getData();
-                        str.append(c.getNcategoriaid().toString()).append(",");
-                        str.append(getSubTreeByNode(n, categoria)).append(",");
+                        if (n != null) {
+                            Categoria c = (Categoria) n.getData();
+                            String id = c.getNcategoriaid().toString();
+                            if (StringUtils.isNotBlank(id)) {
+                                ids.add(id);
+                                getIdsSubTreeByNode(n, ids);
+                            }
+                        }
                     }
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
-        return str.toString();
+        return ids;
     }
-    
+
     public void onClickSubCategoriesFilter(ActionEvent event) {
         try {
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("rowIndex"));
             this.setSelectedCategoriaFiltro(this.getListaCategoriaFiltro().get(index));
             this.getListaBreadCrumb().add(this.getSelectedCategoriaFiltro());
             this.filtrar(event);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public void onClickBreadCrumb(ActionEvent event) {
         int pos = 0;
         try {
             String id = (String) JSFUtils.getRequestParameter("ncategoriaid");
-            for(int i=0;i<this.getListaBreadCrumb().size();i++) {
+            for (int i = 0; i < this.getListaBreadCrumb().size(); i++) {
                 Categoria c = this.getListaBreadCrumb().get(i);
-                if(c.getNcategoriaid().toString().equals(id)) {
+                if (c.getNcategoriaid().toString().equals(id)) {
                     pos = i;
                     break;
                 }
@@ -218,17 +337,75 @@ public class ConsultaMB implements Serializable{
             this.setSelectedCategoriaFiltro(this.getListaBreadCrumb().get(pos));
             this.setListaBreadCrumb(this.getListaBreadCrumb().subList(0, pos + 1));
             this.filtrar(event);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
     
-    public void filtrar(ActionEvent event) {
+    public String getCategoriesFilter(){
+        String id;
+        TreeNode node;
+        List<String> ids = new ArrayList<String>();
         try {
-            String str = this.getSubTreeByNode(this.getTree(), this.getSelectedCategoriaFiltro());
-            if(str.endsWith(",")) {
-                str = str.substring(0, str.length()-1);
+            id = this.getSelectedCategoriaFiltro().getNcategoriaid().toString();
+            ids.add(id);
+            node = this.getNodeByIdCategoria(this.getTree(), id);
+            ids.addAll(getIdsSubTreeByNode(node, ids));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return StringUtils.join(ids, ',');
+    }
+    
+    public String getTypesFilter(){
+        return StringUtils.join(this.getSelectedTipoConocimiento(), ',');
+    }
+
+    public void filtrar(ActionEvent event) {
+        HashMap filter = new HashMap();
+        try {
+            filter.put("fCategoria", this.getCategoriesFilter());
+            filter.put("fFromDate", this.getFechaInicio());
+            filter.put("fToDate", this.getFechaFin());
+            filter.put("fType", this.getTypesFilter());
+            ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+            this.setListaConsulta(service.getQueryFilter(filter));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void filtrar(AjaxBehaviorEvent event) {
+        HashMap filter = new HashMap();
+        try {
+            filter.put("fCategoria", this.getCategoriesFilter());
+            filter.put("fFromDate", this.getFechaInicio());
+            filter.put("fToDate", this.getFechaFin());
+            filter.put("fType", this.getTypesFilter());
+            ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+            this.setListaConsulta(service.getQueryFilter(filter));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void view(ActionEvent event) {
+        try {
+            int id = Integer.parseInt((String) JSFUtils.getRequestParameter("id"));
+            int idTipo = Integer.parseInt((String) JSFUtils.getRequestParameter("idTipo"));
+            switch(idTipo) {
+                case 1: {
+                    BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+                    this.setSelectedBaseLegal(service.getBaselegalById(BigDecimal.valueOf(id)));
+                    ArchivoService sservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
+                    sservice.getArchivosByBaseLegal(this.getSelectedBaseLegal());
+                    FileInputStream fis = new FileInputStream(new File("D:\\gescon\\temp\\Lucene.pdf"));
+                    setContent(new DefaultStreamedContent(fis, "application/pdf"));
+                }
             }
         } catch(Exception e) {
             e.getMessage();

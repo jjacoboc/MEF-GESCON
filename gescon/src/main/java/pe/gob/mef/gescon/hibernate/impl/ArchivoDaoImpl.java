@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.ArchivoDao;
 import pe.gob.mef.gescon.hibernate.domain.Tarchivo;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
@@ -60,6 +61,7 @@ public class ArchivoDaoImpl extends HibernateDaoSupport implements ArchivoDao{
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void saveOrUpdate(Tarchivo tarchivo) throws Exception {
         getHibernateTemplate().saveOrUpdate(tarchivo);
     }

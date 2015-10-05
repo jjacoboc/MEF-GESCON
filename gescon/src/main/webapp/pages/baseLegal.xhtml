@@ -39,7 +39,10 @@
                                              rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
                                     <p:column sortBy="#{row.vnumero}" filterBy="#{row.vnumero}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;">
                                         <f:facet name="header"><h:outputText value="NÚMERO" style="font-size: 11px;"/></f:facet>
-                                        <h:outputText value="#{row.vnumero}" />
+                                        <h:outputLink id="grow" value="#">
+                                            <h:outputText value="#{row.vnumero}" />
+                                        </h:outputLink>
+                                        <p:tooltip id="toolTipGrow" for="grow" value="#{row.vsumilla}" showEffect="clip" hideEffect="explode" style="font-size: 9px;" />
                                     </p:column>
                                     <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
                                         <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>

@@ -11,6 +11,8 @@
         <title>Gescon - Consultas</title>
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
         <h:outputStylesheet library="css" name="style.css" />
+        <h:outputScript library="js" name="calendar_es.js"/>
+        <h:outputScript library="js" name="prime.js"/>
     </h:head>
     <h:body>
         <f:view>
@@ -23,7 +25,7 @@
                     <ui:include src="footer.xhtml" />
                 </pe:layoutPane>
 
-                <pe:layoutPane position="west" size="195" >
+                <pe:layoutPane position="west" size="255" >
                     <ui:include src="filtro.xhtml" />
                 </pe:layoutPane>
 
@@ -41,28 +43,100 @@
                                     </ui:repeat>
                                 </h:panelGroup>
                             </p:panelGrid>
-                            <p:dataScroller value="#{consultaMB.listaBaseLegal}" var="c" chunkSize="10">
+                            <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" chunkSize="10">
                                 <f:facet name="loader">
                                     <p:commandButton type="button" value="Mas" icon="ui-icon-circle-triangle-s"/>
                                 </f:facet>
 
                                 <h:panelGrid columns="1" >
-                                    <h:panelGroup>
-                                        <h:outputText value="#{c.vnumero}" style="font-family: Tahoma;font-weight: bold; font-size: 12px; color: #013C7C;"/>
-                                        <h:outputText value=" - " style="font-weight: bold"/>
-                                        <h:outputText value="#{c.vnombre}" style="font-family: Tahoma;font-weight: bold; font-size: 12px; color: #013C7C;"/>
-                                    </h:panelGroup>
-                                    <h:outputText value="#{c.vsumilla}" style="font-weight: normal;" />
-                                    <h:panelGrid columns="4">
+                                    <p:commandLink actionListener="#{consultaMB.view}" oncomplete="PF('viewDialog').show();" update=":viewDialogForm:pgView" >
+                                        <h:panelGroup>
+                                            <h:outputText value="#{c.codigo}" style="font-family: Tahoma;font-weight: bold; font-size: 12px; color: #013C7C;"/>
+                                            <h:outputText value=" - " style="font-weight: bold"/>
+                                            <h:outputText value="#{c.nombre}" style="font-family: Tahoma;font-weight: bold; font-size: 12px; color: #013C7C;"/>
+                                        </h:panelGroup>
+                                        <f:param name="id" value="#{c.id}"/>
+                                        <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
+                                    </p:commandLink>
+                                    <h:outputText value="#{c.sumilla}" style="font-weight: normal;" />
+                                    <h:panelGrid columns="8">
                                         <h:outputText value="Categoría:" style="font-weight: normal"/>
-                                        <h:outputText value="#{c.ncategoriaid}" style="font-weight: normal">
-                                            <f:converter converterId="converterCategoria"/>
+                                        <h:outputText value="#{c.categoria}" style="font-weight: normal"/>
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="Tipo:" style="font-weight: normal"/>
+                                        <h:outputText value="#{c.tipoConocimiento}" style="font-weight: normal"/>
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="Fecha:" style="font-weight: normal"/>
+                                        <h:outputText value="#{c.fechaPublicacion}" style="font-weight: normal">
+                                            <f:convertDateTime dateStyle="medium" type="date" locale="es" />
                                         </h:outputText>
                                     </h:panelGrid>
                                 </h:panelGrid>
                             </p:dataScroller>
                         </h:panelGrid>
                     </h:form>
+                    
+                    <p:dialog id="viewDlg" header="Base Legal" widgetVar="viewDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="viewDialogForm">
+                            <h:panelGrid id="pgView" columns="3">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Categoría:"/>
+                                <h:outputText value="#{consultaMB.selectedBaseLegal.ncategoriaid}" >
+                                    <f:converter converterId="converterCategoria"/>
+                                </h:outputText>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Archivo:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:lightBox>
+                                        <h:outputLink value="#">
+                                            <h:outputText id="fileName" value="Lucene.pdf"/>
+                                        </h:outputLink>
+                                        <f:facet name="inline">
+                                            <p:media player="pdf" cache="false" value="#{consultaMB.content}" width="700" height="400"/>
+                                        </f:facet>
+                                    </p:lightBox>
+                                </h:panelGrid>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Nombre:"/>
+                                <h:outputText value="#{consultaMB.selectedBaseLegal.vnombre}" />
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Número de Norma:"/>
+                                <h:outputText value="#{consultaMB.selectedBaseLegal.vnumero}" />
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Rango de Norma:"/>
+                                <h:outputText value="#{consultaMB.selectedBaseLegal.mtrango.nrangoid}" >
+                                    <f:converter converterId="converterRango"/>
+                                </h:outputText>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Ambito:"/>                                
+                                <h:panelGrid columns="4">
+                                    <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.ngobnacional eq 1}" itemLabel="Gobierno Nacional"  />
+                                    <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.ngobregional eq 1}" itemLabel="Gobierno Regional" />
+                                    <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.ngoblocal eq 1}" itemLabel="Gobierno Local" />
+                                    <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.nmancomunidades eq 1}" itemLabel="Mancomunidades" />
+                                </h:panelGrid>
+
+                                <p:spacer/>
+                                <h:outputLabel value="Sumilla:"/>
+                                <h:outputText value="#{consultaMB.selectedBaseLegal.vsumilla}" />
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Fecha Publicación:"/>
+                                <h:outputText value="#{consultaMB.selectedBaseLegal.dfechapublicacion}" >
+                                    <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                </h:outputText>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Tema:"/>
+                                <h:outputText value="#{consultaMB.selectedBaseLegal.vtema}" />
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
                 </pe:layoutPane>
             </pe:layout>
         </f:view>

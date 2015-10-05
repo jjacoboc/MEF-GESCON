@@ -17,11 +17,11 @@
         <property name="vapellidos" type="string">
             <column name="VAPELLIDOS" length="25" />
         </property>
-        <property name="vcorreo" type="string">
-            <column name="VCORREO" length="30" />
+        <property name="dfechanacimiento" type="date">
+            <column name="DFECHANACIMIENTO" length="7" />
         </property>
-        <property name="nestado" type="java.lang.Character">
-            <column name="NESTADO" length="1" />
+        <property name="nestado" type="big_decimal">
+            <column name="NESTADO" precision="22" scale="0" />
         </property>
         <property name="nusuariomod" type="big_decimal">
             <column name="NUSUARIOMOD" precision="22" scale="0" />
@@ -32,6 +32,42 @@
         <property name="dfechacreacion" type="date">
             <column name="DFECHACREACION" length="7" />
         </property>
+        <property name="vsexo" type="string">
+            <column name="VSEXO" length="25" />
+        </property>
+        <property name="vdni" type="string">
+            <column name="VDNI" length="8" />
+        </property>        
+        <property name="vdpto" type="string">
+            <column name="VDPTO" length="25" />
+        </property>     
+        <property name="vprov" type="string">
+            <column name="VPROV" length="25" />
+        </property>          
+        <property name="vdist" type="string">
+            <column name="VDIST" length="25" />
+        </property>         
+        <property name="vprofesion" type="string">
+            <column name="VPROFESION" length="25" />
+        </property>        
+        <property name="ventidad" type="string">
+            <column name="VENTIDAD" length="25" />
+        </property>        
+        <property name="vpliego" type="string">
+            <column name="VPLIEGO" length="25" />
+        </property>   
+        <property name="vcargo" type="string">
+            <column name="VCARGO" length="25" />
+        </property> 
+        <property name="varea" type="string">
+            <column name="VAREA" length="25" />
+        </property>            
+        <property name="vsector" type="string">
+            <column name="VSECTOR" length="25" />
+        </property>              
+        <property name="vgobierno" type="string">
+            <column name="VGOBIERNO" length="25" />
+        </property>          
         <set name="tuserPerfils" table="TUSER_PERFIL" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NUSUARIOID" precision="22" scale="0" not-null="true" />
