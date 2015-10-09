@@ -6,30 +6,40 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:pe="http://primefaces.org/ui/extensions"
       xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+    <f:loadBundle basename="pe.gob.mef.gescon.parameters" var="param"/>
     <h:head>
         <title>Gescon - Consultas</title>
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
         <h:outputStylesheet library="css" name="style.css" />
         <h:outputScript library="js" name="calendar_es.js"/>
         <h:outputScript library="js" name="prime.js"/>
+        <h:outputScript>
+            $(function() {
+                $(".ui-datascroller-content").css("height", $("#center").height());
+                $("#fcLink").click(recall);
+                $("#bcLink").click(recall);
+            });
+            function recall() {
+                $(".ui-datascroller-content").css("height", $("#center").height() - 47);
+            }
+        </h:outputScript>
     </h:head>
     <h:body>
         <f:view>
-            <pe:layout fullPage="true">
-                <pe:layoutPane position="north" size="80" resizable="true" closable="true" styleContent="font-size: 10px;">
+            <pe:layout id="full" fullPage="true">
+                <pe:layoutPane id="north" position="north" size="80" resizable="true" closable="true" styleContent="font-size: 10px;">
                     <ui:include src="header.xhtml" />
                 </pe:layoutPane>
 
-                <pe:layoutPane position="south" size="50" closable="true" >
+                <pe:layoutPane id="south" position="south" size="50" closable="true" >
                     <ui:include src="footer.xhtml" />
                 </pe:layoutPane>
 
-                <pe:layoutPane position="west" size="255" >
+                <pe:layoutPane position="west" size="295" >
                     <ui:include src="filtro.xhtml" />
                 </pe:layoutPane>
 
-                <pe:layoutPane position="center" styleContent="font-size: 10px;">
+                <pe:layoutPane id="center" position="center" styleContent="font-size: 12px;">
                     <h:form id="f">
                         <h:panelGrid id="pgConsulta" columns="1" width="100%">
                             <p:panelGrid columns="1" >
@@ -37,46 +47,54 @@
                                     <h:commandLink value="Inicio" action="/index.xhtml"/>
                                     <ui:repeat value="#{consultaMB.listaBreadCrumb}" var="b" rendered="#{not empty consultaMB.listaBreadCrumb}">
                                         <h:outputText class="fa fa-fw fa-chevron-right"/>
-                                        <p:commandLink value="#{b.vnombre}" actionListener="#{consultaMB.onClickBreadCrumb}" update=":fm:pgFiltro, :f:pgConsulta">
+                                        <p:commandLink id="bcLink" value="#{b.vnombre}" actionListener="#{consultaMB.onClickBreadCrumb}" oncomplete="recall();" update=":fm:pgFiltro, :f:pgConsulta">
                                             <f:param name="ncategoriaid" value="#{b.ncategoriaid}"/>
                                         </p:commandLink>
                                     </ui:repeat>
                                 </h:panelGroup>
                             </p:panelGrid>
-                            <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" chunkSize="10">
-                                <f:facet name="loader">
-                                    <p:commandButton type="button" value="Mas" icon="ui-icon-circle-triangle-s"/>
-                                </f:facet>
-
-                                <h:panelGrid columns="1" >
-                                    <p:commandLink actionListener="#{consultaMB.view}" oncomplete="PF('viewDialog').show();" update=":viewDialogForm:pgView" >
-                                        <h:panelGroup>
-                                            <h:outputText value="#{c.codigo}" style="font-family: Tahoma;font-weight: bold; font-size: 12px; color: #013C7C;"/>
-                                            <h:outputText value=" - " style="font-weight: bold"/>
-                                            <h:outputText value="#{c.nombre}" style="font-family: Tahoma;font-weight: bold; font-size: 12px; color: #013C7C;"/>
-                                        </h:panelGroup>
-                                        <f:param name="id" value="#{c.id}"/>
-                                        <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
-                                    </p:commandLink>
-                                    <h:outputText value="#{c.sumilla}" style="font-weight: normal;" />
-                                    <h:panelGrid columns="8">
+                            <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" mode="inline">
+                                <h:panelGrid columns="1" width="100%">
+                                    <h:panelGrid columns="4" cellpadding="0" cellspacing="0">
+                                        <h:outputText class="fa fa-fw fa-circle" style="font-size: 11px;"/>
+                                        <p:commandLink actionListener="#{consultaMB.view}" oncomplete="PF('viewDialog').show();" update=":viewDialogForm:pgView" >
+                                            <h:panelGroup>
+                                                <h:outputText value="#{c.codigo}" style="font-family: Tahoma;font-weight: bold; font-size: 12px; color: #013C7C;"/>
+                                                <h:outputText value=" - " style="font-weight: bold"/>
+                                                <h:outputText value="#{c.nombre}" style="font-family: Tahoma;font-weight: bold; font-size: 12px; color: #013C7C;"/>
+                                            </h:panelGroup>
+                                            <f:param name="id" value="#{c.id}"/>
+                                            <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
+                                        </p:commandLink>
+                                        <p:spacer width="15"/>
+                                        <p:rating value="3.5" readonly="true" immediate="true" />
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2">
+                                        <p:spacer width="8"/>
+                                        <h:outputText value="#{c.sumilla}" style="font-weight: normal;" />
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="11" style="font-size: 10px;">
+                                        <p:spacer width="8"/>
                                         <h:outputText value="Categoría:" style="font-weight: normal"/>
-                                        <h:outputText value="#{c.categoria}" style="font-weight: normal"/>
+                                        <h:outputText value="#{c.categoria}" style="font-weight: bold; font-style: italic;"/>
                                         <p:spacer width="15"/>
                                         <h:outputText value="Tipo:" style="font-weight: normal"/>
-                                        <h:outputText value="#{c.tipoConocimiento}" style="font-weight: normal"/>
+                                        <h:outputText value="#{c.tipoConocimiento}" style="font-weight: bold; font-style: italic;"/>
                                         <p:spacer width="15"/>
                                         <h:outputText value="Fecha:" style="font-weight: normal"/>
-                                        <h:outputText value="#{c.fechaPublicacion}" style="font-weight: normal">
+                                        <h:outputText value="#{c.fechaPublicacion}" style="font-weight: bold; font-style: italic;">
                                             <f:convertDateTime dateStyle="medium" type="date" locale="es" />
                                         </h:outputText>
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="#{c.elapsedTime}" style="font-weight: normal; font-style: italic;"/>
                                     </h:panelGrid>
+                                    <p:separator/>
                                 </h:panelGrid>
                             </p:dataScroller>
                         </h:panelGrid>
                     </h:form>
-                    
-                    <p:dialog id="viewDlg" header="Base Legal" widgetVar="viewDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+
+                    <p:dialog id="viewDlg" header="Base Legal" widgetVar="viewDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 12px;">
                         <h:form id="viewDialogForm">
                             <h:panelGrid id="pgView" columns="3">
                                 <h:outputLabel value="*"/>
@@ -90,10 +108,10 @@
                                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                     <p:lightBox>
                                         <h:outputLink value="#">
-                                            <h:outputText id="fileName" value="Lucene.pdf"/>
+                                            <h:outputText id="fileName" value="#{consultaMB.selectedBaseLegal.archivo.vnombre}"/>
                                         </h:outputLink>
                                         <f:facet name="inline">
-                                            <p:media player="pdf" cache="false" value="#{consultaMB.content}" width="700" height="400"/>
+                                            <p:media player="pdf" cache="false" value="#{consultaMB.content}" width="#{param.pdfwidth}" height="#{param.pdfheight}"/>
                                         </f:facet>
                                     </p:lightBox>
                                 </h:panelGrid>

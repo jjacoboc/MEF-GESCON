@@ -60,10 +60,10 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
                     sql.append("AND a.ncategoriaid IN (").append(fCategoria).append(")");
                 }
                 if(fFromDate != null) {
-                    sql.append(" AND a.dfechapublicacion >= ").append(sdf.format(fFromDate));
+                    sql.append(" AND a.dfechapublicacion >= TO_DATE('").append(fFromDate).append("','dd/mm/yyyy')");
                 }
                 if(fToDate != null) {
-                    sql.append(" AND a.dfechapublicacion <= ").append(sdf.format(fToDate));
+                    sql.append(" AND a.dfechapublicacion <= TO_DATE('").append(fToDate).append("','dd/mm/yyyy')");
                 }
                 sql.append(" ORDER BY a.dfechapublicacion DESC ");
             }

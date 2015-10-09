@@ -8,6 +8,7 @@ package pe.gob.mef.gescon.web.bean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import pe.gob.mef.gescon.util.DateUtils;
 
 /**
  *
@@ -27,6 +28,7 @@ public class Consulta implements Serializable{
     private Date fechaPublicacion;
     private String usuario;
     private String usuarioNombre;
+    private String elapsedTime;
     
     public Consulta() {
         
@@ -198,5 +200,43 @@ public class Consulta implements Serializable{
      */
     public void setUsuarioNombre(String usuarioNombre) {
         this.usuarioNombre = usuarioNombre;
+    }
+    
+    /**
+     * @return the elapsedTime
+     */
+    public String getElapsedTime() {
+        long time = DateUtils.getDifferenceYears(this.fechaPublicacion, new Date());
+        if(time > 0) {
+            this.elapsedTime =  "hace " + time + " años";
+        } else {
+            time = DateUtils.getDifferenceMonths(this.fechaPublicacion, new Date());
+            if(time > 0) {
+                this.elapsedTime =  "hace " + time + " meses";
+            } else {
+                time = DateUtils.getDifferenceDays(this.fechaPublicacion, new Date());
+                if(time > 0) {
+                    this.elapsedTime =  "hace " + time + " días";
+                } else {
+                    time = DateUtils.getDifferenceHours(this.fechaPublicacion, new Date());
+                    if(time > 0) {
+                        this.elapsedTime =  "hace " + time + " horas";
+                    } else {
+                        time = DateUtils.getDifferenceMinutes(this.fechaPublicacion, new Date());
+                        if(time > 0) {
+                            this.elapsedTime =  "hace " + time + " minutos";
+                        }
+                    }
+                }
+            }
+        }
+        return this.elapsedTime;
+    }
+    
+    /**
+     * @param elapsedTime the elapsedTime to set
+     */
+    public void setElapsedTime(String elapsedTime) {
+        this.elapsedTime = elapsedTime;
     }
 }

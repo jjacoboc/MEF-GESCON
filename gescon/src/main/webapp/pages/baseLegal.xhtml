@@ -5,7 +5,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:pe="http://primefaces.org/ui/extensions">
-
+    <f:loadBundle basename="pe.gob.mef.gescon.parameters" var="param"/>
     <h:head>
         <title>GesCon - Base Legal</title>
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
@@ -13,7 +13,7 @@
         <h:outputScript library="js" name="calendar_es.js"/>
         <h:outputScript library="js" name="prime.js"/>
     </h:head>
-    <h:body>            
+    <h:body>
         <f:view>
             <pe:layout fullPage="true">
                 <pe:layoutPane position="north" size="80" resizable="false" closable="false" styleContent="font-size: 10px;" > 
@@ -37,34 +37,48 @@
                                 <p:commandButton  value="Nuevo" actionListener="#{baseLegalMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
                                 <p:dataTable id="tbl" value="#{baseLegalMB.listaBaseLegal}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
                                              rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                                    <p:column sortBy="#{row.vnumero}" filterBy="#{row.vnumero}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;">
+                                    <p:column style="text-align: center; width: 120px;" sortBy="#{row.vnumero}" filterBy="#{row.vnumero}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
                                         <f:facet name="header"><h:outputText value="NÚMERO" style="font-size: 11px;"/></f:facet>
                                         <h:outputLink id="grow" value="#">
                                             <h:outputText value="#{row.vnumero}" />
                                         </h:outputLink>
                                         <p:tooltip id="toolTipGrow" for="grow" value="#{row.vsumilla}" showEffect="clip" hideEffect="explode" style="font-size: 9px;" />
                                     </p:column>
-                                    <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
+                                    <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 400px;text-transform: uppercase;" priority="2">
                                         <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>
                                         <h:outputText value="#{row.vnombre}" />
                                     </p:column>
-                                    <p:column width="250px;" sortBy="#{row.vsumilla}" filterBy="#{row.vsumilla}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
-                                        <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
-                                        <h:outputText value="#{row.vsumilla}" />
-                                    </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" priority="3">
+                                    <p:column style="text-align: center; width: 100px;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" priority="3">
                                         <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
                                         <h:outputText value="#{row.nactivo}" >
                                             <f:converter converterId="converterSiNo"/>
                                         </h:outputText>
                                     </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.dfechapublicacion}" filterBy="#{row.dfechapublicacion}" filterMatchMode="contains" priority="5">
+                                    <p:column style="text-align: center; width: 140px;" sortBy="#{row.dfechapublicacion}" filterBy="#{row.dfechapublicacion}" filterMatchMode="contains" priority="4">
                                         <f:facet name="header"><h:outputText value="FECHA PUBLICACIÓN"/></f:facet>
                                         <h:outputText value="#{row.dfechapublicacion}" >
                                             <f:convertDateTime dateStyle="medium" type="date" locale="es" />
                                         </h:outputText>
                                     </p:column>
+                                    <p:column style="text-align: center; width: 50px;" priority="5">
+                                        <f:facet name="header"><h:outputText value="PDF"/></f:facet>
+                                        <p:lightBox rendered="#{row.archivo ne null}">
+                                            <h:outputLink value="#">
+                                                <p:graphicImage library="images" name="pdf.png"/>
+                                            </h:outputLink>
+                                            <f:facet name="inline">
+                                                <p:media player="pdf" cache="false" value="#{baseLegalMB.pdf}" width="#{param.pdfwidth}" height="#{param.pdfheight}">
+                                                    <f:param name="fileName" value="#{row.archivo.vnombre}"/>
+                                                </p:media>
+                                            </f:facet>
+                                        </p:lightBox>
+                                        <p:graphicImage library="images" name="pdf.png" rendered="#{row.archivo eq null}"/>
+                                    </p:column>
                                     <p:column style="text-align: center; width: 60px;">
+                                        <p:commandLink actionListener="#{baseLegalMB.toView}" oncomplete="PF('viewDialog').show();" update=":viewDialogForm:pgView" title="Ver Base Legal">
+                                            <p:graphicImage library="images" name="magnifier.png" style="border: 0px;"/>
+                                            <f:param name="index" value="#{rowIndex}" />
+                                        </p:commandLink>
                                         <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Base Legal" rendered="#{row.nactivo eq 0}">
                                             <p:graphicImage library="images" name="active.png" style="border: 0px; width: 16px; height: 16px;"/>
                                             <f:setPropertyActionListener value="#{row}" target="#{baseLegalMB.selectedBaseLegal}" />
@@ -100,7 +114,7 @@
                                             <h:outputText id="fileName" value="#{baseLegalMB.uploadFile.fileName}"/>
                                         </h:outputLink>
                                         <f:facet name="inline">
-                                            <p:media player="pdf" cache="false" value="#{baseLegalMB.content}" width="700" height="400"/>
+                                            <p:media player="pdf" cache="false" value="#{baseLegalMB.content}" width="#{param.pdfwidth}" height="#{param.pdfheight}"/>
                                         </f:facet>
                                     </p:lightBox>
                                 </h:panelGrid>
@@ -150,8 +164,72 @@
                                 </h:panelGrid>
                             </h:panelGrid>
                             <h:panelGrid columns="2" width="100%">
-                                <p:commandButton value="Registrar" actionListener="#{baseLegalMB.save}" update=":f:growl"/>
+                                <p:commandButton value="Registrar" actionListener="#{baseLegalMB.save}" update=":f:tbl, :f:growl"/>
                                 <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+                    
+                    <p:dialog id="viewDlg" header="Base Legal" widgetVar="viewDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="viewDialogForm">
+                            <h:panelGrid id="pgView" columns="3">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Categoría:"/>
+                                <h:outputText value="#{baseLegalMB.selectedBaseLegal.ncategoriaid}" >
+                                    <f:converter converterId="converterCategoria"/>
+                                </h:outputText>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Archivo:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:lightBox>
+                                        <h:outputLink value="#">
+                                            <h:outputText id="fileName" value="#{baseLegalMB.selectedBaseLegal.archivo.vnombre}"/>
+                                        </h:outputLink>
+                                        <f:facet name="inline">
+                                            <p:media player="pdf" cache="false" value="#{baseLegalMB.pdf}" width="#{param.pdfwidth}" height="#{param.pdfheight}">
+                                                <f:param name="fileName" value="#{baseLegalMB.selectedBaseLegal.archivo.vnombre}"/>
+                                            </p:media>
+                                        </f:facet>
+                                    </p:lightBox>
+                                </h:panelGrid>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Nombre:"/>
+                                <h:outputText value="#{baseLegalMB.selectedBaseLegal.vnombre}" />
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Número de Norma:"/>
+                                <h:outputText value="#{baseLegalMB.selectedBaseLegal.vnumero}" />
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Rango de Norma:"/>
+                                <h:outputText value="#{baseLegalMB.selectedBaseLegal.mtrango.nrangoid}" >
+                                    <f:converter converterId="converterRango"/>
+                                </h:outputText>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Ambito:"/>                                
+                                <h:panelGrid columns="4">
+                                    <p:selectBooleanCheckbox value="#{baseLegalMB.selectedBaseLegal.ngobnacional eq 1}" itemLabel="Gobierno Nacional"  />
+                                    <p:selectBooleanCheckbox value="#{baseLegalMB.selectedBaseLegal.ngobregional eq 1}" itemLabel="Gobierno Regional" />
+                                    <p:selectBooleanCheckbox value="#{baseLegalMB.selectedBaseLegal.ngoblocal eq 1}" itemLabel="Gobierno Local" />
+                                    <p:selectBooleanCheckbox value="#{baseLegalMB.selectedBaseLegal.nmancomunidades eq 1}" itemLabel="Mancomunidades" />
+                                </h:panelGrid>
+
+                                <p:spacer/>
+                                <h:outputLabel value="Sumilla:"/>
+                                <h:outputText value="#{baseLegalMB.selectedBaseLegal.vsumilla}" />
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Fecha Publicación:"/>
+                                <h:outputText value="#{baseLegalMB.selectedBaseLegal.dfechapublicacion}" >
+                                    <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                </h:outputText>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Tema:"/>
+                                <h:outputText value="#{baseLegalMB.selectedBaseLegal.vtema}" />
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>

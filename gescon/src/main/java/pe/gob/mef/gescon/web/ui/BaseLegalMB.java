@@ -6,7 +6,9 @@
 package pe.gob.mef.gescon.web.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -18,14 +20,15 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
 import javax.sql.rowset.serial.SerialBlob;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -57,6 +60,8 @@ public class BaseLegalMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(BaseLegalMB.class);
+    private final String temppath = "D:\\gescon\\temp\\";
+    private String path = "D:\\gescon\\files\\bl\\";
     private List<BaseLegal> listaBaseLegal;
     private BaseLegal selectedBaseLegal;
     private String nombre;
@@ -324,6 +329,10 @@ public class BaseLegalMB implements Serializable {
         try {
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaBaseLegal(service.getBaselegales());
+            ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
+            for(BaseLegal bl : this.getListaBaseLegal()) {
+                bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
+            }
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -353,7 +362,6 @@ public class BaseLegalMB implements Serializable {
     }
 
     public void handleUploadFile(FileUploadEvent event) {
-        String temppath = "D:\\gescon\\temp\\";
         try {
             if (event != null) {
                 UploadedFile f = event.getFile();
@@ -362,9 +370,9 @@ public class BaseLegalMB implements Serializable {
 //                    if(Constante.FILE_CONTENT_TYPE_XLS.equals(contentType)
 //                            || Constante.FILE_CONTENT_TYPE_XLSX.equals(contentType)) {
                     this.setUploadFile(f);
-                    File direc = new File(temppath);
+                    File direc = new File(this.temppath);
                     direc.mkdirs();
-                    this.setFile(new File(temppath, f.getFileName()));
+                    this.setFile(new File(this.temppath, f.getFileName()));
                     FileOutputStream fileOutStream = new FileOutputStream(this.getFile());
                     fileOutStream.write(f.getContents());
                     fileOutStream.flush();
@@ -378,6 +386,21 @@ public class BaseLegalMB implements Serializable {
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
+        }
+    }
+    
+    public StreamedContent getPdf() throws IOException, Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        }
+        else {
+            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+            String fileName = JSFUtils.getRequestParameter("fileName");
+            FileInputStream fis = new FileInputStream(new File("D:\\gescon\\temp\\".concat(fileName)));
+            return new DefaultStreamedContent(fis, "application/pdf");
         }
     }
 
@@ -484,21 +507,27 @@ public class BaseLegalMB implements Serializable {
             service.saveOrUpdate(base);
             Tbaselegal tbaselegal = new Tbaselegal();
             BeanUtils.copyProperties(tbaselegal, base);
-            Archivo archivo = new Archivo();
-            archivo.setNversion(BigDecimal.ONE);
-            archivo.setTbaselegal(tbaselegal);
-            archivo.setVnombre(this.getUploadFile().getFileName());
-            archivo.setVruta(this.getFile().getPath());
-            Blob blob = new SerialBlob(this.getUploadFile().getContents());
-            archivo.setBbin(blob);
-            archivo.setDfechacreacion(new Date());
+            
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
             TarchivoId archivoId = new TarchivoId();
             archivoId.setNbaselegalid(base.getNbaselegalid());
             archivoId.setNarchivoid(aservice.getNextPK());
+            
+            Archivo archivo = new Archivo();
             archivo.setId(archivoId);
+            archivo.setNversion(BigDecimal.ONE);
+            archivo.setTbaselegal(tbaselegal);
+            archivo.setVnombre(this.getUploadFile().getFileName());
+            archivo.setVruta(path + base.getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
+            archivo.setDfechacreacion(new Date());
             aservice.saveOrUpdate(archivo);
+            
             saveFile(archivo);
+            this.setListaBaseLegal(service.getBaselegales());
+            for(BaseLegal bl : this.getListaBaseLegal()) {
+                bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
+            }
+            RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -506,16 +535,15 @@ public class BaseLegalMB implements Serializable {
     }
 
     public void saveFile(Archivo archivo) {
-        String path = "D:\\gescon\\files\\bl\\";
-        String temppath = "D:\\gescon\\temp\\";
+        
         try {
             if (this.getUploadFile() != null) {
                 String id = archivo.getId().getNbaselegalid().toString();
                 String version = archivo.getNversion().toString();
-                path = path + id + "\\" + version + "\\";
-                File direc = new File(path);
+                String newPath = path + id + "\\" + version + "\\";
+                File direc = new File(newPath);
                 direc.mkdirs();
-                this.setFile(new File(path, this.getUploadFile().getFileName()));
+                this.setFile(new File(newPath, this.getUploadFile().getFileName()));
                 FileOutputStream fileOutStream = new FileOutputStream(this.getFile());
                 fileOutStream.write(this.getUploadFile().getContents());
                 fileOutStream.flush();
@@ -525,6 +553,16 @@ public class BaseLegalMB implements Serializable {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void toView(ActionEvent event) {
+        try {
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+        } catch(Exception e) {
+            e.getMessage();
             e.printStackTrace();
         }
     }

@@ -6,24 +6,22 @@
 package pe.gob.mef.gescon.hibernate.impl;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.PassDao;
-import pe.gob.mef.gescon.hibernate.dao.PoliticaPerfilDao;
-//import pe.gob.mef.gescon.hibernate.dao.PoliticaDao;
-import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfil;
-import pe.gob.mef.gescon.hibernate.domain.Mtperfil;
+import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.Tpass;
 
 //import pe.gob.mef.gescon.hibernate.domain.Mtpolitica;
@@ -50,6 +48,16 @@ public class PassDaoImpl extends HibernateDaoSupport implements PassDao {
                         return query.uniqueResult();
                     }
                 });
+    }
+    
+    @Override
+    public Tpass getTpassByMtuser(Mtuser mtuser) throws Exception {
+        DetachedCriteria proj = DetachedCriteria.forClass(Tpass.class);
+        proj.setProjection(Projections.max("dfechacreacion"));
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tpass.class);
+        criteria.add(Restrictions.eq("id.nusuarioid", mtuser.getNusuarioid()));
+        criteria.add(Property.forName("dfechacreacion").eq(proj));
+        return (Tpass) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
 
     @Override

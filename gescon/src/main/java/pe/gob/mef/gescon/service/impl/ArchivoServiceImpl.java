@@ -45,6 +45,21 @@ public class ArchivoServiceImpl implements ArchivoService{
         }
         return archivos;
     }
+    
+    @Override
+    public Archivo getLastArchivoByBaseLegal(BaseLegal baseLegal) throws Exception {
+        Archivo archivo = new Archivo();
+        Tbaselegal tbaselegal = new Tbaselegal();
+        BeanUtils.copyProperties(tbaselegal, baseLegal);
+        ArchivoDao archivoDao = (ArchivoDao) ServiceFinder.findBean("ArchivoDao");
+        Tarchivo tarchivo = archivoDao.getLastTarchivoByTbaselegal(tbaselegal);
+        if(tarchivo != null) {
+            BeanUtils.copyProperties(archivo, tarchivo);
+        } else {
+            archivo = null;
+        }
+        return archivo;
+    }
 
     @Override
     public void saveOrUpdate(Archivo archivo) throws Exception {

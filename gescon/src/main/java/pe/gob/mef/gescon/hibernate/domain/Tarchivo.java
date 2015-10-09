@@ -2,7 +2,6 @@ package pe.gob.mef.gescon.hibernate.domain;
 // Generated 22/09/2015 05:59:19 PM by Hibernate Tools 4.3.1
 
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.util.Date;
 
 /**
@@ -19,7 +18,6 @@ public class Tarchivo implements java.io.Serializable {
     private Date dfechacreacion;
     private String vusuariomodificacion;
     private Date dfechamodificacion;
-    private Blob bbin;
 
     public Tarchivo() {
     }
@@ -29,7 +27,7 @@ public class Tarchivo implements java.io.Serializable {
         this.tbaselegal = tbaselegal;
     }
 
-    public Tarchivo(TarchivoId id, Tbaselegal tbaselegal, String vnombre, String vruta, BigDecimal nversion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, Blob bbin) {
+    public Tarchivo(TarchivoId id, Tbaselegal tbaselegal, String vnombre, String vruta, BigDecimal nversion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion) {
         this.id = id;
         this.tbaselegal = tbaselegal;
         this.vnombre = vnombre;
@@ -39,7 +37,6 @@ public class Tarchivo implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
         this.vusuariomodificacion = vusuariomodificacion;
         this.dfechamodificacion = dfechamodificacion;
-        this.bbin = bbin;
     }
 
     public TarchivoId getId() {
@@ -113,13 +110,4 @@ public class Tarchivo implements java.io.Serializable {
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
     }
-
-    public Blob getBbin() {
-        return this.bbin;
-    }
-
-    public void setBbin(Blob bbin) {
-        this.bbin = bbin;
-    }
-
 }

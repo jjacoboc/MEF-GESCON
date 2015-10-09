@@ -13,8 +13,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -58,6 +61,16 @@ public class ArchivoDaoImpl extends HibernateDaoSupport implements ArchivoDao{
         criteria.add(Restrictions.eq("id.nbaselegalid", tbaselegal.getNbaselegalid()));
         criteria.addOrder(Order.asc("nversion"));
         return (List<Tarchivo>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public Tarchivo getLastTarchivoByTbaselegal(Tbaselegal tbaselegal) throws Exception {
+        DetachedCriteria proj = DetachedCriteria.forClass(Tarchivo.class);
+        proj.setProjection(Projections.max("nversion"));
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tarchivo.class);
+        criteria.add(Restrictions.eq("id.nbaselegalid", tbaselegal.getNbaselegalid()));
+        criteria.add(Property.forName("nversion").eq(proj));
+        return (Tarchivo) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
 
     @Override

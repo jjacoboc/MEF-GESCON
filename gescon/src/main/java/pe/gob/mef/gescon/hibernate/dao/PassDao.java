@@ -6,8 +6,6 @@
 package pe.gob.mef.gescon.hibernate.dao;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.Tpass;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 //import pe.gob.mef.gescon.hibernate.domain.Mtpolitica;
@@ -19,6 +17,7 @@ import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 public interface PassDao {
 
     public BigDecimal getNextPK() throws Exception;
+    public Tpass getTpassByMtuser(Mtuser mtuser) throws Exception;
     public void saveOrUpdate(Tpass tpass) throws Exception;
 
     

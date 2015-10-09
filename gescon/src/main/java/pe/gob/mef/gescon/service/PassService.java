@@ -6,12 +6,8 @@
 package pe.gob.mef.gescon.service;
 
 import java.math.BigDecimal;
-import java.util.List;
-import javax.faces.model.SelectItem;
 import pe.gob.mef.gescon.web.bean.Pass;
-import pe.gob.mef.gescon.web.bean.PoliticaPerfil;
-import pe.gob.mef.gescon.web.bean.Perfil;
-import pe.gob.mef.gescon.web.bean.Politica;
+import pe.gob.mef.gescon.web.bean.User;
 //import pe.gob.mef.gescon.web.bean.Politica;
 /**
  *
@@ -19,6 +15,7 @@ import pe.gob.mef.gescon.web.bean.Politica;
  */
 public interface PassService {
     public BigDecimal getNextPK() throws Exception;
+    public Pass getPassByUser(User user) throws Exception;
     public void saveOrUpdate(Pass pass) throws Exception;
     
 }

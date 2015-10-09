@@ -36,8 +36,5 @@
         <property name="dfechamodificacion" type="date">
             <column name="DFECHAMODIFICACION" length="7" />
         </property>
-        <property name="bbin" type="blob">
-            <column name="BBIN" />
-        </property>
     </class>
 </hibernate-mapping>

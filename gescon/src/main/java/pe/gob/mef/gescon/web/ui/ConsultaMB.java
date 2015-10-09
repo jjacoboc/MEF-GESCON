@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
@@ -29,6 +31,7 @@ import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.TipoConocimientoService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Archivo;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
@@ -398,12 +401,13 @@ public class ConsultaMB implements Serializable {
             int id = Integer.parseInt((String) JSFUtils.getRequestParameter("id"));
             int idTipo = Integer.parseInt((String) JSFUtils.getRequestParameter("idTipo"));
             switch(idTipo) {
-                case 1: {
+                case 1: { //Base Legal
                     BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
                     this.setSelectedBaseLegal(service.getBaselegalById(BigDecimal.valueOf(id)));
                     ArchivoService sservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-                    sservice.getArchivosByBaseLegal(this.getSelectedBaseLegal());
-                    FileInputStream fis = new FileInputStream(new File("D:\\gescon\\temp\\Lucene.pdf"));
+                    Archivo archivo = sservice.getLastArchivoByBaseLegal(this.getSelectedBaseLegal());
+                    this.getSelectedBaseLegal().setArchivo(archivo);
+                    FileInputStream fis = new FileInputStream(new File(archivo.getVruta()));
                     setContent(new DefaultStreamedContent(fis, "application/pdf"));
                 }
             }

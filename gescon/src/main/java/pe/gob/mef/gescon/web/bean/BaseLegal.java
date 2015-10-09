@@ -8,6 +8,7 @@ package pe.gob.mef.gescon.web.bean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.Mtrango;
 
 /**
@@ -33,6 +34,8 @@ public class BaseLegal implements Serializable{
     private BigDecimal ngoblocal;
     private BigDecimal nmancomunidades;
     private BigDecimal nactivo;
+    private Archivo archivo;
+    private List<Archivo> listaArchivo;
     
     public void BaseLegal(){
         
@@ -274,5 +277,33 @@ public class BaseLegal implements Serializable{
      */
     public void setNactivo(BigDecimal nactivo) {
         this.nactivo = nactivo;
+    }
+
+    /**
+     * @return the archivo
+     */
+    public Archivo getArchivo() {
+        return archivo;
+    }
+
+    /**
+     * @param archivo the archivo to set
+     */
+    public void setArchivo(Archivo archivo) {
+        this.archivo = archivo;
+    }
+
+    /**
+     * @return the listaArchivo
+     */
+    public List<Archivo> getListaArchivo() {
+        return listaArchivo;
+    }
+
+    /**
+     * @param listaArchivo the listaArchivo to set
+     */
+    public void setListaArchivo(List<Archivo> listaArchivo) {
+        this.listaArchivo = listaArchivo;
     }
 }

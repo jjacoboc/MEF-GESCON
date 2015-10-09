@@ -18,4 +18,5 @@ public interface UserDao {
     public BigDecimal getNextPK() throws Exception;
     public void saveOrUpdate(Mtuser mtuser) throws Exception;
     public List<Mtuser> getMtusers() throws Exception;
+    public Mtuser getMtuserByLogin(String login) throws Exception;
 }

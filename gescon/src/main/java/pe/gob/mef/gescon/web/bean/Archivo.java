@@ -7,7 +7,6 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.util.Date;
 import pe.gob.mef.gescon.hibernate.domain.TarchivoId;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
@@ -27,7 +26,6 @@ public class Archivo implements Serializable{
     private Date dfechacreacion;
     private String vusuariomodificacion;
     private Date dfechamodificacion;
-    private Blob bbin;
     
     public Archivo(){
         
@@ -157,19 +155,5 @@ public class Archivo implements Serializable{
      */
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
-    }
-
-    /**
-     * @return the bbin
-     */
-    public Blob getBbin() {
-        return bbin;
-    }
-
-    /**
-     * @param bbin the bbin to set
-     */
-    public void setBbin(Blob bbin) {
-        this.bbin = bbin;
     }
 }

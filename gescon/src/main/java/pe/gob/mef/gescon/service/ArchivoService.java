@@ -18,5 +18,6 @@ public interface ArchivoService {
     
     public BigDecimal getNextPK() throws Exception;
     public List<Archivo> getArchivosByBaseLegal(BaseLegal baseLegal) throws Exception;
+    public Archivo getLastArchivoByBaseLegal(BaseLegal baseLegal) throws Exception;
     public void saveOrUpdate(Archivo archivo) throws Exception;
 }

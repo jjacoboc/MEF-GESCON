@@ -6,30 +6,21 @@
 package pe.gob.mef.gescon.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import javax.faces.model.SelectItem;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.PassDao;
-import pe.gob.mef.gescon.hibernate.dao.PoliticaPerfilDao;
-import pe.gob.mef.gescon.hibernate.domain.Mtperfil;
+import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.Tpass;
 
 //import pe.gob.mef.gescon.hibernate.dao.PoliticaDao;
-import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfil;
 import pe.gob.mef.gescon.service.PassService;
 
 //import pe.gob.mef.gescon.hibernate.domain.Mtpolitica;
-import pe.gob.mef.gescon.service.PoliticaPerfilService;
 
 //import pe.gob.mef.gescon.service.PoliticaService;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Pass;
-import pe.gob.mef.gescon.web.bean.Perfil;
-import pe.gob.mef.gescon.web.bean.Politica;
-import pe.gob.mef.gescon.web.bean.PoliticaPerfil;
+import pe.gob.mef.gescon.web.bean.User;
 
 //import pe.gob.mef.gescon.web.bean.Politica;
 /**
@@ -43,6 +34,21 @@ public class PassServiceImpl implements PassService {
     public BigDecimal getNextPK() throws Exception {
         PassDao passDao = (PassDao) ServiceFinder.findBean("PassDao");
         return passDao.getNextPK();
+    }
+    
+    @Override
+    public Pass getPassByUser(User user) throws Exception {
+        Mtuser mtuser = new Mtuser();
+        BeanUtils.copyProperties(mtuser, user);
+        PassDao passDao = (PassDao) ServiceFinder.findBean("PassDao");
+        Tpass tpass = passDao.getTpassByMtuser(mtuser);
+        Pass pass = new Pass();
+        if(tpass != null) {
+            BeanUtils.copyProperties(pass, tpass);
+        } else {
+            pass = null;
+        }
+        return pass;
     }
 
     @Override

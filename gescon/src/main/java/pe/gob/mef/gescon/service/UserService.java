@@ -18,4 +18,5 @@ public interface UserService {
     public BigDecimal getNextPK() throws Exception;
     public void saveOrUpdate(User user) throws Exception;
     public List<User> getUsers() throws Exception;
+    public User getUserByLogin(String login) throws Exception;
 }

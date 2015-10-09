@@ -14,6 +14,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -62,4 +63,10 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao{
         return (List<Mtuser>) getHibernateTemplate().findByCriteria(criteria);
     }
     
+    @Override
+    public Mtuser getMtuserByLogin(String login) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Mtuser.class);
+        criteria.add(Restrictions.eq("vlogin", login));
+        return (Mtuser) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
+    }
 }

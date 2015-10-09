@@ -18,5 +18,6 @@ public interface ArchivoDao {
     
     public BigDecimal getNextPK() throws Exception;
     public List<Tarchivo> getTarchivosByTbaselegal(Tbaselegal tbaselegal) throws Exception;
+    public Tarchivo getLastTarchivoByTbaselegal(Tbaselegal tbaselegal) throws Exception;
     public void saveOrUpdate(Tarchivo tarchivo) throws Exception;
 }

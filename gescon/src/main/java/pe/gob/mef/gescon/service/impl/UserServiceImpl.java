@@ -50,5 +50,18 @@ public class UserServiceImpl implements UserService{
         }
         return users;
     }
+
+    @Override
+    public User getUserByLogin(String login) throws Exception {
+        UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
+        Mtuser mtuser = userDao.getMtuserByLogin(login);
+        User user = new User();
+        if(mtuser != null) {
+            BeanUtils.copyProperties(user, mtuser);
+        } else {
+            user = null;
+        }        
+        return user;
+    }
     
 }

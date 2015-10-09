@@ -8,6 +8,7 @@ package pe.gob.mef.gescon.web.ui;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.SessionScoped;
@@ -44,8 +45,16 @@ public class CategoriaImages implements Serializable{
         else {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             String id = JSFUtils.getRequestParameter("id");
-            CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-            Categoria categoria = service.getCategoriaById(BigDecimal.valueOf(Long.valueOf(id)));
+            AdministracionMB administracionMB = (AdministracionMB) JSFUtils.getSessionAttribute("administracionMB");
+            List<Categoria> categorias = administracionMB.getListaCategoria();
+            Categoria categoria = new Categoria();
+            for(Categoria c : categorias) {
+                if(c.getNcategoriaid().toString().equals(id)) {
+                    categoria = c;
+                }
+            }
+//            CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+//            Categoria categoria = service.getCategoriaById(BigDecimal.valueOf(Long.valueOf(id)));
             return new DefaultStreamedContent(categoria.getBimagen().getBinaryStream());
         }
     }
