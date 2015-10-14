@@ -73,7 +73,7 @@
                                         <p:spacer width="8"/>
                                         <h:outputText value="#{c.sumilla}" style="font-weight: normal;" />
                                     </h:panelGrid>
-                                    <h:panelGrid columns="11" style="font-size: 10px;">
+                                    <h:panelGrid columns="14" style="font-size: 10px;">
                                         <p:spacer width="8"/>
                                         <h:outputText value="Categoría:" style="font-weight: normal"/>
                                         <h:outputText value="#{c.categoria}" style="font-weight: bold; font-style: italic;"/>
@@ -85,6 +85,9 @@
                                         <h:outputText value="#{c.fechaPublicacion}" style="font-weight: bold; font-style: italic;">
                                             <f:convertDateTime dateStyle="medium" type="date" locale="es" />
                                         </h:outputText>
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="Estado:" style="font-weight: normal"/>
+                                        <h:outputText value="#{c.estado}" style="font-weight: bold; font-style: italic;"/>
                                         <p:spacer width="15"/>
                                         <h:outputText value="#{c.elapsedTime}" style="font-weight: normal; font-style: italic;"/>
                                     </h:panelGrid>

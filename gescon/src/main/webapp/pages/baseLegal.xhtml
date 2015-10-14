@@ -5,7 +5,7 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:pe="http://primefaces.org/ui/extensions">
-    <f:loadBundle basename="pe.gob.mef.gescon.parameters" var="param"/>
+    <f:loadBundle basename="pe.gob.mef.gescon.messages" var="msgs"/>
     <h:head>
         <title>GesCon - Base Legal</title>
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
@@ -36,16 +36,16 @@
                             <h:panelGrid columns="1">
                                 <p:commandButton  value="Nuevo" actionListener="#{baseLegalMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
                                 <p:dataTable id="tbl" value="#{baseLegalMB.listaBaseLegal}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
-                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="NingÃºn registro encontrado.">
                                     <p:column style="text-align: center; width: 120px;" sortBy="#{row.vnumero}" filterBy="#{row.vnumero}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
-                                        <f:facet name="header"><h:outputText value="NÚMERO" style="font-size: 11px;"/></f:facet>
+                                        <f:facet name="header"><h:outputText value="NÚMERO"/></f:facet>
                                         <h:outputLink id="grow" value="#">
                                             <h:outputText value="#{row.vnumero}" />
                                         </h:outputLink>
                                         <p:tooltip id="toolTipGrow" for="grow" value="#{row.vsumilla}" showEffect="clip" hideEffect="explode" style="font-size: 9px;" />
                                     </p:column>
                                     <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 400px;text-transform: uppercase;" priority="2">
-                                        <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>
+                                        <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                         <h:outputText value="#{row.vnombre}" />
                                     </p:column>
                                     <p:column style="text-align: center; width: 100px;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" priority="3">
@@ -67,24 +67,25 @@
                                                 <p:graphicImage library="images" name="pdf.png"/>
                                             </h:outputLink>
                                             <f:facet name="inline">
-                                                <p:media player="pdf" cache="false" value="#{baseLegalMB.pdf}" width="#{param.pdfwidth}" height="#{param.pdfheight}">
-                                                    <f:param name="fileName" value="#{row.archivo.vnombre}"/>
+                                                <p:media player="pdf" cache="false" value="#{baseLegalMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                                    <f:param name="fileName" value="#{row.archivo.vruta}"/>
                                                 </p:media>
                                             </f:facet>
                                         </p:lightBox>
                                         <p:graphicImage library="images" name="pdf.png" rendered="#{row.archivo eq null}"/>
                                     </p:column>
                                     <p:column style="text-align: center; width: 60px;">
-                                        <p:commandLink actionListener="#{baseLegalMB.toView}" oncomplete="PF('viewDialog').show();" update=":viewDialogForm:pgView" title="Ver Base Legal">
+                                        <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
+                                        <p:commandLink actionListener="#{baseLegalMB.toView}" oncomplete="PF('viewDialog').show();" update=":viewDialogForm:pgView, :viewDialogForm:pgViewVinc" title="Ver Base Legal">
                                             <p:graphicImage library="images" name="magnifier.png" style="border: 0px;"/>
                                             <f:param name="index" value="#{rowIndex}" />
                                         </p:commandLink>
                                         <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Base Legal" rendered="#{row.nactivo eq 0}">
-                                            <p:graphicImage library="images" name="active.png" style="border: 0px; width: 16px; height: 16px;"/>
+                                            <p:graphicImage library="images" name="tick.png" style="border: 0px; width: 16px; height: 16px;"/>
                                             <f:setPropertyActionListener value="#{row}" target="#{baseLegalMB.selectedBaseLegal}" />
                                         </p:commandLink>
                                         <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Base Legal" rendered="#{row.nactivo eq 1}">
-                                            <p:graphicImage library="images" name="inactive.png" style="border: 0px; width: 16px; height: 16px;"/>
+                                            <p:graphicImage library="images" name="cross.png" style="border: 0px; width: 16px; height: 16px;"/>
                                             <f:setPropertyActionListener value="#{row}" target="#{baseLegalMB.selectedBaseLegal}" />
                                         </p:commandLink>
                                     </p:column>
@@ -109,12 +110,15 @@
                                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                     <p:fileUpload value="#{baseLegalMB.uploadFile}" skinSimple="true" update=":newDialogForm:pgNew" fileUploadListener="#{baseLegalMB.handleUploadFile}" 
                                                   cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
-                                    <p:lightBox>
+                                    <p:lightBox rendered="#{baseLegalMB.uploadFile ne null}">
                                         <h:outputLink value="#">
-                                            <h:outputText id="fileName" value="#{baseLegalMB.uploadFile.fileName}"/>
+                                            <h:panelGrid columns="2">
+                                                <p:graphicImage library="images" name="pdf.png"/>
+                                                <h:outputText id="fileName" value="#{baseLegalMB.uploadFile.fileName}"/>
+                                            </h:panelGrid>
                                         </h:outputLink>
                                         <f:facet name="inline">
-                                            <p:media player="pdf" cache="false" value="#{baseLegalMB.content}" width="#{param.pdfwidth}" height="#{param.pdfheight}"/>
+                                            <p:media player="pdf" cache="false" value="#{baseLegalMB.content}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}"/>
                                         </f:facet>
                                     </p:lightBox>
                                 </h:panelGrid>
@@ -124,7 +128,7 @@
                                 <p:inputText size="50" value="#{baseLegalMB.nombre}" style="text-transform: uppercase;" maxlength="25"/>
 
                                 <h:outputLabel value="*"/>
-                                <h:outputLabel value="Número de Norma:"/>
+                                <h:outputLabel value="NÃºmero de Norma:"/>
                                 <p:inputText size="25" value="#{baseLegalMB.numeroNorma}" style="text-transform: uppercase;" maxlength="25"/>
 
                                 <h:outputLabel value="*"/>
@@ -152,8 +156,8 @@
                                 </h:panelGrid>
 
                                 <h:outputLabel value="*"/>
-                                <h:outputLabel value="Fecha Publicación:"/>
-                                <p:calendar id="fcese" locale="es" value="#{baseLegalMB.fechaPublicacion}" pattern="dd/MM/yyyy" showOn="button" readonlyInput="true" showButtonPanel="true"/>
+                                <h:outputLabel value="Fecha PublicaciÃ³n:"/>
+                                <p:calendar id="fcese" locale="es" value="#{baseLegalMB.fechaPublicacion}" size="8" pattern="dd/MM/yyyy" showOn="button" readonlyInput="true" showButtonPanel="true"/>
 
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Tema:"/>
@@ -162,14 +166,38 @@
                                     <h:outputText value="(Las palabras deben ir separadas por comas.)" style="font-size: 9px;"/>
                                     <p:watermark for="tema" value="Ej: servir, mef, pcm, regional"/>
                                 </h:panelGrid>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Bases Legales Vinculadas:"/>
+                                <p:spacer/>
                             </h:panelGrid>
+                            <p:fieldset>
+                                <h:panelGrid id="pgNewVinc" columns="1" cellpadding="0" cellspacing="0">
+                                    <p:commandLink value="Agregar Vínculos" actionListener="#{baseLegalMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pgPick"/>
+                                    <p:spacer height="5"/>
+                                    <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada." style="width: 600px;">
+                                        <p:column style="width: 80px; text-align: center;" headerText="NÚMERO">
+                                            <h:outputText value="#{t.vnumero}"/>
+                                        </p:column>
+                                        <p:column headerText="NOMBRE">
+                                            <h:outputText value="#{t.vnombre}"/>
+                                        </p:column>
+                                        <p:column style="width: 80px; text-align: center;" headerText="CATEGORIA">
+                                            <h:outputText value="#{t.vcategoria}"/>
+                                        </p:column>
+                                        <p:column style="width: 80px; text-align: center;" headerText="ESTADO">
+                                            <h:outputText value="#{t.vestado}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:fieldset>
                             <h:panelGrid columns="2" width="100%">
                                 <p:commandButton value="Registrar" actionListener="#{baseLegalMB.save}" update=":f:tbl, :f:growl"/>
                                 <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>
-                    
+
                     <p:dialog id="viewDlg" header="Base Legal" widgetVar="viewDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                         <h:form id="viewDialogForm">
                             <h:panelGrid id="pgView" columns="3">
@@ -184,11 +212,14 @@
                                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                     <p:lightBox>
                                         <h:outputLink value="#">
-                                            <h:outputText id="fileName" value="#{baseLegalMB.selectedBaseLegal.archivo.vnombre}"/>
+                                            <h:panelGrid columns="2">
+                                                <p:graphicImage library="images" name="pdf.png"/>
+                                                <h:outputText id="fileName" value="#{baseLegalMB.selectedBaseLegal.archivo.vnombre}"/>
+                                            </h:panelGrid>
                                         </h:outputLink>
                                         <f:facet name="inline">
-                                            <p:media player="pdf" cache="false" value="#{baseLegalMB.pdf}" width="#{param.pdfwidth}" height="#{param.pdfheight}">
-                                                <f:param name="fileName" value="#{baseLegalMB.selectedBaseLegal.archivo.vnombre}"/>
+                                            <p:media player="pdf" cache="false" value="#{baseLegalMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                                <f:param name="fileName" value="#{baseLegalMB.selectedBaseLegal.archivo.vruta}"/>
                                             </p:media>
                                         </f:facet>
                                     </p:lightBox>
@@ -199,12 +230,12 @@
                                 <h:outputText value="#{baseLegalMB.selectedBaseLegal.vnombre}" />
 
                                 <h:outputLabel value="*"/>
-                                <h:outputLabel value="Número de Norma:"/>
+                                <h:outputLabel value="NÃºmero de Norma:"/>
                                 <h:outputText value="#{baseLegalMB.selectedBaseLegal.vnumero}" />
 
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Rango de Norma:"/>
-                                <h:outputText value="#{baseLegalMB.selectedBaseLegal.mtrango.nrangoid}" >
+                                <h:outputText value="#{baseLegalMB.selectedBaseLegal.nrangoid}" >
                                     <f:converter converterId="converterRango"/>
                                 </h:outputText>
 
@@ -222,7 +253,7 @@
                                 <h:outputText value="#{baseLegalMB.selectedBaseLegal.vsumilla}" />
 
                                 <h:outputLabel value="*"/>
-                                <h:outputLabel value="Fecha Publicación:"/>
+                                <h:outputLabel value="Fecha PublicaciÃ³n:"/>
                                 <h:outputText value="#{baseLegalMB.selectedBaseLegal.dfechapublicacion}" >
                                     <f:convertDateTime dateStyle="medium" type="date" locale="es" />
                                 </h:outputText>
@@ -230,11 +261,62 @@
                                 <h:outputLabel value="*"/>
                                 <h:outputLabel value="Tema:"/>
                                 <h:outputText value="#{baseLegalMB.selectedBaseLegal.vtema}" />
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Bases Legales Vinculadas:"/>
+                                <p:spacer/>
+                            </h:panelGrid>
+                            <p:fieldset>
+                                <h:panelGrid id="pgViewVinc" columns="1" cellpadding="0" cellspacing="0">
+                                    <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada." style="width: 600px;">
+                                        <p:column style="width: 80px; text-align: center;" headerText="NÚMERO">
+                                            <h:outputText value="#{t.vnumero}"/>
+                                        </p:column>
+                                        <p:column headerText="NOMBRE">
+                                            <h:outputText value="#{t.vnombre}"/>
+                                        </p:column>
+                                        <p:column style="width: 80px; text-align: center;" headerText="CATEGORIA">
+                                            <h:outputText value="#{t.vcategoria}"/>
+                                        </p:column>
+                                        <p:column style="width: 80px; text-align: center;" headerText="ESTADO">
+                                            <h:outputText value="#{t.vestado}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:fieldset>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog id="pickDlg" header="Bases Legales Vinculadas" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="pickDialogForm">
+                            <h:panelGrid id="pgPick" columns="1">
+                                <h:panelGroup rendered="#{baseLegalMB.selectedBaseLegal ne null}">
+                                    <h:outputText value="Base Legal:" style="font-weight: bold;"/>
+                                    <p:spacer width="10"/>
+                                    <h:outputText value="#{baseLegalMB.selectedBaseLegal.vnumero}" style="font-weight: bold;"/>
+                                    <h:outputText value=" - " style="font-weight: bold;"/>
+                                    <h:outputText value="#{baseLegalMB.selectedBaseLegal.vnombre}" style="font-weight: bold;"/>
+                                </h:panelGroup>
+                                <h:panelGrid columns="2">
+                                    <p:pickList value="#{baseLegalMB.pickList}" var="p" itemValue="#{p}" itemLabel="#{p.vnumero} - #{p.vnombre}"
+                                                converter="converterPickListBaseLegal" showSourceFilter="true" showTargetFilter="true" 
+                                                filterMatchMode="contains">
+                                        <p:ajax event="transfer" listener="#{baseLegalMB.onTransfer}" update=":newDialogForm:pgNewVinc, :pickDialogForm:pgPick"/>
+                                        <f:facet name="sourceCaption">Disponibles</f:facet>
+                                        <f:facet name="targetCaption">Vinculados</f:facet>
+                                    </p:pickList>
+                                    <ui:repeat value="#{baseLegalMB.listaTarget}" var="t">
+                                        <p:selectOneRadio value="#{t.nestadoid}">
+                                            <f:selectItem itemLabel="Concordada" itemValue="5" />
+                                            <f:selectItem itemLabel="Derogada" itemValue="4" />
+                                        </p:selectOneRadio>
+                                    </ui:repeat>
+                                </h:panelGrid>
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>
 
-                    <p:dialog id="catDlg" header="Seleccionar Categoría" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                    <p:dialog id="catDlg" header="Seleccionar CategorÃ­a" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                         <h:form id="catDialogForm">
                             <h:panelGrid id="pgCat" columns="1">
                                 <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
@@ -248,15 +330,15 @@
                             </h:panelGrid>
                         </h:form>
                     </p:dialog>
-                    
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la base legal. \nDesea Continuar?" header="ACTIVAR BASE LEGAL" widgetVar="confirmActDlg" style="font-size: 10px;">
+
+                    <p:confirmDialog appendTo="@(body)" message="Se procederÃ¡ a activar la base legal. \nDesea Continuar?" header="ACTIVAR BASE LEGAL" widgetVar="confirmActDlg" style="font-size: 10px;">
                         <h:form id="confirmActDlgForm">
                             <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{baseLegalMB.activar}"/>
                             <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
                         </h:form>
                     </p:confirmDialog>
-                    
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la base legal. \nDesea Continuar?" header="DESACTIVAR BASE LEGAL" widgetVar="confirmDesDlg" style="font-size: 10px;">
+
+                    <p:confirmDialog appendTo="@(body)" message="Se procederÃ¡ a desactivar la base legal. \nDesea Continuar?" header="DESACTIVAR BASE LEGAL" widgetVar="confirmDesDlg" style="font-size: 10px;">
                         <h:form id="confirmDesDlgForm">
                             <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{baseLegalMB.desactivar}"/>
                             <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />

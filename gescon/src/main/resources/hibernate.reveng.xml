@@ -2,6 +2,7 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
 <hibernate-reverse-engineering>
   <schema-selection match-schema="GESCON"/>
+  <!--
   <table-filter match-name="TCONOCIMIENTO"/>
   <table-filter match-name="TPOLITICA_PERFIL"/>
   <table-filter match-name="TCATEGORIA_HIST"/>
@@ -22,6 +23,9 @@
   <table-filter match-name="TCATEGORIA_CONOCIMIENTO"/>
   <table-filter match-name="TDISCUSION"/>
   <table-filter match-name="MTRANGO"/>
+  -->
   <table-filter match-name="TBASELEGAL"/>
   <table-filter match-name="TARCHIVO"/>
+  <table-filter match-name="MTESTADO_BASELEGAL"/>
+  <table-filter match-name="TVINCULO_BASELEGAL"/>
 </hibernate-reverse-engineering>
