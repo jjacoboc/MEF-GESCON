@@ -15,6 +15,7 @@ import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.RangoService;
+import pe.gob.mef.gescon.service.SituacionService;
 import pe.gob.mef.gescon.util.ServiceFinder;
 
 /**
@@ -28,6 +29,7 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaSiNo;
     private List<SelectItem> listaCategoria;
     private List<SelectItem> listaRangoBaseLegal;
+    private List<SelectItem> listaSituacion;
     private List<SelectItem> filterEstado;
     
     /**
@@ -89,6 +91,24 @@ public class ListaSessionMB implements Serializable{
      */
     public void setListaRangoBaseLegal(List<SelectItem> listaRangoBaseLegal) {
         this.listaRangoBaseLegal = listaRangoBaseLegal;
+    }
+
+    /**
+     * @return the listaSituacion
+     */
+    public List<SelectItem> getListaSituacion() throws Exception {
+        if(listaSituacion == null){
+            SituacionService service = (SituacionService) ServiceFinder.findBean("SituacionService");
+            listaSituacion =  new Items(service.getSituacions(), null, "nsituacionid","vnombre").getItems();
+        }
+        return listaSituacion;
+    }
+
+    /**
+     * @param listaSituacion the listaSituacion to set
+     */
+    public void setListaSituacion(List<SelectItem> listaSituacion) {
+        this.listaSituacion = listaSituacion;
     }
 
     /**
