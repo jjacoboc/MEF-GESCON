@@ -52,10 +52,9 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(StringUtils.isBlank(fType) || fType.contains("1")) {
                 sql.append("SELECT a.nbaselegalid AS ID, a.vnumero AS NUMERO, a.vnombre AS NOMBRE, a.vsumilla AS SUMILLA, ");
                 sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
-                sql.append("       1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, c.vnombre AS ESTADO ");
+                sql.append("       1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO ");
                 sql.append("FROM TBASELEGAL a ");
                 sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
-                sql.append("INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
                 sql.append("WHERE a.nactivo = :ACTIVO ");
                 if(StringUtils.isNotBlank(fCategoria)) {
                     sql.append("AND a.ncategoriaid IN (").append(fCategoria).append(")");

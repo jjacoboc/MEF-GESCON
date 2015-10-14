@@ -5,7 +5,9 @@
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 
     <application>
-        <message-bundle>pe.gob.mef.gescon.messages</message-bundle>
+        <message-bundle>
+            pe.gob.mef.gescon.messages
+        </message-bundle>
         <el-resolver>
             org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver
         </el-resolver>

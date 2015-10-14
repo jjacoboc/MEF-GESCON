@@ -7,22 +7,20 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import pe.gob.mef.gescon.hibernate.domain.Mtrango;
 
 /**
  *
  * @author JJacobo
  */
-public class BaseLegal implements Serializable, Comparable<BaseLegal>{
+public class BaseLegal implements Serializable{
     
     private BigDecimal nbaselegalid;
-    private BigDecimal nrangoid;
-    private String vrango;
+    private Mtrango mtrango;
     private String vnombre;
     private BigDecimal ncategoriaid;
-    private String vcategoria;
     private String vnumero;
     private String vsumilla;
     private Date dfechapublicacion;
@@ -36,8 +34,6 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     private BigDecimal ngoblocal;
     private BigDecimal nmancomunidades;
     private BigDecimal nactivo;
-    private BigDecimal nestadoid;
-    private String vestado;
     private Archivo archivo;
     private List<Archivo> listaArchivo;
     
@@ -60,31 +56,17 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     }
 
     /**
-     * @return the nrangoid
+     * @return the mtrango
      */
-    public BigDecimal getNrangoid() {
-        return nrangoid;
+    public Mtrango getMtrango() {
+        return mtrango;
     }
 
     /**
-     * @param nrangoid the nrangoid to set
+     * @param mtrango the mtrango to set
      */
-    public void setNrangoid(BigDecimal nrangoid) {
-        this.nrangoid = nrangoid;
-    }
-
-    /**
-     * @return the vrango
-     */
-    public String getVrango() {
-        return vrango;
-    }
-
-    /**
-     * @param vrango the vrango to set
-     */
-    public void setVrango(String vrango) {
-        this.vrango = vrango;
+    public void setMtrango(Mtrango mtrango) {
+        this.mtrango = mtrango;
     }
 
     /**
@@ -113,20 +95,6 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
      */
     public void setNcategoriaid(BigDecimal ncategoriaid) {
         this.ncategoriaid = ncategoriaid;
-    }
-
-    /**
-     * @return the vcategoria
-     */
-    public String getVcategoria() {
-        return vcategoria;
-    }
-
-    /**
-     * @param vcategoria the vcategoria to set
-     */
-    public void setVcategoria(String vcategoria) {
-        this.vcategoria = vcategoria;
     }
 
     /**
@@ -312,34 +280,6 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     }
 
     /**
-     * @return the nestadoid
-     */
-    public BigDecimal getNestadoid() {
-        return nestadoid;
-    }
-
-    /**
-     * @param nestadoid the nestadoid to set
-     */
-    public void setNestadoid(BigDecimal nestadoid) {
-        this.nestadoid = nestadoid;
-    }
-
-    /**
-     * @return the vestado
-     */
-    public String getVestado() {
-        return vestado;
-    }
-
-    /**
-     * @param vestado the vestado to set
-     */
-    public void setVestado(String vestado) {
-        this.vestado = vestado;
-    }
-
-    /**
      * @return the archivo
      */
     public Archivo getArchivo() {
@@ -365,19 +305,5 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
      */
     public void setListaArchivo(List<Archivo> listaArchivo) {
         this.listaArchivo = listaArchivo;
-    }
-    
-    @Override
-    public int compareTo(BaseLegal o) {
-        return Comparators.ID.compare(this, o);
-    }
-    
-    public static class Comparators {
-        public static Comparator<BaseLegal> ID = new Comparator<BaseLegal>() {
-            @Override
-            public int compare(BaseLegal o1, BaseLegal o2) {
-                return o1.getNbaselegalid().intValue() - o2.getNbaselegalid().intValue();
-            }
-        };
     }
 }

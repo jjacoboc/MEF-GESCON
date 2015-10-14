@@ -9,29 +9,27 @@
     <property name="hibernate.connection.password">gescon</property>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtuser.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtpolitica.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TcategoriaHist.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtperfil.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TcategoriaHist.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtrango.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TcomentHist.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tpass.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TvincHist.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TuserPerfil.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tdiscusion.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tconocimiento.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tdiscusion.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TuserPerfil.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tcomentario.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtparametro.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TpoliticaPerfil.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TvinculoBaselegal.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtparametro.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tcalificacion.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TcategoriaConocimiento.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tvinculo.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/MtestadoBaselegal.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TcategoriaConocimiento.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/MttipoConocimiento.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtcategoria.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tarchivo.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tmaestrodetalle.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtalerta.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtmaestro.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtalerta.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tbaselegal.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

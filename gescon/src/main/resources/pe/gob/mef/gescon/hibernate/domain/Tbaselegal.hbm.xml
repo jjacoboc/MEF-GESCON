@@ -1,19 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 12/10/2015 03:16:22 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 22/09/2015 05:59:22 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="pe.gob.mef.gescon.hibernate.domain.Tbaselegal" table="TBASELEGAL" schema="GESCON" optimistic-lock="version">
         <id name="nbaselegalid" type="big_decimal">
             <column name="NBASELEGALID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <property name="nestadoid" type="big_decimal">
-            <column name="NESTADOID" precision="22" scale="0" />
-        </property>
-        <property name="nrangoid" type="big_decimal">
+        <many-to-one name="mtrango" class="pe.gob.mef.gescon.hibernate.domain.Mtrango" fetch="select">
             <column name="NRANGOID" precision="22" scale="0" />
-        </property>
+        </many-to-one>
         <property name="vnombre" type="string">
             <column name="VNOMBRE" length="250" />
         </property>
@@ -26,8 +23,8 @@
         <property name="vsumilla" type="string">
             <column name="VSUMILLA" length="400" />
         </property>
-        <property name="dfechapublicacion" type="timestamp">
-            <column name="DFECHAPUBLICACION" />
+        <property name="dfechapublicacion" type="date">
+            <column name="DFECHAPUBLICACION" length="7" />
         </property>
         <property name="vtema" type="string">
             <column name="VTEMA" length="200" />
@@ -38,11 +35,11 @@
         <property name="vusuariomodificacion" type="string">
             <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
-        <property name="dfechacreacion" type="timestamp">
-            <column name="DFECHACREACION" />
+        <property name="dfechacreacion" type="date">
+            <column name="DFECHACREACION" length="7" />
         </property>
-        <property name="dfechamodificacion" type="timestamp">
-            <column name="DFECHAMODIFICACION" />
+        <property name="dfechamodificacion" type="date">
+            <column name="DFECHAMODIFICACION" length="7" />
         </property>
         <property name="ngobnacional" type="big_decimal">
             <column name="NGOBNACIONAL" precision="22" scale="0" />
@@ -59,12 +56,6 @@
         <property name="nactivo" type="big_decimal">
             <column name="NACTIVO" precision="22" scale="0" />
         </property>
-        <set name="tvinculoBaselegals" table="TVINCULO_BASELEGAL" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="NBASELEGALID" precision="22" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegal" />
-        </set>
         <set name="tarchivos" table="TARCHIVO" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NBASELEGALID" precision="22" scale="0" not-null="true" />

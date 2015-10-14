@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 12/10/2015 03:16:22 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 22/09/2015 05:59:22 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="pe.gob.mef.gescon.hibernate.domain.Tarchivo" table="TARCHIVO" schema="GESCON" optimistic-lock="version">
         <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TarchivoId">

@@ -101,10 +101,6 @@ and open the template in the editor.
     margin: 0%
 }
 
-.ui-picklist .ui-picklist-list{
-    width:300px !important;
-}
-
 .tooltip {
     font-size: 10px;
 }
