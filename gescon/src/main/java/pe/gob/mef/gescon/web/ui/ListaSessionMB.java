@@ -14,7 +14,9 @@ import javax.faces.model.SelectItem;
 import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.EstadoBaseLegalService;
 import pe.gob.mef.gescon.service.RangoService;
+import pe.gob.mef.gescon.service.SituacionService;
 import pe.gob.mef.gescon.util.ServiceFinder;
 
 /**
@@ -28,6 +30,9 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaSiNo;
     private List<SelectItem> listaCategoria;
     private List<SelectItem> listaRangoBaseLegal;
+    private List<SelectItem> listaEstadoBaseLegal;
+    private List<SelectItem> listaEstadoBaseLegalVinculo;
+    private List<SelectItem> listaSituacion;
     private List<SelectItem> filterEstado;
     
     /**
@@ -89,6 +94,62 @@ public class ListaSessionMB implements Serializable{
      */
     public void setListaRangoBaseLegal(List<SelectItem> listaRangoBaseLegal) {
         this.listaRangoBaseLegal = listaRangoBaseLegal;
+    }
+
+    /**
+     * @return the listaEstadoBaseLegal
+     * @throws java.lang.Exception
+     */
+    public List<SelectItem> getListaEstadoBaseLegal() throws Exception {
+        if(listaEstadoBaseLegal == null){
+            EstadoBaseLegalService service = (EstadoBaseLegalService) ServiceFinder.findBean("EstadoBaseLegalService");
+            listaEstadoBaseLegal =  new Items(service.getEstadosBaselegal(), null, "nestadoid","vnombre").getItems();
+        }
+        return listaEstadoBaseLegal;
+    }
+
+    /**
+     * @param listaEstadoBaseLegal the listaEstadoBaseLegal to set
+     */
+    public void setListaEstadoBaseLegal(List<SelectItem> listaEstadoBaseLegal) {
+        this.listaEstadoBaseLegal = listaEstadoBaseLegal;
+    }
+
+    /**
+     * @return the listaEstadoBaseLegalVinculo
+     * @throws java.lang.Exception
+     */
+    public List<SelectItem> getListaEstadoBaseLegalVinculo() throws Exception {
+        if(listaEstadoBaseLegalVinculo == null){
+            EstadoBaseLegalService service = (EstadoBaseLegalService) ServiceFinder.findBean("EstadoBaseLegalService");
+            listaEstadoBaseLegalVinculo =  new Items(service.getEstadosBaselegalToLink(), null, "nestadoid","vnombre").getItems();
+        }
+        return listaEstadoBaseLegalVinculo;
+    }
+
+    /**
+     * @param listaEstadoBaseLegalVinculo the listaEstadoBaseLegalVinculo to set
+     */
+    public void setListaEstadoBaseLegalVinculo(List<SelectItem> listaEstadoBaseLegalVinculo) {
+        this.listaEstadoBaseLegalVinculo = listaEstadoBaseLegalVinculo;
+    }
+
+    /**
+     * @return the listaSituacion
+     */
+    public List<SelectItem> getListaSituacion() throws Exception {
+        if(listaSituacion == null){
+            SituacionService service = (SituacionService) ServiceFinder.findBean("SituacionService");
+            listaSituacion =  new Items(service.getSituacions(), null, "nsituacionid","vnombre").getItems();
+        }
+        return listaSituacion;
+    }
+
+    /**
+     * @param listaSituacion the listaSituacion to set
+     */
+    public void setListaSituacion(List<SelectItem> listaSituacion) {
+        this.listaSituacion = listaSituacion;
     }
 
     /**

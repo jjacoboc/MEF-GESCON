@@ -23,8 +23,11 @@
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="25" />
         </property>
-        <property name="dfechacreacion" type="date">
-            <column name="DFECHACREACION" length="7" />
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" length="6" />
+        </property>
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" length="6" />
         </property>
         <set name="tpoliticaPerfils" table="TPOLITICA_PERFIL" inverse="true" lazy="true" fetch="select">
             <key>

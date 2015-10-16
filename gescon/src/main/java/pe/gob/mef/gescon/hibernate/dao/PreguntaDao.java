@@ -6,19 +6,20 @@
 package pe.gob.mef.gescon.hibernate.dao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import pe.gob.mef.gescon.hibernate.domain.Mtperfil;
-import pe.gob.mef.gescon.hibernate.domain.Mtuser;
+import pe.gob.mef.gescon.hibernate.domain.Tpregunta;
 
 /**
  *
  * @author JJacobo
  */
-public interface PerfilDao {
+public interface PreguntaDao {
     
     public BigDecimal getNextPK() throws Exception;
-    public List<Mtperfil> getMtperfils() throws Exception;
-    public List<HashMap> getMtperfilesByMtuser(final Mtuser mtuser) throws Exception;
-    public void saveOrUpdate(Mtperfil mtperfil) throws Exception;
+    public List<Tpregunta> getTpreguntas() throws Exception;
+    public void saveOrUpdate(Tpregunta tpregunta) throws Exception;
+    public List<HashMap>  traerNomCategoria(BigDecimal categoriaid) throws Exception;
+    public List<ArrayList> obtenerPreguntas() throws Exception;
 }

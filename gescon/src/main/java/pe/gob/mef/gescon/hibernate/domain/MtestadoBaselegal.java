@@ -15,6 +15,7 @@ public class MtestadoBaselegal implements Serializable {
     private BigDecimal nestadoid;
     private String vnombre;
     private String vdescripcion;
+    private BigDecimal nvinculo;
     private String vusuariocreacion;
     private Date dfechacreacion;
     private String vusuariomodificacion;
@@ -28,10 +29,11 @@ public class MtestadoBaselegal implements Serializable {
         this.nestadoid = nestadoid;
     }
 
-    public MtestadoBaselegal(BigDecimal nestadoid, String vnombre, String vdescripcion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, Set tbaselegals) {
+    public MtestadoBaselegal(BigDecimal nestadoid, String vnombre, String vdescripcion, BigDecimal nvinculo, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, Set tbaselegals) {
         this.nestadoid = nestadoid;
         this.vnombre = vnombre;
         this.vdescripcion = vdescripcion;
+        this.nvinculo = nvinculo;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
         this.vusuariomodificacion = vusuariomodificacion;
@@ -61,6 +63,20 @@ public class MtestadoBaselegal implements Serializable {
 
     public void setVdescripcion(String vdescripcion) {
         this.vdescripcion = vdescripcion;
+    }
+
+    /**
+     * @return the nvinculo
+     */
+    public BigDecimal getNvinculo() {
+        return nvinculo;
+    }
+
+    /**
+     * @param nvinculo the nvinculo to set
+     */
+    public void setNvinculo(BigDecimal nvinculo) {
+        this.nvinculo = nvinculo;
     }
 
     public String getVusuariocreacion() {

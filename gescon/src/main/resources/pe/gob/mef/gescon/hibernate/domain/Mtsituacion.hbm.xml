@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 22/09/2015 05:59:22 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pe.gob.mef.gescon.hibernate.domain.Mtsituacion" table="MTSITUACION" schema="GESCON" optimistic-lock="version">
+        <id name="nsituacionid" type="big_decimal">
+            <column name="NSITUACIONID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="vnombre" type="string">
+            <column name="VNOMBRE" length="25" />
+        </property>
+        <property name="vdescripcion" type="string">
+            <column name="VDESCRIPCION" length="400" />
+        </property>
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
+        </property>
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
+        </property>
+        <property name="dfechacreacion" type="date">
+            <column name="DFECHACREACION" length="7" />
+        </property>
+        <property name="dfechamodificacion" type="date">
+            <column name="DFECHAMODIFICACION" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

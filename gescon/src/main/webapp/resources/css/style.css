@@ -108,4 +108,13 @@ and open the template in the editor.
 .tooltip {
     font-size: 10px;
 }
+
+.pickListPanelColumns td{
+    vertical-align: top;
+}
+
+.hide-column-names table thead tr {
+    display: none;
+}
+
 .icon-add{background: url(../images/add.png) no-repeat !important;}

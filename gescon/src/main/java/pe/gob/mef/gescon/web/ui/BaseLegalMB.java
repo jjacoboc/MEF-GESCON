@@ -22,11 +22,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.PhaseId;
+import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -85,7 +89,8 @@ public class BaseLegalMB implements Serializable {
     private List<BaseLegal> listaSource;
     private List<BaseLegal> listaTarget;
     private DualListModel<BaseLegal> pickList;
-    private String tipoVinculo;
+    private List<String> listaTipoVinculo;
+    private DataModel dataModel;
     
 
     /**
@@ -375,17 +380,34 @@ public class BaseLegalMB implements Serializable {
     }
 
     /**
-     * @return the tipoVinculo
+     * @return the listaTipoVinculo
      */
-    public String getTipoVinculo() {
-        return tipoVinculo;
+    public List<String> getListaTipoVinculo() {
+        return listaTipoVinculo;
     }
 
     /**
-     * @param tipoVinculo the tipoVinculo to set
+     * @param listaTipoVinculo the listaTipoVinculo to set
      */
-    public void setTipoVinculo(String tipoVinculo) {
-        this.tipoVinculo = tipoVinculo;
+    public void setListaTipoVinculo(List<String> listaTipoVinculo) {
+        this.listaTipoVinculo = listaTipoVinculo;
+    }
+
+    /**
+     * @return the dataModel
+     */
+    public DataModel getDataModel() {
+        if (dataModel == null) {
+            dataModel = new ListDataModel(this.getListaTipoVinculo());
+        }
+        return dataModel;
+    }
+
+    /**
+     * @param dataModel the dataModel to set
+     */
+    public void setDataModel(DataModel dataModel) {
+        this.dataModel = dataModel;
     }
     
     @PostConstruct
@@ -424,10 +446,25 @@ public class BaseLegalMB implements Serializable {
         this.setTema(StringUtils.EMPTY);
         this.setListaSource(new ArrayList<BaseLegal>());
         this.setListaTarget(new ArrayList<BaseLegal>());
+        this.setListaTipoVinculo(new ArrayList<String>());
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {
             iter.remove();
             FacesContext.getCurrentInstance().renderResponse();
+        }
+    }
+    
+    public void handleChangeValue(AjaxBehaviorEvent event) {
+        try {
+            if(event != null) {
+                String id = (String)((SelectOneMenu) event.getSource()).getValue();
+                String index = JSFUtils.getRequestParameter("index");
+                this.getListaTipoVinculo().set(Integer.parseInt(index), id);
+                this.getListaTarget().get(Integer.parseInt(index)).setNestadoid(BigDecimal.valueOf(Long.parseLong(id)));
+            }
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
         }
     }
 
@@ -648,8 +685,13 @@ public class BaseLegalMB implements Serializable {
     
     public void toEdit(ActionEvent event) {
         try {
+            this.cleanAttributes();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
             this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
+            this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
+            this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
+            this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
             loadPickList(event);
         } catch(Exception e) {
             e.getMessage();
@@ -662,7 +704,9 @@ public class BaseLegalMB implements Serializable {
             if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
                 this.setListaBaseLegal(Collections.EMPTY_LIST);
             }
-            this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            if(this.getSelectedCategoria() != null){
+                this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            }
             this.getSelectedBaseLegal().setVnombre(this.getNombre().trim().toUpperCase());
             this.getSelectedBaseLegal().setVnumero(this.getNumeroNorma().trim().toUpperCase());
             this.getSelectedBaseLegal().setNrangoid(this.getRangoId());
@@ -682,20 +726,22 @@ public class BaseLegalMB implements Serializable {
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
             
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-            TarchivoId archivoId = new TarchivoId();
-            archivoId.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
-            archivoId.setNarchivoid(aservice.getNextPK());
-            
-            Archivo archivo = new Archivo();
-            archivo.setId(archivoId);
-            int version = this.getSelectedBaseLegal().getArchivo().getNversion().intValue();
-            archivo.setNversion(BigDecimal.valueOf(version + 1));
-            archivo.setTbaselegal(tbaselegal);
-            archivo.setVnombre(this.getUploadFile().getFileName());
-            archivo.setVruta(path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
-            archivo.setDfechacreacion(new Date());
-            aservice.saveOrUpdate(archivo);
-            saveFile(archivo);
+            if(this.getUploadFile() != null) {                
+                TarchivoId archivoId = new TarchivoId();
+                archivoId.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
+                archivoId.setNarchivoid(aservice.getNextPK());
+
+                Archivo archivo = new Archivo();
+                archivo.setId(archivoId);
+                int version = this.getSelectedBaseLegal().getArchivo().getNversion().intValue();
+                archivo.setNversion(BigDecimal.valueOf(version + 1));
+                archivo.setTbaselegal(tbaselegal);
+                archivo.setVnombre(this.getUploadFile().getFileName());
+                archivo.setVruta(path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
+                archivo.setDfechacreacion(new Date());
+                aservice.saveOrUpdate(archivo);
+                saveFile(archivo);
+            }            
             
             VinculoBaseLegalService vservice = (VinculoBaseLegalService) ServiceFinder.findBean("VinculoBaseLegalService");
             vservice.deleteByBaseLegal(this.getSelectedBaseLegal());
@@ -776,6 +822,7 @@ public class BaseLegalMB implements Serializable {
                         index = Collections.binarySearch(this.getListaSource(), ele, BaseLegal.Comparators.ID);
                         if(this.getListaTarget() == null) this.setListaTarget(new ArrayList<BaseLegal>());
                         this.getListaTarget().add(this.getListaSource().get(index));
+                        this.getListaTipoVinculo().add(BigDecimal.ZERO.toString());
                         this.getListaSource().remove(index);
                     }
                 }
@@ -786,7 +833,7 @@ public class BaseLegalMB implements Serializable {
                         if(this.getListaSource() == null) this.setListaSource(new ArrayList<BaseLegal>());
                         this.getListaSource().add(this.getListaTarget().get(index));
                         this.getListaTarget().remove(index);
-
+                        this.getListaTipoVinculo().remove(index);
                     }
                 }
             }

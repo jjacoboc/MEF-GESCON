@@ -8,7 +8,7 @@ package pe.gob.mef.gescon.service;
 import java.math.BigDecimal;
 import java.util.List;
 import pe.gob.mef.gescon.web.bean.Perfil;
-//import pe.gob.mef.gescon.web.bean.Politica;
+import pe.gob.mef.gescon.web.bean.User;
 
 /**
  *
@@ -17,6 +17,7 @@ import pe.gob.mef.gescon.web.bean.Perfil;
 public interface PerfilService {
     public BigDecimal getNextPK() throws Exception;
     public List<Perfil> getPerfils() throws Exception;
+    public List<Perfil> getPerfilesByUser(User user) throws Exception;
     public void saveOrUpdate(Perfil perfil) throws Exception;
     
 }

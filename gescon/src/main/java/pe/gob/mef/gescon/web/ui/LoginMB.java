@@ -6,17 +6,21 @@
 package pe.gob.mef.gescon.web.ui;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.PassService;
+import pe.gob.mef.gescon.service.PerfilService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Pass;
+import pe.gob.mef.gescon.web.bean.Perfil;
 import pe.gob.mef.gescon.web.bean.User;
 
 /**
@@ -24,10 +28,12 @@ import pe.gob.mef.gescon.web.bean.User;
  * @author JJacobo
  */
 @ManagedBean
-@ApplicationScoped
+@SessionScoped
 public class LoginMB implements Serializable {
 
     private User user;
+    private Perfil perfil;
+    private List<Perfil> perfiles;
     private String login;
     private String pass;
 
@@ -49,6 +55,34 @@ public class LoginMB implements Serializable {
      */
     public void setUser(User user) {
         this.user = user;
+    }
+
+    /**
+     * @return the perfil
+     */
+    public Perfil getPerfil() {
+        return perfil;
+    }
+
+    /**
+     * @param perfil the perfil to set
+     */
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
+    }
+
+    /**
+     * @return the perfiles
+     */
+    public List<Perfil> getPerfiles() {
+        return perfiles;
+    }
+
+    /**
+     * @param perfiles the perfiles to set
+     */
+    public void setPerfiles(List<Perfil> perfiles) {
+        this.perfiles = perfiles;
     }
 
     /**
@@ -87,7 +121,13 @@ public class LoginMB implements Serializable {
                 if (this.getUser() != null) {
                     PassService passService = (PassService) ServiceFinder.findBean("PassService");
                     Pass pas = passService.getPassByUser(this.getUser());
-                    if (pas == null) {
+                    if(pas != null) {
+                        PerfilService perfilService = (PerfilService) ServiceFinder.findBean("PerfilService");
+                        List<Perfil> listaperfiles = perfilService.getPerfilesByUser(this.getUser());
+                        if(!CollectionUtils.isEmpty(listaperfiles)) {
+                            this.setPerfil(listaperfiles.get(0));
+                        }
+                    } else {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La contraseña ingresada es incorrecta.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return StringUtils.EMPTY;

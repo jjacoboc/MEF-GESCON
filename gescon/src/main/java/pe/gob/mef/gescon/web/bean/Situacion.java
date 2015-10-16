@@ -13,34 +13,48 @@ import java.util.Date;
  *
  * @author JJacobo
  */
-public class Perfil implements Serializable{
+public class Situacion implements Serializable{
     
-    private BigDecimal nperfilid;
+    private BigDecimal nsituacionid;
+    private String vnombre;
     private String vdescripcion;
-    private BigDecimal nactivo;
+    private String vusuariocreacion;
     private String vusuariomodificacion;
-    private String vusuariocreacion;    
     private Date dfechacreacion;
     private Date dfechamodificacion;
-    private String vnombre;
-    private String imagen;
     
-    public Perfil(){
+    public void Situacion(){
         
     }
 
     /**
-     * @return the nperfilid
+     * @return the nsituacionid
      */
-    public BigDecimal getNperfilid() {
-        return nperfilid;
+    public BigDecimal getNsituacionid() {
+        return nsituacionid;
     }
 
     /**
-     * @param nperfilid the nperfilid to set
+     * @param nsituacionid the nsituacionid to set
      */
-    public void setNperfilid(BigDecimal nperfilid) {
-        this.nperfilid = nperfilid;
+    public void setNsituacionid(BigDecimal nsituacionid) {
+        this.nsituacionid = nsituacionid;
+    }
+
+
+
+    /**
+     * @return the vnombre
+     */
+    public String getVnombre() {
+        return vnombre;
+    }
+
+    /**
+     * @param vnombre the vnombre to set
+     */
+    public void setVnombre(String vnombre) {
+        this.vnombre = vnombre;
     }
 
     /**
@@ -58,17 +72,17 @@ public class Perfil implements Serializable{
     }
 
     /**
-     * @return the nestado
+     * @return the vusuariocreacion
      */
-    public BigDecimal getNactivo() {
-        return nactivo;
+    public String getVusuariocreacion() {
+        return vusuariocreacion;
     }
 
     /**
-     * @param nactivo the nestado to set
+     * @param vusuariocreacion the vusuariocreacion to set
      */
-    public void setNactivo(BigDecimal nactivo) {
-        this.nactivo = nactivo;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     /**
@@ -83,20 +97,6 @@ public class Perfil implements Serializable{
      */
     public void setVusuariomodificacion(String vusuariomodificacion) {
         this.vusuariomodificacion = vusuariomodificacion;
-    }
-
-    /**
-     * @return the vusuariocreacion
-     */
-    public String getVusuariocreacion() {
-        return vusuariocreacion;
-    }
-
-    /**
-     * @param vusuariocreacion the vusuariocreacion to set
-     */
-    public void setVusuariocreacion(String vusuariocreacion) {
-        this.vusuariocreacion = vusuariocreacion;
     }
 
     /**
@@ -125,31 +125,5 @@ public class Perfil implements Serializable{
      */
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
-    }
-    
-    
-      public String getVnombre() {
-        return vnombre;
-    }
-
-    /**
-     * @param vnombre the vdescripcion to set
-     */
-    public void setVnombre(String vnombre) {
-        this.vnombre = vnombre;
-    }
-
-    /**
-     * @return the imagen
-     */
-    public String getImagen() {
-        return imagen;
-    }
-
-    /**
-     * @param imagen the imagen to set
-     */
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
     }
 }
