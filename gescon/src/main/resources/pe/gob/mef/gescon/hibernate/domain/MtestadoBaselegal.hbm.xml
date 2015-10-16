@@ -14,6 +14,9 @@
         <property name="vdescripcion" type="string">
             <column name="VDESCRIPCION" length="400" />
         </property>
+        <property name="nvinculo" type="big_decimal">
+            <column name="NVINCULO" precision="22" scale="0" />
+        </property>
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="25" />
         </property>

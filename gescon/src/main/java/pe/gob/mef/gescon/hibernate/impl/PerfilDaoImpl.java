@@ -19,7 +19,6 @@ import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.dao.PerfilDao;
 import pe.gob.mef.gescon.hibernate.domain.Mtperfil;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
@@ -54,6 +53,7 @@ public class PerfilDaoImpl extends HibernateDaoSupport implements PerfilDao {
         return (List<Mtperfil>) getHibernateTemplate().findByCriteria(criteria);
     }
     
+    @Override
     public List<HashMap> getMtperfilesByMtuser(final Mtuser mtuser) throws Exception {
         final StringBuilder sql = new StringBuilder();
         Object object = null;
@@ -64,7 +64,7 @@ public class PerfilDaoImpl extends HibernateDaoSupport implements PerfilDao {
             sql.append("FROM MTPERFIL a ");
             sql.append("INNER JOIN TUSER_PERFIL b ON a.nperfilid = b.nperfilid ");
             sql.append("WHERE a.nactivo = :ACTIVO ");
-            sql.append("AND b.nusuarioid = :USERID");
+            sql.append("AND b.nusuarioid = :USERID ");
             sql.append("ORDER BY a.nperfilid ");
 
             object = getHibernateTemplate().execute(

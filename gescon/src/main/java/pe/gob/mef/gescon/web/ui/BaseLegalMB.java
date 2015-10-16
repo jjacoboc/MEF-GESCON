@@ -776,6 +776,83 @@ public class BaseLegalMB implements Serializable {
         }
     }
     
+    public void post(ActionEvent event) {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
+                this.setListaBaseLegal(Collections.EMPTY_LIST);
+            }
+            if(this.getSelectedCategoria() != null){
+                this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            }
+            this.getSelectedBaseLegal().setVnombre(this.getNombre().trim().toUpperCase());
+            this.getSelectedBaseLegal().setVnumero(this.getNumeroNorma().trim().toUpperCase());
+            this.getSelectedBaseLegal().setNrangoid(this.getRangoId());
+            this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setVsumilla(this.getSumilla().trim());
+            this.getSelectedBaseLegal().setDfechapublicacion(this.getFechaPublicacion());
+            this.getSelectedBaseLegal().setVtema(this.getTema());
+            this.getSelectedBaseLegal().setNactivo(BigDecimal.ONE);
+            this.getSelectedBaseLegal().setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_PUBLICADO)));
+            this.getSelectedBaseLegal().setDfechamodificacion(new Date());
+            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            service.saveOrUpdate(this.getSelectedBaseLegal());
+            Tbaselegal tbaselegal = new Tbaselegal();
+            BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
+            
+            ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
+            if(this.getUploadFile() != null) {                
+                TarchivoId archivoId = new TarchivoId();
+                archivoId.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
+                archivoId.setNarchivoid(aservice.getNextPK());
+
+                Archivo archivo = new Archivo();
+                archivo.setId(archivoId);
+                int version = this.getSelectedBaseLegal().getArchivo().getNversion().intValue();
+                archivo.setNversion(BigDecimal.valueOf(version + 1));
+                archivo.setTbaselegal(tbaselegal);
+                archivo.setVnombre(this.getUploadFile().getFileName());
+                archivo.setVruta(path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
+                archivo.setDfechacreacion(new Date());
+                aservice.saveOrUpdate(archivo);
+                saveFile(archivo);
+            }            
+            
+            VinculoBaseLegalService vservice = (VinculoBaseLegalService) ServiceFinder.findBean("VinculoBaseLegalService");
+            vservice.deleteByBaseLegal(this.getSelectedBaseLegal());
+            for(BaseLegal v : this.getListaTarget()) {
+                TvinculoBaselegalId id = new TvinculoBaselegalId();
+                id.setNbaselegalid(tbaselegal.getNbaselegalid());
+                id.setNvinculoid(vservice.getNextPK());
+                VinculoBaselegal vinculo = new VinculoBaselegal();
+                vinculo.setId(id);
+                vinculo.setTbaselegal(tbaselegal);
+                vinculo.setNbaselegalvinculadaid(v.getNbaselegalid());
+                vinculo.setNtipovinculo(v.getNestadoid());
+                vinculo.setDfechacreacion(new Date());
+//                vinculo.setVusuariocreacion(numeroNorma);
+                vservice.saveOrUpdate(vinculo);
+                
+                BaseLegal bl = service.getBaselegalById(v.getNbaselegalid());
+                bl.setNestadoid(v.getNestadoid());
+                bl.setDfechamodificacion(new Date());
+//                bl.setVusuariomodificacion(numeroNorma);
+                service.saveOrUpdate(bl);
+            }
+            
+            this.setListaBaseLegal(service.getBaselegales());
+            for(BaseLegal bl : this.getListaBaseLegal()) {
+                bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
+            }
+            RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
     public void toView(ActionEvent event) {
         try {
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
