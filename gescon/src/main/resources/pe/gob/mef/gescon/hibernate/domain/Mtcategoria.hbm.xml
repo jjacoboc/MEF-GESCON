@@ -29,11 +29,11 @@
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="20" />
         </property>
-        <property name="dfechacreacion" type="date">
-            <column name="DFECHACREACION" length="7" />
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" length="6" />
         </property>
-        <property name="dfechamod" type="date">
-            <column name="DFECHAMOD" length="7" />
+        <property name="dfechamod" type="timestamp">
+            <column name="DFECHAMOD" length="6" />
         </property>
         <property name="nflagwiki" type="big_decimal">
             <column name="NFLAGWIKI" precision="22" scale="0" />

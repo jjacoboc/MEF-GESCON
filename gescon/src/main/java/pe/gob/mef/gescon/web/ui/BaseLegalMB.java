@@ -55,6 +55,7 @@ import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
+import pe.gob.mef.gescon.web.bean.User;
 import pe.gob.mef.gescon.web.bean.VinculoBaselegal;
 
 /**
@@ -593,6 +594,8 @@ public class BaseLegalMB implements Serializable {
             if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
                 this.setListaBaseLegal(Collections.EMPTY_LIST);
             }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
             BaseLegal base = new BaseLegal();
             base.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             base.setVnombre(this.getNombre().trim().toUpperCase());
@@ -607,6 +610,7 @@ public class BaseLegalMB implements Serializable {
             base.setVtema(this.getTema());
             base.setNactivo(BigDecimal.ONE);
             base.setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_REGISTRADO)));
+            base.setVusuariocreacion(user.getVlogin());
             base.setDfechacreacion(new Date());
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             base.setNbaselegalid(service.getNextPK());
@@ -625,6 +629,7 @@ public class BaseLegalMB implements Serializable {
             archivo.setTbaselegal(tbaselegal);
             archivo.setVnombre(this.getUploadFile().getFileName());
             archivo.setVruta(path + base.getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
+            archivo.setVusuariocreacion(user.getVlogin());
             archivo.setDfechacreacion(new Date());
             aservice.saveOrUpdate(archivo);            
             saveFile(archivo);
@@ -640,13 +645,13 @@ public class BaseLegalMB implements Serializable {
                 vinculo.setNbaselegalvinculadaid(v.getNbaselegalid());
                 vinculo.setNtipovinculo(v.getNestadoid());
                 vinculo.setDfechacreacion(new Date());
-//                vinculo.setVusuariocreacion(numeroNorma);
+                vinculo.setVusuariocreacion(user.getVlogin());
                 vservice.saveOrUpdate(vinculo);
                 
                 BaseLegal bl = service.getBaselegalById(v.getNbaselegalid());
                 bl.setNestadoid(v.getNestadoid());
                 bl.setDfechamodificacion(new Date());
-//                bl.setVusuariomodificacion(numeroNorma);
+                bl.setVusuariomodificacion(user.getVlogin());
                 service.saveOrUpdate(bl);
             }
             
@@ -704,21 +709,22 @@ public class BaseLegalMB implements Serializable {
             if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
                 this.setListaBaseLegal(Collections.EMPTY_LIST);
             }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
             if(this.getSelectedCategoria() != null){
                 this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             }
-            this.getSelectedBaseLegal().setVnombre(this.getNombre().trim().toUpperCase());
-            this.getSelectedBaseLegal().setVnumero(this.getNumeroNorma().trim().toUpperCase());
-            this.getSelectedBaseLegal().setNrangoid(this.getRangoId());
+            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre().trim().toUpperCase());
+            this.getSelectedBaseLegal().setVnumero(this.getSelectedBaseLegal().getVnumero().trim().toUpperCase());
+            this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
             this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
-            this.getSelectedBaseLegal().setVsumilla(this.getSumilla().trim());
-            this.getSelectedBaseLegal().setDfechapublicacion(this.getFechaPublicacion());
-            this.getSelectedBaseLegal().setVtema(this.getTema());
-            this.getSelectedBaseLegal().setNactivo(BigDecimal.ONE);
-            this.getSelectedBaseLegal().setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_REGISTRADO)));
+            this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
+            this.getSelectedBaseLegal().setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
+            this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
+            this.getSelectedBaseLegal().setVusuariomodificacion(user.getVlogin());
             this.getSelectedBaseLegal().setDfechamodificacion(new Date());
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             service.saveOrUpdate(this.getSelectedBaseLegal());
@@ -738,6 +744,7 @@ public class BaseLegalMB implements Serializable {
                 archivo.setTbaselegal(tbaselegal);
                 archivo.setVnombre(this.getUploadFile().getFileName());
                 archivo.setVruta(path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
+                archivo.setVusuariocreacion(user.getVlogin());
                 archivo.setDfechacreacion(new Date());
                 aservice.saveOrUpdate(archivo);
                 saveFile(archivo);
@@ -755,13 +762,13 @@ public class BaseLegalMB implements Serializable {
                 vinculo.setNbaselegalvinculadaid(v.getNbaselegalid());
                 vinculo.setNtipovinculo(v.getNestadoid());
                 vinculo.setDfechacreacion(new Date());
-//                vinculo.setVusuariocreacion(numeroNorma);
+                vinculo.setVusuariocreacion(user.getVlogin());
                 vservice.saveOrUpdate(vinculo);
                 
                 BaseLegal bl = service.getBaselegalById(v.getNbaselegalid());
                 bl.setNestadoid(v.getNestadoid());
                 bl.setDfechamodificacion(new Date());
-//                bl.setVusuariomodificacion(numeroNorma);
+                bl.setVusuariomodificacion(user.getVlogin());
                 service.saveOrUpdate(bl);
             }
             
@@ -769,7 +776,7 @@ public class BaseLegalMB implements Serializable {
             for(BaseLegal bl : this.getListaBaseLegal()) {
                 bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
             }
-            RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('editDialog').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -781,21 +788,23 @@ public class BaseLegalMB implements Serializable {
             if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
                 this.setListaBaseLegal(Collections.EMPTY_LIST);
             }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
             if(this.getSelectedCategoria() != null){
                 this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             }
-            this.getSelectedBaseLegal().setVnombre(this.getNombre().trim().toUpperCase());
-            this.getSelectedBaseLegal().setVnumero(this.getNumeroNorma().trim().toUpperCase());
-            this.getSelectedBaseLegal().setNrangoid(this.getRangoId());
+            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre().trim().toUpperCase());
+            this.getSelectedBaseLegal().setVnumero(this.getSelectedBaseLegal().getVnumero().trim().toUpperCase());
+            this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
             this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
-            this.getSelectedBaseLegal().setVsumilla(this.getSumilla().trim());
-            this.getSelectedBaseLegal().setDfechapublicacion(this.getFechaPublicacion());
-            this.getSelectedBaseLegal().setVtema(this.getTema());
-            this.getSelectedBaseLegal().setNactivo(BigDecimal.ONE);
+             this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
+            this.getSelectedBaseLegal().setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
+            this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
             this.getSelectedBaseLegal().setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_PUBLICADO)));
+            this.getSelectedBaseLegal().setVusuariomodificacion(user.getVlogin());
             this.getSelectedBaseLegal().setDfechamodificacion(new Date());
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             service.saveOrUpdate(this.getSelectedBaseLegal());
@@ -815,6 +824,7 @@ public class BaseLegalMB implements Serializable {
                 archivo.setTbaselegal(tbaselegal);
                 archivo.setVnombre(this.getUploadFile().getFileName());
                 archivo.setVruta(path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
+                archivo.setVusuariocreacion(user.getVlogin());
                 archivo.setDfechacreacion(new Date());
                 aservice.saveOrUpdate(archivo);
                 saveFile(archivo);
@@ -832,13 +842,13 @@ public class BaseLegalMB implements Serializable {
                 vinculo.setNbaselegalvinculadaid(v.getNbaselegalid());
                 vinculo.setNtipovinculo(v.getNestadoid());
                 vinculo.setDfechacreacion(new Date());
-//                vinculo.setVusuariocreacion(numeroNorma);
+                vinculo.setVusuariocreacion(user.getVlogin());
                 vservice.saveOrUpdate(vinculo);
                 
                 BaseLegal bl = service.getBaselegalById(v.getNbaselegalid());
                 bl.setNestadoid(v.getNestadoid());
                 bl.setDfechamodificacion(new Date());
-//                bl.setVusuariomodificacion(numeroNorma);
+                bl.setVusuariomodificacion(user.getVlogin());
                 service.saveOrUpdate(bl);
             }
             
@@ -846,7 +856,7 @@ public class BaseLegalMB implements Serializable {
             for(BaseLegal bl : this.getListaBaseLegal()) {
                 bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
             }
-            RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('postDialog').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

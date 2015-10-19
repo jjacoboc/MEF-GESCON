@@ -15,6 +15,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -78,7 +79,7 @@ public class PerfilDaoImpl extends HibernateDaoSupport implements PerfilDao {
                             return query.list();
                         }
                     });
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             e.getMessage();
             e.printStackTrace();
         }

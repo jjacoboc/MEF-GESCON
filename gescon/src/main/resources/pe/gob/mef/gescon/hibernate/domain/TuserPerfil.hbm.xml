@@ -18,14 +18,17 @@
         <many-to-one name="mtuser" class="pe.gob.mef.gescon.hibernate.domain.Mtuser" update="false" insert="false" fetch="select">
             <column name="NUSUARIOID" precision="22" scale="0" not-null="true" />
         </many-to-one>
-        <property name="nusuariomod" type="big_decimal">
-            <column name="NUSUARIOMOD" precision="22" scale="0" />
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25"/>
         </property>
-        <property name="nusuariocreacion" type="string">
-            <column name="NUSUARIOCREACION" length="18" />
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
         </property>
-        <property name="dfechacreacion" type="date">
-            <column name="DFECHACREACION" length="7" />
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" length="6" />
+        </property>
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" length="6" />
         </property>
     </class>
 </hibernate-mapping>

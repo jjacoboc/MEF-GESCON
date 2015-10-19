@@ -52,9 +52,9 @@
                                         <h:outputText value="#{row.vnombre}" />
                                     </p:column>
                                     <p:column style="text-align: center; width: 100px;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" priority="3">
-                                        <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
-                                        <h:outputText value="#{row.nactivo}" >
-                                            <f:converter converterId="converterSiNo"/>
+                                        <f:facet name="header"><h:outputText value="ESTADO"/></f:facet>
+                                        <h:outputText value="#{row.nestadoid}" >
+                                            <f:converter converterId="converterEstadoBaseLegal"/>
                                         </h:outputText>
                                     </p:column>
                                     <p:column style="text-align: center; width: 140px;" sortBy="#{row.dfechapublicacion}" filterBy="#{row.dfechapublicacion}" filterMatchMode="contains" priority="4">
@@ -204,7 +204,9 @@
                                             <h:outputText value="#{t.vcategoria}"/>
                                         </p:column>
                                         <p:column style="width: 80px; text-align: center;" headerText="ESTADO">
-                                            <h:outputText value="#{t.nestadoid}"/>
+                                            <h:outputText value="#{t.nestadoid}">
+                                                <f:converter converterId="converterEstadoBaseLegal"/>
+                                            </h:outputText>
                                         </p:column>
                                     </p:dataTable>
                                 </h:panelGrid>

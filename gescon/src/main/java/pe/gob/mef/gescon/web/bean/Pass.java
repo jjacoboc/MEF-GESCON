@@ -6,7 +6,6 @@
 package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
@@ -15,17 +14,18 @@ import pe.gob.mef.gescon.hibernate.domain.TpassId;
  *
  * @author JJacobo
  */
-public class Pass implements Serializable{
-    
-     private TpassId id;
-     private Mtuser mtuser;
-     private String vclave;
-     private BigDecimal nusuariocreacion;
-     private Date dfechacreacion;
+public class Pass implements Serializable {
 
-    
-    public Pass(){
-        
+    private TpassId id;
+    private Mtuser mtuser;
+    private String vclave;
+    private String vusuariocreacion;
+    private Date dfechacreacion;
+    private String vusuariomodificacion;
+    private Date dfechamodificacion;
+
+    public Pass() {
+
     }
 
     /**
@@ -71,17 +71,17 @@ public class Pass implements Serializable{
     }
 
     /**
-     * @return the nusuariocreacion
+     * @return the vusuariocreacion
      */
-    public BigDecimal getNusuariocreacion() {
-        return nusuariocreacion;
+    public String getVusuariocreacion() {
+        return vusuariocreacion;
     }
 
     /**
-     * @param nusuariocreacion the nusuariocreacion to set
+     * @param vusuariocreacion the vusuariocreacion to set
      */
-    public void setNusuariocreacion(BigDecimal nusuariocreacion) {
-        this.nusuariocreacion = nusuariocreacion;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     /**
@@ -98,9 +98,32 @@ public class Pass implements Serializable{
         this.dfechacreacion = dfechacreacion;
     }
 
-    
+    /**
+     * @return the vusuariomodificacion
+     */
+    public String getVusuariomodificacion() {
+        return vusuariomodificacion;
+    }
 
-    
+    /**
+     * @param vusuariomodificacion the vusuariomodificacion to set
+     */
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
+    }
 
-    
+    /**
+     * @return the dfechamodificacion
+     */
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
+    }
+
+    /**
+     * @param dfechamodificacion the dfechamodificacion to set
+     */
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
+    }
+
 }
