@@ -23,6 +23,15 @@
         <property name="vdatoadicional" type="string">
             <column name="VDATOADICIONAL" length="100" />
         </property>
+        <property name="vrespuesta" type="string">
+            <column name="VRESPUESTA" length="400" />
+        </property>
+        <property name="vmsjusuario" type="string">
+            <column name="VMSJUSUARIO" length="400" />
+        </property>
+        <property name="vmsjespecialista" type="string">
+            <column name="VMSJESPECIALISTA" length="400" />
+        </property>
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="25" />
         </property>
@@ -37,15 +46,6 @@
         </property>
         <property name="nactivo" type="big_decimal">
             <column name="NACTIVO" precision="22" scale="0" />
-        </property>
-        <property name="vrespuesta" type="string">
-            <column name="VRESPUESTA" length="400" />
-        </property>
-        <property name="vmsjusuario" type="string">
-            <column name="VMSJUSUARIO" length="400" />
-        </property>
-        <property name="vmsjespecialista" type="string">
-            <column name="VMSJESPECIALISTA" length="400" />
         </property>
         <property name="nsituacion" type="big_decimal">
             <column name="NSITUACION" precision="22" scale="0" />

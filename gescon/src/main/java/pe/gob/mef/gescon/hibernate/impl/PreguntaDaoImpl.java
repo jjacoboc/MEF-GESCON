@@ -93,20 +93,27 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
     }
     
     @Override
-    public List<ArrayList> obtenerPreguntas() throws Exception {
+    public List<HashMap> obtenerPreguntas(final BigDecimal preguntaid,final BigDecimal usuarioid, final BigDecimal tpoconocimientoid) throws Exception {
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            sql.append("select P.*, A.nusuarioid ");
+            sql.append("select P.NPREGUNTAID AS IDPREGUNTA, VASUNTO AS ASUNTO, NCATEGORIAID AS IDCATEGORIA, VDETALLE AS DETALLE, ");
+            sql.append(" NENTIDADID AS IDENTIDAD, VDATOADICIONAL AS DATOADICIONAL, P.VUSUARIOCREACION AS USUCREA, P.VUSUARIOMODIFICACION AS USUMOD, ");
+            sql.append(" P.DFECHACREACION AS FECHACREA, P.DFECHAMODIFICACION AS FECHAMOD, NACTIVO AS ESTADO, VRESPUESTA AS RESPUESTA, VMSJUSUARIO AS MSJUSU, ");
+            sql.append(" VMSJESPECIALISTA AS MSJESP, NSITUACION AS SITUACION ");
             sql.append(" from TPREGUNTA P ");
-            sql.append(" inner join TASIGNACION A on P.NPREGUNTAID=A.NPREGUNTAID  ");
+            sql.append(" inner join TASIGNACION A on P.NPREGUNTAID=A.NCONOCIMIENTOID  ");
+            sql.append(" WHERE A.NCONOCIMIENTOID =:PREGUNTA  AND A.NUSUARIOID=:USUARIO  AND A.NTIPOCONOCIMIENTOID=:TIPOCONOCIMIENTO AND NESTADOID=1");
             
             object = getHibernateTemplate().execute(
                     new HibernateCallback() {
                         @Override
                         public Object doInHibernate(Session session) throws HibernateException {
                             Query query = session.createSQLQuery(sql.toString())
-                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                                    .setParameter("PREGUNTA", preguntaid)
+                                    .setParameter("USUARIO", usuarioid)
+                                    .setParameter("TIPOCONOCIMIENTO", tpoconocimientoid);
                             return query.list();
                         }
                     });
@@ -114,8 +121,66 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
             e.getMessage();
             e.printStackTrace();
         }
-        return (List<ArrayList>) object;
+        return (List<HashMap>) object;
 
     }
+    
+    @Override
+    public List<HashMap> obtenerPreguntaxAsig(final BigDecimal preguntaid,final BigDecimal usuarioid, final BigDecimal tpoconocimientoid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        Object object = null;
+        try {
+            sql.append("select nasignacionid AS IDASIGNACION, ntipoconocimientoid AS TPOCONOCIMIENTO , nconocimientoid AS IDPREGUNTA, nusuarioid AS IDUSUARIO, nestadoid AS ESTADO, VUSUARIOCREACION AS USUCREA, VUSUARIOMODIFICACION AS USUMOD, ");
+            sql.append(" DFECHACREACION AS FECHACREA, DFECHAMODIFICACION AS FECHAMOD ");
+            sql.append(" from TASIGNACION ");
+            sql.append(" WHERE NCONOCIMIENTOID =:PREGUNTA  AND NUSUARIOID=:USUARIO AND NTIPOCONOCIMIENTOID=:TIPOCONOCIMIENTO AND NESTADOID=1");
+            
+            object = getHibernateTemplate().execute(
+                    new HibernateCallback() {
+                        @Override
+                        public Object doInHibernate(Session session) throws HibernateException {
+                            Query query = session.createSQLQuery(sql.toString())
+                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                                    .setParameter("PREGUNTA", preguntaid)
+                                    .setParameter("USUARIO", usuarioid)
+                                    .setParameter("TIPOCONOCIMIENTO", tpoconocimientoid);
+                            return query.list();
+                        }
+                    });
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return (List<HashMap>) object;
+
+    }
+
+    @Override
+    public List<HashMap>obtenerPerfilxUsuario(final BigDecimal usuarioid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        Object object = null;
+        try {
+            sql.append("select nperfilid AS PERFIL ");
+            sql.append(" from TUSER_PERFIL ");
+            sql.append(" WHERE NUSUARIOID =:USUARIO");
+            
+            object = getHibernateTemplate().execute(
+                    new HibernateCallback() {
+                        @Override
+                        public Object doInHibernate(Session session) throws HibernateException {
+                            Query query = session.createSQLQuery(sql.toString())
+                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                                    .setParameter("USUARIO", usuarioid);
+                            return query.list();
+                        }
+                    });
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return (List<HashMap>) object;
+    }
+    
+    
     
 }

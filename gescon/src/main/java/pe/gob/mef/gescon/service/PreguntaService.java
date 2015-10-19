@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Politica;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 
@@ -22,6 +23,8 @@ public interface PreguntaService {
     public List<Pregunta> getPreguntas() throws Exception;
     public void saveOrUpdate(Pregunta pregunta) throws Exception;
     public String traerNomCategoria(BigDecimal categoriaid) throws Exception;
-    public List<ArrayList> obtenerPreguntas() throws Exception;
+    public List<Pregunta> obtenerPreguntas(BigDecimal preguntaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    public List<Asignacion> obtenerPreguntaxAsig(BigDecimal preguntaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    public BigDecimal obtenerPerfilxUsuario(BigDecimal usuarioid) throws Exception;
     
 }

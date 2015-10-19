@@ -6,6 +6,7 @@
 package pe.gob.mef.gescon.common;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -86,4 +87,13 @@ public class Constante implements Serializable {
     public static String REMU_ESTADO_PLAZA = "REMU_ESTADO_PLAZA";
     public static String REMU_TIPOREGISTRO = "REMU_TIPOREGISTRO";
     public static String REMU_NORMAS = "REMU_NORMAS";
+    
+    public static int ADMINISTRADOR =21;
+    public static int ESPECIALISTA =2;
+    public static int MODERADOR =1;
+    public static int USUARIOEXTERNO =3;
+    public static int USUARIOINTERNO =4;
+    
+    public static BigDecimal BASELEGAL = new BigDecimal(1);
+    public static BigDecimal PREGUNTAS = new BigDecimal(2);
 }

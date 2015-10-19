@@ -8,7 +8,7 @@ package pe.gob.mef.gescon.web.ui;
 import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.apache.commons.lang3.StringUtils;
 import pe.gob.mef.gescon.common.Constante;
@@ -24,7 +24,7 @@ import pe.gob.mef.gescon.web.bean.User;
  * @author JJacobo
  */
 @ManagedBean
-@ApplicationScoped
+@SessionScoped
 public class LoginMB implements Serializable {
 
     private User user;
