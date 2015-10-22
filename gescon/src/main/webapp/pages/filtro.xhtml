@@ -14,6 +14,18 @@ and open the template in the editor.
     <h:head>
         <title></title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <h:outputScript>
+            function cleanDatepicker() {
+                var old_fn = $.datepicker._updateDatepicker;
+                $.datepicker._updateDatepicker = function(inst) {
+                    old_fn.call(this, inst);
+                    var buttonPane = $(this).datepicker("widget").find(".ui-datepicker-buttonpane");
+                    $("<button type='button' class='ui-datepicker-clean ui-state-default ui-priority-primary ui-corner-all'>Clear</button>").appendTo(buttonPane).click(function(ev) {
+                        $.datepicker._clearDate(inst.input);
+                    }) ;
+                }
+            }       
+        </h:outputScript>
     </h:head>
     <h:body>
         <f:view>
@@ -48,7 +60,8 @@ and open the template in the editor.
                     <p:spacer height="10"/>
                     <p:fieldset legend="Rango">
                         <h:panelGrid columns="4">
-                            <p:calendar id="fromDate" locale="es" value="#{consultaMB.fechaInicio}" maxdate="#{consultaMB.fechaFin}" size="8" pattern="dd/MM/yyyy" readonlyInput="true" showButtonPanel="true" navigator="true" >
+                            <p:calendar id="fromDate" locale="es" value="#{consultaMB.fechaInicio}" maxdate="#{consultaMB.fechaFin}" size="8" 
+                                        pattern="dd/MM/yyyy" readonlyInput="true" showButtonPanel="true" navigator="true" onclick="cleanDatepicker();">
                                 <p:ajax event="dateSelect" update=":fm:toDate"/>
                             </p:calendar>
                             <h:outputText value="al" />

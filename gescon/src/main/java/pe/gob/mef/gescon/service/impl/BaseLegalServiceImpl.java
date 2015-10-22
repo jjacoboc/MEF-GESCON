@@ -7,6 +7,8 @@ package pe.gob.mef.gescon.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
@@ -49,6 +51,48 @@ public class BaseLegalServiceImpl implements BaseLegalService{
         BaseLegal baseLegal = new BaseLegal();
         BeanUtils.copyProperties(baseLegal, tbaselegal);
         return baseLegal;
+    }
+    
+    @Override
+    public List<BaseLegal> getTbaselegalesLinkedById(final BigDecimal id) throws Exception {
+        BaseLegalDao baseLegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
+        List<HashMap> lista = baseLegalDao.getTbaselegalesLinkedById(id);
+        List<BaseLegal> baseLegales = new ArrayList<BaseLegal>();
+        for(HashMap m : lista) {
+            BaseLegal bl = new BaseLegal();
+            bl.setNbaselegalid((BigDecimal) m.get("ID"));
+            bl.setVnumero((String) m.get("NUMERO"));
+            bl.setVnombre((String) m.get("NOMBRE"));
+            bl.setVsumilla((String) m.get("SUMILLA"));
+            bl.setNcategoriaid((BigDecimal) m.get("IDCATEGORIA"));
+            bl.setVcategoria((String) m.get("CATEGORIA"));
+            bl.setNestadoid((BigDecimal) m.get("IDESTADO"));
+            bl.setVestado((String) m.get("ESTADO"));
+            bl.setDfechapublicacion((Date) m.get("FECHA"));
+            baseLegales.add(bl);
+        }
+        return baseLegales;
+    }
+    
+    @Override
+    public List<BaseLegal> getTbaselegalesNotLinkedById(final BigDecimal id) throws Exception {
+        BaseLegalDao baseLegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
+        List<HashMap> lista = baseLegalDao.getTbaselegalesNotLinkedById(id);
+        List<BaseLegal> baseLegales = new ArrayList<BaseLegal>();
+        for(HashMap m : lista) {
+            BaseLegal bl = new BaseLegal();
+            bl.setNbaselegalid((BigDecimal) m.get("ID"));
+            bl.setVnumero((String) m.get("NUMERO"));
+            bl.setVnombre((String) m.get("NOMBRE"));
+            bl.setVsumilla((String) m.get("SUMILLA"));
+            bl.setNcategoriaid((BigDecimal) m.get("IDCATEGORIA"));
+            bl.setVcategoria((String) m.get("CATEGORIA"));
+            bl.setNestadoid((BigDecimal) m.get("IDESTADO"));
+            bl.setVestado((String) m.get("ESTADO"));
+            bl.setDfechapublicacion((Date) m.get("FECHA"));
+            baseLegales.add(bl);
+        }
+        return baseLegales;
     }
 
     @Override

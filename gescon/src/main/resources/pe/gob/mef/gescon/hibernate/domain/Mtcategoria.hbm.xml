@@ -57,7 +57,13 @@
             <column name="BIMAGEN" />
         </property>
         <property name="vimagennombre" type="string">
-            <column name="VIMAGENNOMBRE" length="100" />
+            <column name="VIMAGENNOMBRE" length="200" />
+        </property>
+        <property name="vespecialista" type="string">
+            <column name="VESPECIALISTA" length="25" />
+        </property>
+        <property name="vmoderador" type="string">
+            <column name="VMODERADOR" length="25" />
         </property>
         <set name="tcategoriaConocimientos" table="TCATEGORIA_CONOCIMIENTO" inverse="true" lazy="true" fetch="select">
             <key>

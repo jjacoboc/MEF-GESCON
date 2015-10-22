@@ -12,10 +12,15 @@
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
         <h:outputStylesheet library="css" name="style.css" />
     </h:head>
+    <script>
+        $(document).ready(function() {
+            $(".panelcolumns").parent().css("vertical-align", "top");
+        });
+    </script>
     <h:body>
         <f:view>
             <pe:layout fullPage="true">
-                <pe:layoutPane position="north" size="80" resizable="true" closable="true" styleContent="font-size: 10px;">
+                <pe:layoutPane position="north" size="80" resizable="true" closable="true" styleClassContent="headerStyle">
                     <ui:include src="pages/header.xhtml" />
                 </pe:layoutPane>
 
@@ -27,54 +32,28 @@
                     <h:form id="f">
                         <center>
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
-                            <h:panelGrid columns="2">
-                                <ui:repeat value="#{administracionMB.listaCategoria}" var="c" step="2">
+                            <p:spacer height="100"/>
+                            <p:dataGrid columns="2" value="#{administracionMB.listaCategoria}" var="c" rowStatePreserved="true" style="width: 500px; vertical-align: top;">
+                                <h:panelGrid columns="1" styleClass="panelcolumns">
                                     <h:panelGrid columns="2">
-                                        <h:panelGrid columns="1">
-                                            <h:panelGrid columns="2">
-                                                <p:graphicImage value="#{categoriaImages.image}">
-                                                    <f:param name="id" value="#{c.ncategoriaid}"/>
-                                                </p:graphicImage>
-                                                <h:outputText value="#{c.vnombre}" style="font-family: Tahoma;font-size: 14px;font-weight: bold;"/>
-                                            </h:panelGrid>
-                                            <ui:repeat value="#{c.children}" var="ch">
-                                                <h:panelGrid columns="3" style="font-family: Arial;font-size: 12px;">
-                                                    <p:spacer width="30" height="10"/>
-                                                    <h:outputText class="fa fa-fw fa-circle"/>
-                                                    <p:commandLink action="#{administracionMB.onClickSubCategoriesFilter}" ajax="false">
-                                                        <f:param name="idparent" value="#{c.ncategoriaid}"/>
-                                                        <f:param name="idchild" value="#{ch.ncategoriaid}"/>
-                                                        <h:outputText value="#{ch.vnombre}"/>
-                                                    </p:commandLink>
-                                                </h:panelGrid>
-                                            </ui:repeat>
-                                        </h:panelGrid>
+                                        <p:graphicImage value="#{categoriaImages.image}">
+                                            <f:param name="id" value="#{c.ncategoriaid}"/>
+                                        </p:graphicImage>
+                                        <h:outputText value="#{c.vnombre}" style="font-size: 20px;font-weight: bold;"/>
                                     </h:panelGrid>
-                                </ui:repeat>
-                                <ui:repeat value="#{administracionMB.listaCategoria}" var="c" offset="1" step="2">
-                                    <h:panelGrid columns="2">
-                                        <h:panelGrid columns="1">
-                                            <h:panelGrid columns="2">
-                                                <p:graphicImage value="#{categoriaImages.image}">
-                                                    <f:param name="id" value="#{c.ncategoriaid}"/>
-                                                </p:graphicImage>
-                                                <h:outputText value="#{c.vnombre}" style="font-family: Tahoma;font-size: 14px;font-weight: bold;"/>
-                                            </h:panelGrid>
-                                            <ui:repeat value="#{c.children}" var="ch">
-                                                <h:panelGrid columns="3" style="font-family: Arial;font-size: 12px;">
-                                                    <p:spacer width="30" height="10"/>
-                                                    <h:outputText class="fa fa-fw fa-circle"/>
-                                                    <p:commandLink action="#{administracionMB.onClickSubCategoriesFilter}" ajax="false">
-                                                        <f:param name="idparent" value="#{c.ncategoriaid}"/>
-                                                        <f:param name="idchild" value="#{ch.ncategoriaid}"/>
-                                                        <h:outputText value="#{ch.vnombre}"/>
-                                                    </p:commandLink>
-                                                </h:panelGrid>
-                                            </ui:repeat>
+                                    <ui:repeat value="#{c.children}" var="ch">
+                                        <h:panelGrid columns="3">
+                                            <p:spacer width="30" height="10"/>
+                                            <h:outputText class="fa fa-fw fa-circle"/>
+                                            <p:commandLink action="#{administracionMB.onClickSubCategoriesFilter}" ajax="false">
+                                                <f:param name="idparent" value="#{c.ncategoriaid}"/>
+                                                <f:param name="idchild" value="#{ch.ncategoriaid}"/>
+                                                <h:outputText value="#{ch.vnombre}" style="font-size: 15px;"/>
+                                            </p:commandLink>
                                         </h:panelGrid>
-                                    </h:panelGrid>
-                                </ui:repeat>
-                            </h:panelGrid>
+                                    </ui:repeat>
+                                </h:panelGrid>
+                            </p:dataGrid>
                         </center>
                     </h:form>
                 </pe:layoutPane>

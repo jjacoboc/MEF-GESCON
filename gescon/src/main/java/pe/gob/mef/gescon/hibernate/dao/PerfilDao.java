@@ -6,10 +6,10 @@
 package pe.gob.mef.gescon.hibernate.dao;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.Mtperfil;
-//import pe.gob.mef.gescon.hibernate.domain.Mtmaestro;
-//import pe.gob.mef.gescon.hibernate.domain.Mtpolitica;
+import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 
 /**
  *
@@ -19,5 +19,6 @@ public interface PerfilDao {
     
     public BigDecimal getNextPK() throws Exception;
     public List<Mtperfil> getMtperfils() throws Exception;
+    public List<HashMap> getMtperfilesByMtuser(final Mtuser mtuser) throws Exception;
     public void saveOrUpdate(Mtperfil mtperfil) throws Exception;
 }

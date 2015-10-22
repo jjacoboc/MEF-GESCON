@@ -6,6 +6,7 @@
 package pe.gob.mef.gescon.hibernate.dao;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 
@@ -18,5 +19,7 @@ public interface BaseLegalDao {
     public BigDecimal getNextPK() throws Exception;
     public List<Tbaselegal> getTbaselegales() throws Exception;
     public Tbaselegal getTbaselegalById(BigDecimal id) throws Exception;
+    public List<HashMap> getTbaselegalesLinkedById(BigDecimal id) throws Exception;
+    public List<HashMap> getTbaselegalesNotLinkedById(BigDecimal id) throws Exception;
     public void saveOrUpdate(Tbaselegal tbaselegal) throws Exception;
 }

@@ -23,7 +23,7 @@
                 }, 500);
             }
             function mouseOverUser(obj) {
-                obj.style.background = "#D09042";
+                obj.style.background = "#71CC8D";
             }
             function mouseOutUser(obj) {
                 obj.style.background = "#F4F0EC";
@@ -32,8 +32,8 @@
         </script>
     </h:head>
     <h:body>
-        <h:form id="headerForm">
-            <h:panelGrid  columns="3" width="100%">
+        <h:form id="headerForm" >
+            <h:panelGrid  columns="3" width="100%" >
                 <p:graphicImage library="images" name="46.jpg" style="border: 0px;"/>
                 <p:spacer/>
                 <h:panelGrid columns="1" style="font-family: arial, serif; font-size: 14px; float: right; cursor: pointer; font-weight: ">
@@ -55,7 +55,7 @@
                                         <p:spacer width="3"/>
                                         <h:outputText value="#{loginMB.user.vapellidos}" />
                                     </h:panelGroup>
-                                    <h:outputText value="Administrador" style="font-size: 9px; float: right;"/>
+                                    <h:outputText value="#{loginMB.perfil.vnombre}" style="font-size: 10px; float: right;"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <p:separator style="border: silver 1px dashed;"/>
@@ -90,7 +90,7 @@
                             </h:panelGrid>
                         </h:panelGrid>
                     </p:overlayPanel>
-                    <p:commandLink  value="Iniciar Sesion" update=":iniDialogForm:pgIni" oncomplete="PF('iniDialog').show();" rendered="#{loginMB.user eq null}" style="font-size: 12px;"/>
+                    <p:commandLink  value="Iniciar Sesion" update=":iniDialogForm:pgIni" oncomplete="PF('iniDialog').show();" rendered="#{loginMB.user eq null}" style="font-size: 14px; font-weight: bold;"/>
                 </h:panelGrid>
             </h:panelGrid>
         </h:form>

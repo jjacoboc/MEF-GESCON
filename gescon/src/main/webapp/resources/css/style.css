@@ -104,4 +104,26 @@ and open the template in the editor.
 .tooltip {
     font-size: 10px;
 }
+
+.pickListPanelColumns td{
+    vertical-align: top;
+}
+
+.panelcolumns td {
+    vertical-align: top;
+}
+
+.hide-column-names table thead tr {
+    display: none;
+}
+
+.headerStyle {
+    font-size: 10px;
+    background: #71CC8D;
+}
+
+.etiqueta {
+    font-weight: bold;
+    font-size: 12px;
+}
 .icon-add{background: url(../images/add.png) no-repeat !important;}

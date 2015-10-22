@@ -30,6 +30,8 @@ public class Mtcategoria implements java.io.Serializable {
     private BigDecimal nflagom;
     private Blob bimagen;
     private String vimagennombre;
+    private String vespecialista;
+    private String vmoderador;
     private Set<TcategoriaConocimiento> tcategoriaConocimientos = new HashSet<TcategoriaConocimiento>(0);
 
     public Mtcategoria() {
@@ -39,7 +41,7 @@ public class Mtcategoria implements java.io.Serializable {
         this.ncategoriaid = ncategoriaid;
     }
 
-    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomod, String vusuariocreacion, Date dfechacreacion, Date dfechamod, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Blob bimagen, String vimagennombre, Set<TcategoriaConocimiento> tcategoriaConocimientos) {
+    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomod, String vusuariocreacion, Date dfechacreacion, Date dfechamod, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Blob bimagen, String vimagennombre, String vespecialista, String vmoderador, Set<TcategoriaConocimiento> tcategoriaConocimientos) {
         this.ncategoriaid = ncategoriaid;
         this.vdescripcion = vdescripcion;
         this.nestado = nestado;
@@ -58,6 +60,8 @@ public class Mtcategoria implements java.io.Serializable {
         this.nflagom = nflagom;
         this.bimagen = bimagen;
         this.vimagennombre = vimagennombre;
+        this.vespecialista = vespecialista;
+        this.vmoderador = vmoderador;
         this.tcategoriaConocimientos = tcategoriaConocimientos;
     }
 
@@ -215,6 +219,22 @@ public class Mtcategoria implements java.io.Serializable {
      */
     public void setVimagennombre(String vimagennombre) {
         this.vimagennombre = vimagennombre;
+    }
+
+    public String getVespecialista() {
+        return vespecialista;
+    }
+
+    public void setVespecialista(String vespecialista) {
+        this.vespecialista = vespecialista;
+    }
+
+    public String getVmoderador() {
+        return vmoderador;
+    }
+
+    public void setVmoderador(String vmoderador) {
+        this.vmoderador = vmoderador;
     }
 
     public Set<TcategoriaConocimiento> getTcategoriaConocimientos() {

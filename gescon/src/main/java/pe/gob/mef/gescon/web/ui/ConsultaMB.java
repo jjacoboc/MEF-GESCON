@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
@@ -363,7 +362,11 @@ public class ConsultaMB implements Serializable {
     }
     
     public String getTypesFilter(){
-        return StringUtils.join(this.getSelectedTipoConocimiento(), ',');
+        String filter = StringUtils.join(this.getSelectedTipoConocimiento(), ',');
+        if(StringUtils.isBlank(filter)) {
+            filter = "1,2,3,4,5,6";
+        }
+        return filter;
     }
 
     public void filtrar(ActionEvent event) {
@@ -411,6 +414,7 @@ public class ConsultaMB implements Serializable {
                     setContent(new DefaultStreamedContent(fis, "application/pdf"));
                 }
             }
+            RequestContext.getCurrentInstance().execute("PF('viewDialog').show();");
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();

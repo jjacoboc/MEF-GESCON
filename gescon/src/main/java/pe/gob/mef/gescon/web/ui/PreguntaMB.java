@@ -5,10 +5,8 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
-import com.mchange.lang.ByteUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -25,26 +23,17 @@ import org.apache.commons.logging.LogFactory;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.common.Items;
-import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfil;
-import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfilId;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
-import pe.gob.mef.gescon.service.PerfilService;
-import pe.gob.mef.gescon.service.PoliticaPerfilService;
-import pe.gob.mef.gescon.service.PoliticaService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.util.JSFUtils;
 
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
-import pe.gob.mef.gescon.web.bean.Perfil;
-import pe.gob.mef.gescon.web.bean.PoliticaPerfil;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 
 //import pe.gob.mef.gescon.web.bean.Politica;
@@ -1107,7 +1096,6 @@ public class PreguntaMB implements Serializable {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-
     }
 
 }

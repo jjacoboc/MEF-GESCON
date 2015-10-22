@@ -15,21 +15,24 @@ and open the template in the editor.
     </h:head>
     <h:body>
         <f:view>
-            <p:menu style="font-size: 11px;">
-                <p:submenu label="Menú Principal">
-                    <p:menuitem value="Inicio" url="/index.xhtml" />
-                    <p:menuitem value="Maestro" url="/pages/maestro.xhtml" />
-                    <p:menuitem value="Perfil" url="/pages/perfil.xhtml" />
-                    <p:menuitem value="Políticas de Acceso" url="/pages/politica.xhtml" />
-                    <p:menuitem value="Alerta" url="/pages/alerta.xhtml" />
-                    <p:menuitem value="Parametro" url="/pages/parametro.xhtml" />
-                    <p:menuitem value="Categoría" url="/pages/categoria.xhtml" />
-                    <p:menuitem value="Base Legal" url="/pages/baseLegal.xhtml" />
-                    <p:menuitem value="Usuario Externo" url="/pages/usuarioExterno.xhtml" />
-                    <p:menuitem value="ADM Usuario Externo" url="/pages/listaUserExterno.xhtml" />
-                    <p:menuitem value="Pregunta" url="/pages/pregunta.xhtml" />
-                </p:submenu>
-            </p:menu>
+            <h:panelGrid columns="1">
+                <p:menu style="font-size: 11px;">
+                    <p:submenu label="Menú Principal">
+                        <p:menuitem value="Inicio" url="/index.xhtml" />
+                        <p:menuitem value="Maestro" url="/pages/maestro.xhtml" />
+                        <p:menuitem value="Perfil" url="/pages/perfil.xhtml" />
+                        <p:menuitem value="Políticas de Acceso" url="/pages/politica.xhtml" />
+                        <p:menuitem value="Alerta" url="/pages/alerta.xhtml" />
+                        <p:menuitem value="Parametro" url="/pages/parametro.xhtml" />
+                        <p:menuitem value="Categoría" url="/pages/categoria.xhtml" />
+                        <p:menuitem value="Base Legal" url="/pages/baseLegal.xhtml" />
+                        <p:menuitem value="Usuario Externo" url="/pages/usuarioExterno.xhtml" />
+                        <p:menuitem value="ADM Usuario Externo" url="/pages/listaUserExterno.xhtml" />
+                        <p:menuitem value="Pregunta" url="/pages/pregunta.xhtml" />
+                        <p:menuitem value="Wiki" url="/pages/wiki/lista.xhtml" />
+                    </p:submenu>
+                </p:menu>
+            </h:panelGrid>
         </f:view>
     </h:body>
 </html>

@@ -29,6 +29,7 @@
             <list>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtalerta.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtcategoria.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/MtestadoBaselegal.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtmaestro.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtparametro.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtperfil.hbm.xml</value>
@@ -54,6 +55,7 @@
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TuserPerfil.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvincHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tvinculo.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoBaselegal.hbm.xml</value>
             </list>
         </property>
         <property name="hibernateProperties">

@@ -11,7 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -22,33 +22,41 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.PhaseId;
-import javax.sql.rowset.serial.SerialBlob;
+import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.DualListModel;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.hibernate.domain.Mtrango;
 import pe.gob.mef.gescon.hibernate.domain.TarchivoId;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
+import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
 import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.VinculoBaseLegalService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
+import pe.gob.mef.gescon.web.bean.User;
+import pe.gob.mef.gescon.web.bean.VinculoBaselegal;
 
 /**
  *
@@ -79,6 +87,12 @@ public class BaseLegalMB implements Serializable {
     private File file;
     private TreeNode tree;
     private Categoria selectedCategoria;
+    private List<BaseLegal> listaSource;
+    private List<BaseLegal> listaTarget;
+    private DualListModel<BaseLegal> pickList;
+    private List<String> listaTipoVinculo;
+    private DataModel dataModel;
+    
 
     /**
      * Creates a new instance of BaseLegalMB
@@ -323,6 +337,79 @@ public class BaseLegalMB implements Serializable {
     public void setSelectedCategoria(Categoria selectedCategoria) {
         this.selectedCategoria = selectedCategoria;
     }
+
+    /**
+     * @return the listaSource
+     */
+    public List<BaseLegal> getListaSource() {
+        return listaSource;
+    }
+
+    /**
+     * @param listaSource the listaSource to set
+     */
+    public void setListaSource(List<BaseLegal> listaSource) {
+        this.listaSource = listaSource;
+    }
+
+    /**
+     * @return the listaTarget
+     */
+    public List<BaseLegal> getListaTarget() {
+        return listaTarget;
+    }
+
+    /**
+     * @param listaTarget the listaTarget to set
+     */
+    public void setListaTarget(List<BaseLegal> listaTarget) {
+        this.listaTarget = listaTarget;
+    }
+
+    /**
+     * @return the pickList
+     */
+    public DualListModel<BaseLegal> getPickList() {
+        return pickList;
+    }
+
+    /**
+     * @param pickList the pickList to set
+     */
+    public void setPickList(DualListModel<BaseLegal> pickList) {
+        this.pickList = pickList;
+    }
+
+    /**
+     * @return the listaTipoVinculo
+     */
+    public List<String> getListaTipoVinculo() {
+        return listaTipoVinculo;
+    }
+
+    /**
+     * @param listaTipoVinculo the listaTipoVinculo to set
+     */
+    public void setListaTipoVinculo(List<String> listaTipoVinculo) {
+        this.listaTipoVinculo = listaTipoVinculo;
+    }
+
+    /**
+     * @return the dataModel
+     */
+    public DataModel getDataModel() {
+        if (dataModel == null) {
+            dataModel = new ListDataModel(this.getListaTipoVinculo());
+        }
+        return dataModel;
+    }
+
+    /**
+     * @param dataModel the dataModel to set
+     */
+    public void setDataModel(DataModel dataModel) {
+        this.dataModel = dataModel;
+    }
     
     @PostConstruct
     public void init() {
@@ -333,6 +420,9 @@ public class BaseLegalMB implements Serializable {
             for(BaseLegal bl : this.getListaBaseLegal()) {
                 bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
             }
+            this.setListaSource(new ArrayList<BaseLegal>());
+            this.setListaTarget(new ArrayList<BaseLegal>());
+            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -340,6 +430,7 @@ public class BaseLegalMB implements Serializable {
     }
     
     public void cleanAttributes() {
+        this.setSelectedBaseLegal(null);
         this.setSelectedCategoria(null);
         this.setUploadFile(null);
         this.setFile(null);
@@ -354,10 +445,27 @@ public class BaseLegalMB implements Serializable {
         this.setSumilla(StringUtils.EMPTY);
         this.setFechaPublicacion(null);
         this.setTema(StringUtils.EMPTY);
+        this.setListaSource(new ArrayList<BaseLegal>());
+        this.setListaTarget(new ArrayList<BaseLegal>());
+        this.setListaTipoVinculo(new ArrayList<String>());
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {
             iter.remove();
             FacesContext.getCurrentInstance().renderResponse();
+        }
+    }
+    
+    public void handleChangeValue(AjaxBehaviorEvent event) {
+        try {
+            if(event != null) {
+                String id = (String)((SelectOneMenu) event.getSource()).getValue();
+                String index = JSFUtils.getRequestParameter("index");
+                this.getListaTipoVinculo().set(Integer.parseInt(index), id);
+                this.getListaTarget().get(Integer.parseInt(index)).setNestadoid(BigDecimal.valueOf(Long.parseLong(id)));
+            }
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
         }
     }
 
@@ -399,7 +507,7 @@ public class BaseLegalMB implements Serializable {
         else {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             String fileName = JSFUtils.getRequestParameter("fileName");
-            FileInputStream fis = new FileInputStream(new File("D:\\gescon\\temp\\".concat(fileName)));
+            FileInputStream fis = new FileInputStream(new File(fileName));
             return new DefaultStreamedContent(fis, "application/pdf");
         }
     }
@@ -486,13 +594,13 @@ public class BaseLegalMB implements Serializable {
             if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
                 this.setListaBaseLegal(Collections.EMPTY_LIST);
             }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
             BaseLegal base = new BaseLegal();
             base.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             base.setVnombre(this.getNombre().trim().toUpperCase());
             base.setVnumero(this.getNumeroNorma().trim().toUpperCase());
-            Mtrango mtrango = new Mtrango();
-            mtrango.setNrangoid(this.getRangoId());
-            base.setMtrango(mtrango);
+            base.setNrangoid(this.getRangoId());
             base.setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
@@ -501,6 +609,8 @@ public class BaseLegalMB implements Serializable {
             base.setDfechapublicacion(this.getFechaPublicacion());
             base.setVtema(this.getTema());
             base.setNactivo(BigDecimal.ONE);
+            base.setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_REGISTRADO)));
+            base.setVusuariocreacion(user.getVlogin());
             base.setDfechacreacion(new Date());
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             base.setNbaselegalid(service.getNextPK());
@@ -519,10 +629,32 @@ public class BaseLegalMB implements Serializable {
             archivo.setTbaselegal(tbaselegal);
             archivo.setVnombre(this.getUploadFile().getFileName());
             archivo.setVruta(path + base.getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
+            archivo.setVusuariocreacion(user.getVlogin());
             archivo.setDfechacreacion(new Date());
-            aservice.saveOrUpdate(archivo);
-            
+            aservice.saveOrUpdate(archivo);            
             saveFile(archivo);
+            
+            for(BaseLegal v : this.getListaTarget()) {
+                VinculoBaseLegalService vservice = (VinculoBaseLegalService) ServiceFinder.findBean("VinculoBaseLegalService");
+                TvinculoBaselegalId id = new TvinculoBaselegalId();
+                id.setNbaselegalid(tbaselegal.getNbaselegalid());
+                id.setNvinculoid(vservice.getNextPK());
+                VinculoBaselegal vinculo = new VinculoBaselegal();
+                vinculo.setId(id);
+                vinculo.setTbaselegal(tbaselegal);
+                vinculo.setNbaselegalvinculadaid(v.getNbaselegalid());
+                vinculo.setNtipovinculo(v.getNestadoid());
+                vinculo.setDfechacreacion(new Date());
+                vinculo.setVusuariocreacion(user.getVlogin());
+                vservice.saveOrUpdate(vinculo);
+                
+                BaseLegal bl = service.getBaselegalById(v.getNbaselegalid());
+                bl.setNestadoid(v.getNestadoid());
+                bl.setDfechamodificacion(new Date());
+                bl.setVusuariomodificacion(user.getVlogin());
+                service.saveOrUpdate(bl);
+            }
+            
             this.setListaBaseLegal(service.getBaselegales());
             for(BaseLegal bl : this.getListaBaseLegal()) {
                 bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
@@ -535,7 +667,6 @@ public class BaseLegalMB implements Serializable {
     }
 
     public void saveFile(Archivo archivo) {
-        
         try {
             if (this.getUploadFile() != null) {
                 String id = archivo.getId().getNbaselegalid().toString();
@@ -557,11 +688,243 @@ public class BaseLegalMB implements Serializable {
         }
     }
     
+    public void toEdit(ActionEvent event) {
+        try {
+            this.cleanAttributes();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
+            this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
+            this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
+            this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
+            loadPickList(event);
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void edit(ActionEvent event) {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
+                this.setListaBaseLegal(Collections.EMPTY_LIST);
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            if(this.getSelectedCategoria() != null){
+                this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            }
+            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre().trim().toUpperCase());
+            this.getSelectedBaseLegal().setVnumero(this.getSelectedBaseLegal().getVnumero().trim().toUpperCase());
+            this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
+            this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
+            this.getSelectedBaseLegal().setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
+            this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
+            this.getSelectedBaseLegal().setVusuariomodificacion(user.getVlogin());
+            this.getSelectedBaseLegal().setDfechamodificacion(new Date());
+            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            service.saveOrUpdate(this.getSelectedBaseLegal());
+            Tbaselegal tbaselegal = new Tbaselegal();
+            BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
+            
+            ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
+            if(this.getUploadFile() != null) {                
+                TarchivoId archivoId = new TarchivoId();
+                archivoId.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
+                archivoId.setNarchivoid(aservice.getNextPK());
+
+                Archivo archivo = new Archivo();
+                archivo.setId(archivoId);
+                int version = this.getSelectedBaseLegal().getArchivo().getNversion().intValue();
+                archivo.setNversion(BigDecimal.valueOf(version + 1));
+                archivo.setTbaselegal(tbaselegal);
+                archivo.setVnombre(this.getUploadFile().getFileName());
+                archivo.setVruta(path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
+                archivo.setVusuariocreacion(user.getVlogin());
+                archivo.setDfechacreacion(new Date());
+                aservice.saveOrUpdate(archivo);
+                saveFile(archivo);
+            }            
+            
+            VinculoBaseLegalService vservice = (VinculoBaseLegalService) ServiceFinder.findBean("VinculoBaseLegalService");
+            vservice.deleteByBaseLegal(this.getSelectedBaseLegal());
+            for(BaseLegal v : this.getListaTarget()) {
+                TvinculoBaselegalId id = new TvinculoBaselegalId();
+                id.setNbaselegalid(tbaselegal.getNbaselegalid());
+                id.setNvinculoid(vservice.getNextPK());
+                VinculoBaselegal vinculo = new VinculoBaselegal();
+                vinculo.setId(id);
+                vinculo.setTbaselegal(tbaselegal);
+                vinculo.setNbaselegalvinculadaid(v.getNbaselegalid());
+                vinculo.setNtipovinculo(v.getNestadoid());
+                vinculo.setDfechacreacion(new Date());
+                vinculo.setVusuariocreacion(user.getVlogin());
+                vservice.saveOrUpdate(vinculo);
+                
+                BaseLegal bl = service.getBaselegalById(v.getNbaselegalid());
+                bl.setNestadoid(v.getNestadoid());
+                bl.setDfechamodificacion(new Date());
+                bl.setVusuariomodificacion(user.getVlogin());
+                service.saveOrUpdate(bl);
+            }
+            
+            this.setListaBaseLegal(service.getBaselegales());
+            for(BaseLegal bl : this.getListaBaseLegal()) {
+                bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
+            }
+            RequestContext.getCurrentInstance().execute("PF('editDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void post(ActionEvent event) {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
+                this.setListaBaseLegal(Collections.EMPTY_LIST);
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            if(this.getSelectedCategoria() != null){
+                this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            }
+            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre().trim().toUpperCase());
+            this.getSelectedBaseLegal().setVnumero(this.getSelectedBaseLegal().getVnumero().trim().toUpperCase());
+            this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
+            this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
+             this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
+            this.getSelectedBaseLegal().setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
+            this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
+            this.getSelectedBaseLegal().setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_PUBLICADO)));
+            this.getSelectedBaseLegal().setVusuariomodificacion(user.getVlogin());
+            this.getSelectedBaseLegal().setDfechamodificacion(new Date());
+            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            service.saveOrUpdate(this.getSelectedBaseLegal());
+            Tbaselegal tbaselegal = new Tbaselegal();
+            BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
+            
+            ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
+            if(this.getUploadFile() != null) {                
+                TarchivoId archivoId = new TarchivoId();
+                archivoId.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
+                archivoId.setNarchivoid(aservice.getNextPK());
+
+                Archivo archivo = new Archivo();
+                archivo.setId(archivoId);
+                int version = this.getSelectedBaseLegal().getArchivo().getNversion().intValue();
+                archivo.setNversion(BigDecimal.valueOf(version + 1));
+                archivo.setTbaselegal(tbaselegal);
+                archivo.setVnombre(this.getUploadFile().getFileName());
+                archivo.setVruta(path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
+                archivo.setVusuariocreacion(user.getVlogin());
+                archivo.setDfechacreacion(new Date());
+                aservice.saveOrUpdate(archivo);
+                saveFile(archivo);
+            }            
+            
+            VinculoBaseLegalService vservice = (VinculoBaseLegalService) ServiceFinder.findBean("VinculoBaseLegalService");
+            vservice.deleteByBaseLegal(this.getSelectedBaseLegal());
+            for(BaseLegal v : this.getListaTarget()) {
+                TvinculoBaselegalId id = new TvinculoBaselegalId();
+                id.setNbaselegalid(tbaselegal.getNbaselegalid());
+                id.setNvinculoid(vservice.getNextPK());
+                VinculoBaselegal vinculo = new VinculoBaselegal();
+                vinculo.setId(id);
+                vinculo.setTbaselegal(tbaselegal);
+                vinculo.setNbaselegalvinculadaid(v.getNbaselegalid());
+                vinculo.setNtipovinculo(v.getNestadoid());
+                vinculo.setDfechacreacion(new Date());
+                vinculo.setVusuariocreacion(user.getVlogin());
+                vservice.saveOrUpdate(vinculo);
+                
+                BaseLegal bl = service.getBaselegalById(v.getNbaselegalid());
+                bl.setNestadoid(v.getNestadoid());
+                bl.setDfechamodificacion(new Date());
+                bl.setVusuariomodificacion(user.getVlogin());
+                service.saveOrUpdate(bl);
+            }
+            
+            this.setListaBaseLegal(service.getBaselegales());
+            for(BaseLegal bl : this.getListaBaseLegal()) {
+                bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
+            }
+            RequestContext.getCurrentInstance().execute("PF('postDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
     public void toView(ActionEvent event) {
         try {
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
             this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            loadPickList(event);
         } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void loadPickList(ActionEvent event) {
+        try {
+            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            if(this.getSelectedBaseLegal() != null) {
+                if(CollectionUtils.isEmpty(this.getListaSource())){
+                    this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+                }
+                if(CollectionUtils.isEmpty(this.getListaTarget())){
+                    this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+                }
+            } else {
+                if(CollectionUtils.isEmpty(this.getListaSource())){
+                    this.setListaSource(service.getTbaselegalesNotLinkedById(null));
+                }
+                if(CollectionUtils.isEmpty(this.getListaTarget())){
+                    this.setListaTarget(new ArrayList<BaseLegal>());
+                }
+            }
+            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void onTransfer(TransferEvent event) {
+        int index;
+        try {
+            if (event != null) {
+                if (event.isAdd()) {
+                    Collections.sort(this.getListaSource(), BaseLegal.Comparators.ID);
+                    for (BaseLegal ele : (List<BaseLegal>) event.getItems()) {
+                        index = Collections.binarySearch(this.getListaSource(), ele, BaseLegal.Comparators.ID);
+                        if(this.getListaTarget() == null) this.setListaTarget(new ArrayList<BaseLegal>());
+                        this.getListaTarget().add(this.getListaSource().get(index));
+                        this.getListaTipoVinculo().add(BigDecimal.ZERO.toString());
+                        this.getListaSource().remove(index);
+                    }
+                }
+                if (event.isRemove()) {
+                    Collections.sort(this.getListaTarget(), BaseLegal.Comparators.ID);
+                    for (BaseLegal ele : (List<BaseLegal>) event.getItems()) {
+                        index = Collections.binarySearch(this.getListaTarget(), ele, BaseLegal.Comparators.ID);
+                        if(this.getListaSource() == null) this.setListaSource(new ArrayList<BaseLegal>());
+                        this.getListaSource().add(this.getListaTarget().get(index));
+                        this.getListaTarget().remove(index);
+                        this.getListaTipoVinculo().remove(index);
+                    }
+                }
+            }
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }

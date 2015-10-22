@@ -25,6 +25,8 @@ public class Consulta implements Serializable{
     private String categoria;
     private BigDecimal idTipoConocimiento;
     private String tipoConocimiento;
+    private BigDecimal idEstado;
+    private String estado;
     private Date fechaPublicacion;
     private String usuario;
     private String usuarioNombre;
@@ -158,6 +160,34 @@ public class Consulta implements Serializable{
      */
     public void setTipoConocimiento(String tipoConocimiento) {
         this.tipoConocimiento = tipoConocimiento;
+    }
+
+    /**
+     * @return the idEstado
+     */
+    public BigDecimal getIdEstado() {
+        return idEstado;
+    }
+
+    /**
+     * @param idEstado the idEstado to set
+     */
+    public void setIdEstado(BigDecimal idEstado) {
+        this.idEstado = idEstado;
+    }
+
+    /**
+     * @return the estado
+     */
+    public String getEstado() {
+        return estado;
+    }
+
+    /**
+     * @param estado the estado to set
+     */
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     /**

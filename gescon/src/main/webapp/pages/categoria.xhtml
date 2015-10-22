@@ -55,11 +55,11 @@
                         </p:panel>
                     </h:form>
                     
-                    <p:dialog id="newDlg" header="Nueva Categoría" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                    <p:dialog id="newDlg" header="Nueva Categoría" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
                         <h:form id="newDialogForm">
                             <h:panelGrid id="pgNew" columns="3" style="text-align: left;width: 100%">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Nombre:"/>
+                                <h:outputLabel value="*" styleClass="etiqueta"/>
+                                <h:outputLabel value="Nombre:" styleClass="etiqueta"/>
                                 <p:inputText size="50" value="#{categoriaMB.nombre}" maxlength="25"/> 
                                 
                                 <h:outputLabel value="*"/>
@@ -105,8 +105,8 @@
                     <p:dialog id="editDlg" header="Actualizar Categoría" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                         <h:form id="editDialogForm">
                             <h:panelGrid id="pgEdit" columns="3" style="text-align: left;width: 100%">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Nombre:"/>
+                                <h:outputLabel value="*" styleClass="etiqueta"/>
+                                <h:outputLabel value="Nombre:" styleClass="etiqueta"/>
                                 <p:inputText size="50" value="#{categoriaMB.selectedCategoria.vnombre}" maxlength="25"/> 
                                 
                                 <h:outputLabel value="*"/>

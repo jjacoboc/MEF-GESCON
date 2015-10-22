@@ -42,6 +42,8 @@ public class ConsultaServiceImpl implements ConsultaService{
                     c.setCategoria((String) map.get("CATEGORIA"));
                     c.setIdTipoConocimiento((BigDecimal) map.get("IDTIPOCONOCIMIENTO"));
                     c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
+                    c.setIdEstado((BigDecimal) map.get("IDESTADO"));
+                    c.setEstado((String) map.get("ESTADO"));
                     lista.add(c);
                 }
             }

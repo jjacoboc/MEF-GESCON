@@ -21,6 +21,7 @@ public class Perfil implements Serializable{
     private String vusuariomodificacion;
     private String vusuariocreacion;    
     private Date dfechacreacion;
+    private Date dfechamodificacion;
     private String vnombre;
     private String imagen;
     
@@ -110,6 +111,20 @@ public class Perfil implements Serializable{
      */
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
+    }
+
+    /**
+     * @return the dfechamodificacion
+     */
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
+    }
+
+    /**
+     * @param dfechamodificacion the dfechamodificacion to set
+     */
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
     
     

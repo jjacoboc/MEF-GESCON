@@ -17,6 +17,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -174,13 +175,36 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
                             return query.list();
                         }
                     });
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
             e.getMessage();
             e.printStackTrace();
         }
         return (List<HashMap>) object;
     }
     
-    
-    
+    @Override
+    public List<ArrayList> obtenerPreguntas() throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        Object object = null;
+        try {
+            sql.append("select P.*, A.nusuarioid ");
+            sql.append(" from TPREGUNTA P ");
+            sql.append(" inner join TASIGNACION A on P.NPREGUNTAID=A.NPREGUNTAID  ");
+            
+            object = getHibernateTemplate().execute(
+                    new HibernateCallback() {
+                        @Override
+                        public Object doInHibernate(Session session) throws HibernateException {
+                            Query query = session.createSQLQuery(sql.toString())
+                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+                            return query.list();
+                        }
+                    });
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return (List<ArrayList>) object;
+
+    }    
 }
