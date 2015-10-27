@@ -24,4 +24,5 @@
   <table-filter match-name="MTRANGO"/>
   <table-filter match-name="TBASELEGAL"/>
   <table-filter match-name="TARCHIVO"/>
+  <table-filter match-name="TCONOCIMIENTO"/>
 </hibernate-reverse-engineering>
