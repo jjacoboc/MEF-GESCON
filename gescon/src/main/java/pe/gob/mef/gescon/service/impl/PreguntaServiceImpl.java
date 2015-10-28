@@ -91,9 +91,11 @@ public class PreguntaServiceImpl implements PreguntaService {
             pregunta.setDfechamodificacion((Date) bean.get("FECHAMOD"));
             pregunta.setNactivo((BigDecimal) bean.get("ESTADO"));
             pregunta.setVrespuesta((String) bean.get("RESPUESTA"));
-            pregunta.setVmsjusuario((String) bean.get("MSJUSU"));
+            pregunta.setVmsjusuario2((String) bean.get("MSJUSU2"));
             pregunta.setVmsjespecialista((String) bean.get("MSJESP"));
             pregunta.setNsituacion((BigDecimal) bean.get("SITUACION"));
+            pregunta.setVmsjmoderador((String) bean.get("MSJMOD"));
+            pregunta.setVmsjusuario1((String) bean.get("MSJUSU1"));
             preguntas.add(pregunta);
 
         }

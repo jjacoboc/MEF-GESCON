@@ -55,7 +55,7 @@ public class PoliticaPerfilDaoImpl extends HibernateDaoSupport implements Politi
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            sql.append("select TP.NPOLITICAID as POLITICA, TP.NPERFILID AS PERFIL, P.VDESCRIPCION AS DES ");
+            sql.append("select TP.NPOLITICAID as POLITICA, TP.NPERFILID AS PERFIL, P.vnombre AS DES ");
             sql.append(" from TPOLITICA_PERFIL TP ");
             sql.append(" inner join MTPOLITICA P on P.NPoliticaID=TP.Npoliticaid ");
             sql.append("WHERE TP.NPERFILID = :PERFIL ");
@@ -83,7 +83,7 @@ public class PoliticaPerfilDaoImpl extends HibernateDaoSupport implements Politi
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            sql.append("select npoliticaid as POLITICA, vdescripcion as DES from MTPOLITICA P ");
+            sql.append("select npoliticaid as POLITICA, vnombre as DES from MTPOLITICA P ");
             sql.append(" where NPOLITICAID not in (select NPOLITICAID from TPOLITICA_PERFIL TP where TP.NPERFILID=:PERFIL ) ");
 
             object = getHibernateTemplate().execute(

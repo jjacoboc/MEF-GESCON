@@ -23,9 +23,11 @@ public class Tpregunta implements java.io.Serializable {
     private Date dfechamodificacion;
     private BigDecimal nactivo;
     private String vrespuesta;
-    private String vmsjusuario;
+    private String vmsjusuario2;
     private String vmsjespecialista;
     private BigDecimal nsituacion;
+    private String vmsjmoderador;
+    private String vmsjusuario1;
 
     public Tpregunta() {
     }
@@ -34,7 +36,7 @@ public class Tpregunta implements java.io.Serializable {
         this.npreguntaid = npreguntaid;
     }
 
-    public Tpregunta(BigDecimal npreguntaid, String vasunto, BigDecimal ncategoriaid, String vdetalle, BigDecimal nentidadid, String vdatoadicional, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nactivo, String vrespuesta, String vmsjusuario, String vmsjespecialista, BigDecimal nsituacion) {
+    public Tpregunta(BigDecimal npreguntaid, String vasunto, BigDecimal ncategoriaid, String vdetalle, BigDecimal nentidadid, String vdatoadicional, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nactivo, String vrespuesta, String vmsjusuario2, String vmsjespecialista, BigDecimal nsituacion, String vmsjmoderador, String vmsjusuario1) {
         this.npreguntaid = npreguntaid;
         this.vasunto = vasunto;
         this.ncategoriaid = ncategoriaid;
@@ -47,9 +49,11 @@ public class Tpregunta implements java.io.Serializable {
         this.dfechamodificacion = dfechamodificacion;
         this.nactivo = nactivo;
         this.vrespuesta = vrespuesta;
-        this.vmsjusuario = vmsjusuario;
+        this.vmsjusuario2 = vmsjusuario2;
         this.vmsjespecialista = vmsjespecialista;
         this.nsituacion = nsituacion;
+        this.vmsjmoderador = vmsjmoderador;
+        this.vmsjusuario1 = vmsjusuario1;
     }
 
     /**
@@ -221,18 +225,19 @@ public class Tpregunta implements java.io.Serializable {
     }
 
     /**
-     * @return the vmsjusuario
+     * @return the vmsjusuario2
      */
-    public String getVmsjusuario() {
-        return vmsjusuario;
+    public String getVmsjusuario2() {
+        return vmsjusuario2;
     }
 
     /**
-     * @param vmsjusuario the vmsjusuario to set
+     * @param vmsjusuario2 the vmsjusuario2 to set
      */
-    public void setVmsjusuario(String vmsjusuario) {
-        this.vmsjusuario = vmsjusuario;
+    public void setVmsjusuario2(String vmsjusuario2) {
+        this.vmsjusuario2 = vmsjusuario2;
     }
+
 
     /**
      * @return the vmsjespecialista
@@ -260,6 +265,34 @@ public class Tpregunta implements java.io.Serializable {
      */
     public void setNsituacion(BigDecimal nsituacion) {
         this.nsituacion = nsituacion;
+    }
+
+    /**
+     * @return the vmsjmoderador
+     */
+    public String getVmsjmoderador() {
+        return vmsjmoderador;
+    }
+
+    /**
+     * @param vmsjmoderador the vmsjmoderador to set
+     */
+    public void setVmsjmoderador(String vmsjmoderador) {
+        this.vmsjmoderador = vmsjmoderador;
+    }
+
+    /**
+     * @return the vmsjusuario1
+     */
+    public String getVmsjusuario1() {
+        return vmsjusuario1;
+    }
+
+    /**
+     * @param vmsjusuario1 the vmsjusuario1 to set
+     */
+    public void setVmsjusuario1(String vmsjusuario1) {
+        this.vmsjusuario1 = vmsjusuario1;
     }
 
     

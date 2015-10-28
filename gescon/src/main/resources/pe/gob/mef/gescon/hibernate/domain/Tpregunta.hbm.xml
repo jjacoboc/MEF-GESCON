@@ -26,8 +26,8 @@
         <property name="vrespuesta" type="string">
             <column name="VRESPUESTA" length="400" />
         </property>
-        <property name="vmsjusuario" type="string">
-            <column name="VMSJUSUARIO" length="400" />
+        <property name="vmsjusuario2" type="string">
+            <column name="VMSJUSUARIO2" length="400" />
         </property>
         <property name="vmsjespecialista" type="string">
             <column name="VMSJESPECIALISTA" length="400" />
@@ -49,6 +49,12 @@
         </property>
         <property name="nsituacion" type="big_decimal">
             <column name="NSITUACION" precision="22" scale="0" />
+        </property>
+        <property name="vmsjmoderador" type="string">
+            <column name="VMSJMODERADOR" length="400" />
+        </property>
+        <property name="vmsjusuario1" type="string">
+            <column name="VMSJUSUARIO1" length="400" />
         </property>
     </class>
 </hibernate-mapping>

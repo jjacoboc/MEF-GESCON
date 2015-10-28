@@ -24,5 +24,4 @@ public interface PreguntaDao {
     public List<HashMap> obtenerPreguntas(BigDecimal preguntaid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     public List<HashMap> obtenerPreguntaxAsig(BigDecimal preguntaid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     public List<HashMap> obtenerPerfilxUsuario(BigDecimal usuarioid) throws Exception;
-    public List<ArrayList> obtenerPreguntas() throws Exception;
 }

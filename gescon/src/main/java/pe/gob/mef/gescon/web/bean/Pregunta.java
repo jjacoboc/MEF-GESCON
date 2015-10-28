@@ -13,8 +13,8 @@ import java.util.Date;
  *
  * @author JJacobo
  */
-public class Pregunta implements Serializable{
-    
+public class Pregunta implements Serializable {
+
     private BigDecimal npreguntaid;
     private String vasunto;
     private BigDecimal ncategoriaid;
@@ -27,12 +27,14 @@ public class Pregunta implements Serializable{
     private Date dfechamodificacion;
     private BigDecimal nactivo;
     private String vrespuesta;
-    private String vmsjusuario;
+    private String vmsjusuario2;
     private String vmsjespecialista;
     private BigDecimal nsituacion;
-    
-    public void Pregunta(){
-        
+    private String vmsjmoderador;
+    private String vmsjusuario1;
+
+    public void Pregunta() {
+
     }
 
     /**
@@ -204,17 +206,17 @@ public class Pregunta implements Serializable{
     }
 
     /**
-     * @return the vmsjusuario
+     * @return the vmsjusuario2
      */
-    public String getVmsjusuario() {
-        return vmsjusuario;
+    public String getVmsjusuario2() {
+        return vmsjusuario2;
     }
 
     /**
-     * @param vmsjusuario the vmsjusuario to set
+     * @param vmsjusuario2 the vmsjusuario2 to set
      */
-    public void setVmsjusuario(String vmsjusuario) {
-        this.vmsjusuario = vmsjusuario;
+    public void setVmsjusuario2(String vmsjusuario2) {
+        this.vmsjusuario2 = vmsjusuario2;
     }
 
     /**
@@ -245,7 +247,32 @@ public class Pregunta implements Serializable{
         this.nsituacion = nsituacion;
     }
 
+    /**
+     * @return the vmsjmoderador
+     */
+    public String getVmsjmoderador() {
+        return vmsjmoderador;
+    }
 
+    /**
+     * @param vmsjmoderador the vmsjmoderador to set
+     */
+    public void setVmsjmoderador(String vmsjmoderador) {
+        this.vmsjmoderador = vmsjmoderador;
+    }
 
-    
+    /**
+     * @return the vmsjusuario1
+     */
+    public String getVmsjusuario1() {
+        return vmsjusuario1;
+    }
+
+    /**
+     * @param vmsjusuario1 the vmsjusuario1 to set
+     */
+    public void setVmsjusuario1(String vmsjusuario1) {
+        this.vmsjusuario1 = vmsjusuario1;
+    }
+
 }

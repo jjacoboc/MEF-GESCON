@@ -17,7 +17,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -100,8 +99,8 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
         try {
             sql.append("select P.NPREGUNTAID AS IDPREGUNTA, VASUNTO AS ASUNTO, NCATEGORIAID AS IDCATEGORIA, VDETALLE AS DETALLE, ");
             sql.append(" NENTIDADID AS IDENTIDAD, VDATOADICIONAL AS DATOADICIONAL, P.VUSUARIOCREACION AS USUCREA, P.VUSUARIOMODIFICACION AS USUMOD, ");
-            sql.append(" P.DFECHACREACION AS FECHACREA, P.DFECHAMODIFICACION AS FECHAMOD, NACTIVO AS ESTADO, VRESPUESTA AS RESPUESTA, VMSJUSUARIO AS MSJUSU, ");
-            sql.append(" VMSJESPECIALISTA AS MSJESP, NSITUACION AS SITUACION ");
+            sql.append(" P.DFECHACREACION AS FECHACREA, P.DFECHAMODIFICACION AS FECHAMOD, NACTIVO AS ESTADO, VRESPUESTA AS RESPUESTA, VMSJUSUARIO2 AS MSJUSU2, ");
+            sql.append(" VMSJESPECIALISTA AS MSJESP, NSITUACION AS SITUACION, VMSJMODERADOR AS MSJMOD, VMSJUSUARIO1 AS MSJUSU1  ");
             sql.append(" from TPREGUNTA P ");
             sql.append(" inner join TASIGNACION A on P.NPREGUNTAID=A.NCONOCIMIENTOID  ");
             sql.append(" WHERE A.NCONOCIMIENTOID =:PREGUNTA  AND A.NUSUARIOID=:USUARIO  AND A.NTIPOCONOCIMIENTOID=:TIPOCONOCIMIENTO AND NESTADOID=1");
@@ -175,36 +174,13 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
                             return query.list();
                         }
                     });
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
         return (List<HashMap>) object;
     }
     
-    @Override
-    public List<ArrayList> obtenerPreguntas() throws Exception {
-        final StringBuilder sql = new StringBuilder();
-        Object object = null;
-        try {
-            sql.append("select P.*, A.nusuarioid ");
-            sql.append(" from TPREGUNTA P ");
-            sql.append(" inner join TASIGNACION A on P.NPREGUNTAID=A.NPREGUNTAID  ");
-            
-            object = getHibernateTemplate().execute(
-                    new HibernateCallback() {
-                        @Override
-                        public Object doInHibernate(Session session) throws HibernateException {
-                            Query query = session.createSQLQuery(sql.toString())
-                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
-                            return query.list();
-                        }
-                    });
-        } catch (Exception e) {
-            e.getMessage();
-            e.printStackTrace();
-        }
-        return (List<ArrayList>) object;
-
-    }    
+    
+    
 }
