@@ -35,6 +35,7 @@ public class Constante implements Serializable {
     public static String ESTADO_ACTIVO = "1";
     public static String ESTADO_INACTIVO = "0";
     public static String ESTADO_BASELEGAL_REGISTRADO = "1";
+    public static String ESTADO_OPORTUNIDAD_MEJORA = "1";
     public static String ESTADO_BASELEGAL_PUBLICADO = "3";
     public static String ESTADO_BASELEGAL_CONCORDADO = "5";
     public static int ADMINISTRADOR =21;

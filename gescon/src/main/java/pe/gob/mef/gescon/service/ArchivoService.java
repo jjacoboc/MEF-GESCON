@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import pe.gob.mef.gescon.web.bean.Archivo;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
+import pe.gob.mef.gescon.web.bean.OportunidadMejora;
 
 /**
  *
@@ -20,4 +21,6 @@ public interface ArchivoService {
     public List<Archivo> getArchivosByBaseLegal(BaseLegal baseLegal) throws Exception;
     public Archivo getLastArchivoByBaseLegal(BaseLegal baseLegal) throws Exception;
     public void saveOrUpdate(Archivo archivo) throws Exception;
+    
+    
 }
