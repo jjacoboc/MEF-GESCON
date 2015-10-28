@@ -6,46 +6,56 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:pe="http://primefaces.org/ui/extensions">
     <h:head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-        <h:outputStylesheet library="css" name="style.css" />
-        <script type="text/javascript">
-            //<![CDATA[
-            function manejarLogin(xhr, status, args) {
-                if (!args.validationFailed && args.estaLogeado) {
-                    setTimeout(function () {
-                        window.location = args.view;
-                    }, 500);
-                }
-            }
-            function logout() {
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+    </h:head>
+    <h:outputStylesheet library="css" name="style.css" />
+    <h:outputStylesheet name="css/core-layout.css" library="spark-layout" />
+    <h:outputStylesheet name="css/font-awesome.css" library="spark-layout" />
+    <h:outputStylesheet name="css/animate.css" library="spark-layout" />
+    <h:outputStylesheet name="css/spark-layout-red.css" library="spark-layout" />
+    <h:outputScript name="js/layout.js" library="spark-layout" />
+    <script type="text/javascript">
+        //<![CDATA[
+        function manejarLogin(xhr, status, args) {
+            if (!args.validationFailed && args.estaLogeado) {
                 setTimeout(function () {
-                    window.location = "/gescon/index.xhtml";
+                    window.location = args.view;
                 }, 500);
             }
-            function mouseOverUser(obj) {
-                obj.style.background = "#71CC8D";
-            }
-            function mouseOutUser(obj) {
-                obj.style.background = "#F4F0EC";
-            }
-            //]]>
-        </script>
-    </h:head>
+        }
+        function logout() {
+            setTimeout(function () {
+                window.location = "/gescon/index.xhtml";
+            }, 500);
+        }
+        function mouseOverUser(obj) {
+            obj.style.background = "#71CC8D";
+        }
+        function mouseOutUser(obj) {
+            obj.style.background = "#F4F0EC";
+        }
+        //]]>
+    </script>
     <h:body>
         <h:form id="headerForm" >
             <h:panelGrid  columns="3" width="100%" >
                 <p:graphicImage library="images" name="46.jpg" style="border: 0px;"/>
                 <p:spacer/>
-                <h:panelGrid columns="1" style="font-family: arial, serif; font-size: 14px; float: right; cursor: pointer; font-weight: ">
+                <h:panelGrid columns="1" styleClass="Fright">
                     <h:panelGroup id="pgUser" rendered="#{loginMB.user ne null}">
-                        <h:outputText class="fa fa-fw fa-user" style="font-size: 19px;"/>
+                        <h:outputText class="fa fa-user Fs20 CursPointer white" />
                         <p:spacer width="3"/>
-                        <h:outputText value="#{loginMB.user.vnombres}" />
+                        <h:outputText value="#{loginMB.user.vnombres}" styleClass="Animated05 Fs18 CursPointer white"/>
                         <p:spacer width="3"/>
-                        <h:outputText value="#{loginMB.user.vapellidos}" />
-                        <h:outputText value=", Bienvenido"/>
+                        <h:outputText value="#{loginMB.user.vapellidos}" styleClass="Animated05 Fs18 CursPointer white"/>
+                        <h:outputText value=", Bienvenido" styleClass="Fs18 white"/>
                     </h:panelGroup>
-                    <p:overlayPanel for="pgUser" hideEffect="fade" showEffect="fade" appendToBody="true"  dismissable="true">
+                    <p:overlayPanel for="pgUser" hideEffect="fade" showEffect="fade" appendToBody="true" dismissable="true">
                         <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
                             <h:panelGrid columns="2">
                                 <h:outputText class="fa fa-fw fa-user" style="font-size: 30px; float: left;"/>
@@ -59,28 +69,29 @@
                                 </h:panelGrid>
                             </h:panelGrid>
                             <p:separator style="border: silver 1px dashed;"/>
-                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="cursor: pointer; width: 100%" onmouseover="mouseOverUser(this);" onmouseout="mouseOutUser(this);">
+                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="cursor: pointer; width: 100%">
                                 <h:panelGrid columns="2">
                                     <h:outputText class="fa fa-fw fa-dashboard" style="font-size: 14px;"/>
                                     <h:outputText value="Mi Perfil" style="font-size: 13px;"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <p:separator style="border: silver 1px dashed;"/>
-                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="cursor: pointer; width: 100%" onmouseover="mouseOverUser(this);" onmouseout="mouseOutUser(this);">
+                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="cursor: pointer; width: 100%">
                                 <h:panelGrid columns="2">
                                     <h:outputText class="fa fa-fw fa-bell" style="font-size: 14px;"/>
                                     <h:outputText value="Alertas" style="font-size: 13px;"/>
                                 </h:panelGrid>
                             </h:panelGrid>
                             <p:separator style="border: silver 1px dashed;"/>
-                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="cursor: pointer; width: 100%" onmouseover="mouseOverUser(this);" onmouseout="mouseOutUser(this);">
-                                <h:panelGrid columns="2">
-                                    <h:outputText class="fa fa-fw fa-quote-right" style="font-size: 14px;"/>
-                                    <h:outputText value="Notificaciones" style="font-size: 13px;"/>
+                            <h:commandLink  styleClass="CursPointer Animated05">
+                                <h:panelGrid columns="3" width="100%">
+                                    <h:outputText class="fa fa-quote-right Fs14"/>
+                                    <h:outputText value="Notificaciones" styleClass="Fs14"/>
+                                    <h:outputText value="#{loginMB.notificaciones}" styleClass="notification-bubble BordRad3 Fs14 FontBold Fright animated tada infinite red"/>
                                 </h:panelGrid>
-                            </h:panelGrid>
+                            </h:commandLink>
                             <p:separator style="border: silver 1px dashed;"/>
-                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="cursor: pointer; width: 100%" onmouseover="mouseOverUser(this);" onmouseout="mouseOutUser(this);">
+                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="cursor: pointer; width: 100%">
                                 <p:commandLink id="logout" actionListener="#{loginMB.logout}" oncomplete="logout();">
                                     <h:panelGrid columns="2">
                                         <h:outputText class="fa fa-fw fa-sign-out" style="font-size: 16px;"/>
@@ -90,7 +101,9 @@
                             </h:panelGrid>
                         </h:panelGrid>
                     </p:overlayPanel>
-                    <p:commandLink  value="Iniciar Sesion" update=":iniDialogForm:pgIni" oncomplete="PF('iniDialog').show();" rendered="#{loginMB.user eq null}" style="font-size: 14px; font-weight: bold;"/>
+                    <p:commandLink update=":iniDialogForm:pgIni" oncomplete="PF('iniDialog').show();" rendered="#{loginMB.user eq null}" >
+                        <h:outputText value="Iniciar Sesión" styleClass="Fs14 FontBold Underline white"/>
+                    </p:commandLink>
                 </h:panelGrid>
             </h:panelGrid>
         </h:form>
@@ -99,8 +112,8 @@
                 <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
                 <h:panelGrid id="pgIni" columns="1" cellpadding="5" style="text-align: center;width: 100%">
                     <p:graphicImage library="images" name="46.jpg" style="border: 0px;"/>
-                    <h:outputLabel value="Ingresa tu Usuario" />
-                    <p:inputText value="#{loginMB.login}" size="25" maxlength="25" /> 
+                    <h:outputLabel value="Ingresa tu Usuario" class="FontBold"/>
+                    <p:inputText value="#{loginMB.login}" size="25" maxlength="25" />
                     <p:password value="#{loginMB.pass}" size="25" />
                     <p:commandButton value="Iniciar Sesion" action="#{loginMB.ingresar}" update=":iniDialogForm:growl" oncomplete="manejarLogin(xhr, status, args)"/>
                     <p:row>
@@ -334,11 +347,17 @@
                     </h:panelGrid>
                     <p:captcha label="Captcha" />
                     <p:commandButton update="pgReg" actionListener="#{userMB.save}" value="Registrar" />
-
                 </p:scrollPanel>
-
             </h:form>
-
+        </p:dialog>
+        
+        <p:dialog id="notDlg" header="Iniciar Sesion" widgetVar="notDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+            <h:form id="notDialogForm">
+                <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
+                <h:panelGrid id="pgNot" columns="1">
+                    
+                </h:panelGrid>
+            </h:form>
         </p:dialog>
 
     </h:body>

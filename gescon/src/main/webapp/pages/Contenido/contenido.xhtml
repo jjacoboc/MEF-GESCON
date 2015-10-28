@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <h:head>
+        <title>GesCon - Contenido</title>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
+        <h:outputStylesheet library="css" name="style.css" />
+    </h:head>
+    <h:body>            
+        <f:view>
+            <pe:layout fullPage="true" >
+                <pe:layoutPane position="north" size="80" resizable="false" closable="false" styleClassContent="headerStyle"> 
+                    <ui:include src="/pages/header.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="south" size="50" closable="true" >
+                    <ui:include src="/pages/footer.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="west" size="165" >
+                    <ui:include src="/pages/menu.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="center" styleContent="font-size: 10px;">
+                    <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+                    <h:form id="f">
+                        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
+                        <p:panel header="Administración de Contenidos" >
+                            <h:panelGrid columns="1">
+                                <p:commandButton  value="Nuevo" ajax="false" action="/pages/Contenido/registro.xhtml" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
+                                <p:dataTable id="tbl" value="#{parametroMB.listaParametro}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
+                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                    <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
+                                        <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>
+                                        <h:outputText value="#{row.vnombre}" />
+                                    </p:column>
+                                    <p:column width="250px;" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;">
+                                        <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
+                                        <h:outputText value="#{row.vdescripcion}" />
+                                    </p:column>
+                                    <p:column style="text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact">
+                                        <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
+                                        <h:outputText value="#{row.nactivo}" >
+                                            <f:converter converterId="converterSiNo"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center;" sortBy="#{row.vusuariocreacion}" filterByvusuariocreacionvusucrea}" filterMatchMode="contains">
+                                        <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
+                                        <h:outputText value="#{row.vusuariocreacion}" />
+                                    </p:column>
+                                    <p:column style="text-align: center;" sortBy="#{row.dfechacreacion}" filterBy="#dfechacreacionhcrea}" filterMatchMode="contains">
+                                        <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                        <h:outputText value="#{row.dfechacreacion}" >
+                                            <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 50px;">
+                                        <p:commandLink actionListener="#{parametroMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Parámetro">
+                                            <h:outputText styleClass="ui-icon ui-icon-pencil"/>
+                                            <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
+                                        </p:commandLink>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+
+                    <p:dialog id="newDlg" header="Nuevo Contenido" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="newDialogForm">
+                            <p:scrollPanel  mode="native" style="width:500px;height:600px">
+                                <h:panelGrid id="pgNew" columns="3" cellpadding="5" style="text-align: left;width: 100%">
+                                    <h:outputLabel value="*"/>
+                                    <h:panelGrid columns="2" cellspacing="5px" cellpadding="0">
+                                        <h:outputLabel value="Categoria"/>
+                                        <p:commandButton value="Seleccionar Categoria"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+
+                                    <h:outputLabel value="*"/>
+                                    <h:panelGrid columns="2" cellspacing="5px" cellpadding="0">
+                                        <h:outputLabel value="Titulo"/>
+                                        <p:inputText size="50" style="text-transform: uppercase;" maxlength="25" /> 
+                                    </h:panelGrid>
+                                    <p:spacer/>
+
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Detalle"/>
+                                    <p:spacer/>
+
+                                    <p:spacer/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{parametroMB.descripcion}" rows="4" cols="57" style="font-weight: normal;"
+                                                         counter="displaydet" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="displaydet"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Descripción"/>
+                                    <p:spacer/>
+
+                                    <p:spacer/>
+                                    <p:editor/>
+                                    <p:spacer/>
+
+                                    <h:outputLabel value=""/>
+                                    <h:outputLabel value="CONTENIDOS RELACIONADOS"/>
+                                    <p:spacer/>
+
+                                    <h:outputLabel value=""/>
+                                    <h:panelGrid columns="2" cellspacing="5px" cellpadding="0">
+                                        <h:outputLabel value="Subir archivo(s) del contenido"/>
+                                        <p:commandButton value="Seleccionar archivos" oncomplete="PF('tpoconDialog').show();"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+
+                                    <p:spacer/>
+                                    <p:panelGrid style="margin-top:0px">
+                                        <f:facet name="header">
+                                            <p:row>
+                                                <p:column>Nombre del Archivo</p:column>
+                                                <p:column>Tipo del Archivo</p:column>
+                                                <p:column>Acciones</p:column>
+                                            </p:row>
+                                        </f:facet>
+                                        <p:row>
+                                            <p:column>Archivo #1</p:column>
+                                            <p:column>PDF</p:column>
+                                            <p:column></p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>Archivo #2</p:column>
+                                            <p:column>MP3</p:column>
+                                            <p:column></p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                    <p:spacer/>
+
+                                    <h:outputLabel value=""/>
+                                    <h:outputLabel value="VINCULOS RELACIONADOS" />
+                                    <p:spacer/>
+
+                                    <h:outputLabel value=""/>
+                                    <h:panelGrid columns="2" cellspacing="5px" cellpadding="0">
+                                        <p:commandLink value="Agregar Vinculos"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+                                    
+                                    <p:spacer/>
+                                    <p:panelGrid style="margin-top:0px; width: 150px;">
+                                        <f:facet name="header">
+                                            <p:row>
+                                                <p:column>Numero</p:column>
+                                                <p:column>Nombre</p:column>
+                                                <p:column>Categoria</p:column>
+                                                <p:column>Estado</p:column>
+                                            </p:row>
+                                        </f:facet>
+                                        <p:row>
+                                            <p:column>C2PO-2183712</p:column>
+                                            <p:column>BASE LEGAL 1</p:column>
+                                            <p:column>SIGA</p:column>
+                                            <p:column>VIGENTE</p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>Y7A8-5414567</p:column>
+                                            <p:column>BASE LEGAL 2</p:column>
+                                            <p:column>SIGA</p:column>
+                                            <p:column>VIGENTE</p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                    <p:spacer/>
+
+                                </h:panelGrid>
+                                <br></br>
+                                <p:commandButton style="float: right"  value="Registrar"  update=":f:growl, :f:tbl"/>
+                            </p:scrollPanel>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog id="tpoconDlg" header="Agregar Contenidos" widgetVar="tpoconDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="tpoconDialogForm">
+                            <p:messages id="msgs" showSummary="true" showDetail="true" />
+                            <h:panelGrid id="pgTpoCon" columns="2" cellpadding="5" style="text-align: left;width: 100%">
+                                <h:outputLabel value="Tipos de contenido"/>
+                                <p:spacer/>
+
+                                <p:selectOneRadio id="console" layout="grid" columns="1">
+                                    <f:selectItem itemLabel="Boletin" itemValue="0" />
+                                    <f:selectItem itemLabel="Blog" itemValue="1" />
+                                    <f:selectItem itemLabel="Manual" itemValue="2" />
+                                    <f:selectItem itemLabel="Video Tutorial" itemValue="3" />
+                                    <f:selectItem itemLabel="Articulo" itemValue="4" />
+                                    <f:selectItem itemLabel="Libro" itemValue="5" />
+                                    <f:selectItem itemLabel="Otros" itemValue="6" />
+                                </p:selectOneRadio>
+                                <p:spacer/>
+
+                                <p:fileUpload fileUploadListener="#{contenidoMB.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                                              multiple="true" update="messages" sizeLimit="10000000000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                                <p:growl id="messages" showDetail="true" />
+
+                                <p:commandButton  value="Cancelar" actionListener="#{contenidoMB.toCancel}" update=":f:growl, :f:tbl"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog id="editDlg" header="Actualizar Parametro" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="editDialogForm">
+                            <p:messages id="msgs" showSummary="true" showDetail="true" />
+                            <h:panelGrid id="pgEdit" columns="3" cellpadding="5" style="text-align: left;width: 100%">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Nombre:"/>
+                                <p:inputText size="50" value="#{parametroMB.selectedParametro.vnombre}" style="text-transform: uppercase;" maxlength="25" />
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Valor"/>
+                                <p:inputText size="50" value="#{parametroMB.selectedParametro.vvalor}" style="text-transform: uppercase;" maxlength="25" />
+
+                                <p:spacer/>
+                                <h:outputLabel value="Descripción:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:inputTextarea value="#{parametroMB.selectedParametro.vdescripcion}" rows="4" cols="36" style="font-weight: normal;"
+                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                    <h:outputText id="display"/>
+                                </h:panelGrid>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Activo:"/>
+                                <p:selectOneMenu value="#{parametroMB.selectedParametro.nactivo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
+                                    <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
+                                </p:selectOneMenu>
+                            </h:panelGrid>
+                            <p:commandButton  value="Actualizar" actionListener="#{parametroMB.update}" update=":f:growl, :f:tbl"/>
+                        </h:form>
+                    </p:dialog>
+
+                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)"  draggable="false" closable="false" resizable="false" showHeader="false">
+                        <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
+                    </p:dialog>
+                </pe:layoutPane>
+            </pe:layout>
+        </f:view>
+    </h:body>
+</html>
+

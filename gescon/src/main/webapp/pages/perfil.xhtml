@@ -1,164 +1,146 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
 
-    <h:head>
-        <title>GesCon - Pregunta
-        </title>
-        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
-        <h:outputStylesheet library="css" name="style.css" />
-    </h:head>
-    <h:body>            
-        <f:view>
-            <pe:layout fullPage="true" >
-                <pe:layoutPane position="north" size="80" resizable="false" closable="false" > 
-                    <ui:include src="header.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="south" size="50" closable="true" >
-                    <ui:include src="footer.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="west" size="165" >
-                    <ui:include src="menu.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="center" styleContent="font-size: 10px;">
-                    <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
-                    <h:form id="f">
-                        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
-                        <p:panel header="Administración de Perfiles" >
-                            <h:panelGrid columns="1">
-                                <p:commandButton  value="Nuevo" actionListener="#{perfilMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
-                                <p:dataTable id="tbl" value="#{perfilMB.listaPerfils}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
-                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                                    <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
-                                        <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>
-                                        <h:outputText value="#{row.vnombre}" />
-                                    </p:column>
-                                    <p:column width="250px;" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;">
-                                        <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
-                                        <h:outputText value="#{row.vdescripcion}" />
-                                    </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact">
-                                        <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
-                                        <h:outputText value="#{row.nactivo}" >
-                                            <f:converter converterId="converterSiNo"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains">
-                                        <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
-                                        <h:outputText value="#{row.vusuariocreacion}" />
-                                    </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains">
-                                        <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
-                                        <h:outputText value="#{row.dfechacreacion}" >
-                                            <f:convertDateTime dateStyle="medium" type="both" locale="es" />
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column style="text-align: center; width: 50px;">
-                                        <p:commandLink actionListener="#{perfilMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Parámetro">
-                                            <h:outputText styleClass="ui-icon ui-icon-pencil"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
-                                        </p:commandLink>
-                                        <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Perfil" rendered="#{row.nactivo eq 0}">
-                                            <h:outputText styleClass="ui-icon ui-icon-check"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
-                                        </p:commandLink>
-                                        <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Perfil" rendered="#{row.nactivo eq 1}">
-                                            <h:outputText styleClass="ui-icon ui-icon-close"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
-                                        </p:commandLink>
-                                        <p:commandLink  actionListener="#{perfilMB.toAsig}" update="f:growl, :asigDialogForm:pgAsig" oncomplete="PF('asigDialog').show();" title="Asignar Politicas">
-                                            <h:outputText styleClass="ui-icon ui-icon-clipboard"/>
-                                            <f:param name="index" value="#{rowIndex}"/>
-                                        </p:commandLink>
-                                    </p:column>
-                                </p:dataTable>
-                            </h:panelGrid>
-                        </p:panel>
-                    </h:form>
-
-                    <p:dialog id="newDlg" header="Nuevo Perfil" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="newDialogForm">
-                            <h:panelGrid id="pgNew" columns="3" cellpadding="5" style="text-align: left;width: 100%">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Nombre:"/>
-                                <p:inputText size="50" value="#{perfilMB.nombre}" style="text-transform: uppercase;" maxlength="25" /> 
-
-                                <p:spacer/>
-                                <h:outputLabel value="Descripción:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{perfilMB.descripcion}" rows="4" cols="36" style="font-weight: normal;"
-                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="display"/>
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="Administración de Perfiles" >
+                                <h:panelGrid columns="1">
+                                    <p:commandButton  value="Nuevo" actionListener="#{perfilMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
+                                    <p:dataTable id="tbl" value="#{perfilMB.listaPerfils}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                        <p:column style="width: 200px;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                            <h:outputText value="#{row.vnombre}" styleClass="Fleft"/>
+                                        </p:column>
+                                        <p:column sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                            <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
+                                            <h:outputText value="#{row.vdescripcion}" styleClass="Fleft"/>
+                                        </p:column>
+                                        <p:column style="width: 100px; text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                            <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
+                                            <h:outputText value="#{row.nactivo}" >
+                                                <f:converter converterId="converterSiNo"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains" priority="4">
+                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
+                                            <h:outputText value="#{row.vusuariocreacion}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 150px;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains" priority="5">
+                                            <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechacreacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 70px;">
+                                            <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
+                                            <p:commandLink actionListener="#{perfilMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Parámetro">
+                                                <h:outputText class="fa fa-edit Fs16" />
+                                                <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
+                                            </p:commandLink>
+                                            <p:spacer width="5px;"/>
+                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Perfil" rendered="#{row.nactivo eq 0}">
+                                                <h:outputText class="fa fa-check Fs16" />
+                                                <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
+                                            </p:commandLink>
+                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Perfil" rendered="#{row.nactivo eq 1}">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
+                                            </p:commandLink>
+                                            <p:spacer width="5px;"/>
+                                            <p:commandLink  actionListener="#{perfilMB.toAsig}" update="f:growl, :asigDialogForm:pgAsig" oncomplete="PF('asigDialog').show();" title="Asignar Politicas">
+                                                <h:outputText class="fa fa-briefcase Fs16" />
+                                                <f:param name="index" value="#{rowIndex}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
                                 </h:panelGrid>
-                            </h:panelGrid>
-                            <p:commandButton  value="Registrar" actionListener="#{perfilMB.save}" update=":f:growl, :f:tbl"/>
+                            </p:panel>
                         </h:form>
-                    </p:dialog>
 
-                    <p:dialog id="editDlg" header="Actualizar Perfil" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="editDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgEdit" columns="3" cellpadding="5" style="text-align: left;width: 100%">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Nombre:"/>
-                                <p:inputText size="50" value="#{perfilMB.selectedPerfil.vnombre}" style="text-transform: uppercase;" maxlength="25" />
+                        <p:dialog id="newDlg" header="Nuevo Perfil" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
+                            <h:form id="newDialogForm">
+                                <h:panelGrid id="pgNew" columns="3">
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Nombre:"/>
+                                    <p:inputText size="50" value="#{perfilMB.nombre}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" /> 
 
-                                <p:spacer/>
-                                <h:outputLabel value="Descripción:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{perfilMB.selectedPerfil.vdescripcion}" rows="4" cols="36" style="font-weight: normal;"
-                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="display"/>
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Descripción:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{perfilMB.descripcion}" rows="4" cols="49" styleClass="Fs14"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
                                 </h:panelGrid>
+                                <p:commandButton  value="Registrar" actionListener="#{perfilMB.save}" update=":f:growl, :f:tbl"/>
+                            </h:form>
+                        </p:dialog>
 
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Activo:"/>
-                                <p:selectOneMenu value="#{perfilMB.selectedPerfil.nactivo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
-                                    <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
-                                </p:selectOneMenu>
-                            </h:panelGrid>
-                            <p:commandButton  value="Actualizar" actionListener="#{perfilMB.update}" update=":f:growl, :f:tbl"/>
-                        </h:form>
-                    </p:dialog>
+                        <p:dialog id="editDlg" header="Actualizar Perfil" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="editDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgEdit" columns="3">
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Nombre:"/>
+                                    <p:inputText size="50" value="#{perfilMB.selectedPerfil.vnombre}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" />
 
-                    <p:dialog id="asigDlg" header="Asignar Politicas" widgetVar="asigDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="asigDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgAsig" columns="3" cellpadding="5" style="text-align: left;width: 100%">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Politicas:"/>
-                                <p:pickList id="pickList" value="#{perfilMB.listaPoliticas}" var="politica" itemLabel="#{politica.label}" itemValue="#{politica.value}" />
-                            </h:panelGrid>
-                            <p:commandButton  value="Asignar" actionListener="#{perfilMB.asignar}" update=":f:growl, :f:tbl"/>
-                        </h:form>
-                    </p:dialog>
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Descripción:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{perfilMB.selectedPerfil.vdescripcion}" rows="4" cols="49" styleClass="Fs14"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
 
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar el Perfil. \nDesea Continuar?" header="ACTIVAR Perfil" widgetVar="confirmActDlg" style="font-size: 10px;">
-                        <h:form id="confirmActDlgForm">
-                            <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{perfilMB.activar}"/>
-                            <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
-                        </h:form>
-                    </p:confirmDialog>
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la Perfil. \nDesea Continuar?" header="DESACTIVAR Perfil" widgetVar="confirmDesDlg" style="font-size: 10px;">
-                        <h:form id="confirmDesDlgForm">
-                            <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{perfilMB.desactivar}"/>
-                            <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />
-                        </h:form>
-                    </p:confirmDialog>
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Activo:"/>
+                                    <p:selectOneMenu value="#{perfilMB.selectedPerfil.nactivo}">
+                                        <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <p:commandButton  value="Actualizar" actionListener="#{perfilMB.update}" update=":f:growl, :f:tbl"/>
+                            </h:form>
+                        </p:dialog>
 
-                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)"  draggable="false" closable="false" resizable="false" showHeader="false">
-                        <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
-                    </p:dialog>
-                </pe:layoutPane>
-            </pe:layout>
-        </f:view>
-    </h:body>
-</html>
+                        <p:dialog id="asigDlg" header="Asignar Politicas" widgetVar="asigDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="asigDialogForm">
+                                <h:panelGrid id="pgAsig" columns="1">
+                                    <p:pickList id="pickList" value="#{perfilMB.listaPoliticas}" var="politica" itemLabel="#{politica.label}" itemValue="#{politica.value}" >
+                                        <f:facet name="sourceCaption">Disponibles</f:facet>
+                                        <f:facet name="targetCaption">Asignadas</f:facet>
+                                    </p:pickList>
+                                    <p:commandButton  value="Asignar" actionListener="#{perfilMB.asignar}" update=":f:growl, :f:tbl"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
 
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a activar el Perfil. Desea Continuar?" header="ACTIVAR PERFIL" widgetVar="confirmActDlg">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{perfilMB.activar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la Perfil. Desea Continuar?" header="DESACTIVAR PERFIL" widgetVar="confirmDesDlg">
+                            <h:form id="confirmDesDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{perfilMB.desactivar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

@@ -203,11 +203,6 @@
         </dependency>
         <dependency>
             <groupId>org.primefaces.themes</groupId>
-            <artifactId>all-themes</artifactId>
-            <version>1.0.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.primefaces.themes</groupId>
             <artifactId>spark-theme</artifactId>
             <version>1.3.1</version>
         </dependency>

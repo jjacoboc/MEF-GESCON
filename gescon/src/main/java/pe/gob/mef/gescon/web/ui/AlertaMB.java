@@ -5,7 +5,6 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
-import com.mchange.lang.ByteUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -28,8 +27,10 @@ import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.service.AlertaService;
 import pe.gob.mef.gescon.service.ParametroService;
+import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Alerta;
+import pe.gob.mef.gescon.web.bean.User;
 
 /**
  *
@@ -37,7 +38,7 @@ import pe.gob.mef.gescon.web.bean.Alerta;
  */
 @ManagedBean
 @ViewScoped
-public class AlertaMB implements Serializable{
+public class AlertaMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(AlertaMB.class);
@@ -57,9 +58,9 @@ public class AlertaMB implements Serializable{
     private BigDecimal valor1;
     private BigDecimal tipo2;
     private BigDecimal valor2;
-            
+
     private List<SelectItem> listaParametro;
-    
+
     /**
      * Creates a new instance of MaestroMB
      */
@@ -123,28 +124,28 @@ public class AlertaMB implements Serializable{
     }
 
     /**
-     * @return the listaMaestro
+     * @return the listaAlerta
      */
     public List<Alerta> getListaAlerta() {
         return listaAlerta;
     }
 
     /**
-     * @param listaMaestro the listaMaestro to set
+     * @param listaAlerta the listaAlerta to set
      */
     public void setListaAlerta(List<Alerta> listaAlerta) {
         this.listaAlerta = listaAlerta;
     }
 
     /**
-     * @return the selectedMaestro
+     * @return the selectedAlerta
      */
     public Alerta getSelectedAlerta() {
         return selectedAlerta;
     }
 
     /**
-     * @param selectedMaestro the selectedMaestro to set
+     * @param selectedAlerta the selectedAlerta to set
      */
     public void setSelectedAlerta(Alerta selectedAlerta) {
         this.selectedAlerta = selectedAlerta;
@@ -292,11 +293,12 @@ public class AlertaMB implements Serializable{
 
     /**
      * @return the listaParametro
+     * @throws java.lang.Exception
      */
     public List<SelectItem> getListaParametro() throws Exception {
-        if(listaParametro == null){
+        if (listaParametro == null) {
             ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
-            listaParametro =  new Items(service.getParametros(), null, "nparametroid","vnombre").getItems();
+            listaParametro = new Items(service.getParametros(), null, "nparametroid", "vnombre").getItems();
         }
         return listaParametro;
     }
@@ -307,18 +309,18 @@ public class AlertaMB implements Serializable{
     public void setListaParametro(List<SelectItem> listaParametro) {
         this.listaParametro = listaParametro;
     }
-    
+
     @PostConstruct
     public void init() {
         try {
             AlertaService service = (AlertaService) ServiceFinder.findBean("AlertaService");
             listaAlerta = service.getAlertas();
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
     }
-    
+
     public void cleanAttributes() {
         this.setId(BigDecimal.ZERO);
         this.setDescripcion(StringUtils.EMPTY);
@@ -326,15 +328,14 @@ public class AlertaMB implements Serializable{
         this.setActivo(BigDecimal.ONE);
         this.setSelectedParametro(BigDecimal.ZERO);
         this.setCondicion1(StringUtils.EMPTY);
-        
-        
+
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {
             iter.remove();
             FacesContext.getCurrentInstance().renderResponse();
         }
     }
-    
+
     public void toSave(ActionEvent event) {
         try {
             this.cleanAttributes();
@@ -363,12 +364,13 @@ public class AlertaMB implements Serializable{
             alerta.setNvalor1(this.getValor1());
             alerta.setNvalor2(this.getValor2());
             if (!errorValidation(alerta)) {
-//                UsuarioMB usuarioMB = (UsuarioMB) JSFUtils.getSession().getAttribute("usuarioMB");
-//                Usuario usuario = usuarioMB.getUsuario();
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 AlertaService service = (AlertaService) ServiceFinder.findBean("AlertaService");
                 alerta.setNalertaid(service.getNextPK());
                 alerta.setNactivo(BigDecimal.ONE);
-                alerta.setDfechcrea(new Date());
+                alerta.setDfechacreacion(new Date());
+                alerta.setVusuariocreacion(user.getVlogin());
                 service.saveOrUpdate(alerta);
                 this.setListaAlerta(service.getAlertas());
                 this.cleanAttributes();
@@ -379,10 +381,10 @@ public class AlertaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void toUpdate(ActionEvent event) {
         try {
-            if(event != null) {
+            if (event != null) {
 //                if(this.getSelectedMaestro() == null) {
 //                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Seleccione el maestro que desea editar.");
 //                    FacesContext.getCurrentInstance().addMessage(null, message);
@@ -393,24 +395,26 @@ public class AlertaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void update(ActionEvent event) {
         try {
-            if(event != null) {
-                if(StringUtils.isBlank(this.getSelectedAlerta().getVnombre())) {
+            if (event != null) {
+                if (StringUtils.isBlank(this.getSelectedAlerta().getVnombre())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Nombre requerido. Ingrese el nombre de la alerta.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if(StringUtils.isBlank(this.getSelectedAlerta().getVdescripcion())) {
+                if (StringUtils.isBlank(this.getSelectedAlerta().getVdescripcion())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Descripción requerida. Ingrese la descripción de la alerta.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 this.getSelectedAlerta().setVnombre(this.getSelectedAlerta().getVnombre().toUpperCase());
                 this.getSelectedAlerta().setVdescripcion(this.getSelectedAlerta().getVdescripcion().toUpperCase());
-//                this.getSelectedMestro().setIdUsuaModi(user.getUsuario());
-                this.getSelectedAlerta().setDfechmod(new Date());
+                this.getSelectedAlerta().setVusuariomodificacion(user.getVlogin());
+                this.getSelectedAlerta().setDfechamodificacion(new Date());
                 this.getSelectedAlerta().setDfechini(this.getSelectedAlerta().getDfechini());
                 this.getSelectedAlerta().setDfechfin(this.getSelectedAlerta().getDfechfin());
                 this.getSelectedAlerta().setNuseraplica(this.getSelectedAlerta().getNuseraplica());
@@ -420,7 +424,7 @@ public class AlertaMB implements Serializable{
                 this.getSelectedAlerta().setNtipo2(this.getSelectedAlerta().getNtipo2());
                 this.getSelectedAlerta().setNvalor1(this.getSelectedAlerta().getNvalor1());
                 this.getSelectedAlerta().setNvalor2(this.getSelectedAlerta().getNvalor2());
-                
+
                 AlertaService service = (AlertaService) ServiceFinder.findBean("AlertaService");
                 service.saveOrUpdate(this.getSelectedAlerta());
                 this.setListaAlerta(service.getAlertas());
@@ -432,15 +436,17 @@ public class AlertaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void activar(ActionEvent event) {
         try {
-            if(event != null) {
-                if(this.getSelectedAlerta() != null) {
+            if (event != null) {
+                if (this.getSelectedAlerta() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     AlertaService service = (AlertaService) ServiceFinder.findBean("AlertaService");
                     this.getSelectedAlerta().setNactivo(BigDecimal.ONE);
-                    this.getSelectedAlerta().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedAlerta().setDfechamodificacion(new Date());
+                    this.getSelectedAlerta().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedAlerta());
                     this.setListaAlerta(service.getAlertas());
                 } else {
@@ -453,15 +459,17 @@ public class AlertaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void desactivar(ActionEvent event) {
         try {
-            if(event != null) {
-                if(this.getSelectedAlerta() != null) {
+            if (event != null) {
+                if (this.getSelectedAlerta() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     AlertaService service = (AlertaService) ServiceFinder.findBean("AlertaService");
                     this.getSelectedAlerta().setNactivo(BigDecimal.ZERO);
-                    this.getSelectedAlerta().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedAlerta().setDfechamodificacion(new Date());
+                    this.getSelectedAlerta().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedAlerta());
                     this.setListaAlerta(service.getAlertas());
                 } else {
@@ -474,7 +482,7 @@ public class AlertaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public boolean errorValidation(Alerta alerta) {
         FacesMessage message;
         boolean error = false;
@@ -484,7 +492,7 @@ public class AlertaMB implements Serializable{
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;
                 return error;
-            } else if (alerta.getVdescripcion()== null || alerta.getVdescripcion().isEmpty()) {
+            } else if (alerta.getVdescripcion() == null || alerta.getVdescripcion().isEmpty()) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción requerida. Ingrese la descripción de la alerta.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;

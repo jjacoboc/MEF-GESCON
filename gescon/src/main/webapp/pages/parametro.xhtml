@@ -1,155 +1,136 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
 
-    <h:head>
-        <title>GesCon - Parametros</title>
-        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
-        <h:outputStylesheet library="css" name="style.css" />
-    </h:head>
-    <h:body>            
-        <f:view>
-            <pe:layout fullPage="true" >
-                <pe:layoutPane position="north" size="80" resizable="false" closable="false" styleContent="font-size: 10px;"> 
-                    <ui:include src="header.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="south" size="50" closable="true" >
-                    <ui:include src="footer.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="west" size="165" >
-                    <ui:include src="menu.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="center" styleContent="font-size: 10px;">
-                    <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
-                    <h:form id="f">
-                        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
-                        <p:panel header="Administración de Parametros" >
-                            <h:panelGrid columns="1">
-                                <p:commandButton  value="Nuevo" actionListener="#{parametroMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
-                                <p:dataTable id="tbl" value="#{parametroMB.listaParametro}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
-                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                                    <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
-                                        <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>
-                                        <h:outputText value="#{row.vnombre}" />
-                                    </p:column>
-                                    <p:column width="250px;" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;">
-                                        <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
-                                        <h:outputText value="#{row.vdescripcion}" />
-                                    </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact">
-                                        <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
-                                        <h:outputText value="#{row.nactivo}" >
-                                            <f:converter converterId="converterSiNo"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.vusucrea}" filterBy="#{row.vusucrea}" filterMatchMode="contains">
-                                        <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
-                                        <h:outputText value="#{row.vusucrea}" />
-                                    </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.dfechcrea}" filterBy="#{row.dfechcrea}" filterMatchMode="contains">
-                                        <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
-                                        <h:outputText value="#{row.dfechcrea}" >
-                                            <f:convertDateTime dateStyle="medium" type="both" locale="es" />
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column style="text-align: center; width: 50px;">
-                                        <p:commandLink actionListener="#{parametroMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Parámetro">
-                                            <h:outputText styleClass="ui-icon ui-icon-pencil"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
-                                        </p:commandLink>
-                                        <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Parametro" rendered="#{row.nactivo eq 0}">
-                                            <h:outputText styleClass="ui-icon ui-icon-check"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
-                                        </p:commandLink>
-                                        <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Parametro" rendered="#{row.nactivo eq 1}">
-                                            <h:outputText styleClass="ui-icon ui-icon-close"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
-                                        </p:commandLink>
-                                    </p:column>
-                                </p:dataTable>
-                            </h:panelGrid>
-                        </p:panel>
-                    </h:form>
-
-                    <p:dialog id="newDlg" header="Nuevo Parametro" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="newDialogForm">
-                            <h:panelGrid id="pgNew" columns="3" cellpadding="5" style="text-align: left;width: 100%">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Nombre:"/>
-                                <p:inputText size="50" value="#{parametroMB.nombre}" style="text-transform: uppercase;" maxlength="25" /> 
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Valor:"/>
-                                <p:inputText size="50" value="#{parametroMB.valor}" style="text-transform: uppercase;" maxlength="25" /> 
-                                
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Descripción:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{parametroMB.descripcion}" rows="4" cols="36" style="font-weight: normal;"
-                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="display"/>
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="Administración de Parámetros" >
+                                <h:panelGrid columns="1">
+                                    <p:commandButton  value="Nuevo" actionListener="#{parametroMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
+                                    <p:dataTable id="tbl" value="#{parametroMB.listaParametro}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                        <p:column style="width: 200px;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                            <h:outputText value="#{row.vnombre}" styleClass="Fleft"/>
+                                        </p:column>
+                                        <p:column sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                            <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
+                                            <h:outputText value="#{row.vdescripcion}" styleClass="Fleft"/>
+                                        </p:column>
+                                        <p:column style="width: 100px; text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                            <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
+                                            <h:outputText value="#{row.nactivo}" >
+                                                <f:converter converterId="converterSiNo"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains" priority="4">
+                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
+                                            <h:outputText value="#{row.vusuariocreacion}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 150px;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains" priority="5">
+                                            <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechacreacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 70px;">
+                                            <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
+                                            <p:commandLink actionListener="#{parametroMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Parámetro">
+                                                <h:outputText class="fa fa-edit Fs16" />
+                                                <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
+                                            </p:commandLink>
+                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Parametro" rendered="#{row.nactivo eq 0}">
+                                                <h:outputText class="fa fa-check Fs16" />
+                                                <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
+                                            </p:commandLink>
+                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Parametro" rendered="#{row.nactivo eq 1}">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
                                 </h:panelGrid>
-                            </h:panelGrid>
-                            <p:commandButton  value="Registrar" actionListener="#{parametroMB.save}" update=":f:growl, :f:tbl"/>
+                            </p:panel>
                         </h:form>
-                    </p:dialog>
 
-                    <p:dialog id="editDlg" header="Actualizar Parametro" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="editDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgEdit" columns="3" cellpadding="5" style="text-align: left;width: 100%">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Nombre:"/>
-                                <p:inputText size="50" value="#{parametroMB.selectedParametro.vnombre}" style="text-transform: uppercase;" maxlength="25" />
-                                
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Valor"/>
-                                <p:inputText size="50" value="#{parametroMB.selectedParametro.vvalor}" style="text-transform: uppercase;" maxlength="25" />
-                                
-                                <p:spacer/>
-                                <h:outputLabel value="Descripción:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{parametroMB.selectedParametro.vdescripcion}" rows="4" cols="36" style="font-weight: normal;"
-                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="display"/>
+                        <p:dialog id="newDlg" header="Nuevo Parámetro" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="newDialogForm">
+                                <h:panelGrid id="pgNew" columns="3" >
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Nombre:"/>
+                                    <p:inputText size="50" value="#{parametroMB.nombre}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" /> 
+
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Valor:"/>
+                                    <p:inputText size="50" value="#{parametroMB.valor}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" /> 
+
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Descripción:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{parametroMB.descripcion}" rows="4" cols="49" styleClass="Fs14"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
                                 </h:panelGrid>
+                                <p:commandButton  value="Registrar" actionListener="#{parametroMB.save}" update=":f:growl, :f:tbl"/>
+                            </h:form>
+                        </p:dialog>
 
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Activo:"/>
-                                <p:selectOneMenu value="#{parametroMB.selectedParametro.nactivo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
-                                    <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
-                                </p:selectOneMenu>
-                            </h:panelGrid>
-                            <p:commandButton  value="Actualizar" actionListener="#{parametroMB.update}" update=":f:growl, :f:tbl"/>
-                        </h:form>
-                    </p:dialog>
+                        <p:dialog id="editDlg" header="Actualizar Parámetro" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="editDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgEdit" columns="3">
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Nombre:"/>
+                                    <p:inputText size="50" value="#{parametroMB.selectedParametro.vnombre}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" />
 
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar el parametro. \nDesea Continuar?" header="ACTIVAR PARAMETRO" widgetVar="confirmActDlg" style="font-size: 10px;">
-                        <h:form id="confirmActDlgForm">
-                            <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{parametroMB.activar}"/>
-                            <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
-                        </h:form>
-                    </p:confirmDialog>
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar el parametro. \nDesea Continuar?" header="DESACTIVAR PARAMETRO" widgetVar="confirmDesDlg" style="font-size: 10px;">
-                        <h:form id="confirmDesDlgForm">
-                            <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{parametroMB.desactivar}"/>
-                            <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />
-                        </h:form>
-                    </p:confirmDialog>
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Valor"/>
+                                    <p:inputText size="50" value="#{parametroMB.selectedParametro.vvalor}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" />
 
-                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)"  draggable="false" closable="false" resizable="false" showHeader="false">
-                        <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
-                    </p:dialog>
-                </pe:layoutPane>
-            </pe:layout>
-        </f:view>
-    </h:body>
-</html>
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Descripción:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{parametroMB.selectedParametro.vdescripcion}" rows="4" cols="49" styleClass="Fs14"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
 
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Activo:"/>
+                                    <p:selectOneMenu value="#{parametroMB.selectedParametro.nactivo}">
+                                        <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <p:commandButton  value="Actualizar" actionListener="#{parametroMB.update}" update=":f:growl, :f:tbl"/>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a activar el parámetro. Desea Continuar?" header="ACTIVAR PARAMETRO" widgetVar="confirmActDlg">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{parametroMB.activar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar el parámetro. Desea Continuar?" header="DESACTIVAR PARAMETRO" widgetVar="confirmDesDlg">
+                            <h:form id="confirmDesDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{parametroMB.desactivar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

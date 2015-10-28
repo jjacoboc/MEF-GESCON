@@ -14,10 +14,10 @@ public class Mtparametro implements java.io.Serializable {
     private String vnombre;
     private BigDecimal vvalor;
     private String vdescripcion;
-    private String vusucrea;
-    private Date dfechcrea;
-    private String vusumod;
-    private Date dfechmod;
+    private String vusuariocreacion;
+    private Date dfechacreacion;
+    private String vusuariomodificacion;
+    private Date dfechamodificacion;
     private BigDecimal nactivo;
     
 
@@ -28,15 +28,15 @@ public class Mtparametro implements java.io.Serializable {
         this.nparametroid = nparametroid;
     }
 
-    public Mtparametro(BigDecimal nparametroid, String vnombre, BigDecimal vvalor, String vdescripcion, String vusucrea, Date dfechcrea, String vusumod, Date dfechmod, BigDecimal nactivo) {
+    public Mtparametro(BigDecimal nparametroid, String vnombre, BigDecimal vvalor, String vdescripcion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, BigDecimal nactivo) {
         this.nparametroid = nparametroid;
         this.vnombre = vnombre;
         this.vvalor= vvalor;
         this.vdescripcion = vdescripcion;
-        this.vusucrea = vusucrea;
-        this.dfechcrea = dfechcrea;
-        this.vusumod = vusumod;
-        this.dfechmod = dfechmod;
+        this.vusuariocreacion = vusuariocreacion;
+        this.dfechacreacion = dfechacreacion;
+        this.vusuariomodificacion = vusuariomodificacion;
+        this.dfechamodificacion = dfechamodificacion;
         this.nactivo = nactivo;
         
     }
@@ -73,36 +73,36 @@ public class Mtparametro implements java.io.Serializable {
         this.vdescripcion = vdescripcion;
     }
 
-    public String getVusucrea() {
-        return this.vusucrea;
+    public String getVusuariocreacion() {
+        return this.vusuariocreacion;
     }
 
-    public void setVusucrea(String vusucrea) {
-        this.vusucrea = vusucrea;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Date getDfechcrea() {
-        return this.dfechcrea;
+    public Date getDfechacreacion() {
+        return this.dfechacreacion;
     }
 
-    public void setDfechcrea(Date dfechcrea) {
-        this.dfechcrea = dfechcrea;
+    public void setDfechacreacion(Date dfechacreacion) {
+        this.dfechacreacion = dfechacreacion;
     }
 
-    public String getVusumod() {
-        return this.vusumod;
+    public String getVusuariomodificacion() {
+        return this.vusuariomodificacion;
     }
 
-    public void setVusumod(String vusumod) {
-        this.vusumod = vusumod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Date getDfechmod() {
-        return this.dfechmod;
+    public Date getDfechamodificacion() {
+        return this.dfechamodificacion;
     }
 
-    public void setDfechmod(Date dfechmod) {
-        this.dfechmod = dfechmod;
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
     
     public BigDecimal getNactivo() {

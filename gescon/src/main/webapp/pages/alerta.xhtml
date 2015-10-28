@@ -1,278 +1,251 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
 
-    <h:head>
-        <title>GesCon - Alertas</title>
-        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
-        <h:outputStylesheet library="css" name="style.css" />
-    </h:head>
-    <h:body>            
-        <f:view>
-            <pe:layout fullPage="true" >
-                <pe:layoutPane position="north" size="80" resizable="false" closable="false" styleContent="font-size: 10px;"> 
-                    <ui:include src="header.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="south" size="50" closable="true" >
-                    <ui:include src="footer.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="west" size="165" >
-                    <ui:include src="menu.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="center" styleContent="font-size: 10px;">
-                    <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
-                    <h:form id="f">
-                        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
-                        <p:panel header="Administración de Alertas" >
-                            <h:panelGrid columns="1">
-                                <p:commandButton  value="Nuevo" actionListener="#{alertaMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
-                                <p:dataTable id="tbl" value="#{alertaMB.listaAlerta}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
-                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                                    <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
-                                        <f:facet name="header"><h:outputText value="NOMBRE" style="font-size: 11px;"/></f:facet>
-                                        <h:outputText value="#{row.vnombre}" />
-                                    </p:column>
-                                    <p:column width="250px;" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;">
-                                        <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
-                                        <h:outputText value="#{row.vdescripcion}" />
-                                    </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact">
-                                        <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
-                                        <h:outputText value="#{row.nactivo}" >
-                                            <f:converter converterId="converterSiNo"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.vusucrea}" filterBy="#{row.vusucrea}" filterMatchMode="contains">
-                                        <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
-                                        <h:outputText value="#{row.vusucrea}" />
-                                    </p:column>
-                                    <p:column style="text-align: center;" sortBy="#{row.dfechcrea}" filterBy="#{row.dfechcrea}" filterMatchMode="contains">
-                                        <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
-                                        <h:outputText value="#{row.dfechcrea}" >
-                                            <f:convertDateTime dateStyle="medium" type="both" locale="es" />
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column style="text-align: center; width: 50px;">
-                                        <p:commandLink actionListener="#{alertaMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Alerta">
-                                            <h:outputText styleClass="ui-icon ui-icon-pencil"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{alertaMB.selectedAlerta}" />
-                                        </p:commandLink>
-                                        <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Alerta" rendered="#{row.nactivo eq 0}">
-                                            <h:outputText styleClass="ui-icon ui-icon-check"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{alertaMB.selectedAlerta}" />
-                                        </p:commandLink>
-                                        <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Alerta" rendered="#{row.nactivo eq 1}">
-                                            <h:outputText styleClass="ui-icon ui-icon-close"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{alertaMB.selectedAlerta}" />
-                                        </p:commandLink>
-                                    </p:column>
-                                </p:dataTable>
-                            </h:panelGrid>
-                        </p:panel>
-                    </h:form>
-
-                    <p:dialog id="newDlg" header="Nuevo Alerta" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="newDialogForm">
-                            <h:panelGrid id="pgNew" columns="3" cellpadding="5" style="text-align: left;width: 100%">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Nombre:"/>
-                                <p:inputText size="50" value="#{alertaMB.nombre}" style="text-transform: uppercase;" maxlength="25" /> 
-
-                                <p:spacer/>
-                                <h:outputLabel value="Descripción:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{alertaMB.descripcion}" rows="4" cols="36" style="font-weight: normal;"
-                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="display"/>
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="Administración de Alertas" >
+                                <h:panelGrid columns="1">
+                                    <p:commandButton value="Nuevo" actionListener="#{alertaMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
+                                    <p:dataTable id="tbl" value="#{alertaMB.listaAlerta}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                        <p:column style="width: 200px;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                            <h:outputText value="#{row.vnombre}" styleClass="Fleft"/>
+                                        </p:column>
+                                        <p:column sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                            <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
+                                            <h:outputText value="#{row.vdescripcion}" styleClass="Fleft"/>
+                                        </p:column>
+                                        <p:column style="width: 100px; text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                            <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
+                                            <h:outputText value="#{row.nactivo}" >
+                                                <f:converter converterId="converterSiNo"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.vusuariocreacion}" filterByvusuariocreacionvusucrea}" filterMatchMode="contains" priority="4">
+                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
+                                            <h:outputText value="#{row.vusuariocreacion}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 150px;" sortBy="#{row.dfechacreacion}" filterBy="#dfechacreacionhcrea}" filterMatchMode="contains" priority="5">
+                                            <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechacreacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 70px;">
+                                            <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
+                                            <p:commandLink actionListener="#{alertaMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Alerta">
+                                                <h:outputText class="fa fa-edit Fs16" />
+                                                <f:setPropertyActionListener value="#{row}" target="#{alertaMB.selectedAlerta}" />
+                                            </p:commandLink>
+                                            <p:spacer width="5px;"/>
+                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Alerta" rendered="#{row.nactivo eq 0}">
+                                                <h:outputText class="fa fa-check Fs16" />
+                                                <f:setPropertyActionListener value="#{row}" target="#{alertaMB.selectedAlerta}" />
+                                            </p:commandLink>
+                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Alerta" rendered="#{row.nactivo eq 1}">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:setPropertyActionListener value="#{row}" target="#{alertaMB.selectedAlerta}" />
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
                                 </h:panelGrid>
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Parametro:"/>
-                                <p:selectOneMenu value="#{alertaMB.selectedParametro}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
-                                    <f:selectItems value="#{alertaMB.listaParametro}"/>
-                                </p:selectOneMenu>
-                                <p:spacer/>
-                                <p:spacer/>
-                                <p:fieldset legend="Alerta Via Email" style="margin-bottom:20px">
-                                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                                        <p:outputLabel for="ViaEmail" value="Tipo de Envio:" />
-                                        <p:selectOneRadio id="ViaEmail" value="#{alertaMB.useraplica}">
-                                            <f:selectItem itemLabel="Todos" itemValue="0" />
-                                            <f:selectItem itemLabel="Moderador" itemValue="1" />
-                                            <f:selectItem itemLabel="Especialista" itemValue="2" />
-                                            <f:selectItem itemLabel="Usuario Interno" itemValue="3" />
-                                            <f:selectItem itemLabel="Usuario Externo" itemValue="4" />
-                                        </p:selectOneRadio>
-
-                                        <p:outputLabel for="buttoni" value="Inicio:" />
-                                        <p:calendar id="buttoni" value="#{alertaMB.fechfin}" showOn="button" />
-                                        <p:outputLabel for="buttonf" value="Fin:" />
-                                        <p:calendar id="buttonf" value="#{alertaMB.fechfin}" showOn="button" />
-
-                                    </h:panelGrid>
-                                </p:fieldset>
-                                <p:spacer/>
-                                <p:spacer/>
-                                <p:fieldset legend="Alerta Via Web" style="margin-bottom:20px">
-                                    <h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
-                                        <h:graphicImage library="images" name="BAJO.png" style="border: 0px; " />
-                                        <p:outputLabel  value="Cuando el valor es " />
-                                        <p:selectOneMenu value="#{alertaMB.condicion1}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
-                                            <f:selectItem itemLabel=">" itemValue=">" />
-                                            <f:selectItem itemLabel=">=" itemValue=">=" />
-                                        </p:selectOneMenu>
-                                        <p:outputLabel  value="A: " />
-                                        <p:inputText size="5" value="#{alertaMB.valor1}"  maxlength="5" /> 
-                                        <p:selectOneMenu value="#{alertaMB.tipo1}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
-                                            <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
-                                            <f:selectItem itemLabel="Semanas" itemValue="1" />
-                                            <f:selectItem itemLabel="Meses" itemValue="2" />
-                                        </p:selectOneMenu>
-
-                                        <h:graphicImage library="images" name="MEDIO.png" style="border: 0px; " />
-                                        <p:outputLabel  value="Cuando es menor que A y " />
-                                        <p:selectOneMenu value="#{alertaMB.condicion2}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
-                                            <f:selectItem itemLabel=">" itemValue=">" />
-                                            <f:selectItem itemLabel=">=" itemValue=">=" />
-                                        </p:selectOneMenu>
-                                        <p:outputLabel  value="B: " />
-                                        <p:inputText size="5" value="#{alertaMB.valor2}"  maxlength="5" /> 
-                                        <p:selectOneMenu value="#{alertaMB.tipo2}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
-                                            <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
-                                            <f:selectItem itemLabel="Semanas" itemValue="1" />
-                                            <f:selectItem itemLabel="Meses" itemValue="2" />
-                                        </p:selectOneMenu>
-
-                                        <h:graphicImage library="images" name="ALTO.png" style="border: 0px; " />
-                                        <p:outputLabel  value="Cuando es menor que B " />
-                                    </h:panelGrid>
-                                </p:fieldset>
-                            </h:panelGrid>
-
-
-                            <p:commandButton  value="Registrar" actionListener="#{alertaMB.save}" update=":f:growl, :f:tbl"/>
+                            </p:panel>
                         </h:form>
-                    </p:dialog>
 
-                    <p:dialog id="editDlg" header="Actualizar Alerta" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="editDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgEdit" columns="3" cellpadding="5" style="text-align: left;width: 100%">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Nombre:"/>
-                                <p:inputText size="50" value="#{alertaMB.selectedAlerta.vnombre}" style="text-transform: uppercase;" maxlength="25" />
+                        <p:dialog id="newDlg" header="Nueva Alerta" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="newDialogForm">
+                                <h:panelGrid id="pgNew" columns="3">
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Nombre:"/>
+                                    <p:inputText size="50" value="#{alertaMB.nombre}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" /> 
 
-                                <p:spacer/>
-                                <h:outputLabel value="Descripción:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{alertaMB.selectedAlerta.vdescripcion}" rows="4" cols="36" style="font-weight: normal;"
-                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="display"/>
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Descripción:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{alertaMB.descripcion}" rows="4" cols="49" styleClass="Fs14"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Parametro:"/>
+                                    <p:selectOneMenu value="#{alertaMB.selectedParametro}">
+                                        <f:selectItems value="#{alertaMB.listaParametro}"/>
+                                    </p:selectOneMenu>
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <p:fieldset legend="Alerta Via Email">
+                                        <h:panelGrid columns="2">
+                                            <h:outputText value="Tipo de Envio:" />
+                                            <p:selectOneRadio id="ViaEmail" value="#{alertaMB.useraplica}">
+                                                <f:selectItem itemLabel="Todos" itemValue="0" />
+                                                <f:selectItem itemLabel="Moderador" itemValue="1" />
+                                                <f:selectItem itemLabel="Especialista" itemValue="2" />
+                                                <f:selectItem itemLabel="Usuario Interno" itemValue="3" />
+                                                <f:selectItem itemLabel="Usuario Externo" itemValue="4" />
+                                            </p:selectOneRadio>
+
+                                            <h:outputText value="Inicio:" />
+                                            <p:calendar id="buttoni" value="#{alertaMB.fechfin}" showOn="button" />
+                                            <h:outputText value="Fin:" />
+                                            <p:calendar id="buttonf" value="#{alertaMB.fechfin}" showOn="button" />
+                                        </h:panelGrid>
+                                    </p:fieldset>
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <p:fieldset legend="Alerta Via Web">
+                                        <h:panelGrid columns="6">
+                                            <h:graphicImage library="images" name="BAJO.png" style="border: 0px; " />
+                                            <h:outputText  value="Cuando el valor es " />
+                                            <p:selectOneMenu value="#{alertaMB.condicion1}">
+                                                <f:selectItem itemLabel=">" itemValue=">" />
+                                                <f:selectItem itemLabel=">=" itemValue=">=" />
+                                            </p:selectOneMenu>
+                                            <h:outputText  value="A: " />
+                                            <p:inputText size="5" value="#{alertaMB.valor1}"  maxlength="5" /> 
+                                            <p:selectOneMenu value="#{alertaMB.tipo1}">
+                                                <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
+                                                <f:selectItem itemLabel="Semanas" itemValue="1" />
+                                                <f:selectItem itemLabel="Meses" itemValue="2" />
+                                            </p:selectOneMenu>
+
+                                            <h:graphicImage library="images" name="MEDIO.png" style="border: 0px; " />
+                                            <h:outputText  value="Cuando es menor que A y " />
+                                            <p:selectOneMenu value="#{alertaMB.condicion2}">
+                                                <f:selectItem itemLabel=">" itemValue=">" />
+                                                <f:selectItem itemLabel=">=" itemValue=">=" />
+                                            </p:selectOneMenu>
+                                            <h:outputText  value="B: " />
+                                            <p:inputText size="5" value="#{alertaMB.valor2}"  maxlength="5" /> 
+                                            <p:selectOneMenu value="#{alertaMB.tipo2}">
+                                                <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
+                                                <f:selectItem itemLabel="Semanas" itemValue="1" />
+                                                <f:selectItem itemLabel="Meses" itemValue="2" />
+                                            </p:selectOneMenu>
+
+                                            <h:graphicImage library="images" name="ALTO.png" style="border: 0px; " />
+                                            <h:outputText  value="Cuando es menor que B " />
+                                        </h:panelGrid>
+                                    </p:fieldset>
                                 </h:panelGrid>
+                                <p:commandButton  value="Registrar" actionListener="#{alertaMB.save}" update=":f:growl, :f:tbl"/>
+                            </h:form>
+                        </p:dialog>
 
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Activo:"/>
-                                <p:selectOneMenu value="#{alertaMB.selectedAlerta.nactivo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
-                                    <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
-                                </p:selectOneMenu>
+                        <p:dialog id="editDlg" header="Actualizar Alerta" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="editDialogForm">
+                                <h:panelGrid id="pgEdit" columns="3" >
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Nombre:"/>
+                                    <p:inputText size="50" value="#{alertaMB.selectedAlerta.vnombre}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" />
 
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Parametro:"/>
-                                <p:selectOneMenu value="#{alertaMB.selectedAlerta.nparametroid}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;" >
-                                    <f:selectItems value="#{alertaMB.listaParametro}"/>
-                                </p:selectOneMenu>
-                                <p:spacer/>
-                                <p:spacer/>
-                                <p:fieldset legend="Alerta Via Email" style="margin-bottom:20px">
-                                    <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-                                        <p:outputLabel for="ViaEmail" value="Tipo de Envio:" />
-                                        <p:selectOneRadio id="ViaEmail" value="#{alertaMB.selectedAlerta.nuseraplica}">
-                                            <f:selectItem itemLabel="Todos" itemValue="0" />
-                                            <f:selectItem itemLabel="Moderador" itemValue="1" />
-                                            <f:selectItem itemLabel="Especialista" itemValue="2" />
-                                            <f:selectItem itemLabel="Usuario Interno" itemValue="3" />
-                                            <f:selectItem itemLabel="Usuario Externo" itemValue="4" />
-                                        </p:selectOneRadio>
-
-
-                                        <p:outputLabel for="buttoni" value="Inicio:" />
-                                        <p:calendar id="buttoni" value="#{alertaMB.selectedAlerta.dfechini}" showOn="button" />
-                                        <p:outputLabel for="buttonf" value="Fin:" />
-                                        <p:calendar id="buttonf" value="#{alertaMB.selectedAlerta.dfechfin}" showOn="button" />
-
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Descripción:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{alertaMB.selectedAlerta.vdescripcion}" rows="4" cols="49" styleClass="Fs14"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
                                     </h:panelGrid>
-                                </p:fieldset>
 
-                                <p:spacer/>
-                                <p:spacer/>
-                                <p:fieldset legend="Alerta Via Web" style="margin-bottom:20px">
-                                    <h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">
-                                        <h:graphicImage library="images" name="BAJO.png" style="border: 0px; " />
-                                        <p:outputLabel  value="Cuando el valor es " />
-                                        <p:selectOneMenu value="#{alertaMB.selectedAlerta.ncondicion1}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
-                                            <f:selectItem itemLabel=">" itemValue=">" />
-                                            <f:selectItem itemLabel=">=" itemValue=">=" />
-                                        </p:selectOneMenu>
-                                        <p:outputLabel  value="A: " />
-                                        <p:inputText size="5" value="#{alertaMB.selectedAlerta.nvalor1}"  maxlength="5" /> 
-                                        <p:selectOneMenu value="#{alertaMB.selectedAlerta.ntipo1}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
-                                            <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
-                                            <f:selectItem itemLabel="Semanas" itemValue="1" />
-                                            <f:selectItem itemLabel="Meses" itemValue="2" />
-                                        </p:selectOneMenu>
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Activo:"/>
+                                    <p:selectOneMenu value="#{alertaMB.selectedAlerta.nactivo}">
+                                        <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
+                                    </p:selectOneMenu>
 
-                                        <h:graphicImage library="images" name="MEDIO.png" style="border: 0px; " />
-                                        <p:outputLabel  value="Cuando es menor que A y " />
-                                        <p:selectOneMenu value="#{alertaMB.selectedAlerta.ncondicion2}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
-                                            <f:selectItem itemLabel=">" itemValue=">" />
-                                            <f:selectItem itemLabel=">=" itemValue=">=" />
-                                        </p:selectOneMenu>
-                                        <p:outputLabel  value="B: " />
-                                        <p:inputText size="5" value="#{alertaMB.selectedAlerta.nvalor2}"  maxlength="5" /> 
-                                        <p:selectOneMenu value="#{alertaMB.selectedAlerta.ntipo2}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:125px">
-                                            <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
-                                            <f:selectItem itemLabel="Semanas" itemValue="1" />
-                                            <f:selectItem itemLabel="Meses" itemValue="2" />
-                                        </p:selectOneMenu>
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Parametro:"/>
+                                    <p:selectOneMenu value="#{alertaMB.selectedAlerta.nparametroid}">
+                                        <f:selectItems value="#{alertaMB.listaParametro}"/>
+                                    </p:selectOneMenu>
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <p:fieldset legend="Alerta Via Email">
+                                        <h:panelGrid columns="2">
+                                            <h:outputText value="Tipo de Envio:" />
+                                            <p:selectOneRadio id="ViaEmail" value="#{alertaMB.selectedAlerta.nuseraplica}">
+                                                <f:selectItem itemLabel="Todos" itemValue="0" />
+                                                <f:selectItem itemLabel="Moderador" itemValue="1" />
+                                                <f:selectItem itemLabel="Especialista" itemValue="2" />
+                                                <f:selectItem itemLabel="Usuario Interno" itemValue="3" />
+                                                <f:selectItem itemLabel="Usuario Externo" itemValue="4" />
+                                            </p:selectOneRadio>
 
-                                        <h:graphicImage library="images" name="ALTO.png" style="border: 0px; " />
-                                        <p:outputLabel  value="Cuando es menor que B " />
-                                    </h:panelGrid>
-                                </p:fieldset>
+                                            <h:outputText value="Inicio:" />
+                                            <p:calendar id="buttoni" value="#{alertaMB.selectedAlerta.dfechini}" showOn="button" />
+                                            <h:outputText value="Fin:" />
+                                            <p:calendar id="buttonf" value="#{alertaMB.selectedAlerta.dfechfin}" showOn="button" />
+                                        </h:panelGrid>
+                                    </p:fieldset>
 
-                            </h:panelGrid>
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <p:fieldset legend="Alerta Via Web">
+                                        <h:panelGrid columns="6">
+                                            <h:graphicImage library="images" name="BAJO.png" style="border: 0px; " />
+                                            <h:outputText  value="Cuando el valor es " />
+                                            <p:selectOneMenu value="#{alertaMB.selectedAlerta.ncondicion1}">
+                                                <f:selectItem itemLabel=">" itemValue=">" />
+                                                <f:selectItem itemLabel=">=" itemValue=">=" />
+                                            </p:selectOneMenu>
+                                            <h:outputText  value="A: " />
+                                            <p:inputText size="5" value="#{alertaMB.selectedAlerta.nvalor1}"  maxlength="5" /> 
+                                            <p:selectOneMenu value="#{alertaMB.selectedAlerta.ntipo1}">
+                                                <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
+                                                <f:selectItem itemLabel="Semanas" itemValue="1" />
+                                                <f:selectItem itemLabel="Meses" itemValue="2" />
+                                            </p:selectOneMenu>
 
+                                            <h:graphicImage library="images" name="MEDIO.png" style="border: 0px; " />
+                                            <h:outputText  value="Cuando es menor que A y " />
+                                            <p:selectOneMenu value="#{alertaMB.selectedAlerta.ncondicion2}">
+                                                <f:selectItem itemLabel=">" itemValue=">" />
+                                                <f:selectItem itemLabel=">=" itemValue=">=" />
+                                            </p:selectOneMenu>
+                                            <h:outputText  value="B: " />
+                                            <p:inputText size="5" value="#{alertaMB.selectedAlerta.nvalor2}"  maxlength="5" /> 
+                                            <p:selectOneMenu value="#{alertaMB.selectedAlerta.ntipo2}">
+                                                <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
+                                                <f:selectItem itemLabel="Semanas" itemValue="1" />
+                                                <f:selectItem itemLabel="Meses" itemValue="2" />
+                                            </p:selectOneMenu>
 
-                            <p:commandButton  value="Actualizar" actionListener="#{alertaMB.update}" update=":f:growl, :f:tbl"/>
-                        </h:form>
-                    </p:dialog>
+                                            <h:graphicImage library="images" name="ALTO.png" style="border: 0px; " />
+                                            <h:outputText  value="Cuando es menor que B " />
+                                        </h:panelGrid>
+                                    </p:fieldset>
+                                </h:panelGrid>
+                                <p:commandButton  value="Actualizar" actionListener="#{alertaMB.update}" update=":f:growl, :f:tbl"/>
+                            </h:form>
+                        </p:dialog>
 
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la alerta. \nDesea Continuar?" header="ACTIVAR Alerta" widgetVar="confirmActDlg" style="font-size: 10px;">
-                        <h:form id="confirmActDlgForm">
-                            <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{alertaMB.activar}"/>
-                            <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
-                        </h:form>
-                    </p:confirmDialog>
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la alerta. \nDesea Continuar?" header="DESACTIVAR Alerta" widgetVar="confirmDesDlg" style="font-size: 10px;">
-                        <h:form id="confirmDesDlgForm">
-                            <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{alertaMB.desactivar}"/>
-                            <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />
-                        </h:form>
-                    </p:confirmDialog>
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la alerta. Desea Continuar?" header="ACTIVAR ALERTA" widgetVar="confirmActDlg">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{alertaMB.activar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la alerta. Desea Continuar?" header="DESACTIVAR ALERTA" widgetVar="confirmDesDlg">
+                            <h:form id="confirmDesDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{alertaMB.desactivar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
 
-                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)"  draggable="false" closable="false" resizable="false" showHeader="false">
-                        <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
-                    </p:dialog>
-                </pe:layoutPane>
-            </pe:layout>
-        </f:view>
-    </h:body>
-</html>
+    </ui:define>
 
+</ui:composition>

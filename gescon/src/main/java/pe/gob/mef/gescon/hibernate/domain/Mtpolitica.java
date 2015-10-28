@@ -15,8 +15,9 @@ public class Mtpolitica implements java.io.Serializable {
     private String vnombre;
     private String vdescripcion;
     private BigDecimal nactivo;
-    private BigDecimal nusuariomod;
-    private BigDecimal nusuariocreacion;
+    private String vusuariomodificacion;
+    private String vusuariocreacion;
+    private Date dfechamodificacion;
     private Date dfechacreacion;
     private Set<TpoliticaPerfil> tpoliticaPerfils = new HashSet<TpoliticaPerfil>(0);
 
@@ -27,13 +28,14 @@ public class Mtpolitica implements java.io.Serializable {
         this.npoliticaid = npoliticaid;
     }
 
-    public Mtpolitica(BigDecimal npoliticaid, String vnombre, String vdescripcion, BigDecimal nactivo, BigDecimal nusuariomod, BigDecimal nusuariocreacion, Date dfechacreacion, Set<TpoliticaPerfil> tpoliticaPerfils) {
+    public Mtpolitica(BigDecimal npoliticaid, String vnombre, String vdescripcion, BigDecimal nactivo, String vusuariomodificacion, String vusuariocreacion, Date dfechamodificacion, Date dfechacreacion, Set<TpoliticaPerfil> tpoliticaPerfils) {
         this.npoliticaid = npoliticaid;
         this.vnombre = vnombre;
         this.vdescripcion = vdescripcion;
         this.nactivo = nactivo;
-        this.nusuariomod = nusuariomod;
-        this.nusuariocreacion = nusuariocreacion;
+        this.vusuariomodificacion = vusuariomodificacion;
+        this.vusuariocreacion = vusuariocreacion;
+        this.dfechamodificacion = dfechamodificacion;
         this.dfechacreacion = dfechacreacion;
         this.tpoliticaPerfils = tpoliticaPerfils;
     }
@@ -70,20 +72,28 @@ public class Mtpolitica implements java.io.Serializable {
         this.nactivo = nactivo;
     }
 
-    public BigDecimal getNusuariomod() {
-        return this.nusuariomod;
+    public String getVusuariomodificacion() {
+        return this.vusuariomodificacion;
     }
 
-    public void setNusuariomod(BigDecimal nusuariomod) {
-        this.nusuariomod = nusuariomod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public BigDecimal getNusuariocreacion() {
-        return this.nusuariocreacion;
+    public String getVusuariocreacion() {
+        return this.vusuariocreacion;
     }
 
-    public void setNusuariocreacion(BigDecimal nusuariocreacion) {
-        this.nusuariocreacion = nusuariocreacion;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
+    }
+
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
+    }
+
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
 
     public Date getDfechacreacion() {

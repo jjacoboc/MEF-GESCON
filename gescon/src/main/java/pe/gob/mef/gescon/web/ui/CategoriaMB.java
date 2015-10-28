@@ -33,8 +33,10 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Categoria;
+import pe.gob.mef.gescon.web.bean.User;
 
 /**
  *
@@ -42,7 +44,7 @@ import pe.gob.mef.gescon.web.bean.Categoria;
  */
 @ManagedBean
 @SessionScoped
-public class CategoriaMB implements Serializable{
+public class CategoriaMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(CategoriaMB.class);
@@ -62,7 +64,7 @@ public class CategoriaMB implements Serializable{
     private TreeNode selectedNodeParent;
     private Categoria selectedCategoria;
     private Categoria selectedCategoriaPadre;
-    
+
     /**
      * Creates a new instance of CategoriaMB
      */
@@ -194,8 +196,6 @@ public class CategoriaMB implements Serializable{
     public void setFlagom(boolean flagom) {
         this.flagom = flagom;
     }
-    
-    
 
     /**
      * @return the uploadFile
@@ -294,18 +294,18 @@ public class CategoriaMB implements Serializable{
     public void setSelectedCategoriaPadre(Categoria selectedCategoriaPadre) {
         this.selectedCategoriaPadre = selectedCategoriaPadre;
     }
-    
+
     @PostConstruct
     public void init() {
         try {
             CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             createTree(service.getCategorias());
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public void createTree(List<Categoria> lista) {
         try {
             for (Categoria ele : lista) {
@@ -323,7 +323,7 @@ public class CategoriaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public TreeNode getNodeByIdCategoria(TreeNode treeNode, String idCategoria) {
         try {
             if (treeNode != null) {
@@ -350,7 +350,7 @@ public class CategoriaMB implements Serializable{
         }
         return null;
     }
-    
+
     public void cleanAttributes() {
         this.setDescripcion(StringUtils.EMPTY);
         this.setNombre(StringUtils.EMPTY);
@@ -369,26 +369,26 @@ public class CategoriaMB implements Serializable{
             FacesContext.getCurrentInstance().renderResponse();
         }
     }
-    
+
     public void handleUploadFile(FileUploadEvent event) {
         try {
             if (event != null) {
                 UploadedFile f = event.getFile();
                 if (f != null) {
-                    if(!f.getContentType().equals("image/png")) {
+                    if (!f.getContentType().equals("image/png")) {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La imagen debe ser de tipo PNG.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
-                    if(f.getSize() > 20480) {
+                    if (f.getSize() > 20480) {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "El tamaño de la imagen no debe ser mayor a 20KB.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
                     BufferedImage bimg = ImageIO.read(f.getInputstream());
-                    int width          = bimg.getWidth();
-                    int height         = bimg.getHeight();
-                    if(width > 32 || height > 32) {
+                    int width = bimg.getWidth();
+                    int height = bimg.getHeight();
+                    if (width > 32 || height > 32) {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La dimensión de la imagen no debe ser mayor a 32x32.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
@@ -402,30 +402,32 @@ public class CategoriaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void onNodeSelect(NodeSelectEvent event) {
         try {
             if (event != null) {
                 this.setSelectedCategoria((Categoria) event.getTreeNode().getData());
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public void toSave(ActionEvent event) {
-        try{
+        try {
             this.cleanAttributes();
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public void save(ActionEvent event) {
         try {
             if (event != null) {
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 Categoria categoria = new Categoria();
                 categoria.setVnombre(StringUtils.capitalize(this.getNombre().trim()));
                 categoria.setVdescripcion(StringUtils.capitalize(this.getDescripcion().trim()));
@@ -435,8 +437,8 @@ public class CategoriaMB implements Serializable{
                 categoria.setNflagct(this.isFlagct() ? BigDecimal.ONE : BigDecimal.ZERO);
                 categoria.setNflagom(this.isFlagom() ? BigDecimal.ONE : BigDecimal.ZERO);
                 categoria.setNflagpr(this.isFlagpr() ? BigDecimal.ONE : BigDecimal.ZERO);
-                categoria.setNflagwiki(this.isFlagwiki()? BigDecimal.ONE : BigDecimal.ZERO);
-                if(this.getSelectedNode() != null) {
+                categoria.setNflagwiki(this.isFlagwiki() ? BigDecimal.ONE : BigDecimal.ZERO);
+                if (this.getSelectedNode() != null) {
                     Categoria parent = (Categoria) this.getSelectedNode().getData();
                     categoria.setNcategoriasup(parent.getNcategoriaid());
                     categoria.setNnivel(BigDecimal.valueOf(parent.getNnivel().intValue() + 1));
@@ -444,12 +446,13 @@ public class CategoriaMB implements Serializable{
                     categoria.setNcategoriasup(null);
                     categoria.setNnivel(BigDecimal.ONE);
                 }
-                if(this.getUploadFile() != null) {
+                if (this.getUploadFile() != null) {
                     Blob blob = new SerialBlob(this.getUploadFile().getContents());
                     categoria.setBimagen(blob);
                     categoria.setVimagennombre(this.getUploadFile().getFileName());
                 }
                 categoria.setDfechacreacion(new Date());
+                categoria.setVusuariocreacion(user.getVlogin());
                 CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                 categoria.setNcategoriaid(service.getNextPK());
                 service.saveOrUpdate(categoria);
@@ -457,17 +460,17 @@ public class CategoriaMB implements Serializable{
                 createTree(service.getCategorias());
                 RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public void toUpdate(ActionEvent event) {
-        try{
+        try {
             this.cleanAttributes();
-            this.setSelectedCategoria((Categoria)this.getSelectedNode().getData());
-            this.setSelectedCategoriaPadre((Categoria)this.getSelectedNode().getParent().getData());
+            this.setSelectedCategoria((Categoria) this.getSelectedNode().getData());
+            this.setSelectedCategoriaPadre((Categoria) this.getSelectedNode().getParent().getData());
             this.setFlagbl(this.getSelectedCategoria().getNflagbl().equals(BigDecimal.ONE));
             this.setFlagbp(this.getSelectedCategoria().getNflagbp().equals(BigDecimal.ONE));
             this.setFlagct(this.getSelectedCategoria().getNflagct().equals(BigDecimal.ONE));
@@ -475,7 +478,7 @@ public class CategoriaMB implements Serializable{
             this.setFlagpr(this.getSelectedCategoria().getNflagpr().equals(BigDecimal.ONE));
             this.setFlagwiki(this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE));
             Blob blob = this.getSelectedCategoria().getBimagen();
-            if(blob != null) {
+            if (blob != null) {
                 this.setContent(new DefaultStreamedContent(blob.getBinaryStream(), "image/png", this.getSelectedCategoria().getVimagennombre()));
             }
         } catch (Exception e) {
@@ -483,10 +486,12 @@ public class CategoriaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void update(ActionEvent event) {
         try {
             if (event != null) {
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 this.getSelectedCategoria().setVnombre(StringUtils.capitalize(this.getSelectedCategoria().getVnombre().trim()));
                 this.getSelectedCategoria().setVdescripcion(StringUtils.capitalize(this.getSelectedCategoria().getVdescripcion().trim()));
                 this.getSelectedCategoria().setNflagbl(this.isFlagbl() ? BigDecimal.ONE : BigDecimal.ZERO);
@@ -494,9 +499,10 @@ public class CategoriaMB implements Serializable{
                 this.getSelectedCategoria().setNflagct(this.isFlagct() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedCategoria().setNflagom(this.isFlagom() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedCategoria().setNflagpr(this.isFlagpr() ? BigDecimal.ONE : BigDecimal.ZERO);
-                this.getSelectedCategoria().setNflagwiki(this.isFlagwiki()? BigDecimal.ONE : BigDecimal.ZERO);
-                this.getSelectedCategoria().setDfechamod(new Date());
-                if(this.getUploadFile() != null) {
+                this.getSelectedCategoria().setNflagwiki(this.isFlagwiki() ? BigDecimal.ONE : BigDecimal.ZERO);
+                this.getSelectedCategoria().setDfechamodificacion(new Date());
+                this.getSelectedCategoria().setVusuariomodificacion(user.getVlogin());
+                if (this.getUploadFile() != null) {
                     Blob blob = new SerialBlob(this.getUploadFile().getContents());
                     this.getSelectedCategoria().setBimagen(blob);
                     this.getSelectedCategoria().setVimagennombre(this.getUploadFile().getFileName());
@@ -507,21 +513,23 @@ public class CategoriaMB implements Serializable{
                 createTree(service.getCategorias());
                 RequestContext.getCurrentInstance().execute("PF('editDialog').hide();");
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public void activar(ActionEvent event) {
         try {
             if (event != null) {
                 if (this.getSelectedNode() != null) {
-                    Categoria categoria = (Categoria)this.getSelectedNode().getData();
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
+                    Categoria categoria = (Categoria) this.getSelectedNode().getData();
                     CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     categoria.setNestado(BigDecimal.ONE);
-                    categoria.setDfechamod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    categoria.setDfechamodificacion(new Date());
+                    categoria.setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(categoria);
                 } else {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar la categoría a activar.");
@@ -538,11 +546,13 @@ public class CategoriaMB implements Serializable{
         try {
             if (event != null) {
                 if (this.getSelectedNode() != null) {
-                    Categoria categoria = (Categoria)this.getSelectedNode().getData();
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
+                    Categoria categoria = (Categoria) this.getSelectedNode().getData();
                     CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     categoria.setNestado(BigDecimal.ZERO);
-                    categoria.setDfechamod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    categoria.setDfechamodificacion(new Date());
+                    categoria.setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(categoria);
                 } else {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar la categoría a desactivar.");

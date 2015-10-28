@@ -13,10 +13,10 @@ public class Mtalerta implements java.io.Serializable {
     private BigDecimal nalertaid;
     private String vnombre;
     private String vdescripcion;
-    private String vusucrea;
-    private Date dfechcrea;
-    private String vusumod;
-    private Date dfechmod;
+    private String vusuariocreacion;
+    private Date dfechacreacion;
+    private String vusuariomodificacion;
+    private Date dfechamodificacion;
     private BigDecimal nactivo;
     private BigDecimal nuseraplica;
     private BigDecimal nparametroid;
@@ -36,14 +36,14 @@ public class Mtalerta implements java.io.Serializable {
         this.nalertaid = nalertaid;
     }
 
-    public Mtalerta(BigDecimal nalertaid, String vnombre, String vdescripcion, String vusucrea, Date dfechcrea, String vusumod, Date dfechmod, BigDecimal nactivo, BigDecimal nuseraplica, BigDecimal nparametroid, Date dfechini, Date dfechfin, String ncondicion1, String ncondicion2, BigDecimal nvalor1, BigDecimal ntipo1, BigDecimal nvalor2, BigDecimal ntipo2) {
+    public Mtalerta(BigDecimal nalertaid, String vnombre, String vdescripcion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, BigDecimal nactivo, BigDecimal nuseraplica, BigDecimal nparametroid, Date dfechini, Date dfechfin, String ncondicion1, String ncondicion2, BigDecimal nvalor1, BigDecimal ntipo1, BigDecimal nvalor2, BigDecimal ntipo2) {
         this.nalertaid = nalertaid;
         this.vnombre = vnombre;
         this.vdescripcion = vdescripcion;
-        this.vusucrea = vusucrea;
-        this.dfechcrea = dfechcrea;
-        this.vusumod = vusumod;
-        this.dfechmod = dfechmod;
+        this.vusuariocreacion = vusuariocreacion;
+        this.dfechacreacion = dfechacreacion;
+        this.vusuariomodificacion = vusuariomodificacion;
+        this.dfechamodificacion = dfechamodificacion;
         this.nactivo = nactivo;
         this.nuseraplica = nuseraplica;
         this.nparametroid = nparametroid;
@@ -81,36 +81,36 @@ public class Mtalerta implements java.io.Serializable {
         this.vdescripcion = vdescripcion;
     }
 
-    public String getVusucrea() {
-        return this.vusucrea;
+    public String getVusuariocreacion() {
+        return this.vusuariocreacion;
     }
 
-    public void setVusucrea(String vusucrea) {
-        this.vusucrea = vusucrea;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Date getDfechcrea() {
-        return this.dfechcrea;
+    public Date getDfechacreacion() {
+        return this.dfechacreacion;
     }
 
-    public void setDfechcrea(Date dfechcrea) {
-        this.dfechcrea = dfechcrea;
+    public void setDfechacreacion(Date dfechacreacion) {
+        this.dfechacreacion = dfechacreacion;
     }
 
-    public String getVusumod() {
-        return this.vusumod;
+    public String getVusuariomodificacion() {
+        return this.vusuariomodificacion;
     }
 
-    public void setVusumod(String vusumod) {
-        this.vusumod = vusumod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Date getDfechmod() {
-        return this.dfechmod;
+    public Date getDfechamodificacion() {
+        return this.dfechamodificacion;
     }
 
-    public void setDfechmod(Date dfechmod) {
-        this.dfechmod = dfechmod;
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
     
     public BigDecimal getNactivo() {

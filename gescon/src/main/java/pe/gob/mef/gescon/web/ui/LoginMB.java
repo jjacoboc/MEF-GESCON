@@ -6,6 +6,7 @@
 package pe.gob.mef.gescon.web.ui;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -14,6 +15,7 @@ import javax.faces.context.FacesContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.PassService;
 import pe.gob.mef.gescon.service.PerfilService;
 import pe.gob.mef.gescon.service.UserService;
@@ -36,6 +38,7 @@ public class LoginMB implements Serializable {
     private List<Perfil> perfiles;
     private String login;
     private String pass;
+    private BigDecimal notificaciones;
 
     /**
      * Creates a new instance of LoginMB
@@ -113,6 +116,14 @@ public class LoginMB implements Serializable {
         this.pass = pass;
     }
 
+    public BigDecimal getNotificaciones() {
+        return notificaciones;
+    }
+
+    public void setNotificaciones(BigDecimal notificaciones) {
+        this.notificaciones = notificaciones;
+    }
+
     public String ingresar() {
         String page = StringUtils.EMPTY;
         try {
@@ -127,16 +138,18 @@ public class LoginMB implements Serializable {
                         List<Perfil> listaperfiles = perfilService.getPerfilesByUser(this.getUser());
                         if(!CollectionUtils.isEmpty(listaperfiles)) {
                             this.setPerfil(listaperfiles.get(0));
+                            AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                            this.setNotificaciones(asignacionService.getNumberNotificationsByUser(this.getUser()));
                             if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_ADMINISTRADOR)) {
                                 page = "/pages/indexAdmin?faces-redirect=true";
                             } else if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_MODERADOR)) {
-                                page = "/index?faces-redirect=true";
+                                page = "/index2?faces-redirect=true";
                             } else if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_ESPECIALISTA)) {
-                                page = "/index?faces-redirect=true";
+                                page = "/index2?faces-redirect=true";
                             } else if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_USUARIOEXTERNO)) {
-                                page = "/index?faces-redirect=true";
+                                page = "/index2?faces-redirect=true";
                             } else if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_USUARIOINTERNO)) {
-                                page = "/index?faces-redirect=true";
+                                page = "/index2?faces-redirect=true";
                             }                               
                             
                         } else {

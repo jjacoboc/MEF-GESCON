@@ -6,8 +6,8 @@
 package pe.gob.mef.gescon.service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import pe.gob.mef.gescon.web.bean.Asignacion;
+import pe.gob.mef.gescon.web.bean.User;
 
 /**
  *
@@ -16,5 +16,6 @@ import pe.gob.mef.gescon.web.bean.Asignacion;
 public interface AsignacionService {
     
     public BigDecimal getNextPK() throws Exception;
+    public BigDecimal getNumberNotificationsByUser(User user) throws Exception;
     public void saveOrUpdate(Asignacion asignacion) throws Exception;
 }

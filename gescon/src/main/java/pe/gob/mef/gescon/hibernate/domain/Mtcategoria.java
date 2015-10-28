@@ -18,10 +18,10 @@ public class Mtcategoria implements java.io.Serializable {
     private BigDecimal ncategoriasup;
     private BigDecimal nnivel;
     private String vnombre;
-    private String vusuariomod;
+    private String vusuariomodificacion;
     private String vusuariocreacion;
     private Date dfechacreacion;
-    private Date dfechamod;
+    private Date dfechamodificacion;
     private BigDecimal nflagwiki;
     private BigDecimal nflagbl;
     private BigDecimal nflagpr;
@@ -41,17 +41,17 @@ public class Mtcategoria implements java.io.Serializable {
         this.ncategoriaid = ncategoriaid;
     }
 
-    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomod, String vusuariocreacion, Date dfechacreacion, Date dfechamod, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Blob bimagen, String vimagennombre, String vespecialista, String vmoderador, Set<TcategoriaConocimiento> tcategoriaConocimientos) {
+    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Blob bimagen, String vimagennombre, String vespecialista, String vmoderador, Set<TcategoriaConocimiento> tcategoriaConocimientos) {
         this.ncategoriaid = ncategoriaid;
         this.vdescripcion = vdescripcion;
         this.nestado = nestado;
         this.ncategoriasup = ncategoriasup;
         this.nnivel = nnivel;
         this.vnombre = vnombre;
-        this.vusuariomod = vusuariomod;
+        this.vusuariomodificacion = vusuariomodificacion;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
-        this.dfechamod = dfechamod;
+        this.dfechamodificacion = dfechamodificacion;
         this.nflagwiki = nflagwiki;
         this.nflagbl = nflagbl;
         this.nflagpr = nflagpr;
@@ -113,12 +113,12 @@ public class Mtcategoria implements java.io.Serializable {
         this.vnombre = vnombre;
     }
 
-    public String getVusuariomod() {
-        return this.vusuariomod;
+    public String getVusuariomodificacion() {
+        return this.vusuariomodificacion;
     }
 
-    public void setVusuariomod(String vusuariomod) {
-        this.vusuariomod = vusuariomod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
     public String getVusuariocreacion() {
@@ -137,12 +137,12 @@ public class Mtcategoria implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public Date getDfechamod() {
-        return this.dfechamod;
+    public Date getDfechamodificacion() {
+        return this.dfechamodificacion;
     }
 
-    public void setDfechamod(Date dfechamod) {
-        this.dfechamod = dfechamod;
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
 
     public BigDecimal getNflagwiki() {

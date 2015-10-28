@@ -27,7 +27,7 @@ public class ConverterSiNo implements Converter {
     @Override
     public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
         try {
-            return Integer.valueOf(value);
+            return value != null ? Integer.valueOf(value) : null;
         } catch (NumberFormatException exception) {
             throw new ConverterException(exception);
         }
@@ -38,13 +38,15 @@ public class ConverterSiNo implements Converter {
         List lista;
         String label = "";
         try {
-            HttpSession session = JSFUtils.getSession();
-            ListaSessionMB listasSession = session.getAttribute("listaSessionMB") != null ? (ListaSessionMB) session.getAttribute("listaSessionMB") : new ListaSessionMB();
-            lista = listasSession.getListaSiNo();
-            for (Object lista1 : lista) {
-                SelectItem item = (SelectItem) lista1;
-                if (o.toString().equals(item.getValue().toString())) {
-                    label = item.getLabel();
+            if(o != null) {
+                HttpSession session = JSFUtils.getSession();
+                ListaSessionMB listasSession = session.getAttribute("listaSessionMB") != null ? (ListaSessionMB) session.getAttribute("listaSessionMB") : new ListaSessionMB();
+                lista = listasSession.getListaSiNo();
+                for (Object lista1 : lista) {
+                    SelectItem item = (SelectItem) lista1;
+                    if (o.toString().equals(item.getValue().toString())) {
+                        label = item.getLabel();
+                    }
                 }
             }
             return label;

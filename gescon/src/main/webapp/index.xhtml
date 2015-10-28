@@ -10,8 +10,13 @@
     <h:head>
         <title>Gescon - Inicio</title>
         <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
-        <h:outputStylesheet library="css" name="style.css" />
     </h:head>
+    <h:outputStylesheet library="css" name="style.css" />
+    <h:outputStylesheet name="css/core-layout.css" library="spark-layout" />
+    <h:outputStylesheet name="css/font-awesome.css" library="spark-layout" />
+    <h:outputStylesheet name="css/animate.css" library="spark-layout" />
+    <h:outputStylesheet name="css/spark-layout.css" library="spark-layout" />
+    <h:outputScript name="js/layout.js" library="spark-layout" />
     <script>
         $(document).ready(function() {
             $(".panelcolumns").parent().css("vertical-align", "top");
@@ -28,27 +33,27 @@
                     <ui:include src="pages/footer.xhtml" />
                 </pe:layoutPane>
 
-                <pe:layoutPane position="center" >
+                <pe:layoutPane position="center">
                     <h:form id="f">
                         <center>
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
                             <p:spacer height="100"/>
-                            <p:dataGrid columns="2" value="#{administracionMB.listaCategoria}" var="c" rowStatePreserved="true" style="width: 500px; vertical-align: top;">
+                            <p:dataGrid columns="2" value="#{administracionMB.listaCategoria}" var="c" rowStatePreserved="true" style="width: 500px; box-shadow: 3px 3px 5px #888888;">
                                 <h:panelGrid columns="1" styleClass="panelcolumns">
-                                    <h:panelGrid columns="2">
-                                        <p:graphicImage value="#{categoriaImages.image}">
+                                    <h:panelGrid columns="2" styleClass="panelcolumns2">
+                                        <p:graphicImage cache="false" value="#{categoriaImages.image}">
                                             <f:param name="id" value="#{c.ncategoriaid}"/>
                                         </p:graphicImage>
-                                        <h:outputText value="#{c.vnombre}" style="font-size: 20px;font-weight: bold;"/>
+                                        <h:outputText value="#{c.vnombre}" styleClass="Fs20 FontBold black"/>
                                     </h:panelGrid>
                                     <ui:repeat value="#{c.children}" var="ch">
                                         <h:panelGrid columns="3">
                                             <p:spacer width="30" height="10"/>
-                                            <h:outputText class="fa fa-fw fa-circle"/>
+                                            <h:outputText class="fa fa-arrow-circle-o-right Fs20 animated fadeInDown"/>
                                             <p:commandLink action="#{administracionMB.onClickSubCategoriesFilter}" ajax="false">
                                                 <f:param name="idparent" value="#{c.ncategoriaid}"/>
                                                 <f:param name="idchild" value="#{ch.ncategoriaid}"/>
-                                                <h:outputText value="#{ch.vnombre}" style="font-size: 15px;"/>
+                                                <h:outputText value="#{ch.vnombre}" styleClass="Fs14 CursPointer"/>
                                             </p:commandLink>
                                         </h:panelGrid>
                                     </ui:repeat>

@@ -14,7 +14,7 @@
     <h:body>
         <f:view>
             <pe:layout fullPage="true">
-                <pe:layoutPane position="north" size="80" resizable="true" closable="true" styleContent="font-size: 10px;">
+                <pe:layoutPane position="north" size="80" resizable="true" closable="true" styleClassContent="headerStyle">
                     <ui:include src="header.xhtml" />
                 </pe:layoutPane>
 
@@ -47,7 +47,7 @@
                                         itemStyle="border:0px;height:92px;width:160px;" >
                                 <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
                                     <p:spacer/>
-                                    <p:graphicImage value="#{categoriaImages.image}">
+                                    <p:graphicImage cache="false" value="#{categoriaImages.image}">
                                         <f:param name="id" value="#{cat.ncategoriaid}"/>
                                     </p:graphicImage>
                                     <p:spacer/>

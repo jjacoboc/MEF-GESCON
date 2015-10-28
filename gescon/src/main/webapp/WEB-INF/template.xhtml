@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>MEF Gescon</title>
+        <h:outputScript name="js/layout.js" library="spark-layout" />
+        <h:outputScript library="js" name="calendar_es.js"/>
+        <ui:insert name="head" />
+    </h:head>
+
+    <h:body>    
+        <div id="menu-mask"></div>
+
+        <ui:include src="topbar.xhtml" />
+
+        <ui:include src="layoutmenu.xhtml" />
+
+        <div id="layout-portlets-cover">
+            <ui:insert name="content">
+                Template
+            </ui:insert>
+
+            <div class="layout-portlets-box TexAlCenter">
+                <span class="Fs10 gray FontRalewayRegular">
+                    <h:panelGrid columns="1" width="100%">
+                        <h:outputText value="Ministerio de Economía y Finanzas - Jr. Junín 319, Cercado de Lima, Lima 1-Perú Telf: (51 1) 311 5930 - (CENTRAL TELEFÓNICA)"/>
+                        <h:outputText value="Copyright © 2014 - ® Todos los Derechos Reservados"/>
+                    </h:panelGrid>
+                </span>
+            </div>
+        </div>
+
+        <!--
+        <p:ajaxStatus style="width:32px;height:32px;position:fixed;right:7px;bottom:7px">
+            <f:facet name="start">
+                <p:graphicImage name="images/preloader.gif" library="spark-layout"/>
+            </f:facet>
+
+            <f:facet name="complete">
+                <h:outputText value="" />
+            </f:facet>
+        </p:ajaxStatus>
+        -->
+        
+        <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+        
+        <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)" draggable="false" closable="false" resizable="false" showHeader="false">
+            <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
+        </p:dialog>
+
+        <h:outputStylesheet name="style.css" library="css"/>
+        <h:outputStylesheet name="css/core-layout.css" library="spark-layout" />
+        <h:outputStylesheet name="css/font-awesome.css" library="spark-layout" />
+        <h:outputStylesheet name="css/animate.css" library="spark-layout" />
+        <h:outputStylesheet name="css/spark-layout-red.css" library="spark-layout" />
+    </h:body>
+
+</html>

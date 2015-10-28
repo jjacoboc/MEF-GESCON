@@ -14,17 +14,17 @@
         <property name="vdescripcion" type="string">
             <column name="VDESCRIPCION" length="400" />
         </property>
-        <property name="vusucrea" type="string">
-            <column name="VUSUCREA" length="25" />
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
         </property>
-        <property name="dfechcrea" type="date">
-            <column name="DFECHCREA" length="7" />
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" length="6" />
         </property>
-        <property name="vusumod" type="string">
-            <column name="VUSUMOD" length="25" />
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
-        <property name="dfechmod" type="date">
-            <column name="DFECHMOD" length="7" />
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" length="6" />
         </property>
         <property name="nactivo" type="big_decimal">
             <column name="NACTIVO" precision="22" scale="0" />

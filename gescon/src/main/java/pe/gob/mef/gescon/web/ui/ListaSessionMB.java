@@ -136,6 +136,7 @@ public class ListaSessionMB implements Serializable{
 
     /**
      * @return the listaSituacion
+     * @throws java.lang.Exception
      */
     public List<SelectItem> getListaSituacion() throws Exception {
         if(listaSituacion == null){

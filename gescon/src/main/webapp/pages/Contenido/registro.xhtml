@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <h:head>
+        <title>GesCon - Contenido</title>
+        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
+        <h:outputStylesheet library="css" name="style.css" />
+    </h:head>
+    <h:body>            
+        <f:view>
+            <pe:layout fullPage="true" >
+                <pe:layoutPane position="north" size="80" resizable="false" closable="false" styleClassContent="headerStyle"> 
+                    <ui:include src="/pages/header.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="south" size="50" closable="true" >
+                    <ui:include src="/pages/footer.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="west" size="165" >
+                    <ui:include src="/pages/menu.xhtml" />
+                </pe:layoutPane>
+
+                <pe:layoutPane position="center" styleContent="font-size: 10px;">
+                    <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+                    <h:form id="f">
+                        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
+                        <p:panel header="Registro de Contenido" >
+                            <h:panelGrid id="pgNew" columns="3" cellpadding="5" style="text-align: left;width: 100%">
+                                <h:outputLabel value="*"/>
+                                <h:panelGrid columns="2" cellspacing="5px" cellpadding="0">
+                                    <h:outputLabel value="Categoria"/>
+                                    <p:commandButton value="Seleccionar Categoria"/>
+                                </h:panelGrid>
+                                <p:spacer/>
+
+                                <h:outputLabel value="*"/>
+                                <h:panelGrid columns="2" cellspacing="5px" cellpadding="0">
+                                    <h:outputLabel value="Titulo"/>
+                                    <p:inputText size="50" style="text-transform: uppercase;" maxlength="25" /> 
+                                </h:panelGrid>
+                                <p:spacer/>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Detalle"/>
+                                <p:spacer/>
+
+                                <p:spacer/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:inputTextarea value="#{parametroMB.descripcion}" rows="4" cols="57" style="font-weight: normal;"
+                                                     counter="displaydet" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                    <h:outputText id="displaydet"/>
+                                </h:panelGrid>
+                                <p:spacer/>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Descripción"/>
+                                <p:spacer/>
+
+                                <p:spacer/>
+                                <p:editor/>
+                                <p:spacer/>
+                                
+                                <h:outputLabel value=""/>
+                                <h:outputLabel value="CONTENIDOS RELACIONADOS" style="text-decoration: underline"/>
+                                <p:spacer/>
+
+                                <h:outputLabel value=""/>
+                                <h:panelGrid columns="2" cellspacing="5px" cellpadding="0">
+                                    <h:outputLabel value="Subir archivo(s) del contenido"/>
+                                    <p:commandButton value="Seleccionar archivos" oncomplete="PF('tpoconDialog').show();"/>
+                                </h:panelGrid>
+                                <p:spacer/>
+
+                                <p:spacer/>
+                                <p:panelGrid style="margin-top:0px">
+                                    <f:facet name="header">
+                                        <p:row>
+                                            <p:column style="text-align: center;" >Nombre del Archivo</p:column>
+                                            <p:column style="text-align: center;" >Tipo del Archivo</p:column>
+                                            <p:column style="text-align: center;" >Acciones</p:column>
+                                        </p:row>
+                                    </f:facet>
+                                    <p:row>
+                                        <p:column style="text-align: center;" >Archivo #1</p:column>
+                                        <p:column style="text-align: center;" >PDF</p:column>
+                                        <p:column style="text-align: center;" ><h:outputText styleClass="ui-icon ui-icon-pencil"/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column style="text-align: center;" >Archivo #2</p:column>
+                                        <p:column style="text-align: center;" >MP3</p:column>
+                                        <p:column style="text-align: center;" ><h:outputText styleClass="ui-icon ui-icon-pencil"/></p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                                <p:spacer/>
+
+                                <h:outputLabel value=""/>
+                                <h:outputLabel value="VINCULOS RELACIONADOS" style="text-decoration: underline"/>
+                                <p:spacer/>
+
+                                <h:outputLabel value=""/>
+                                <h:panelGrid columns="2" cellspacing="5px" cellpadding="0">
+                                    <p:commandButton value="Agregar Vinculos" />
+                                </h:panelGrid>
+                                <p:spacer/>
+
+                                <p:spacer/>
+                                <p:panelGrid style="margin-top:0px; width: 150px;">
+                                    <f:facet name="header">
+                                        <p:row>
+                                            <p:column style="text-align: center;" >Numero</p:column>
+                                            <p:column style="text-align: center;" >Nombre</p:column>
+                                            <p:column style="text-align: center;" >Categoria</p:column>
+                                            <p:column style="text-align: center;" >Estado</p:column>
+                                            <p:column style="text-align: center;" >Acciones</p:column>
+                                        </p:row>
+                                    </f:facet>
+                                    <p:row>
+                                        <p:column style="text-align: center;" >C2PO-2183712</p:column>
+                                        <p:column style="text-align: center;" >BASE LEGAL 1</p:column>
+                                        <p:column style="text-align: center;" >SIGA</p:column>
+                                        <p:column style="text-align: center;" >VIGENTE</p:column>
+                                        <p:column style="text-align: center;" ><h:outputText styleClass="ui-icon ui-icon-pencil"/></p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column style="text-align: center;" >Y7A8-5414567</p:column>
+                                        <p:column style="text-align: center;" >BASE LEGAL 2</p:column>
+                                        <p:column style="text-align: center;" >SIGA</p:column>
+                                        <p:column style="text-align: center;" >VIGENTE</p:column>
+                                        <p:column style="text-align: center;" ><h:outputText styleClass="ui-icon ui-icon-pencil"/></p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                                <p:spacer/>
+                                <p:spacer/>
+                                <p:spacer/>
+                                <p:commandButton style="float: right"  value="Registrar"  update=":f:growl"/>
+                            </h:panelGrid>
+
+
+                        </p:panel>
+
+                    </h:form>
+
+
+
+
+                    <p:dialog id="tpoconDlg" header="Agregar Contenidos" widgetVar="tpoconDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <h:form id="tpoconDialogForm">
+                            <p:messages id="msgs" showSummary="true" showDetail="true" />
+                            <h:panelGrid id="pgTpoCon" columns="2" cellpadding="5" style="text-align: left;width: 100%">
+                                <h:outputLabel value="Tipos de contenido"/>
+                                <p:spacer/>
+
+                                <p:selectOneRadio id="console" layout="grid" columns="1">
+                                    <f:selectItem itemLabel="Boletin" itemValue="0" />
+                                    <f:selectItem itemLabel="Blog" itemValue="1" />
+                                    <f:selectItem itemLabel="Manual" itemValue="2" />
+                                    <f:selectItem itemLabel="Video Tutorial" itemValue="3" />
+                                    <f:selectItem itemLabel="Articulo" itemValue="4" />
+                                    <f:selectItem itemLabel="Libro" itemValue="5" />
+                                    <f:selectItem itemLabel="Otros" itemValue="6" />
+                                </p:selectOneRadio>
+                                <p:spacer/>
+
+                                <p:fileUpload fileUploadListener="#{contenidoMB.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                                              multiple="true" update="messages" sizeLimit="10000000000000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                                <p:growl id="messages" showDetail="true" />
+
+                                <p:commandButton  value="Cancelar" actionListener="#{contenidoMB.toCancel}" update=":f:growl"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:dialog>
+
+
+
+                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)"  draggable="false" closable="false" resizable="false" showHeader="false">
+                        <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
+                    </p:dialog>
+                </pe:layoutPane>
+            </pe:layout>
+        </f:view>
+    </h:body>
+</html>
+

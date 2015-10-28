@@ -30,6 +30,7 @@ import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Maestro;
 import pe.gob.mef.gescon.web.bean.MaestroDetalle;
+import pe.gob.mef.gescon.web.bean.User;
 
 /**
  *
@@ -210,12 +211,13 @@ public class MaestroMB implements Serializable {
             maestro.setVnombre(this.getNombre().trim().toUpperCase());
             maestro.setVdescripcion(StringUtils.capitalize(this.getDescripcion().trim()));
             if (!errorValidation(maestro)) {
-//                UsuarioMB usuarioMB = (UsuarioMB) JSFUtils.getSession().getAttribute("usuarioMB");
-//                Usuario usuario = usuarioMB.getUsuario();
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 MaestroService service = (MaestroService) ServiceFinder.findBean("MaestroService");
                 maestro.setNmaestroid(service.getNextPK());
                 maestro.setNactivo(BigDecimal.ONE);
-                maestro.setDfechcrea(new Date());
+                maestro.setVusuariocreacion(user.getVlogin());
+                maestro.setDfechacreacion(new Date());
                 service.saveOrUpdate(maestro);
                 this.setListaMaestro(service.getMaestros());
                 this.cleanAttributes();
@@ -254,10 +256,12 @@ public class MaestroMB implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 this.getSelectedMaestro().setVnombre(this.getSelectedMaestro().getVnombre().trim().toUpperCase());
                 this.getSelectedMaestro().setVdescripcion(StringUtils.capitalize(this.getSelectedMaestro().getVdescripcion().trim()));
-//                this.getSelectedMestro().setIdUsuaModi(user.getUsuario());
-                this.getSelectedMaestro().setDfechmod(new Date());
+                this.getSelectedMaestro().setVusuariomodificacion(user.getVlogin());
+                this.getSelectedMaestro().setDfechamodificacion(new Date());
                 MaestroService service = (MaestroService) ServiceFinder.findBean("MaestroService");
                 service.saveOrUpdate(this.getSelectedMaestro());
                 this.setListaMaestro(service.getMaestros());
@@ -274,10 +278,12 @@ public class MaestroMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedMaestro() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     MaestroService service = (MaestroService) ServiceFinder.findBean("MaestroService");
                     this.getSelectedMaestro().setNactivo(BigDecimal.ONE);
-                    this.getSelectedMaestro().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedMaestro().setDfechamodificacion(new Date());
+                    this.getSelectedMaestro().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedMaestro());
                     this.setListaMaestro(service.getMaestros());
                 } else {
@@ -295,10 +301,12 @@ public class MaestroMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedMaestro() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     MaestroService service = (MaestroService) ServiceFinder.findBean("MaestroService");
                     this.getSelectedMaestro().setNactivo(BigDecimal.ZERO);
-                    this.getSelectedMaestro().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedMaestro().setDfechamodificacion(new Date());
+                    this.getSelectedMaestro().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedMaestro());
                     this.setListaMaestro(service.getMaestros());
                 } else {
@@ -354,13 +362,14 @@ public class MaestroMB implements Serializable {
             maestroDetalle.setVnombre(this.getNombre().trim().toUpperCase());
             maestroDetalle.setVdescripcion(StringUtils.capitalize(this.getDescripcion().trim()));
             if (!errorValidationDetail(maestroDetalle)) {
-//                UsuarioMB usuarioMB = (UsuarioMB) JSFUtils.getSession().getAttribute("usuarioMB");
-//                Usuario usuario = usuarioMB.getUsuario();
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
                 maestroDetalle.setNdetalleid(service.getNextPK());
                 maestroDetalle.setNmaestroid(this.getSelectedMaestro().getNmaestroid());
                 maestroDetalle.setNactivo(BigDecimal.ONE);
-                maestroDetalle.setDfechcrea(new Date());
+                maestroDetalle.setDfechacreacion(new Date());
+                maestroDetalle.setVusuariocreacion(user.getVlogin());
                 TmaestrodetalleId id = new TmaestrodetalleId();
                 id.setNdetalleid(maestroDetalle.getNdetalleid());
                 id.setNmaestroid(maestroDetalle.getNmaestroid());
@@ -389,10 +398,12 @@ public class MaestroMB implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 this.getSelectedMaestroDetalle().setVnombre(this.getSelectedMaestroDetalle().getVnombre().trim().toUpperCase());
                 this.getSelectedMaestroDetalle().setVdescripcion(StringUtils.capitalize(this.getSelectedMaestroDetalle().getVdescripcion().trim()));
-//                this.getSelectedMestro().setIdUsuaModi(user.getUsuario());
-                this.getSelectedMaestroDetalle().setDfechmod(new Date());
+                this.getSelectedMaestroDetalle().setVusuariomodificacion(user.getVlogin());
+                this.getSelectedMaestroDetalle().setDfechamodificacion(new Date());
                 MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
                 service.saveOrUpdate(this.getSelectedMaestroDetalle());
                 this.setListaMaestroDetalle(service.getDetallesByMaestro(this.getSelectedMaestro()));
@@ -409,10 +420,12 @@ public class MaestroMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedMaestroDetalle() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
                     this.getSelectedMaestroDetalle().setNactivo(BigDecimal.ONE);
-                    this.getSelectedMaestroDetalle().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedMaestroDetalle().setDfechamodificacion(new Date());
+                    this.getSelectedMaestroDetalle().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedMaestroDetalle());
                     this.setListaMaestroDetalle(service.getDetallesByMaestro(this.getSelectedMaestro()));
                 } else {
@@ -430,10 +443,12 @@ public class MaestroMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedMaestroDetalle() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
                     this.getSelectedMaestroDetalle().setNactivo(BigDecimal.ZERO);
-                    this.getSelectedMaestroDetalle().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedMaestroDetalle().setDfechamodificacion(new Date());
+                    this.getSelectedMaestroDetalle().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedMaestroDetalle());
                     this.setListaMaestroDetalle(service.getDetallesByMaestro(this.getSelectedMaestro()));
                 } else {

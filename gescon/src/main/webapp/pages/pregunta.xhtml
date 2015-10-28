@@ -1,581 +1,560 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
 
-    <h:head>
-        <title>GesCon - Pregunta
-        </title>
-        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
-        <h:outputStylesheet library="css" name="style.css" />
-    </h:head>
-    <h:body>            
-        <f:view>
-            <pe:layout fullPage="true" >
-                <pe:layoutPane position="north" size="80" resizable="false" closable="false" > 
-                    <ui:include src="header.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="south" size="50" closable="true" >
-                    <ui:include src="footer.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="west" size="165" >
-                    <ui:include src="menu.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="center" styleContent="font-size: 10px;">
-                    <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
-                    <h:form id="f">
-                        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
-                        <p:panel header="Administración de Preguntas" >
-                            <h:panelGrid columns="1">
-                                <p:commandButton  value="Nuevo" actionListener="#{preguntaMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" icon="ui-icon-plus" />
-                                <p:dataTable id="tbl" value="#{preguntaMB.listaPregunta}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
-                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                                    <p:column style="text-align: center; width: 120px;" sortBy="#{row.vasunto}" filterBy="#{row.vasunto}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
-                                        <f:facet name="header"><h:outputText value="ASUNTO"/></f:facet>
-                                        <h:outputLink id="grow" value="#">
-                                            <h:outputText value="#{row.vasunto}" />
-                                        </h:outputLink>
-                                        <p:tooltip id="toolTipGrow" for="grow" value="#{row.vdetalle}" showEffect="clip" hideEffect="explode" style="font-size: 9px;" />
-                                    </p:column>
-                                    <p:column style="text-align: center; width: 100px;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" priority="3">
-                                        <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
-                                        <h:outputText value="#{row.nactivo}" >
-                                            <f:converter converterId="converterSiNo"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column style="text-align: center; width: 140px;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains" priority="4">
-                                        <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
-                                        <h:outputText value="#{row.dfechacreacion}" >
-                                            <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column style="text-align: center; width: 140px;" sortBy="#{row.nsituacion}" filterBy="#{row.nsituacion}" filterMatchMode="contains" priority="4">
-                                        <f:facet name="header"><h:outputText value="SITUACION"/></f:facet>
-                                        <h:outputText value="#{row.nsituacion}" >
-                                            <f:converter converterId="converterSituacion"/>
-                                        </h:outputText>
-                                    </p:column>
-                                    <p:column style="text-align: center; width: 60px;">
-                                        <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                        <p:commandLink actionListener="#{preguntaMB.toSee}" oncomplete="PF('seeDialog').show();" update=":seeDialogForm:pgSee " title="Ver Pregunta">
-                                            <p:graphicImage library="images" name="magnifier.png" style="border: 0px;"/>
-                                            <f:param name="index" value="#{rowIndex}" />
-                                        </p:commandLink>
-                                        <!--<p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Pregunta" rendered="#{row.nactivo eq 0}">
-                                            <p:graphicImage library="images" name="tick.png" style="border: 0px; width: 16px; height: 16px;"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{preguntaMB.selectedPregunta}" />
-                                        </p:commandLink>
-                                        <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Pregunta" rendered="#{row.nactivo eq 1}">
-                                            <p:graphicImage library="images" name="cross.png" style="border: 0px; width: 16px; height: 16px;"/>
-                                            <f:setPropertyActionListener value="#{row}" target="#{preguntaMB.selectedPregunta}" />
-                                        </p:commandLink>-->
-                                    </p:column>
-                                </p:dataTable>
-                            </h:panelGrid>
-                        </p:panel>
-                    </h:form>
-
-                    <p:dialog id="newDlg" header="Nuevo Pregunta" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="newDialogForm">
-                            <h:panelGrid id="pgNew"  columns="3">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Categoría:"/>
-                                <h:panelGroup>
-                                    <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
-                                    <p:spacer width="15"/>
-                                    <h:outputText value="#{preguntaMB.selectedCategoria.vnombre}" />
-                                </h:panelGroup>
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Asunto:"/>
-                                <p:inputText size="99" value="#{preguntaMB.asunto}" maxlength="80"/>
-
-                                <p:spacer/>
-                                <h:outputLabel value="Detalle:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{preguntaMB.detalle}" rows="4" cols="66" style="font-weight: normal;"
-                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="display"/>
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="Administración de Preguntas" styleClass="TexAlLeft">
+                                <h:panelGrid columns="1">
+                                    <p:commandButton  value="Nuevo" actionListener="#{preguntaMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
+                                    <p:dataTable id="tbl" value="#{preguntaMB.listaPregunta}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                        <p:column style="text-align: center; width: 120px;" sortBy="#{row.vasunto}" filterBy="#{row.vasunto}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="ASUNTO"/></f:facet>
+                                            <h:outputLink id="grow" value="#">
+                                                <h:outputText value="#{row.vasunto}" />
+                                            </h:outputLink>
+                                            <p:tooltip id="toolTipGrow" for="grow" value="#{row.vdetalle}" showEffect="clip" hideEffect="explode" style="font-size: 9px;" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 100px;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" priority="3">
+                                            <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
+                                            <h:outputText value="#{row.nactivo}" >
+                                                <f:converter converterId="converterSiNo"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 140px;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains" priority="4">
+                                            <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechacreacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 140px;" sortBy="#{row.nsituacion}" filterBy="#{row.nsituacion}" filterMatchMode="contains" priority="4">
+                                            <f:facet name="header"><h:outputText value="SITUACION"/></f:facet>
+                                            <h:outputText value="#{row.nsituacion}" >
+                                                <f:converter converterId="converterSituacion"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 60px;">
+                                            <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
+                                            <p:commandLink actionListener="#{preguntaMB.toSee}" oncomplete="PF('seeDialog').show();" update=":seeDialogForm:pgSee " title="Ver Pregunta">
+                                                <p:graphicImage library="images" name="magnifier.png" style="border: 0px;"/>
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                            <!--<p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Pregunta" rendered="#{row.nactivo eq 0}">
+                                                <p:graphicImage library="images" name="tick.png" style="border: 0px; width: 16px; height: 16px;"/>
+                                                <f:setPropertyActionListener value="#{row}" target="#{preguntaMB.selectedPregunta}" />
+                                            </p:commandLink>
+                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Pregunta" rendered="#{row.nactivo eq 1}">
+                                                <p:graphicImage library="images" name="cross.png" style="border: 0px; width: 16px; height: 16px;"/>
+                                                <f:setPropertyActionListener value="#{row}" target="#{preguntaMB.selectedPregunta}" />
+                                            </p:commandLink>-->
+                                        </p:column>
+                                    </p:dataTable>
                                 </h:panelGrid>
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Entidad" style="text-decoration: underline"/>
-                                <p:spacer/>
-
-                                <p:spacer/>
-                                <h:panelGrid columns="3">
-                                    <h:outputLabel value="NM:"/>
-                                    <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
-                                    <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
-                                </h:panelGrid>
-                                <h:panelGrid columns="2">
-                                    <h:outputLabel value="Nombre:"/>
-                                    <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}"/>  
-                                </h:panelGrid>
-
-                                <p:spacer/>
-                                <p:spacer/>
-                                <p:spacer/>
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Dato adicional:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputText id="tema" size="99" value="#{preguntaMB.datoAdicional}" maxlength="80"/>
-                                    <p:watermark for="tema" value="(Opcional) Este dato solo lo podra ver el especialista"/>
-                                </h:panelGrid>
-
-                            </h:panelGrid>
-                            <h:panelGrid columns="2" width="100%">
-                                <p:commandButton value="Registrar" actionListener="#{preguntaMB.save}" update=":f:tbl, :f:growl"/>
-                                <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
-                            </h:panelGrid>
+                            </p:panel>
                         </h:form>
-                    </p:dialog>
 
-                    <p:dialog id="seeDlg" header="Ver Pregunta" widgetVar="seeDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="seeDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgSee"  columns="2" width="500px;">
-                                <h:outputLabel  value="Mensaje del usuario:" rendered="#{preguntaMB.fvMusu}"/>
-                                <p:inputTextarea value="#{preguntaMB.selectedPregunta.vmsjusuario}" rows="4" cols="66" style="font-weight: normal;"
-                                                 readonly="#{preguntaMB.getfMusu()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvMusu}"/>
+                        <p:dialog id="newDlg" header="Nuevo Pregunta" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="newDialogForm">
+                                <h:panelGrid id="pgNew"  columns="3">
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGroup>
+                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="#{preguntaMB.selectedCategoria.vnombre}" />
+                                    </h:panelGroup>
 
-                                <h:outputLabel value="Mensaje del Especialista:" rendered="#{preguntaMB.fvSinf}"/>
-                                <p:inputTextarea  value="#{preguntaMB.selectedPregunta.vmsjespecialista}" rows="4" cols="66" style="font-weight: normal;"
-                                                  readonly="#{preguntaMB.getfSinf()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvSinf}"/>
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Asunto:"/>
+                                    <p:inputText size="99" value="#{preguntaMB.asunto}" maxlength="80"/>
 
-                                <p:spacer/>
-                                <p:spacer/>
+                                    <p:spacer/>
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.detalle}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
 
-                                <p:spacer/>
-                                <p:spacer/>
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Entidad" style="text-decoration: underline"/>
+                                    <p:spacer/>
 
-                                <h:outputLabel value="Categoría:"/>
-                                <h:outputText value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
-                                    <f:converter converterId="converterCategoria"/>
-                                </h:outputText>
+                                    <p:spacer/>
+                                    <h:panelGrid columns="3">
+                                        <h:outputLabel value="NM:"/>
+                                        <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
+                                        <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel value="Nombre:"/>
+                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}"/>  
+                                    </h:panelGrid>
 
-                                <h:outputLabel value="Asunto:"/>
-                                <h:outputText value="#{preguntaMB.selectedPregunta.vasunto}"/>
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <p:spacer/>
 
-                                <h:outputLabel value="Detalle:"/>
-                                <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}"/>
+                                    <h:outputLabel value="*"/>
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputText id="tema" size="99" value="#{preguntaMB.datoAdicional}" maxlength="80"/>
+                                        <p:watermark for="tema" value="(Opcional) Este dato solo lo podra ver el especialista"/>
+                                    </h:panelGrid>
 
-                                <h:outputLabel value="Entidad:"/>
-                                <h:outputText value="MEF"/>    
-
-
-                                <h:outputLabel value="Dato adicional:"/>
-                                <h:outputText id="tema" value="#{preguntaMB.selectedPregunta.vdatoadicional}" />
-
-                                <p:spacer rendered="#{preguntaMB.fbuttonmod}"/>
-                                <h:panelGrid columns="1" style="float: right" rendered="#{preguntaMB.fbuttonmod}">
-                                    <p:commandButton  value="Verificar" actionListener="#{preguntaMB.toMod}" update=":modDialogForm:pgMod" oncomplete="PF('modDialog').show();" />
                                 </h:panelGrid>
-
-                                <p:spacer rendered="#{preguntaMB.fbuttonmodpub}"/>
-                                <h:panelGrid columns="1" style="float: right" rendered="#{preguntaMB.fbuttonmodpub}">
-                                    <p:commandButton  value="Verificar" actionListener="#{preguntaMB.toModPub}" update=":modpubDialogForm:pgModPub" oncomplete="PF('modpubDialog').show();" />
+                                <h:panelGrid columns="2" width="100%">
+                                    <p:commandButton value="Registrar" actionListener="#{preguntaMB.save}" update=":f:tbl, :f:growl"/>
+                                    <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
                                 </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
 
-                                <p:spacer rendered="#{preguntaMB.fbuttonesp}"/>
-                                <h:panelGrid columns="1" style="float: right" rendered="#{preguntaMB.fbuttonesp}">
-                                    <p:commandButton  value="Responder" actionListener="#{preguntaMB.toResp}" update=":respDialogForm:pgResp" oncomplete="PF('respDialog').show();" />
-                                </h:panelGrid>
+                        <p:dialog id="seeDlg" header="Ver Pregunta" widgetVar="seeDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="seeDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgSee"  columns="2" width="500px;">
+                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{preguntaMB.fvMusu}"/>
+                                    <p:inputTextarea value="#{preguntaMB.selectedPregunta.vmsjusuario}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="#{preguntaMB.getfMusu()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvMusu}"/>
 
-                                <p:spacer rendered="#{preguntaMB.fbutton}"/>
-                                <h:panelGrid columns="1" style="float: right" rendered="#{preguntaMB.fbutton}">
-                                    <p:commandButton  value="Responder Especialista" actionListener="#{preguntaMB.toRespUsu}" update=":respusuDialogForm:pgRespUsu" oncomplete="PF('respusuDialog').show();" />
-                                </h:panelGrid>
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
+                                    <h:outputLabel value="Mensaje del Especialista:" rendered="#{preguntaMB.fvSinf}"/>
+                                    <p:inputTextarea  value="#{preguntaMB.selectedPregunta.vmsjespecialista}" rows="4" cols="66" style="font-weight: normal;"
+                                                      readonly="#{preguntaMB.getfSinf()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvSinf}"/>
 
+                                    <p:spacer/>
+                                    <p:spacer/>
 
+                                    <p:spacer/>
+                                    <p:spacer/>
 
-                    <p:dialog id="respDlg" header="Responder Pregunta" widgetVar="respDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
-                        <h:form id="respDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgResp"  columns="2" width="500px">
-
-                                <h:outputLabel id="msjusue" value="Mensaje del usuario:" rendered="#{preguntaMB.fvMusu}"/>
-                                <p:inputTextarea id="msjusut"  value="#{preguntaMB.selectedPregunta.vmsjusuario}" rows="4" cols="66" style="font-weight: normal;"
-                                                 readonly="#{preguntaMB.getfMusu()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvMusu}"/>
-                                <h:outputLabel id="msjespe"  value="Mensaje del Especialista:" rendered="#{preguntaMB.fvSinf}"/>
-                                <p:inputTextarea id="msjespt" value="#{preguntaMB.selectedPregunta.vmsjespecialista}" rows="4" cols="66" style="font-weight: normal;"
-                                                 readonly="#{preguntaMB.getfSinf()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvSinf}"/>
-                                <p:spacer/>
-                                <p:spacer/>
-                                <p:spacer/>
-                                <p:spacer/>                               
-
-                                <h:outputLabel value="Categoría:"/>
-                                <h:panelGrid  columns="2">
-                                    <h:outputText id="cat" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
-                                        <f:converter converterId="converterCategoria"/>
-                                    </h:outputText>
-                                    <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />    
-                                </h:panelGrid>
-
-                                <h:outputLabel value="Asunto:"/>
-                                <h:outputLabel value="#{preguntaMB.selectedPregunta.vasunto}"  />
-
-                                <h:outputLabel value="Detalle:"/>
-                                <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}"/>
-
-                                <h:outputLabel value="Respuesta"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{preguntaMB.selectedPregunta.vrespuesta}" rows="4" cols="66" style="font-weight: normal;"
-                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="display"/>
-                                </h:panelGrid>
-
-                                <h:outputLabel value="Entidad:"/>
-                                <h:outputText value="MEF"/>
-
-                                <h:outputLabel value="Dato adicional:"/>
-                                <h:outputText id="tema" value="#{preguntaMB.selectedPregunta.vdatoadicional}" />
-                                <p:watermark for="tema" value="(Opcional)"/>
-
-                            </h:panelGrid>
-                            <br></br>
-                            <br></br>
-                            <h:panelGrid columns="5" width="100%">
-
-                                <p:commandButton value="Editar" actionListener="#{preguntaMB.toEdit}" update=":editrespDialogForm:pgEditResp" oncomplete="PF('editrespDialog').show();" />
-                                <p:commandButton value="Responder" actionListener="#{preguntaMB.Responder}" update=":f:tbl, :f:growl"/>
-                                <p:commandButton value="Solicitar Informacion Adicional" actionListener="#{preguntaMB.toSi}" update=":siDialogForm:pgSi" oncomplete="PF('siDialog').show();" />
-                                <p:commandButton value="Derivar Especialista"  actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
-                                <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancel}" update=":f:tbl, :f:growl"/>
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
-
-                    <p:dialog id="modDlg" header="Moderar Pregunta" widgetVar="modDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
-                        <h:form id="modDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgMod"  columns="2" width="500px">
-
-                                <h:outputLabel id="msjusue" value="Mensaje del usuario:" rendered="#{preguntaMB.fvMusu}"/>
-                                <p:inputTextarea id="msjusut"  value="#{preguntaMB.selectedPregunta.vmsjusuario}" rows="4" cols="66" style="font-weight: normal;"
-                                                 readonly="#{preguntaMB.getfMusu()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvMusu}"/>
-                                <h:outputLabel id="msjespe"  value="Mensaje del Especialista:" rendered="#{preguntaMB.fvSinf}"/>
-                                <p:inputTextarea id="msjespt" value="#{preguntaMB.selectedPregunta.vmsjespecialista}" rows="4" cols="66" style="font-weight: normal;"
-                                                 readonly="#{preguntaMB.getfSinf()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvSinf}"/>
-                                <p:spacer/>
-                                <p:spacer/>
-                                <p:spacer/>
-                                <p:spacer/>                               
-
-                                <h:outputLabel value="Categoría:"/>
-                                <h:panelGrid  columns="1">
-                                    <h:outputText id="catmod" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
-                                        <f:converter converterId="converterCategoria"/>
-                                    </h:outputText>
-                                </h:panelGrid>
-
-                                <h:outputLabel value="Asunto:"/>
-                                <h:outputLabel value="#{preguntaMB.selectedPregunta.vasunto}"  />
-
-                                <h:outputLabel value="Detalle:"/>
-                                <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}"/>
-
-                                <h:outputLabel value="Entidad:"/>
-                                <h:outputText value="MEF"/>
-
-                                <h:outputLabel value="Dato adicional:"/>
-                                <h:outputText id="tema" value="#{preguntaMB.selectedPregunta.vdatoadicional}" />
-                                <p:watermark for="tema" value="(Opcional)"/>
-
-                            </h:panelGrid>
-                            <br></br>
-                            <br></br>
-                            <h:panelGrid columns="4" width="100%">
-                                <p:commandButton value="Editar" actionListener="#{preguntaMB.toEdit}" update=":editpregDialogForm:pgEditPreg" oncomplete="PF('editpregDialog').show();" />
-                                <p:commandButton value="Derivar" actionListener="#{preguntaMB.DevEsp}" update=":f:tbl, :f:growl"/>
-                                <p:commandButton value="Solicitar Informacion Adicional" actionListener="#{preguntaMB.toSi}" />
-                                <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancel}" update=":f:tbl, :f:growl"/>
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
-
-                    <p:dialog id="modpubDlg" header="Moderar Pregunta" widgetVar="modpubDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
-                        <h:form id="modpubDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgModPub"  columns="2" width="500px">
-
-                                <h:outputLabel value="Categoría:"/>
-                                <h:panelGrid  columns="1">
-                                    <h:outputText id="catmod" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
-                                        <f:converter converterId="converterCategoria"/>
-                                    </h:outputText>
-                                </h:panelGrid>
-
-                                <h:outputLabel value="Asunto:"/>
-                                <h:outputLabel value="#{preguntaMB.selectedPregunta.vasunto}"  />
-
-                                <h:outputLabel value="Detalle:"/>
-                                <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}"/>
-
-                                <h:outputLabel value="Respuesta:"/>
-                                <h:outputText value="#{preguntaMB.selectedPregunta.vrespuesta}"/>
-
-                                <h:outputLabel value="Entidad:"/>
-                                <h:outputText value="MEF"/>
-
-                                <h:outputLabel value="Dato adicional:"/>
-                                <h:outputText id="tema" value="#{preguntaMB.selectedPregunta.vdatoadicional}" />
-                                <p:watermark for="tema" value="(Opcional)"/>
-
-                            </h:panelGrid>
-                            <br></br>
-                            <br></br>
-                            <h:panelGrid columns="4" width="100%">
-                                <p:commandButton value="Editar" actionListener="#{preguntaMB.toEdit}" update=":editpubDialogForm:pgEditPub" oncomplete="PF('editpubDialog').show();" />
-                                <p:commandButton value="Publicar" actionListener="#{preguntaMB.Publicar}" update=":f:tbl, :f:growl"/>
-
-                                <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancel}" update=":f:tbl, :f:growl"/>
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
-
-
-                    <p:dialog id="editrespDlg" header="Editar Pregunta" widgetVar="editrespDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
-                        <h:form id="editrespDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgEditResp"  columns="2" width="500px">
-
-                                <h:outputLabel value="Categoría:"/>
-                                <h:panelGrid  columns="2">
-                                    <h:outputText id="catedit" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
-                                        <f:converter converterId="converterCategoria"/>
-                                    </h:outputText>
-                                    <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />    
-                                </h:panelGrid>
-
-                                <h:outputLabel value="Asunto:"/>
-                                <p:inputText size="99" value="#{preguntaMB.selectedPregunta.vasunto}"  maxlength="80"/>
-
-                                <h:outputLabel value="Detalle:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
-                                                     counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="displayd"/>
-                                </h:panelGrid>
-
-                                <h:outputLabel value="Entidad" style="text-decoration: underline"/>
-                                <p:spacer/>
-
-                                <h:panelGrid columns="3">
-                                    <h:outputLabel value="NM:"/>
-                                    <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
-                                    <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
-                                </h:panelGrid>
-                                <h:panelGrid columns="2">
-                                    <h:outputLabel value="Nombre:"/>
-                                    <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}"/>  
-                                </h:panelGrid>
-
-                                <h:outputLabel value="Dato adicional:"/>
-                                <p:inputText id="tema" size="99" value="#{preguntaMB.selectedPregunta.vdatoadicional}" maxlength="80"/>
-
-                            </h:panelGrid>
-                            <br></br>
-                            <br></br>
-                            <h:panelGrid columns="2" width="100%">
-                                <p:commandButton value="Guardar" actionListener="#{preguntaMB.saveRespEdit}" update=":respDialogForm:pgResp" oncomplete="PF('respDialog').show();"/>
-                                <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancelRespEdit}" update=":respDialogForm:pgResp" oncomplete="PF('respDialog').show();" />
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
-
-                    <p:dialog id="editpregDlg" header="Editar Pregunta" widgetVar="editpregDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
-                        <h:form id="editpregDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgEditPreg"  columns="2" width="500px">
-
-                                <h:outputLabel value="Categoría:"/>
-                                <h:panelGrid  columns="2">
-                                    <h:outputText id="catedit" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
-                                        <f:converter converterId="converterCategoria"/>
-                                    </h:outputText>
-                                    <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />    
-                                </h:panelGrid>
-
-                                <h:outputLabel value="Asunto:"/>
-                                <p:inputText size="99" value="#{preguntaMB.selectedPregunta.vasunto}"  maxlength="80"/>
-
-                                <h:outputLabel value="Detalle:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
-                                                     counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="displayd"/>
-                                </h:panelGrid>
-
-                                <h:outputLabel value="Entidad" style="text-decoration: underline"/>
-                                <p:spacer/>
-
-                                <h:panelGrid columns="3">
-                                    <h:outputLabel value="NM:"/>
-                                    <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
-                                    <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
-                                </h:panelGrid>
-                                <h:panelGrid columns="2">
-                                    <h:outputLabel value="Nombre:"/>
-                                    <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}"/>  
-                                </h:panelGrid>
-
-                                <h:outputLabel value="Dato adicional:"/>
-                                <p:inputText id="tema" size="99" value="#{preguntaMB.selectedPregunta.vdatoadicional}" maxlength="80"/>
-
-                            </h:panelGrid>
-                            <br></br>
-                            <br></br>
-                            <h:panelGrid columns="2" width="100%">
-                                <p:commandButton value="Guardar" actionListener="#{preguntaMB.savePregEdit}" update=":modDialogForm:pgMod" oncomplete="PF('modDialog').show();"/>
-                                <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancelRespEdit}" update=":modDialogForm:pgMod" oncomplete="PF('modDialog').show();" />
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
-
-                    <p:dialog id="editpubDlg" header="Editar Pregunta" widgetVar="editpubDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
-                        <h:form id="editpubDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgEditPub"  columns="2" width="500px">
-
-                                <h:outputLabel value="Categoría:"/>
-                                <h:panelGrid  columns="1">
+                                    <h:outputLabel value="Categoría:"/>
                                     <h:outputText value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
                                         <f:converter converterId="converterCategoria"/>
                                     </h:outputText>
 
+                                    <h:outputLabel value="Asunto:"/>
+                                    <h:outputText value="#{preguntaMB.selectedPregunta.vasunto}"/>
+
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}"/>
+
+                                    <h:outputLabel value="Entidad:"/>
+                                    <h:outputText value="MEF"/>    
+
+
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <h:outputText id="tema" value="#{preguntaMB.selectedPregunta.vdatoadicional}" />
+
+                                    <p:spacer rendered="#{preguntaMB.fbuttonmod}"/>
+                                    <h:panelGrid columns="1" style="float: right" rendered="#{preguntaMB.fbuttonmod}">
+                                        <p:commandButton  value="Verificar" actionListener="#{preguntaMB.toMod}" update=":modDialogForm:pgMod" oncomplete="PF('modDialog').show();" />
+                                    </h:panelGrid>
+
+                                    <p:spacer rendered="#{preguntaMB.fbuttonmodpub}"/>
+                                    <h:panelGrid columns="1" style="float: right" rendered="#{preguntaMB.fbuttonmodpub}">
+                                        <p:commandButton  value="Verificar" actionListener="#{preguntaMB.toModPub}" update=":modpubDialogForm:pgModPub" oncomplete="PF('modpubDialog').show();" />
+                                    </h:panelGrid>
+
+                                    <p:spacer rendered="#{preguntaMB.fbuttonesp}"/>
+                                    <h:panelGrid columns="1" style="float: right" rendered="#{preguntaMB.fbuttonesp}">
+                                        <p:commandButton  value="Responder" actionListener="#{preguntaMB.toResp}" update=":respDialogForm:pgResp" oncomplete="PF('respDialog').show();" />
+                                    </h:panelGrid>
+
+                                    <p:spacer rendered="#{preguntaMB.fbutton}"/>
+                                    <h:panelGrid columns="1" style="float: right" rendered="#{preguntaMB.fbutton}">
+                                        <p:commandButton  value="Responder Especialista" actionListener="#{preguntaMB.toRespUsu}" update=":respusuDialogForm:pgRespUsu" oncomplete="PF('respusuDialog').show();" />
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+
+
+                        <p:dialog id="respDlg" header="Responder Pregunta" widgetVar="respDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
+                            <h:form id="respDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgResp"  columns="2" width="500px">
+
+                                    <h:outputLabel id="msjusue" value="Mensaje del usuario:" rendered="#{preguntaMB.fvMusu}"/>
+                                    <p:inputTextarea id="msjusut"  value="#{preguntaMB.selectedPregunta.vmsjusuario}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="#{preguntaMB.getfMusu()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvMusu}"/>
+                                    <h:outputLabel id="msjespe"  value="Mensaje del Especialista:" rendered="#{preguntaMB.fvSinf}"/>
+                                    <p:inputTextarea id="msjespt" value="#{preguntaMB.selectedPregunta.vmsjespecialista}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="#{preguntaMB.getfSinf()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvSinf}"/>
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <p:spacer/>                               
+
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGrid  columns="2">
+                                        <h:outputText id="cat" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />    
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Asunto:"/>
+                                    <h:outputLabel value="#{preguntaMB.selectedPregunta.vasunto}"  />
+
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}"/>
+
+                                    <h:outputLabel value="Respuesta"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vrespuesta}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Entidad:"/>
+                                    <h:outputText value="MEF"/>
+
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <h:outputText id="tema" value="#{preguntaMB.selectedPregunta.vdatoadicional}" />
+                                    <p:watermark for="tema" value="(Opcional)"/>
+
+                                </h:panelGrid>
+                                <br></br>
+                                <br></br>
+                                <h:panelGrid columns="5" width="100%">
+
+                                    <p:commandButton value="Editar" actionListener="#{preguntaMB.toEdit}" update=":editrespDialogForm:pgEditResp" oncomplete="PF('editrespDialog').show();" />
+                                    <p:commandButton value="Responder" actionListener="#{preguntaMB.Responder}" update=":f:tbl, :f:growl"/>
+                                    <p:commandButton value="Solicitar Informacion Adicional" actionListener="#{preguntaMB.toSi}" update=":siDialogForm:pgSi" oncomplete="PF('siDialog').show();" />
+                                    <p:commandButton value="Derivar Especialista"  actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
+                                    <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancel}" update=":f:tbl, :f:growl"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="modDlg" header="Moderar Pregunta" widgetVar="modDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
+                            <h:form id="modDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgMod"  columns="2" width="500px">
+
+                                    <h:outputLabel id="msjusue" value="Mensaje del usuario:" rendered="#{preguntaMB.fvMusu}"/>
+                                    <p:inputTextarea id="msjusut"  value="#{preguntaMB.selectedPregunta.vmsjusuario}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="#{preguntaMB.getfMusu()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvMusu}"/>
+                                    <h:outputLabel id="msjespe"  value="Mensaje del Especialista:" rendered="#{preguntaMB.fvSinf}"/>
+                                    <p:inputTextarea id="msjespt" value="#{preguntaMB.selectedPregunta.vmsjespecialista}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="#{preguntaMB.getfSinf()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{preguntaMB.fvSinf}"/>
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <p:spacer/>                               
+
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGrid  columns="1">
+                                        <h:outputText id="catmod" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Asunto:"/>
+                                    <h:outputLabel value="#{preguntaMB.selectedPregunta.vasunto}"  />
+
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}"/>
+
+                                    <h:outputLabel value="Entidad:"/>
+                                    <h:outputText value="MEF"/>
+
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <h:outputText id="tema" value="#{preguntaMB.selectedPregunta.vdatoadicional}" />
+                                    <p:watermark for="tema" value="(Opcional)"/>
+
+                                </h:panelGrid>
+                                <br></br>
+                                <br></br>
+                                <h:panelGrid columns="4" width="100%">
+                                    <p:commandButton value="Editar" actionListener="#{preguntaMB.toEdit}" update=":editpregDialogForm:pgEditPreg" oncomplete="PF('editpregDialog').show();" />
+                                    <p:commandButton value="Derivar" actionListener="#{preguntaMB.DevEsp}" update=":f:tbl, :f:growl"/>
+                                    <p:commandButton value="Solicitar Informacion Adicional" actionListener="#{preguntaMB.toSi}" />
+                                    <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancel}" update=":f:tbl, :f:growl"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="modpubDlg" header="Moderar Pregunta" widgetVar="modpubDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
+                            <h:form id="modpubDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgModPub"  columns="2" width="500px">
+
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGrid  columns="1">
+                                        <h:outputText id="catmod" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Asunto:"/>
+                                    <h:outputLabel value="#{preguntaMB.selectedPregunta.vasunto}"  />
+
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}"/>
+
+                                    <h:outputLabel value="Respuesta:"/>
+                                    <h:outputText value="#{preguntaMB.selectedPregunta.vrespuesta}"/>
+
+                                    <h:outputLabel value="Entidad:"/>
+                                    <h:outputText value="MEF"/>
+
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <h:outputText id="tema" value="#{preguntaMB.selectedPregunta.vdatoadicional}" />
+                                    <p:watermark for="tema" value="(Opcional)"/>
+
+                                </h:panelGrid>
+                                <br></br>
+                                <br></br>
+                                <h:panelGrid columns="4" width="100%">
+                                    <p:commandButton value="Editar" actionListener="#{preguntaMB.toEdit}" update=":editpubDialogForm:pgEditPub" oncomplete="PF('editpubDialog').show();" />
+                                    <p:commandButton value="Publicar" actionListener="#{preguntaMB.Publicar}" update=":f:tbl, :f:growl"/>
+
+                                    <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancel}" update=":f:tbl, :f:growl"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+
+                        <p:dialog id="editrespDlg" header="Editar Pregunta" widgetVar="editrespDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
+                            <h:form id="editrespDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgEditResp"  columns="2" width="500px">
+
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGrid  columns="2">
+                                        <h:outputText id="catedit" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />    
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Asunto:"/>
+                                    <p:inputText size="99" value="#{preguntaMB.selectedPregunta.vasunto}"  maxlength="80"/>
+
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="displayd"/>
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Entidad" style="text-decoration: underline"/>
+                                    <p:spacer/>
+
+                                    <h:panelGrid columns="3">
+                                        <h:outputLabel value="NM:"/>
+                                        <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
+                                        <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel value="Nombre:"/>
+                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}"/>  
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <p:inputText id="tema" size="99" value="#{preguntaMB.selectedPregunta.vdatoadicional}" maxlength="80"/>
+
+                                </h:panelGrid>
+                                <br></br>
+                                <br></br>
+                                <h:panelGrid columns="2" width="100%">
+                                    <p:commandButton value="Guardar" actionListener="#{preguntaMB.saveRespEdit}" update=":respDialogForm:pgResp" oncomplete="PF('respDialog').show();"/>
+                                    <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancelRespEdit}" update=":respDialogForm:pgResp" oncomplete="PF('respDialog').show();" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="editpregDlg" header="Editar Pregunta" widgetVar="editpregDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
+                            <h:form id="editpregDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgEditPreg"  columns="2" width="500px">
+
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGrid  columns="2">
+                                        <h:outputText id="catedit" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />    
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Asunto:"/>
+                                    <p:inputText size="99" value="#{preguntaMB.selectedPregunta.vasunto}"  maxlength="80"/>
+
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="displayd"/>
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Entidad" style="text-decoration: underline"/>
+                                    <p:spacer/>
+
+                                    <h:panelGrid columns="3">
+                                        <h:outputLabel value="NM:"/>
+                                        <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
+                                        <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel value="Nombre:"/>
+                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}"/>  
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <p:inputText id="tema" size="99" value="#{preguntaMB.selectedPregunta.vdatoadicional}" maxlength="80"/>
+
+                                </h:panelGrid>
+                                <br></br>
+                                <br></br>
+                                <h:panelGrid columns="2" width="100%">
+                                    <p:commandButton value="Guardar" actionListener="#{preguntaMB.savePregEdit}" update=":modDialogForm:pgMod" oncomplete="PF('modDialog').show();"/>
+                                    <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancelRespEdit}" update=":modDialogForm:pgMod" oncomplete="PF('modDialog').show();" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="editpubDlg" header="Editar Pregunta" widgetVar="editpubDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" style="font-size: 10px;">
+                            <h:form id="editpubDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgEditPub"  columns="2" width="500px">
+
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGrid  columns="1">
+                                        <h:outputText value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Asunto:"/>
+                                    <p:inputText size="99" value="#{preguntaMB.selectedPregunta.vasunto}"  maxlength="80"/>
+
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="displayd"/>
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Respuesta"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vrespuesta}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="displayr" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="displayr"/>
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Entidad" style="text-decoration: underline"/>
+                                    <p:spacer/>
+
+                                    <h:panelGrid columns="3">
+                                        <h:outputLabel value="NM:"/>
+                                        <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
+                                        <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel value="Nombre:"/>
+                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}"/>  
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <p:inputText id="tema" size="99" value="#{preguntaMB.selectedPregunta.vdatoadicional}" maxlength="80"/>
+
+                                </h:panelGrid>
+                                <br></br>
+                                <br></br>
+                                <h:panelGrid columns="2" width="100%">
+                                    <p:commandButton value="Guardar" actionListener="#{preguntaMB.savePubEdit}" update=":modpubDialogForm:pgModPub" oncomplete="PF('modpubDialog').show();"/>
+                                    <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancelRespEdit}" update=":modpubDialogForm:pgModPub" oncomplete="PF('modpubDialog').show();" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+
+                        <p:dialog id="siDlg" header="Solicitar Informacion Adicional" widgetVar="siDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="siDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgSi"  columns="2">
+                                    <h:outputLabel value="Mensaje:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vmsjespecialista}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="#{preguntaMB.getfSinf()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+                                    <h:panelGrid style="float: right" columns="2" width="25%">
+                                        <p:commandButton value="Enviar" actionListener="#{preguntaMB.sendSi}" update=":respDialogForm:pgResp ,:f:tbl, :f:growl" />
+                                        <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancelSi}" update=":f:tbl, :f:growl"/>
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="respusuDlg" header="Responder al Especialista" widgetVar="respusuDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="respusuDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgRespUsu"  columns="2">
+                                    <h:outputLabel value="Mensaje:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vmsjusuario}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="#{preguntaMB.getfMusu()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+                                    <h:panelGrid style="float: right" columns="2" width="25%">
+                                        <p:commandButton value="Enviar" actionListener="#{preguntaMB.sendUsu}" update=":seeDialogForm:pgSee ,:f:tbl, :f:growl" />
+                                        <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancelRespUsu}" update=":f:tbl, :f:growl"/>
+                                    </h:panelGrid>
                                 </h:panelGrid>
 
-                                <h:outputLabel value="Asunto:"/>
-                                <p:inputText size="99" value="#{preguntaMB.selectedPregunta.vasunto}"  maxlength="80"/>
 
-                                <h:outputLabel value="Detalle:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
-                                                     counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="displayd"/>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="catDlg" header="Seleccionar Categoría" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="catDialogForm">
+                                <h:panelGrid id="pgCat" columns="1">
+                                    <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
+                                    <p:tree id="cats" value="#{preguntaMB.tree}" var="node" animate="true" cache="true"  
+                                            selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
+                                        <p:ajax event="select" listener="#{preguntaMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":newDialogForm:pgNew,respDialogForm:cat,editrespDialogForm:catedit" />
+                                        <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
+                                            <h:outputText value="#{node.vnombre}"/>
+                                        </p:treeNode>
+                                    </p:tree>
                                 </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
 
-                                <h:outputLabel value="Respuesta"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{preguntaMB.selectedPregunta.vrespuesta}" rows="4" cols="66" style="font-weight: normal;"
-                                                     counter="displayr" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="displayr"/>
-                                </h:panelGrid>
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la pregunta. \nDesea Continuar?" header="ACTIVAR PREGUNTA" widgetVar="confirmActDlg" style="font-size: 10px;">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{preguntaMB.activar}"/>
+                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
 
-                                <h:outputLabel value="Entidad" style="text-decoration: underline"/>
-                                <p:spacer/>
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la pregutna. \nDesea Continuar?" header="DESACTIVAR PREGUNTA" widgetVar="confirmDesDlg" style="font-size: 10px;">
+                            <h:form id="confirmDesDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{preguntaMB.desactivar}"/>
+                                <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
 
-                                <h:panelGrid columns="3">
-                                    <h:outputLabel value="NM:"/>
-                                    <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
-                                    <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
-                                </h:panelGrid>
-                                <h:panelGrid columns="2">
-                                    <h:outputLabel value="Nombre:"/>
-                                    <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}"/>  
-                                </h:panelGrid>
+    </ui:define>
 
-                                <h:outputLabel value="Dato adicional:"/>
-                                <p:inputText id="tema" size="99" value="#{preguntaMB.selectedPregunta.vdatoadicional}" maxlength="80"/>
-
-                            </h:panelGrid>
-                            <br></br>
-                            <br></br>
-                            <h:panelGrid columns="2" width="100%">
-                                <p:commandButton value="Guardar" actionListener="#{preguntaMB.savePubEdit}" update=":modpubDialogForm:pgModPub" oncomplete="PF('modpubDialog').show();"/>
-                                <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancelRespEdit}" update=":modpubDialogForm:pgModPub" oncomplete="PF('modpubDialog').show();" />
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
-
-
-                    <p:dialog id="siDlg" header="Solicitar Informacion Adicional" widgetVar="siDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="siDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgSi"  columns="2">
-                                <h:outputLabel value="Mensaje:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{preguntaMB.selectedPregunta.vmsjespecialista}" rows="4" cols="66" style="font-weight: normal;"
-                                                     readonly="#{preguntaMB.getfSinf()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
-                                    <h:outputText id="display"/>
-                                </h:panelGrid>
-                                <p:spacer/>
-                                <h:panelGrid style="float: right" columns="2" width="25%">
-                                    <p:commandButton value="Enviar" actionListener="#{preguntaMB.sendSi}" update=":respDialogForm:pgResp ,:f:tbl, :f:growl" />
-                                    <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancelSi}" update=":f:tbl, :f:growl"/>
-                                </h:panelGrid>
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
-
-                    <p:dialog id="respusuDlg" header="Responder al Especialista" widgetVar="respusuDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="respusuDialogForm">
-                            <p:messages id="msgs" showSummary="true" showDetail="true" />
-                            <h:panelGrid id="pgRespUsu"  columns="2">
-                                <h:outputLabel value="Mensaje:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{preguntaMB.selectedPregunta.vmsjusuario}" rows="4" cols="66" style="font-weight: normal;"
-                                                     readonly="#{preguntaMB.getfMusu()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
-                                    <h:outputText id="display"/>
-                                </h:panelGrid>
-                                <p:spacer/>
-                                <h:panelGrid style="float: right" columns="2" width="25%">
-                                    <p:commandButton value="Enviar" actionListener="#{preguntaMB.sendUsu}" update=":seeDialogForm:pgSee ,:f:tbl, :f:growl" />
-                                    <p:commandButton value="Cancelar" actionListener="#{preguntaMB.toCancelRespUsu}" update=":f:tbl, :f:growl"/>
-                                </h:panelGrid>
-                            </h:panelGrid>
-
-
-                        </h:form>
-                    </p:dialog>
-
-                    <p:dialog id="catDlg" header="Seleccionar Categoría" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                        <h:form id="catDialogForm">
-                            <h:panelGrid id="pgCat" columns="1">
-                                <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
-                                <p:tree id="cats" value="#{preguntaMB.tree}" var="node" animate="true" cache="true"  
-                                        selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                    <p:ajax event="select" listener="#{preguntaMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":newDialogForm:pgNew,respDialogForm:cat,editrespDialogForm:catedit" />
-                                    <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
-                                        <h:outputText value="#{node.vnombre}"/>
-                                    </p:treeNode>
-                                </p:tree>
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
-
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la pregunta. \nDesea Continuar?" header="ACTIVAR PREGUNTA" widgetVar="confirmActDlg" style="font-size: 10px;">
-                        <h:form id="confirmActDlgForm">
-                            <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{preguntaMB.activar}"/>
-                            <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" type="button" />
-                        </h:form>
-                    </p:confirmDialog>
-
-                    <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la pregutna. \nDesea Continuar?" header="DESACTIVAR PREGUNTA" widgetVar="confirmDesDlg" style="font-size: 10px;">
-                        <h:form id="confirmDesDlgForm">
-                            <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{preguntaMB.desactivar}"/>
-                            <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" type="button" />
-                        </h:form>
-                    </p:confirmDialog>
-
-                    <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)"  draggable="false" closable="false" resizable="false" showHeader="false">
-                        <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
-                    </p:dialog>
-                </pe:layoutPane>
-            </pe:layout>
-        </f:view>
-    </h:body>
-</html>
-
+</ui:composition>

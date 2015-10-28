@@ -6,19 +6,17 @@
 package pe.gob.mef.gescon.hibernate.impl;
 
 import java.math.BigDecimal;
-import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.AsignacionDao;
+import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.Tasignacion;
 
 /**
@@ -45,6 +43,24 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
                 @Override
                 public Object doInHibernate(Session session) throws HibernateException {
                     Query query = session.createSQLQuery("SELECT SEQ_TASIGNACION.NEXTVAL FROM DUAL");
+                    return query.uniqueResult();
+                }
+            });
+    }
+    
+    @Override
+    public BigDecimal getNumberNotificationsByMtuser(Mtuser mtuser) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(1) FROM TASIGNACION t ");
+        sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
+        sql.append("AND (t.dfecharecepcion is null and t.dfechaatencion is null) ");
+        sql.append("OR (t.dfecharecepcion is not null and t.dfechaatencion is null) ");
+        
+        return (BigDecimal) getHibernateTemplate().execute(
+            new HibernateCallback() {
+                @Override
+                public Object doInHibernate(Session session) throws HibernateException {
+                    Query query = session.createSQLQuery(sql.toString());
                     return query.uniqueResult();
                 }
             });

@@ -10,9 +10,18 @@ and open the template in the editor.
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
         <title></title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
+    <h:outputStylesheet library="css" name="style.css" />
+    <h:outputStylesheet name="css/core-layout.css" library="spark-layout" />
+    <h:outputStylesheet name="css/font-awesome.css" library="spark-layout" />
+    <h:outputStylesheet name="css/animate.css" library="spark-layout" />
     <h:body>
         <f:view>
             <h:panelGrid columns="1">
@@ -30,6 +39,9 @@ and open the template in the editor.
                         <p:menuitem value="ADM Usuario Externo" url="/pages/listaUserExterno.xhtml" />
                         <p:menuitem value="Pregunta" url="/pages/pregunta.xhtml" />
                         <p:menuitem value="Wiki" url="/pages/wiki/lista.xhtml" />
+                        <p:menuitem value="Buenas Practicas" url="/pages/Bpracticas/buenasPracticas.xhtml" />
+                        <p:menuitem value="Contenido" url="/pages/Contenido/contenido.xhtml" />
+                        <p:menuitem value="Oportunidad de Mejora" url="/pages/Omejora/oportunidadMejora.xhtml" />
                     </p:submenu>
                 </p:menu>
             </h:panelGrid>

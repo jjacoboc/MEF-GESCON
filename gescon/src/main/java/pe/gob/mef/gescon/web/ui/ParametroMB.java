@@ -5,7 +5,6 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
-import com.mchange.lang.ByteUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -25,8 +24,10 @@ import org.primefaces.context.RequestContext;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.ParametroService;
+import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Parametro;
+import pe.gob.mef.gescon.web.bean.User;
 
 /**
  *
@@ -194,12 +195,13 @@ public class ParametroMB implements Serializable{
             parametro.setVvalor(this.getValor().trim().toUpperCase());
             parametro.setVdescripcion(this.getDescripcion().trim());
             if (!errorValidation(parametro)) {
-//                UsuarioMB usuarioMB = (UsuarioMB) JSFUtils.getSession().getAttribute("usuarioMB");
-//                Usuario usuario = usuarioMB.getUsuario();
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
                 parametro.setNparametroid(service.getNextPK());
                 parametro.setNactivo(BigDecimal.ONE);
-                parametro.setDfechcrea(new Date());
+                parametro.setDfechacreacion(new Date());
+                parametro.setVusuariocreacion(user.getVlogin());
                 service.saveOrUpdate(parametro);
                 this.setListaParametro(service.getParametros());
                 this.cleanAttributes();
@@ -243,11 +245,13 @@ public class ParametroMB implements Serializable{
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 this.getSelectedParametro().setVnombre(this.getSelectedParametro().getVnombre().toUpperCase());
                 this.getSelectedParametro().setVvalor(this.getSelectedParametro().getVvalor().toUpperCase());
                 this.getSelectedParametro().setVdescripcion(this.getSelectedParametro().getVdescripcion().toUpperCase());
-//                this.getSelectedMestro().setIdUsuaModi(user.getUsuario());
-                this.getSelectedParametro().setDfechmod(new Date());
+                this.getSelectedParametro().setVusuariomodificacion(user.getVlogin());
+                this.getSelectedParametro().setDfechamodificacion(new Date());
                 ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
                 service.saveOrUpdate(this.getSelectedParametro());
                 this.setListaParametro(service.getParametros());
@@ -264,10 +268,12 @@ public class ParametroMB implements Serializable{
         try {
             if(event != null) {
                 if(this.getSelectedParametro() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
                     this.getSelectedParametro().setNactivo(BigDecimal.ONE);
-                    this.getSelectedParametro().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedParametro().setDfechamodificacion(new Date());
+                    this.getSelectedParametro().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedParametro());
                     this.setListaParametro(service.getParametros());
                 } else {
@@ -285,10 +291,12 @@ public class ParametroMB implements Serializable{
         try {
             if(event != null) {
                 if(this.getSelectedParametro() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
                     this.getSelectedParametro().setNactivo(BigDecimal.ZERO);
-                    this.getSelectedParametro().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedParametro().setDfechamodificacion(new Date());
+                    this.getSelectedParametro().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedParametro());
                     this.setListaParametro(service.getParametros());
                 } else {
