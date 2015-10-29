@@ -6,6 +6,8 @@
 package pe.gob.mef.gescon.hibernate.dao;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.Tasignacion;
 
@@ -20,5 +22,8 @@ public interface AsignacionDao {
     public BigDecimal getNumberNotificationsAssignedByMtuser(Mtuser mtuser) throws Exception;
     public BigDecimal getNumberNotificationsReceivedByMtuser(Mtuser mtuser) throws Exception;
     public BigDecimal getNumberNotificationsServedByMtuser(Mtuser mtuser) throws Exception;
+    public List<HashMap> getNotificationsAssignedPanelByMtuser(Mtuser mtuser) throws Exception;
+    public List<HashMap> getNotificationsReceivedPanelByMtuser(Mtuser mtuser) throws Exception;
+    public List<HashMap> getNotificationsServedPanelByMtuser(Mtuser mtuser) throws Exception;
     public void saveOrUpdate(Tasignacion tasignacion) throws Exception;
 }

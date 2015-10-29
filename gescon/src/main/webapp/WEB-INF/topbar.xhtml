@@ -5,7 +5,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
-    
+
     <script type="text/javascript">
         //<![CDATA[
         function manejarLogin(xhr, status, args) {
@@ -17,7 +17,7 @@
         }
         function logout() {
             setTimeout(function () {
-                window.location = "/gescon/index2.xhtml";
+                window.location = "/gescon/index.xhtml";
             }, 500);
         }
         //]]>
@@ -41,25 +41,25 @@
                             </h:panelGroup>
                             <ul style="width:200px; margin-left:0px;" class="Animated03 submenu">
                                 <li>
-                                    <a href="#" class="Animated05">
+                                    <p:commandLink styleClass="Animated05" actionListener="#{loginMB.loadAssignedPanel}" oncomplete="PF('asgDialog').show();" update=":asgDialogForm:pgAsg">
                                         <h:panelGroup rendered="#{loginMB.notificacionesAsignadas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
                                         <h:panelGroup rendered="#{loginMB.notificacionesAsignadas gt 0}"><i class="fa fa-envelope Fs18 blue animated infinite rubberBand"></i></h:panelGroup>
                                         <span class="Fright Fs16 TexAlRight">Asignadas<span class="Fs10 DispBlock">#{loginMB.notificacionesAsignadas} por recibir</span></span>
-                                    </a>
+                                    </p:commandLink>
                                 </li>
                                 <li>
-                                    <a href="#" class="Animated05">
+                                    <p:commandLink styleClass="Animated05" actionListener="#{loginMB.loadReceivedPanel}" oncomplete="PF('rcbDialog').show();" update=":rcbDialogForm:pgRcb">
                                         <h:panelGroup rendered="#{loginMB.notificacionesRecibidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
                                         <h:panelGroup rendered="#{loginMB.notificacionesRecibidas gt 0}"><i class="fa fa-envelope Fs18 blue animated infinite rubberBand"></i></h:panelGroup>
                                         <span class="Fright Fs16 TexAlRight">Recibidas<span class="Fs10 DispBlock">#{loginMB.notificacionesRecibidas} por atender</span></span>
-                                    </a>
+                                    </p:commandLink>
                                 </li>
                                 <li>
-                                    <a href="#" class="Animated05">
+                                    <p:commandLink styleClass="Animated05" actionListener="#{loginMB.loadServedPanel}" oncomplete="PF('srvDialog').show();" update=":srvDialogForm:pgSrv">
                                         <h:panelGroup rendered="#{loginMB.notificacionesAtendidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
                                         <h:panelGroup rendered="#{loginMB.notificacionesAtendidas gt 0}"><i class="fa fa-envelope Fs18 blue"></i></h:panelGroup>
                                         <span class="Fright Fs16 TexAlRight">Atendidas<span class="Fs10 DispBlock">#{loginMB.notificacionesAtendidas} atendidas</span></span>
-                                    </a>
+                                    </p:commandLink>
                                 </li>
                             </ul>
                         </li>
@@ -90,7 +90,111 @@
                 </ul>
             </h:form>
 
-            <p:dialog id="iniDlg" header="Iniciar Sesion" widgetVar="iniDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+            <p:dialog id="asgDlg" header="Bandeja de Asignados" widgetVar="asgDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
+                <h:form id="asgDialogForm">
+                    <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
+                    <h:panelGrid id="pgAsg" columns="1" >
+                        <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAsignadas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
+                                     paginatorPosition="top" selectionMode="single" selection="#{loginMB.selectedNotification}" rowKey="#{row.id}"
+                                     emptyMessage="Ningún registro encontrado." style="width: 1200px;">
+                            <p:ajax event="rowSelect" listener="#{loginMB.goToKnowledge}" async="true"/>
+                            <p:column style="width: 180px;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
+                                <h:outputText value="#{row.categoria}" />
+                            </p:column>
+                            <p:column style="width: 180px;" sortBy="#{row.tipoConocimiento}" filterBy="#{row.tipoConocimiento}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="TIPO CONOCIMIENTO"/></f:facet>
+                                <h:outputText value="#{row.tipoConocimiento}" styleClass="Fleft"/>
+                            </p:column>
+                            <p:column sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                <h:outputText value="#{row.codigo} #{row.nombre}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
+                                <h:outputText value="#{row.nombre}" styleClass="Fleft" rendered="#{empty row.codigo}"/>
+                            </p:column>
+                            <p:column style="width: 100px; text-align: center;" sortBy="#{row.estado}" filterBy="#{row.estado}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                <f:facet name="header"><h:outputText value="ESTADO"/></f:facet>
+                                <h:outputText value="#{row.estado}" />
+                            </p:column>
+                            <p:column style="text-align: center; width: 170px;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
+                                <f:facet name="header"><h:outputText value="FECHA PUBLICACION"/></f:facet>
+                                <h:outputText value="#{row.fechaPublicacion}" >
+                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog id="rcbDlg" header="Bandeja de Recibidos" widgetVar="rcbDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
+                <h:form id="rcbDialogForm">
+                    <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
+                    <h:panelGrid id="pgRcb" columns="1" >
+                        <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesRecibidas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
+                                     paginatorPosition="top" emptyMessage="Ningún registro encontrado." style="width: 1200px;">
+                            <p:column style="width: 180px;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
+                                <h:outputText value="#{row.categoria}" />
+                            </p:column>
+                            <p:column style="width: 180px;" sortBy="#{row.tipoConocimiento}" filterBy="#{row.tipoConocimiento}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="TIPO CONOCIMIENTO"/></f:facet>
+                                <h:outputText value="#{row.tipoConocimiento}" styleClass="Fleft"/>
+                            </p:column>
+                            <p:column sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                <h:outputText value="#{row.codigo} #{row.nombre}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
+                                <h:outputText value="#{row.nombre}" styleClass="Fleft" rendered="#{empty row.codigo}"/>
+                            </p:column>
+                            <p:column style="width: 100px; text-align: center;" sortBy="#{row.estado}" filterBy="#{row.estado}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                <f:facet name="header"><h:outputText value="ESTADO"/></f:facet>
+                                <h:outputText value="#{row.estado}" />
+                            </p:column>
+                            <p:column style="text-align: center; width: 170px;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
+                                <f:facet name="header"><h:outputText value="FECHA PUBLICACION"/></f:facet>
+                                <h:outputText value="#{row.fechaPublicacion}" >
+                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog id="srvDlg" header="Bandeja de Atendidos" widgetVar="srvDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
+                <h:form id="srvDialogForm">
+                    <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
+                    <h:panelGrid id="pgSrv" columns="1" >
+                        <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAtendidas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
+                                     paginatorPosition="top" emptyMessage="Ningún registro encontrado." style="width: 1200px;">
+                            <p:column style="width: 180px;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
+                                <h:outputText value="#{row.categoria}" />
+                            </p:column>
+                            <p:column style="width: 180px;" sortBy="#{row.tipoConocimiento}" filterBy="#{row.tipoConocimiento}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="TIPO CONOCIMIENTO"/></f:facet>
+                                <h:outputText value="#{row.tipoConocimiento}" styleClass="Fleft"/>
+                            </p:column>
+                            <p:column sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                <h:outputText value="#{row.codigo} #{row.nombre}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
+                                <h:outputText value="#{row.nombre}" styleClass="Fleft" rendered="#{empty row.codigo}"/>
+                            </p:column>
+                            <p:column style="width: 100px; text-align: center;" sortBy="#{row.estado}" filterBy="#{row.estado}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                <f:facet name="header"><h:outputText value="ESTADO"/></f:facet>
+                                <h:outputText value="#{row.estado}" />
+                            </p:column>
+                            <p:column style="text-align: center; width: 170px;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
+                                <f:facet name="header"><h:outputText value="FECHA PUBLICACION"/></f:facet>
+                                <h:outputText value="#{row.fechaPublicacion}" >
+                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog id="iniDlg" header="Iniciar Sesion" widgetVar="iniDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
                 <h:form id="iniDialogForm">
                     <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
                     <h:panelGrid id="pgIni" columns="1" cellpadding="5" style="text-align: center;width: 100%">

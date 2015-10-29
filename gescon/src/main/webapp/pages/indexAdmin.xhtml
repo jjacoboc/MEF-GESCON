@@ -18,15 +18,12 @@
                                                 var="admin" headerText="Administración" styleClass="TexAlLeft Fs15"
                                                 circular="true" style="width: 100%;" numVisible="6"
                                                 itemStyle="border:0px;height:98px;width:180px;" >
-                                        <p:commandLink styleClass="ui-link" action="#{administracionMB.onClickCategoriesFilter}" ajax="false">
-                                            <f:param name="idparent" value="#{c.ncategoriaid}"/>
-                                            <p:panelGrid columns="1" layout="grid" style="text-align: center;">
-                                                <p:spacer/>
-                                                <i class="#{admin.imagen}"></i>
-                                                <h:outputText value="#{admin.nombre}" styleClass="Fs14 FontBold black"/>
-                                                <p:spacer/>
-                                            </p:panelGrid>
-                                        </p:commandLink>
+                                        <p:panelGrid columns="1" layout="grid" style="text-align: center;">
+                                            <p:spacer/>
+                                            <i class="#{admin.imagen}"></i>
+                                            <h:outputText value="#{admin.nombre}" styleClass="Fs14 FontBold black"/>
+                                            <p:spacer/>
+                                        </p:panelGrid>
                                     </p:carousel>
                                     <p:carousel value="#{administracionMB.listaCategoria}" 
                                                 var="cat" headerText="Categorías" styleClass="TexAlLeft Fs15"
@@ -37,7 +34,10 @@
                                             <p:graphicImage cache="false" value="#{categoriaImages.image}" styleClass="black">
                                                 <f:param name="id" value="#{cat.ncategoriaid}"/>
                                             </p:graphicImage>
-                                            <h:outputText value="#{cat.vnombre}" styleClass="Fs14 FontBold black"/>
+                                            <p:commandLink styleClass="ui-link" action="#{administracionMB.onClickCategoriesFilter}" ajax="false">
+                                                <f:param name="idparent" value="#{cat.ncategoriaid}"/>
+                                                <h:outputText value="#{cat.vnombre}" styleClass="Fs14 FontBold black"/>
+                                            </p:commandLink>
                                             <p:spacer/>
                                         </p:panelGrid>
                                     </p:carousel>

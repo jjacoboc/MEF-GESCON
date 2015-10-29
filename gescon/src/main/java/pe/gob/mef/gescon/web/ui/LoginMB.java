@@ -12,7 +12,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.event.SelectEvent;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.AsignacionService;
@@ -21,6 +23,7 @@ import pe.gob.mef.gescon.service.PerfilService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Pass;
 import pe.gob.mef.gescon.web.bean.Perfil;
 import pe.gob.mef.gescon.web.bean.User;
@@ -42,6 +45,10 @@ public class LoginMB implements Serializable {
     private BigDecimal notificacionesAsignadas;
     private BigDecimal notificacionesRecibidas;
     private BigDecimal notificacionesAtendidas;
+    private List<Consulta> listaNotificacionesAsignadas;
+    private List<Consulta> listaNotificacionesRecibidas;
+    private List<Consulta> listaNotificacionesAtendidas;
+    private Consulta selectedNotification;
 
     /**
      * Creates a new instance of LoginMB
@@ -151,6 +158,38 @@ public class LoginMB implements Serializable {
         this.notificacionesAtendidas = notificacionesAtendidas;
     }
 
+    public List<Consulta> getListaNotificacionesAsignadas() {
+        return listaNotificacionesAsignadas;
+    }
+
+    public void setListaNotificacionesAsignadas(List<Consulta> listaNotificacionesAsignadas) {
+        this.listaNotificacionesAsignadas = listaNotificacionesAsignadas;
+    }
+
+    public List<Consulta> getListaNotificacionesRecibidas() {
+        return listaNotificacionesRecibidas;
+    }
+
+    public void setListaNotificacionesRecibidas(List<Consulta> listaNotificacionesRecibidas) {
+        this.listaNotificacionesRecibidas = listaNotificacionesRecibidas;
+    }
+
+    public List<Consulta> getListaNotificacionesAtendidas() {
+        return listaNotificacionesAtendidas;
+    }
+
+    public void setListaNotificacionesAtendidas(List<Consulta> listaNotificacionesAtendidas) {
+        this.listaNotificacionesAtendidas = listaNotificacionesAtendidas;
+    }
+
+    public Consulta getSelectedNotification() {
+        return selectedNotification;
+    }
+
+    public void setSelectedNotification(Consulta selectedNotification) {
+        this.selectedNotification = selectedNotification;
+    }
+
     public String ingresar() {
         String page = StringUtils.EMPTY;
         try {
@@ -173,13 +212,13 @@ public class LoginMB implements Serializable {
                             if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_ADMINISTRADOR)) {
                                 page = "/pages/indexAdmin?faces-redirect=true";
                             } else if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_MODERADOR)) {
-                                page = "/index2?faces-redirect=true";
+                                page = "/index?faces-redirect=true";
                             } else if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_ESPECIALISTA)) {
-                                page = "/index2?faces-redirect=true";
+                                page = "/index?faces-redirect=true";
                             } else if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_USUARIOEXTERNO)) {
-                                page = "/index2?faces-redirect=true";
+                                page = "/index?faces-redirect=true";
                             } else if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_USUARIOINTERNO)) {
-                                page = "/index2?faces-redirect=true";
+                                page = "/index?faces-redirect=true";
                             }                               
                             
                         } else {
@@ -207,6 +246,61 @@ public class LoginMB implements Serializable {
             e.printStackTrace();
         }
         return page;
+    }
+    
+    public void loadAssignedPanel(ActionEvent event) {
+        try {
+            if(event != null) {
+                AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.setListaNotificacionesAsignadas(asignacionService.getNotificationsAssignedPanelByUser(this.getUser()));
+            }
+        } catch(Exception e){
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void loadReceivedPanel(ActionEvent event) {
+        try {
+            if(event != null) {
+                AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.setListaNotificacionesRecibidas(asignacionService.getNotificationsReceivedPanelByUser(this.getUser()));
+            }
+        } catch(Exception e){
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void loadServedPanel(ActionEvent event) {
+        try {
+            if(event != null) {
+                AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.setListaNotificacionesAtendidas(asignacionService.getNotificationsServedPanelByUser(this.getUser()));
+            }
+        } catch(Exception e){
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public String goToKnowledge(SelectEvent event) {
+        String pagina = null;
+        try {
+                Integer tipo = ((Consulta) event.getObject()).getId().intValue();
+                switch(tipo) {
+                    case 1 : {
+                        pagina = "/pages/baseLegal.xhtml?faces-redirect=true";
+                    }
+                    case 2 : {
+                        pagina = "/pages/pregunta.xhtml?faces-redirect=true";
+                    }
+                }
+        } catch(Exception e){
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return pagina;
     }
     
     public void logout() {
