@@ -67,6 +67,57 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
     }
     
     @Override
+    public BigDecimal getNumberNotificationsAssignedByMtuser(Mtuser mtuser) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(1) FROM TASIGNACION t ");
+        sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
+        sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
+        
+        return (BigDecimal) getHibernateTemplate().execute(
+            new HibernateCallback() {
+                @Override
+                public Object doInHibernate(Session session) throws HibernateException {
+                    Query query = session.createSQLQuery(sql.toString());
+                    return query.uniqueResult();
+                }
+            });
+    }
+    
+    @Override
+    public BigDecimal getNumberNotificationsReceivedByMtuser(Mtuser mtuser) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(1) FROM TASIGNACION t ");
+        sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
+        sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is null) ");
+        
+        return (BigDecimal) getHibernateTemplate().execute(
+            new HibernateCallback() {
+                @Override
+                public Object doInHibernate(Session session) throws HibernateException {
+                    Query query = session.createSQLQuery(sql.toString());
+                    return query.uniqueResult();
+                }
+            });
+    }
+    
+    @Override
+    public BigDecimal getNumberNotificationsServedByMtuser(Mtuser mtuser) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(1) FROM TASIGNACION t ");
+        sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
+        sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is not null) ");
+        
+        return (BigDecimal) getHibernateTemplate().execute(
+            new HibernateCallback() {
+                @Override
+                public Object doInHibernate(Session session) throws HibernateException {
+                    Query query = session.createSQLQuery(sql.toString());
+                    return query.uniqueResult();
+                }
+            });
+    }
+    
+    @Override
     @Transactional(readOnly = false)
     public void saveOrUpdate(Tasignacion tasignacion) throws Exception {
         getHibernateTemplate().saveOrUpdate(tasignacion);

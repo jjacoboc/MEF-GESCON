@@ -17,5 +17,8 @@ public interface AsignacionDao {
     
     public BigDecimal getNextPK() throws Exception;
     public BigDecimal getNumberNotificationsByMtuser(Mtuser mtuser) throws Exception;
+    public BigDecimal getNumberNotificationsAssignedByMtuser(Mtuser mtuser) throws Exception;
+    public BigDecimal getNumberNotificationsReceivedByMtuser(Mtuser mtuser) throws Exception;
+    public BigDecimal getNumberNotificationsServedByMtuser(Mtuser mtuser) throws Exception;
     public void saveOrUpdate(Tasignacion tasignacion) throws Exception;
 }

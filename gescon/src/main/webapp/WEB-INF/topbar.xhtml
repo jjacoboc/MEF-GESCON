@@ -5,11 +5,7 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
-
-    <h:outputStylesheet name="css/core-layout.css" library="spark-layout" />
-    <h:outputStylesheet name="css/font-awesome.css" library="spark-layout" />
-    <h:outputStylesheet name="css/animate.css" library="spark-layout" />
-    <h:outputStylesheet name="css/spark-layout-red.css" library="spark-layout" />
+    
     <script type="text/javascript">
         //<![CDATA[
         function manejarLogin(xhr, status, args) {
@@ -29,7 +25,8 @@
     <div id="layout-topbar" class="ShadowGray">
         <div id="layout-topbar-indent">
 
-            <a href="dashboard.xhtml"><h:graphicImage name="images/LOGO.svg" styleClass="Fleft" library="spark-layout" id="logo" class="Fleft"/></a>
+            <a href="dashboard.xhtml">
+                <h:graphicImage name="gescon.png" styleClass="Fleft" library="images" id="logo"  class="Fleft"/></a>
             <a href="#" id="mobile-menu-button" class="BordRad3 white ShowOnMobile"><i class="fa fa-bars"></i> Menu</a>
             <a href="#" id="mobile-menu-button-gray" class="BordRad3 white ShowOnMobile"><i class="fa fa-caret-down"></i> Top Menu</a>
             <h:form id="headerForm">
@@ -37,17 +34,33 @@
                     <h:panelGroup rendered="#{loginMB.user ne null}">
                         <li>
                             <h:panelGroup rendered="#{loginMB.notificaciones gt 0}">
-                                <a class="Animated05 CursPointer"><i class="fa fa-bell animated swing infinite red"></i> Notificaciones <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                                <a class="Animated05 CursPointer"><i class="fa fa-bell animated swing infinite red"></i> Bandeja de Notificaciones <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
                             </h:panelGroup>
                             <h:panelGroup rendered="#{loginMB.notificaciones eq 0}">
-                                <a class="Animated05 CursPointer"><i class="fa fa-bell"></i> Notificaciones <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                                <a class="Animated05 CursPointer"><i class="fa fa-bell"></i>Bandeja de Notificaciones <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
                             </h:panelGroup>
-                            <ul style="width:200px; margin-left:-45px;" class="Animated03 submenu">
-                                <li><a href="#" class="Animated05"><i class="fa fa-envelope Fs18 blue"></i> <span class="Fright Fs16 TexAlRight">Brian Connely<span class="Fs10 DispBlock">Sales Reports</span></span></a></li>
-                                <li><a href="#" class="Animated05"><i class="fa fa-envelope Fs18"></i> <span class="Fright Fs16 TexAlRight">Jack O'Neill<span class="Fs10 DispBlock">Last Meeting Notes</span></span></a></li>
-                                <li><a href="#" class="Animated05"><i class="fa fa-envelope Fs18 blue"></i> <span class="Fright Fs16 TexAlRight">Tony Parker<span class="Fs10 DispBlock">Web Site Visitors</span></span></a></li>
-                                <li><a href="#" class="Animated05"><i class="fa fa-envelope Fs18 red animated infinite rubberBand"></i> <span class="Fright Fs16 TexAlRight">Bob Ross<span class="Fs10 DispBlock">IK Reports</span></span></a></li>
-                                <li><a href="#" class="Animated05"><i class="fa fa-envelope Fs18 orange"></i> <span class="Fright Fs16 TexAlRight">Sarah White<span class="Fs10 DispBlock">Marketing News</span></span></a></li>
+                            <ul style="width:200px; margin-left:0px;" class="Animated03 submenu">
+                                <li>
+                                    <a href="#" class="Animated05">
+                                        <h:panelGroup rendered="#{loginMB.notificacionesAsignadas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
+                                        <h:panelGroup rendered="#{loginMB.notificacionesAsignadas gt 0}"><i class="fa fa-envelope Fs18 blue animated infinite rubberBand"></i></h:panelGroup>
+                                        <span class="Fright Fs16 TexAlRight">Asignadas<span class="Fs10 DispBlock">#{loginMB.notificacionesAsignadas} por recibir</span></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="Animated05">
+                                        <h:panelGroup rendered="#{loginMB.notificacionesRecibidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
+                                        <h:panelGroup rendered="#{loginMB.notificacionesRecibidas gt 0}"><i class="fa fa-envelope Fs18 blue animated infinite rubberBand"></i></h:panelGroup>
+                                        <span class="Fright Fs16 TexAlRight">Recibidas<span class="Fs10 DispBlock">#{loginMB.notificacionesRecibidas} por atender</span></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="Animated05">
+                                        <h:panelGroup rendered="#{loginMB.notificacionesAtendidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
+                                        <h:panelGroup rendered="#{loginMB.notificacionesAtendidas gt 0}"><i class="fa fa-envelope Fs18 blue"></i></h:panelGroup>
+                                        <span class="Fright Fs16 TexAlRight">Atendidas<span class="Fs10 DispBlock">#{loginMB.notificacionesAtendidas} atendidas</span></span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                         <li class="fa fa-ellipsis-v menu-separator"></li>
@@ -72,7 +85,7 @@
                         </li>
                     </h:panelGroup>
                     <h:panelGroup rendered="#{loginMB.user eq null}">
-                        <li class="Animated05"><p:link href="#" onclick="PF('iniDialog').show();" styleClass="Unselectable"><i class="fa fa-sign-in"/> Iniciar Sesión </p:link></li>
+                        <li class="Animated05"><p:link href="#" onclick="PF('iniDialog').show();" styleClass="Unselectable"><i class="fa fa-sign-in"/> Iniciar Sesión</p:link></li>
                     </h:panelGroup>
                 </ul>
             </h:form>

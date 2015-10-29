@@ -39,6 +39,9 @@ public class LoginMB implements Serializable {
     private String login;
     private String pass;
     private BigDecimal notificaciones;
+    private BigDecimal notificacionesAsignadas;
+    private BigDecimal notificacionesRecibidas;
+    private BigDecimal notificacionesAtendidas;
 
     /**
      * Creates a new instance of LoginMB
@@ -124,6 +127,30 @@ public class LoginMB implements Serializable {
         this.notificaciones = notificaciones;
     }
 
+    public BigDecimal getNotificacionesAsignadas() {
+        return notificacionesAsignadas;
+    }
+
+    public void setNotificacionesAsignadas(BigDecimal notificacionesAsignadas) {
+        this.notificacionesAsignadas = notificacionesAsignadas;
+    }
+
+    public BigDecimal getNotificacionesRecibidas() {
+        return notificacionesRecibidas;
+    }
+
+    public void setNotificacionesRecibidas(BigDecimal notificacionesRecibidas) {
+        this.notificacionesRecibidas = notificacionesRecibidas;
+    }
+
+    public BigDecimal getNotificacionesAtendidas() {
+        return notificacionesAtendidas;
+    }
+
+    public void setNotificacionesAtendidas(BigDecimal notificacionesAtendidas) {
+        this.notificacionesAtendidas = notificacionesAtendidas;
+    }
+
     public String ingresar() {
         String page = StringUtils.EMPTY;
         try {
@@ -140,6 +167,9 @@ public class LoginMB implements Serializable {
                             this.setPerfil(listaperfiles.get(0));
                             AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
                             this.setNotificaciones(asignacionService.getNumberNotificationsByUser(this.getUser()));
+                            this.setNotificacionesAsignadas(asignacionService.getNumberNotificationsAssignedByUser(this.getUser()));
+                            this.setNotificacionesRecibidas(asignacionService.getNumberNotificationsReceivedByUser(this.getUser()));
+                            this.setNotificacionesAtendidas(asignacionService.getNumberNotificationsServedByUser(this.getUser()));
                             if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_ADMINISTRADOR)) {
                                 page = "/pages/indexAdmin?faces-redirect=true";
                             } else if(this.getPerfil().getNperfilid().toString().equals(Constante.ROL_MODERADOR)) {

@@ -123,15 +123,15 @@ public class AdministracionMB implements Serializable{
             listaAdministracion = new ArrayList<Admin>();
             Admin admin = new Admin();
             admin.setNombre("Alertas");
-            admin.setImagen("Alarm-Bell.png");
+            admin.setImagen("fa fa-bullhorn Fs26 black");
             listaAdministracion.add(admin);
             admin = new Admin();
             admin.setNombre("Parámetros");
-            admin.setImagen("Widgets.png");
+            admin.setImagen("fa fa-gears Fs26 black");
             listaAdministracion.add(admin);
             admin = new Admin();
             admin.setNombre("Tablas Maestras");
-            admin.setImagen("Table-Multiple.png");
+            admin.setImagen("fa fa-table Fs26 black");
             listaAdministracion.add(admin);
             
             CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
@@ -196,6 +196,32 @@ public class AdministracionMB implements Serializable{
             consultaMB.getListaBreadCrumb().add(consultaMB.getListaCategoriaFiltro().get(index));
             
             consultaMB.setSelectedCategoriaFiltro(child);
+            consultaMB.filtrar(new ActionEvent(new CommandButton()));
+            JSFUtils.getSession().setAttribute("consultaMB", consultaMB);
+            
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return "/pages/consulta?faces-redirect=true";
+    }
+    
+    public String onClickCategoriesFilter() {
+        int index;
+        Categoria categoria = new Categoria();
+        try {
+            String idparent = (String) JSFUtils.getRequestParameter("idparent");
+            
+            categoria.setNcategoriaid(BigDecimal.valueOf(Long.parseLong(idparent)));
+            index = Collections.binarySearch(this.getListaCategoria(), categoria, Categoria.Comparators.ID);
+            categoria = this.getListaCategoria().get(index);
+            
+            ConsultaMB consultaMB = new ConsultaMB();
+            consultaMB.init();
+            index = Collections.binarySearch(consultaMB.getListaCategoriaFiltro(), categoria, Categoria.Comparators.ID);
+            consultaMB.getListaBreadCrumb().add(consultaMB.getListaCategoriaFiltro().get(index));
+            
+            consultaMB.setSelectedCategoriaFiltro(categoria);
             consultaMB.filtrar(new ActionEvent(new CommandButton()));
             JSFUtils.getSession().setAttribute("consultaMB", consultaMB);
             

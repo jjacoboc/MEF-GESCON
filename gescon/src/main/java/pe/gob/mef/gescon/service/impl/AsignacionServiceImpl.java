@@ -38,6 +38,30 @@ public class AsignacionServiceImpl implements AsignacionService{
     }
     
     @Override
+    public BigDecimal getNumberNotificationsAssignedByUser(User user) throws Exception {
+        Mtuser mtuser = new Mtuser();
+        BeanUtils.copyProperties(mtuser, user);
+        AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
+        return asignacionDao.getNumberNotificationsAssignedByMtuser(mtuser);
+    }
+    
+    @Override
+    public BigDecimal getNumberNotificationsReceivedByUser(User user) throws Exception {
+        Mtuser mtuser = new Mtuser();
+        BeanUtils.copyProperties(mtuser, user);
+        AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
+        return asignacionDao.getNumberNotificationsReceivedByMtuser(mtuser);
+    }
+    
+    @Override
+    public BigDecimal getNumberNotificationsServedByUser(User user) throws Exception {
+        Mtuser mtuser = new Mtuser();
+        BeanUtils.copyProperties(mtuser, user);
+        AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
+        return asignacionDao.getNumberNotificationsServedByMtuser(mtuser);
+    }
+    
+    @Override
     public void saveOrUpdate(Asignacion asignacion) throws Exception {
         Tasignacion tasignacion = new Tasignacion();
         BeanUtils.copyProperties(tasignacion, asignacion);
