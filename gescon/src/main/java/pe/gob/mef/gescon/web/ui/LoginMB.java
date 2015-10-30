@@ -284,23 +284,24 @@ public class LoginMB implements Serializable {
         }
     }
     
-    public String goToKnowledge(SelectEvent event) {
+    public void goToKnowledge(SelectEvent event) {
         String pagina = null;
         try {
-                Integer tipo = ((Consulta) event.getObject()).getId().intValue();
+                Integer tipo = ((Consulta) event.getObject()).getIdTipoConocimiento().intValue();
                 switch(tipo) {
                     case 1 : {
-                        pagina = "/pages/baseLegal.xhtml?faces-redirect=true";
+                        pagina = "/gescon/faces/pages/baseLegal.xhtml";
                     }
                     case 2 : {
-                        pagina = "/pages/pregunta.xhtml?faces-redirect=true";
+                        pagina = "/gescon/faces/pages/pregunta.xhtml";
                     }
                 }
+                FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
+                FacesContext.getCurrentInstance().responseComplete();  
         } catch(Exception e){
             e.getMessage();
             e.printStackTrace();
         }
-        return pagina;
     }
     
     public void logout() {

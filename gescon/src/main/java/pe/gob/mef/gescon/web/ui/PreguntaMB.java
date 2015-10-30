@@ -5,10 +5,8 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
-import com.mchange.lang.ByteUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -25,26 +23,16 @@ import org.apache.commons.logging.LogFactory;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.common.Items;
-import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfil;
-import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfilId;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
-import pe.gob.mef.gescon.service.PerfilService;
-import pe.gob.mef.gescon.service.PoliticaPerfilService;
-import pe.gob.mef.gescon.service.PoliticaService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.util.JSFUtils;
-
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
-import pe.gob.mef.gescon.web.bean.Perfil;
-import pe.gob.mef.gescon.web.bean.PoliticaPerfil;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 
 //import pe.gob.mef.gescon.web.bean.Politica;
@@ -627,6 +615,7 @@ public class PreguntaMB implements Serializable {
             asignacion.setNconocimientoid(idpregunta);
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("2")));
+            asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
 
@@ -702,7 +691,14 @@ public class PreguntaMB implements Serializable {
                     this.setfButtonMod("false");
                     this.setfButtonModPub("false");
                 } else {
-                    this.setSelectedAsignacion(this.getListaAsignacion().get(0));
+
+                    setSelectedAsignacion(getListaAsignacion().get(0));
+
+                    AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                    getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                    getSelectedAsignacion().setDfecharecepcion(new Date());
+                    serviceasig.saveOrUpdate(getSelectedAsignacion());
+
                     perfil = Integer.parseInt(service.obtenerPerfilxUsuario(mb.getUser().getNusuarioid()).toString());
 
                     if (perfil == Constante.ESPECIALISTA) {
@@ -799,8 +795,8 @@ public class PreguntaMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
-        public void Rechazar(ActionEvent event) {
+
+    public void Rechazar(ActionEvent event) {
         try {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             this.getSelectedPregunta().setNsituacion(BigDecimal.valueOf(Long.parseLong("7")));
@@ -978,6 +974,7 @@ public class PreguntaMB implements Serializable {
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
             Asignacion asignacion = new Asignacion();
@@ -987,6 +984,7 @@ public class PreguntaMB implements Serializable {
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("3")));
             asignacion.setDfechacreacion(new Date());
+            asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
 
             this.fMsjUsu2 = "true";
@@ -1018,6 +1016,7 @@ public class PreguntaMB implements Serializable {
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
             Asignacion asignacion = new Asignacion();
@@ -1027,6 +1026,7 @@ public class PreguntaMB implements Serializable {
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("2")));
             asignacion.setDfechacreacion(new Date());
+            asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
 
             this.fMsjUsu1 = "true";
@@ -1058,6 +1058,7 @@ public class PreguntaMB implements Serializable {
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
             Asignacion asignacion = new Asignacion();
@@ -1067,6 +1068,7 @@ public class PreguntaMB implements Serializable {
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("4")));
             asignacion.setDfechacreacion(new Date());
+            asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
 
             this.fSInfEspe = "true";
@@ -1098,6 +1100,7 @@ public class PreguntaMB implements Serializable {
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
             Asignacion asignacion = new Asignacion();
@@ -1106,6 +1109,7 @@ public class PreguntaMB implements Serializable {
             asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("4")));
+            asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
 
@@ -1134,6 +1138,7 @@ public class PreguntaMB implements Serializable {
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
             //Asignacion asignacion = new Asignacion();
@@ -1171,6 +1176,7 @@ public class PreguntaMB implements Serializable {
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
             Asignacion asignacion = new Asignacion();
@@ -1180,6 +1186,7 @@ public class PreguntaMB implements Serializable {
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("2")));
             asignacion.setDfechacreacion(new Date());
+            asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
             this.setListaPregunta(service.getPreguntas());
             RequestContext.getCurrentInstance().execute("PF('respDialog').hide();");
@@ -1202,6 +1209,7 @@ public class PreguntaMB implements Serializable {
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
             Asignacion asignacion = new Asignacion();
@@ -1211,6 +1219,7 @@ public class PreguntaMB implements Serializable {
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("3")));
             asignacion.setDfechacreacion(new Date());
+            asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
             this.setListaPregunta(service.getPreguntas());
             RequestContext.getCurrentInstance().execute("PF('modDialog').hide();");

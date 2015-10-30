@@ -97,7 +97,7 @@
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAsignadas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
                                      paginatorPosition="top" selectionMode="single" selection="#{loginMB.selectedNotification}" rowKey="#{row.id}"
                                      emptyMessage="Ningún registro encontrado." style="width: 1200px;">
-                            <p:ajax event="rowSelect" listener="#{loginMB.goToKnowledge}" async="true"/>
+                            <p:ajax event="rowSelect" listener="#{loginMB.goToKnowledge}"/>
                             <p:column style="width: 180px;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
                                 <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
                                 <h:outputText value="#{row.categoria}" />

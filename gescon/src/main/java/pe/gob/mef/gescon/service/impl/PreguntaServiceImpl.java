@@ -118,6 +118,9 @@ public class PreguntaServiceImpl implements PreguntaService {
             asignacion.setVusuariomodificacion((String) bean.get("USUMOD"));
             asignacion.setDfechacreacion((Date) bean.get("FECHACREA"));
             asignacion.setDfechamodificacion((Date) bean.get("FECHAMOD"));     
+            asignacion.setDfechaasignacion((Date) bean.get("FECHAASIG"));  
+            asignacion.setDfechaatencion((Date) bean.get("FECHAATEN"));  
+            asignacion.setDfecharecepcion((Date) bean.get("FECHARECEP"));  
             asignacions.add(asignacion);
         }
         return asignacions;

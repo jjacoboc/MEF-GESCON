@@ -6,11 +6,8 @@
 package pe.gob.mef.gescon.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import pe.gob.mef.gescon.web.bean.Asignacion;
-import pe.gob.mef.gescon.web.bean.Politica;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 
 /**

@@ -6,7 +6,6 @@
 package pe.gob.mef.gescon.hibernate.dao;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.Tpregunta;

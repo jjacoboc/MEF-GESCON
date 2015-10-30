@@ -32,5 +32,14 @@
         <property name="dfechamodificacion" type="date">
             <column name="DFECHAMODIFICACION" length="7" />
         </property>
+        <property name="dfechaasignacion" type="date">
+            <column name="DFECHAASIGNACION" length="7" />
+        </property>
+        <property name="dfechaatencion" type="date">
+            <column name="DFECHAATENCION" length="7" />
+        </property>
+        <property name="dfecharecepcion" type="date">
+            <column name="DFECHARECEPCION" length="7" />
+        </property>
     </class>
 </hibernate-mapping>
