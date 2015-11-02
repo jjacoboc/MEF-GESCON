@@ -22,16 +22,42 @@
         }
         //]]>
     </script>
-    <div id="layout-topbar" class="ShadowGray">
+    <div id="layout-topbar">
         <div id="layout-topbar-indent">
-
-            <a href="dashboard.xhtml">
-                <h:graphicImage name="gescon.png" styleClass="Fleft" library="images" id="logo"  class="Fleft"/></a>
-            <a href="#" id="mobile-menu-button" class="BordRad3 white ShowOnMobile"><i class="fa fa-bars"></i> Menu</a>
-            <a href="#" id="mobile-menu-button-gray" class="BordRad3 white ShowOnMobile"><i class="fa fa-caret-down"></i> Top Menu</a>
             <h:form id="headerForm">
+                <p:link outcome="/index.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}">
+                    <h:graphicImage name="gescon.png" styleClass="Fleft" library="images" class="Fleft" width="200px;" height="40px;"/>
+                </p:link>
+                <p:link outcome="/pages/indexAdmin.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <h:graphicImage name="gescon.png" styleClass="Fleft" library="images" class="Fleft" width="200px;" height="40px;"/>
+                </p:link>
+                <p:link outcome="/index.xhtml" rendered="#{loginMB.user eq null}">
+                    <h:graphicImage name="gescon.png" styleClass="Fleft" library="images" class="Fleft" width="200px;" height="40px;"/>
+                </p:link>
+                <a href="#" id="mobile-menu-button" class="BordRad3 white ShowOnMobile"><i class="fa fa-bars"></i> Menu</a>
+                <a href="#" id="mobile-menu-button-gray" class="BordRad3 white ShowOnMobile"><i class="fa fa-caret-down"></i> Top Menu</a>
                 <ul id="layout-topbar-menu">
                     <h:panelGroup rendered="#{loginMB.user ne null}">
+                        <li>
+                            <a class="Animated05 CursPointer">
+                                <h:panelGroup>
+                                    <i class="fa fa-user"></i>
+                                    <p:spacer width="3"/>
+                                    <h:outputText value="#{loginMB.user.vnombres}" />
+                                    <p:spacer width="3"/>
+                                    <h:outputText value="#{loginMB.user.vapellidos}"/>
+                                    <h:outputText value=", Bienvenido" />
+                                    <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i>
+                                </h:panelGroup>
+                            </a>
+                            <ul style="width:185px; margin-left:-10px;" class="Animated03 submenu">
+                                <li><a class="Animated05"><i class="fa fa-user Fs30 Fleft"></i> <span class="Fright Fs20 TexAlRight">#{loginMB.user.vnombres} #{loginMB.user.vapellidos}<span class="Fs10 DispBlock">#{loginMB.perfil.vnombre}</span></span></a></li>
+                                <li><a href="#" class="Animated05"><i class="fa fa-dashboard"></i> Mi Perfil</a></li>
+                                <li><a href="#" class="Animated05"><i class="fa fa-key"></i> Cambiar Contraseña</a></li>
+                                <li class="Animated05"><p:commandLink actionListener="#{loginMB.logout}" oncomplete="logout();" styleClass="Unselectable"><i class="fa fa-sign-out"/> Cerrar Sesión </p:commandLink></li>
+                            </ul>
+                        </li>
+                        <li class="fa fa-ellipsis-v menu-separator"></li>
                         <li>
                             <h:panelGroup rendered="#{loginMB.notificaciones gt 0}">
                                 <a class="Animated05 CursPointer"><i class="fa fa-bell animated swing infinite red"></i> Bandeja de Notificaciones <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
@@ -62,27 +88,7 @@
                                     </p:commandLink>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="fa fa-ellipsis-v menu-separator"></li>
-                        <li>
-                            <a class="Animated05 CursPointer">
-                                <h:panelGroup>
-                                    <i class="fa fa-user"></i>
-                                    <p:spacer width="3"/>
-                                    <h:outputText value="#{loginMB.user.vnombres}" />
-                                    <p:spacer width="3"/>
-                                    <h:outputText value="#{loginMB.user.vapellidos}"/>
-                                    <h:outputText value=", Bienvenido" />
-                                    <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i>
-                                </h:panelGroup>
-                            </a>
-                            <ul style="width:185px; margin-left:-10px;" class="Animated03 submenu">
-                                <li><a class="Animated05"><i class="fa fa-user Fs30 Fleft"></i> <span class="Fright Fs20 TexAlRight">#{loginMB.user.vnombres} #{loginMB.user.vapellidos}<span class="Fs10 DispBlock">#{loginMB.perfil.vnombre}</span></span></a></li>
-                                <li><a href="#" class="Animated05"><i class="fa fa-dashboard"></i> Mi Perfil</a></li>
-                                <li><a href="#" class="Animated05"><i class="fa fa-key"></i> Cambiar Contraseña</a></li>
-                                <li class="Animated05"><p:commandLink actionListener="#{loginMB.logout}" oncomplete="logout();" styleClass="Unselectable"><i class="fa fa-sign-out"/> Cerrar Sesión </p:commandLink></li>
-                            </ul>
-                        </li>
+                        </li>                        
                     </h:panelGroup>
                     <h:panelGroup rendered="#{loginMB.user eq null}">
                         <li class="Animated05"><p:link href="#" onclick="PF('iniDialog').show();" styleClass="Unselectable"><i class="fa fa-sign-in"/> Iniciar Sesión</p:link></li>
@@ -197,31 +203,34 @@
             <p:dialog id="iniDlg" header="Iniciar Sesion" widgetVar="iniDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
                 <h:form id="iniDialogForm">
                     <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
-                    <h:panelGrid id="pgIni" columns="1" cellpadding="5" style="text-align: center;width: 100%">
+                    <h:panelGrid id="pgIni" columns="1" styleClass="TexAlCenter">
                         <p:graphicImage library="images" name="46.jpg" style="border: 0px;"/>
-                        <h:outputLabel value="Ingresa tu Usuario" class="FontBold"/>
-                        <p:inputText value="#{loginMB.login}" size="25" maxlength="25" />
-                        <p:password value="#{loginMB.pass}" size="25" />
+                        <p:spacer/>
+                        <h:outputText value="Ingresa tu Usuario y Contraseña" class="FontBold"/>
+                        <p:inputText value="#{loginMB.login}" size="25" maxlength="25" styleClass="Fs14"/>
+                        <p:password value="#{loginMB.pass}" size="25" styleClass="Fs14"/>
+                        <p:spacer/>
                         <p:commandButton value="Iniciar Sesion" action="#{loginMB.ingresar}" update=":iniDialogForm:growl" oncomplete="manejarLogin(xhr, status, args)"/>
+                        <p:spacer/>
                         <p:row>
                             <p:column>
-                                Aun no tienes cuenta? <p:commandLink  value="Registrate"  update=":regDialogForm:pgReg" oncomplete="PF('regDialog').show();" />
+                                <h:outputText value="Aún no tienes cuenta? "/> <p:commandLink value="Registrate" update=":regDialogForm:pgReg" oncomplete="PF('regDialog').show();" styleClass="ui-link Fs14 FontBold"/>
                             </p:column>
                         </p:row>
                         <p:row>
                             <p:column>
-                                <p:commandLink  value="Olvide mi contraseña" />
+                                <p:commandLink value="Olvide mi contraseña" styleClass="ui-link Fs14 FontBold"/>
                             </p:column>
                         </p:row>
                         <p:separator />
                         <p:row>
                             <p:column>
-                                Ver las <p:commandLink  value="Condiciones de Uso" /> y las
+                                <h:outputText value="Ver las "/><p:commandLink value="Condiciones de Uso" styleClass="ui-link Fs14 FontBold"/><h:outputText value=" y las"/>
                             </p:column>
                         </p:row>
                         <p:row>
                             <p:column>
-                                <p:commandLink  value="Politicas de Privacidad" /> 
+                                <p:commandLink value="Politicas de Privacidad" styleClass="ui-link Fs14 FontBold"/> 
                             </p:column>
                         </p:row>
                     </h:panelGrid>

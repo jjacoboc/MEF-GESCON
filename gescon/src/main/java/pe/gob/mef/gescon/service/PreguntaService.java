@@ -16,12 +16,13 @@ import pe.gob.mef.gescon.web.bean.Pregunta;
  */
 public interface PreguntaService {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<Pregunta> getPreguntas() throws Exception;
-    public void saveOrUpdate(Pregunta pregunta) throws Exception;
-    public String traerNomCategoria(BigDecimal categoriaid) throws Exception;
-    public List<Pregunta> obtenerPreguntas(BigDecimal preguntaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
-    public List<Asignacion> obtenerPreguntaxAsig(BigDecimal preguntaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
-    public BigDecimal obtenerPerfilxUsuario(BigDecimal usuarioid) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<Pregunta> getPreguntas() throws Exception;
+    Pregunta getPreguntaById(BigDecimal id) throws Exception;
+    void saveOrUpdate(Pregunta pregunta) throws Exception;
+    String traerNomCategoria(BigDecimal categoriaid) throws Exception;
+    List<Pregunta> obtenerPreguntas(BigDecimal preguntaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    List<Asignacion> obtenerPreguntaxAsig(BigDecimal preguntaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    BigDecimal obtenerPerfilxUsuario(BigDecimal usuarioid) throws Exception;
     
 }

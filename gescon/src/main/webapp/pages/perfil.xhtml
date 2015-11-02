@@ -43,21 +43,21 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 70px;">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink actionListener="#{perfilMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Parámetro">
+                                            <p:commandLink actionListener="#{perfilMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="Editar Parámetro">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Perfil" rendered="#{row.nactivo eq 0}">
+                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Perfil" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
                                             </p:commandLink>
-                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Perfil" rendered="#{row.nactivo eq 1}">
+                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Perfil" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink styleClass="ui-link" actionListener="#{perfilMB.toAsig}" update="f:growl, :asigDialogForm:pgAsig" oncomplete="PF('asigDialog').show();" title="Asignar Politicas">
+                                            <p:commandLink styleClass="ui-link" actionListener="#{perfilMB.toAsig}" update="f:growl, :asigDialogForm:pgAsig" oncomplete="PF('asigDialog').show();" styleClass="ui-link" title="Asignar Politicas">
                                                 <f:param name="index" value="#{rowIndex}"/>
                                                 <h:outputText class="fa fa-briefcase Fs16" />
                                             </p:commandLink>

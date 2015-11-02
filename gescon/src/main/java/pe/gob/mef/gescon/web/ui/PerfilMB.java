@@ -248,17 +248,13 @@ public class PerfilMB implements Serializable {
     public void toAsig(ActionEvent event) {
         try {
             if (event != null) {
-                List<String> politicasSource = new ArrayList<String>();
-                List<String> politicasTarget = new ArrayList<String>();
                 int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
                 this.setSelectedPerfil(this.getListaPerfils().get(index));
 
                 PoliticaPerfilService ppservice = (PoliticaPerfilService) ServiceFinder.findBean("PoliticaPerfilService");
-                politicasSource = new Items(ppservice.obtenerListaPoliticasDisp(this.getSelectedPerfil().getNperfilid()), null, "npoliticaid", "vnombre").getItems();
-                politicasTarget = new Items(ppservice.obtenerListaPoliticas(this.getSelectedPerfil().getNperfilid()), null, "npoliticaid", "vnombre").getItems();
+                List<String> politicasSource = new Items(ppservice.obtenerListaPoliticasDisp(this.getSelectedPerfil().getNperfilid()), null, "npoliticaid", "vnombre").getItems();
+                List<String> politicasTarget = new Items(ppservice.obtenerListaPoliticas(this.getSelectedPerfil().getNperfilid()), null, "npoliticaid", "vnombre").getItems();
                 this.listaPoliticas = new DualListModel<String>(politicasSource, politicasTarget);
-
-//                }
             }
         } catch (Exception e) {
             log.error(e.getMessage());

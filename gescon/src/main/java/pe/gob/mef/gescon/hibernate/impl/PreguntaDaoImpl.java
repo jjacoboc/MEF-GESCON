@@ -15,7 +15,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -57,6 +59,13 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
         DetachedCriteria criteria = DetachedCriteria.forClass(Tpregunta.class);
         criteria.addOrder(Order.desc("dfechacreacion"));
         return (List<Tpregunta>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public Tpregunta getTpreguntaById(BigDecimal id) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tpregunta.class);
+        criteria.add(Restrictions.eq("npreguntaid", id));
+        return (Tpregunta) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
 
     @Override

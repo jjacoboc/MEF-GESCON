@@ -17,9 +17,10 @@ public class Mtuser implements java.io.Serializable {
      private String vapellidos;
      private Date dfechanacimiento;
      private BigDecimal nestado;
-     private BigDecimal nusuariomod;
-     private BigDecimal nusuariocreacion;
+     private BigDecimal vusuariomodificacion;
+     private BigDecimal vusuariocreacion;
      private Date dfechacreacion;
+     private Date dfechamodificacion;
      private String vsexo;
      private String vdni;
      private String vdpto;
@@ -42,16 +43,17 @@ public class Mtuser implements java.io.Serializable {
         this.nusuarioid = nusuarioid;
     }
     
-    public Mtuser(BigDecimal nusuarioid, String vlogin, String vnombres, String vapellidos, Date dfechanacimiento, BigDecimal nestado, BigDecimal nusuariomod, BigDecimal nusuariocreacion, Date dfechacreacion, String vsexo, String vdni, String vdpto, String vprov, String vdist, String vprofesion, String ventidad, String vpliego, String vcargo, String varea, String vsector, String vgobierno, Set<TuserPerfil> tuserPerfils, Set<Tpass> tpasses) {
+    public Mtuser(BigDecimal nusuarioid, String vlogin, String vnombres, String vapellidos, Date dfechanacimiento, BigDecimal nestado, BigDecimal vusuariomodificacion, BigDecimal vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, String vsexo, String vdni, String vdpto, String vprov, String vdist, String vprofesion, String ventidad, String vpliego, String vcargo, String varea, String vsector, String vgobierno, Set<TuserPerfil> tuserPerfils, Set<Tpass> tpasses) {
        this.nusuarioid = nusuarioid;
        this.vlogin = vlogin;
        this.vnombres = vnombres;
        this.vapellidos = vapellidos;
        this.dfechanacimiento = dfechanacimiento;
        this.nestado = nestado;
-       this.nusuariomod = nusuariomod;
-       this.nusuariocreacion = nusuariocreacion;
+       this.vusuariomodificacion = vusuariomodificacion;
+       this.vusuariocreacion = vusuariocreacion;
        this.dfechacreacion = dfechacreacion;
+       this.dfechamodificacion = dfechamodificacion;
        this.vsexo = vsexo;
        this.vdni = vdni;
        this.vdpto = vdpto;
@@ -108,20 +110,20 @@ public class Mtuser implements java.io.Serializable {
         this.nestado = nestado;
     }
 
-    public BigDecimal getNusuariomod() {
-        return this.nusuariomod;
+    public BigDecimal getVusuariomodificacion() {
+        return this.vusuariomodificacion;
     }
 
-    public void setNusuariomod(BigDecimal nusuariomod) {
-        this.nusuariomod = nusuariomod;
+    public void setVusuariomodificacion(BigDecimal vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public BigDecimal getNusuariocreacion() {
-        return this.nusuariocreacion;
+    public BigDecimal getVusuariocreacion() {
+        return this.vusuariocreacion;
     }
 
-    public void setNusuariocreacion(BigDecimal nusuariocreacion) {
-        this.nusuariocreacion = nusuariocreacion;
+    public void setVusuariocreacion(BigDecimal vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     public Date getDfechacreacion() {
@@ -130,6 +132,14 @@ public class Mtuser implements java.io.Serializable {
 
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
+    }
+
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
+    }
+
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
 
     public Set<TuserPerfil> getTuserPerfils() {

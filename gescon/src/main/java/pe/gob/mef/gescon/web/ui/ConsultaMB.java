@@ -27,6 +27,7 @@ import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConsultaService;
+import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.TipoConocimientoService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
@@ -34,6 +35,7 @@ import pe.gob.mef.gescon.web.bean.Archivo;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
+import pe.gob.mef.gescon.web.bean.Pregunta;
 import pe.gob.mef.gescon.web.bean.TipoConocimiento;
 
 /**
@@ -56,6 +58,7 @@ public class ConsultaMB implements Serializable {
     private List<Consulta> listaConsulta;
     private BaseLegal selectedBaseLegal;
     private StreamedContent content;
+    private Pregunta selectedPregunta;
 
     /**
      * Creates a new instance of ConsultaMB
@@ -229,6 +232,14 @@ public class ConsultaMB implements Serializable {
      */
     public void setContent(StreamedContent content) {
         this.content = content;
+    }
+
+    public Pregunta getSelectedPregunta() {
+        return selectedPregunta;
+    }
+
+    public void setSelectedPregunta(Pregunta selectedPregunta) {
+        this.selectedPregunta = selectedPregunta;
     }
 
     public void init() {
@@ -412,9 +423,17 @@ public class ConsultaMB implements Serializable {
                     this.getSelectedBaseLegal().setArchivo(archivo);
                     FileInputStream fis = new FileInputStream(new File(archivo.getVruta()));
                     setContent(new DefaultStreamedContent(fis, "application/pdf"));
+                    RequestContext.getCurrentInstance().execute("PF('viewblDialog').show();");
+                    break;
+                }
+                case 2: { //Preguntas y respuestas
+                    PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+                    this.setSelectedPregunta(service.getPreguntaById(BigDecimal.valueOf(id)));
+                    RequestContext.getCurrentInstance().execute("PF('viewprDialog').show();");
+                    break;
                 }
             }
-            RequestContext.getCurrentInstance().execute("PF('viewDialog').show();");
+            
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();

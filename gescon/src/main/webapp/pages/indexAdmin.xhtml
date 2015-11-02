@@ -29,17 +29,17 @@
                                                 var="cat" headerText="Categorías" styleClass="TexAlLeft Fs15"
                                                 circular="true" style="width: 100%;" numVisible="6"
                                                 itemStyle="border:0px;height:106px;width:180px;" >
-                                        <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
-                                            <p:spacer/>
-                                            <p:graphicImage cache="false" value="#{categoriaImages.image}" styleClass="black">
-                                                <f:param name="id" value="#{cat.ncategoriaid}"/>
-                                            </p:graphicImage>
-                                            <p:commandLink styleClass="ui-link" action="#{administracionMB.onClickCategoriesFilter}" ajax="false">
-                                                <f:param name="idparent" value="#{cat.ncategoriaid}"/>
+                                        <p:commandLink styleClass="ui-link" action="#{administracionMB.onClickCategoriesFilter}" ajax="false">
+                                            <f:param name="idparent" value="#{cat.ncategoriaid}"/>
+                                            <p:panelGrid columns="1" layout="grid" style="width:100%;text-align: center ">
+                                                <p:spacer/>
+                                                <p:graphicImage cache="false" value="#{categoriaImages.image}" styleClass="black">
+                                                    <f:param name="id" value="#{cat.ncategoriaid}"/>
+                                                </p:graphicImage>
                                                 <h:outputText value="#{cat.vnombre}" styleClass="Fs14 FontBold black"/>
-                                            </p:commandLink>
-                                            <p:spacer/>
-                                        </p:panelGrid>
+                                                <p:spacer/>
+                                            </p:panelGrid>
+                                        </p:commandLink>
                                     </p:carousel>
                                     <p:carousel value="#{administracionMB.listaPerfil}" 
                                                 var="per" headerText="Perfiles" styleClass="TexAlLeft Fs15"

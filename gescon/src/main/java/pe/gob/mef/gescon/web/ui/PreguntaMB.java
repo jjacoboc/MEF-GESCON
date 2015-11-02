@@ -684,7 +684,7 @@ public class PreguntaMB implements Serializable {
 
                 situacion = Integer.parseInt(this.getSelectedPregunta().getNsituacion().toString());
 
-                if (listaAsignacion.size() == 0 || flistaPregunta.isEmpty()) {
+                if (listaAsignacion.isEmpty() || flistaPregunta.isEmpty()) {
                     this.setfButton("false");
                     this.setfButtonUM("false");
                     this.setfButtonEspe("false");
@@ -695,7 +695,6 @@ public class PreguntaMB implements Serializable {
                     setSelectedAsignacion(getListaAsignacion().get(0));
 
                     AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
-                    getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
                     getSelectedAsignacion().setDfecharecepcion(new Date());
                     serviceasig.saveOrUpdate(getSelectedAsignacion());
 

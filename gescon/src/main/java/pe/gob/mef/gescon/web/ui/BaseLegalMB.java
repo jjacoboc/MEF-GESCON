@@ -71,6 +71,7 @@ public class BaseLegalMB implements Serializable {
     private final String temppath = "D:\\gescon\\temp\\";
     private String path = "D:\\gescon\\files\\bl\\";
     private List<BaseLegal> listaBaseLegal;
+    private List<BaseLegal> filteredListaBaseLegal;
     private BaseLegal selectedBaseLegal;
     private String nombre;
     private String numeroNorma;
@@ -112,6 +113,14 @@ public class BaseLegalMB implements Serializable {
      */
     public void setListaBaseLegal(List<BaseLegal> listaBaseLegal) {
         this.listaBaseLegal = listaBaseLegal;
+    }
+
+    public List<BaseLegal> getFilteredListaBaseLegal() {
+        return filteredListaBaseLegal;
+    }
+
+    public void setFilteredListaBaseLegal(List<BaseLegal> filteredListaBaseLegal) {
+        this.filteredListaBaseLegal = filteredListaBaseLegal;
     }
 
     /**

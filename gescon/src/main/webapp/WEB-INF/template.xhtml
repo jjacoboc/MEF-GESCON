@@ -17,7 +17,7 @@
         <h:outputScript library="js" name="calendar_es.js"/>
         <ui:insert name="head" />
     </h:head>
-
+    <f:loadBundle basename="pe.gob.mef.gescon.messages" var="msgs"/>
     <h:body>    
         <div id="menu-mask"></div>
 
@@ -55,7 +55,7 @@
         <p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
         
         <p:dialog widgetVar="statusDialog" modal="true" appendTo="@(body)" draggable="false" closable="false" resizable="false" showHeader="false">
-            <h:graphicImage library="images" name="loading.gif" style="border: 0;" />
+            <h:graphicImage library="spark-layout" name="images/preloader.gif" style="border: 0;" />
         </p:dialog>
 
         <h:outputStylesheet name="style.css" library="css"/>

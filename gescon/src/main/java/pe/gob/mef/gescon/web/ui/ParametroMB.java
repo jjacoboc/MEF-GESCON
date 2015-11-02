@@ -192,7 +192,7 @@ public class ParametroMB implements Serializable{
             }
             Parametro parametro = new Parametro();
             parametro.setVnombre(this.getNombre().trim().toUpperCase());
-            parametro.setVvalor(this.getValor().trim().toUpperCase());
+            parametro.setVvalor(this.getValor().trim());
             parametro.setVdescripcion(this.getDescripcion().trim());
             if (!errorValidation(parametro)) {
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -247,9 +247,9 @@ public class ParametroMB implements Serializable{
                 }
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user = loginMB.getUser();
-                this.getSelectedParametro().setVnombre(this.getSelectedParametro().getVnombre().toUpperCase());
-                this.getSelectedParametro().setVvalor(this.getSelectedParametro().getVvalor().toUpperCase());
-                this.getSelectedParametro().setVdescripcion(this.getSelectedParametro().getVdescripcion().toUpperCase());
+                this.getSelectedParametro().setVnombre(this.getSelectedParametro().getVnombre().trim().toUpperCase());
+                this.getSelectedParametro().setVvalor(this.getSelectedParametro().getVvalor().trim());
+                this.getSelectedParametro().setVdescripcion(this.getSelectedParametro().getVdescripcion().trim());
                 this.getSelectedParametro().setVusuariomodificacion(user.getVlogin());
                 this.getSelectedParametro().setDfechamodificacion(new Date());
                 ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");

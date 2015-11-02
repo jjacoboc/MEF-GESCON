@@ -13,32 +13,33 @@ import java.util.Date;
  *
  * @author JJacobo
  */
-public class User implements Serializable{
-    
-     private BigDecimal nusuarioid;
-     private String vlogin;
-     private String vnombres;
-     private String vapellidos;
-     private Date dfechanacimiento;
-     private BigDecimal nestado;
-     private BigDecimal nusuariomod;
-     private BigDecimal nusuariocreacion;
-     private Date dfechacreacion;
-     private String vsexo;
-     private String vdni;
-     private String vdpto;
-     private String vprov;
-     private String vdist;
-     private String vprofesion;
-     private String ventidad;
-     private String vpliego;
-     private String vcargo;
-     private String varea;
-     private String vsector;
-     private String vgobierno;
-    
-    public void User(){
-        
+public class User implements Serializable {
+
+    private BigDecimal nusuarioid;
+    private String vlogin;
+    private String vnombres;
+    private String vapellidos;
+    private Date dfechanacimiento;
+    private BigDecimal nestado;
+    private String vusuariomodificacion;
+    private String vusuariocreacion;
+    private Date dfechacreacion;
+    private Date dfechamodificacion;
+    private String vsexo;
+    private String vdni;
+    private String vdpto;
+    private String vprov;
+    private String vdist;
+    private String vprofesion;
+    private String ventidad;
+    private String vpliego;
+    private String vcargo;
+    private String varea;
+    private String vsector;
+    private String vgobierno;
+
+    public void User() {
+
     }
 
     /**
@@ -112,31 +113,31 @@ public class User implements Serializable{
     }
 
     /**
-     * @return the nusuariomod
+     * @return the vusuariomodificacion
      */
-    public BigDecimal getNusuariomod() {
-        return nusuariomod;
+    public String getVusuariomodificacion() {
+        return vusuariomodificacion;
     }
 
     /**
-     * @param nusuariomod the nusuariomod to set
+     * @param vusuariomodificacion the vusuariomodificacion to set
      */
-    public void setNusuariomod(BigDecimal nusuariomod) {
-        this.nusuariomod = nusuariomod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
     /**
-     * @return the nusuariocreacion
+     * @return the vusuariocreacion
      */
-    public BigDecimal getNusuariocreacion() {
-        return nusuariocreacion;
+    public String getVusuariocreacion() {
+        return vusuariocreacion;
     }
 
     /**
-     * @param nusuariocreacion the nusuariocreacion to set
+     * @param vusuariocreacion the vusuariocreacion to set
      */
-    public void setNusuariocreacion(BigDecimal nusuariocreacion) {
-        this.nusuariocreacion = nusuariocreacion;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     /**
@@ -151,6 +152,14 @@ public class User implements Serializable{
      */
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
+    }
+
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
+    }
+
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
 
     /**

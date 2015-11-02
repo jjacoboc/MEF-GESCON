@@ -44,6 +44,19 @@ public class PreguntaServiceImpl implements PreguntaService {
         }
         return preguntas;
     }
+    
+    @Override
+    public Pregunta getPreguntaById(BigDecimal id) throws Exception {
+        PreguntaDao preguntaDao = (PreguntaDao) ServiceFinder.findBean("PreguntaDao");
+        Tpregunta tpregunta = preguntaDao.getTpreguntaById(id);
+        Pregunta pregunta = new Pregunta();
+        if(tpregunta != null) {
+            BeanUtils.copyProperties(pregunta, tpregunta);
+        } else {
+            pregunta = null;
+        }
+        return pregunta;
+    }
 
     @Override
     public void saveOrUpdate(Pregunta pregunta) throws Exception {

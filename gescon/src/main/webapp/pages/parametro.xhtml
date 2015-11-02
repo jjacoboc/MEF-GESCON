@@ -3,6 +3,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="content">
@@ -17,7 +18,7 @@
                                     <p:commandButton  value="Nuevo" actionListener="#{parametroMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
                                     <p:dataTable id="tbl" value="#{parametroMB.listaParametro}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                                        <p:column style="width: 200px;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                        <p:column style="width: 220px;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                             <h:outputText value="#{row.vnombre}" styleClass="Fleft"/>
                                         </p:column>
@@ -43,15 +44,15 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 70px;">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink actionListener="#{parametroMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" title="Editar Parámetro">
+                                            <p:commandLink actionListener="#{parametroMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="Editar Parámetro">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
                                             </p:commandLink>
-                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Parametro" rendered="#{row.nactivo eq 0}">
+                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Parametro" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
                                             </p:commandLink>
-                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Parametro" rendered="#{row.nactivo eq 1}">
+                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Parametro" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
                                             </p:commandLink>
@@ -70,7 +71,7 @@
 
                                     <h:outputText value="*"/>
                                     <h:outputText value="Valor:"/>
-                                    <p:inputText size="50" value="#{parametroMB.valor}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" /> 
+                                    <pe:inputNumber value="#{parametroMB.valor}" styleClass="Fs14" maxlength="10" /> 
 
                                     <h:outputText value="*"/>
                                     <h:outputText value="Descripción:"/>
