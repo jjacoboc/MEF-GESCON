@@ -30,12 +30,15 @@ import org.primefaces.model.TreeNode;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.AsignacionService;
+import pe.gob.mef.gescon.service.CalificacionPreguntaService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.RespuestaHistService;
+import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
+import pe.gob.mef.gescon.web.bean.CalificacionPregunta;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Pregunta;
@@ -98,12 +101,17 @@ public class PreguntaMB implements Serializable {
     private List<Consulta> listaTargetVinculosCT;
     private List<Consulta> listaTargetVinculosConocimiento;
     private DualListModel<Consulta> pickListPregunta;
+    private BigDecimal cat1;
+    private List<CalificacionPregunta> listaCalificacion;
+    private CalificacionPregunta selectedCalificacion;
+    private BigDecimal calificacion;
+    private String comentarioCalificacion;
     /**
      * Creates a new instance of MaestroMB
      */
     public PreguntaMB() {
     }
-    public BigDecimal cat1;
+    
 
     /**
      * @return the listaPregunta
@@ -749,6 +757,46 @@ public class PreguntaMB implements Serializable {
         this.pickListPregunta = pickListPregunta;
     }
 
+    public BigDecimal getCat1() {
+        return cat1;
+    }
+
+    public void setCat1(BigDecimal cat1) {
+        this.cat1 = cat1;
+    }
+
+    public List<CalificacionPregunta> getListaCalificacion() {
+        return listaCalificacion;
+    }
+
+    public void setListaCalificacion(List<CalificacionPregunta> listaCalificacion) {
+        this.listaCalificacion = listaCalificacion;
+    }
+
+    public CalificacionPregunta getSelectedCalificacion() {
+        return selectedCalificacion;
+    }
+
+    public void setSelectedCalificacion(CalificacionPregunta selectedCalificacion) {
+        this.selectedCalificacion = selectedCalificacion;
+    }
+
+    public BigDecimal getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(BigDecimal calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    public String getComentarioCalificacion() {
+        return comentarioCalificacion;
+    }
+
+    public void setComentarioCalificacion(String comentarioCalificacion) {
+        this.comentarioCalificacion = comentarioCalificacion;
+    }
+
     @PostConstruct
     public void init() {
         try {
@@ -772,6 +820,22 @@ public class PreguntaMB implements Serializable {
         if (iter.hasNext() == true) {
             iter.remove();
             FacesContext.getCurrentInstance().renderResponse();
+        }
+    }
+    
+    public void clearCalificacion() {
+        try {
+            this.setSelectedCalificacion(null);
+            this.setComentarioCalificacion(StringUtils.EMPTY);
+            this.setCalificacion(null);
+            Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
+            if (iter.hasNext() == true) {
+                iter.remove();
+                FacesContext.getCurrentInstance().renderResponse();
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
         }
     }
 
@@ -1189,7 +1253,7 @@ public class PreguntaMB implements Serializable {
 
             cat2 = this.getSelectedPregunta().getNcategoriaid();
 
-            if (Integer.parseInt(cat1.toString()) != Integer.parseInt(cat2.toString())) {
+            if (Integer.parseInt(getCat1().toString()) != Integer.parseInt(cat2.toString())) {
                 this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("3")));
             } else {
                 this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("6")));
@@ -1575,4 +1639,125 @@ public class PreguntaMB implements Serializable {
         return pagina;
     }
 
+    public void toAddCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void addCalificacion(ActionEvent event) {
+        try {
+            if (this.getCalificacion() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getComentarioCalificacion())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            CalificacionPreguntaService calificacionService = (CalificacionPreguntaService) ServiceFinder.findBean("CalificacionPreguntaService");
+            CalificacionPregunta cal = new CalificacionPregunta();
+            cal.setNcalificacionid(calificacionService.getNextPK());
+            cal.setNpreguntaid(this.getSelectedPregunta().getNpreguntaid());
+            cal.setNcalificacion(this.getCalificacion());
+            cal.setVcomentario(StringUtils.capitalize(this.getComentarioCalificacion().trim()));
+            cal.setDfechacreacion(new Date());
+            cal.setVusuariocreacion(user.getVlogin());
+            calificacionService.saveOrUpdate(cal);
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedPregunta().getNpreguntaid()));
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (CalificacionPregunta c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
+            }
+            RequestContext.getCurrentInstance().execute("PF('calDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void toEditCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedCalificacion(this.getListaCalificacion().get(index));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void editCalificacion(ActionEvent event) {
+        try {
+            if (this.getSelectedCalificacion().getNcalificacion() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSelectedCalificacion().getVcomentario())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            CalificacionPreguntaService calificacionService = (CalificacionPreguntaService) ServiceFinder.findBean("CalificacionPreguntaService");
+            this.getSelectedCalificacion().setNcalificacion(this.getSelectedCalificacion().getNcalificacion());
+            this.getSelectedCalificacion().setVcomentario(StringUtils.capitalize(this.getSelectedCalificacion().getVcomentario().trim()));
+            this.getSelectedCalificacion().setDfechamodificacion(new Date());
+            this.getSelectedCalificacion().setVusuariomodificacion(user.getVlogin());
+            calificacionService.saveOrUpdate(this.getSelectedCalificacion());
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedPregunta().getNpreguntaid()));
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (CalificacionPregunta c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
+            }
+            RequestContext.getCurrentInstance().execute("PF('ecalDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void toDeleteCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedCalificacion(this.getListaCalificacion().get(index));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteCalificacion(ActionEvent event) {
+        try {
+            CalificacionPreguntaService calificacionService = (CalificacionPreguntaService) ServiceFinder.findBean("CalificacionPreguntaService");
+            calificacionService.delete(this.getSelectedCalificacion().getNcalificacionid());
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedPregunta().getNpreguntaid()));
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (CalificacionPregunta c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
 }

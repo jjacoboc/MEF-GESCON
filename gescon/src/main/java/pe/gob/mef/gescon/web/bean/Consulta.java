@@ -30,12 +30,12 @@ public class Consulta implements Serializable, Comparable<Consulta> {
     private BigDecimal idEstado;
     private String estado;
     private Date fechaPublicacion;
+    private Integer calificacion;
     private String usuario;
     private String usuarioNombre;
     private String elapsedTime;
 
     public Consulta() {
-
     }
 
     public BigDecimal getId() {
@@ -213,6 +213,14 @@ public class Consulta implements Serializable, Comparable<Consulta> {
      */
     public void setFechaPublicacion(Date fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
+    }
+
+    public Integer getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(Integer calificacion) {
+        this.calificacion = calificacion;
     }
 
     /**

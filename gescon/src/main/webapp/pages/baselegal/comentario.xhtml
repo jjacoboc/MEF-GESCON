@@ -15,39 +15,45 @@
     </style>
     <h:form id="fc">
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-        <p:panel header="#{buenaPracticaMB.selectedBuenaPractica.vtitulo}" styleClass="TexAlLeft">
+        <p:panel header="#{baseLegalMB.selectedBaseLegal.vnumero}" styleClass="TexAlLeft">
             <h:panelGrid columns="1" width="100%">
                 <h:panelGroup>
-                    <h:outputText value="#{msgs.bp_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{msgs.wk_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{buenaPracticaMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{baseLegalMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="15"/>
-                    <h:outputText value="#{msgs.bp_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{msgs.wk_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{buenaPracticaMB.selectedBuenaPractica.dfechapublicacion}" styleClass="Fs12" style="font-style: italic;">
+                    <h:outputText value="#{baseLegalMB.selectedBaseLegal.dfechapublicacion}" styleClass="Fs12" style="font-style: italic;">
                         <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                    </h:outputText>
+                    <p:spacer width="15"/>
+                    <h:outputText value="#{msgs.bl_lbl_rango}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{baseLegalMB.selectedBaseLegal.nrangoid}" styleClass="Fs12" style="font-style: italic;" >
+                        <f:converter converterId="converterRango"/>
                     </h:outputText>
                 </h:panelGroup>
                 <p:spacer/>
-                <p:commandButton value="#{msgs.bp_btn_calificacion}" actionListener="#{buenaPracticaMB.toAddCalificacion}" update=":tabview:calDialogForm:pgCal" 
+                <p:commandButton value="#{msgs.wk_btn_calificacion}" actionListener="#{baseLegalMB.toAddCalificacion}" update=":tabview:calDialogForm:pgCal" 
                                  oncomplete="PF('calDialog').show();" styleClass="ui-link Fs14" rendered="#{loginMB.user ne null}"/>
             </h:panelGrid>
             <h:panelGrid id="pgCal" columns="1" cellpadding="0" cellspacing="0" width="100%">
                 <table class="Wid100">
-                    <c:forEach items="#{buenaPracticaMB.listaCalificacion}" var="c" varStatus="vs">
+                    <c:forEach items="#{baseLegalMB.listaCalificacion}" var="c" varStatus="vs">
                         <tr>
                             <td>
                                 <h:panelGroup>
                                     <h:outputText value="#{c.usuarioNombre}" styleClass="Fs14 FontBold blue" />
                                     <p:spacer width="10"/>
                                     <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
-                                    <p:commandLink value="editar" actionListener="#{buenaPracticaMB.toEditCalificacion}" update=":tabview:ecalDialogForm:pgEcal" 
+                                    <p:commandLink value="editar" actionListener="#{baseLegalMB.toEditCalificacion}" update=":tabview:ecalDialogForm:pgEcal" 
                                                    oncomplete="PF('ecalDialog').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
                                         <f:param name="index" value="#{vs.index}"/>
                                     </p:commandLink>
                                     <h:outputText value=" ]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
                                     <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
-                                    <p:commandLink value="eliminar" actionListener="#{buenaPracticaMB.toDeleteCalificacion}" update=":tabview:ecalDialogForm:pgEcal" 
+                                    <p:commandLink value="eliminar" actionListener="#{baseLegalMB.toDeleteCalificacion}" update=":tabview:ecalDialogForm:pgEcal" 
                                                    oncomplete="PF('confirmDlg').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
                                         <f:param name="index" value="#{vs.index}"/>
                                     </p:commandLink>
@@ -75,61 +81,61 @@
         </p:panel>
     </h:form>
 
-    <p:dialog id="calDlg" header="#{msgs.bp_lbl_pnlCalificacion}" widgetVar="calDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+    <p:dialog id="calDlg" header="#{msgs.wk_lbl_pnlCalificacion}" widgetVar="calDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
         <h:form id="calDialogForm">
             <h:panelGrid id="pgCal" columns="1">
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_calificacion}"/>
+                    <h:outputText value="#{msgs.wk_lbl_calificacion}"/>
                 </h:panelGroup>
-                <p:rating value="#{buenaPracticaMB.calificacion}" />
+                <p:rating value="#{baseLegalMB.calificacion}" />
 
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_comentario}"/>
+                    <h:outputText value="#{msgs.wk_lbl_comentario}"/>
                 </h:panelGroup>
                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                    <p:inputTextarea value="#{buenaPracticaMB.comentario}" rows="5" cols="100" styleClass="Fs14"
+                    <p:inputTextarea value="#{baseLegalMB.comentarioCalificacion}" rows="5" cols="100" styleClass="Fs14"
                                      counter="display" maxlength="4000" counterTemplate="{0} caracteres restantes." />
                     <h:outputText id="display"/>
                 </h:panelGrid>
 
-                <p:commandButton value="#{msgs.bp_btn_addcalificacion}" actionListener="#{buenaPracticaMB.addCalificacion}" update=":tabview:fc:pgCal, :tabview:fc:growl" styleClass="ui-link Fs14"/>
+                <p:commandButton value="#{msgs.wk_btn_addcalificacion}" actionListener="#{baseLegalMB.addCalificacion}" update=":tabview:fc:pgCal, :tabview:fc:growl" styleClass="ui-link Fs14"/>
             </h:panelGrid>
         </h:form>
     </p:dialog>
 
-    <p:dialog id="ecalDlg" header="#{msgs.bp_lbl_pnlCalificacione}" widgetVar="ecalDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+    <p:dialog id="ecalDlg" header="#{msgs.wk_lbl_pnlCalificacione}" widgetVar="ecalDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
         <h:form id="ecalDialogForm">
             <h:panelGrid id="pgEcal" columns="1">
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_calificacion}"/>
+                    <h:outputText value="#{msgs.wk_lbl_calificacion}"/>
                 </h:panelGroup>
-                <p:rating value="#{buenaPracticaMB.selectedCalificacion.ncalificacion}" />
+                <p:rating value="#{baseLegalMB.selectedCalificacion.ncalificacion}" />
 
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_comentario}"/>
+                    <h:outputText value="#{msgs.wk_lbl_comentario}"/>
                 </h:panelGroup>
                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                    <p:inputTextarea value="#{buenaPracticaMB.selectedCalificacion.vcomentario}" rows="5" cols="100" styleClass="Fs14"
+                    <p:inputTextarea value="#{baseLegalMB.selectedCalificacion.vcomentario}" rows="5" cols="100" styleClass="Fs14"
                                      counter="display" maxlength="4000" counterTemplate="{0} caracteres restantes." />
                     <h:outputText id="display"/>
                 </h:panelGrid>
 
-                <p:commandButton value="#{msgs.bp_btn_editcalificacion}" actionListener="#{buenaPracticaMB.editCalificacion}" update=":tabview:fc:pgCal, :tabview:fc:growl" styleClass="ui-link Fs14"/>
+                <p:commandButton value="#{msgs.wk_btn_editcalificacion}" actionListener="#{baseLegalMB.editCalificacion}" update=":tabview:fc:pgCal, :tabview:fc:growl" styleClass="ui-link Fs14"/>
             </h:panelGrid>
         </h:form>
     </p:dialog>
 
     <p:confirmDialog appendTo="@(body)" message="Se procederá a eliminar el comentario. Desea Continuar?" header="ELIMINAR COMENTARIO" widgetVar="confirmDlg">
         <h:form id="confirmDlgForm">
-            <p:commandButton value="SI" oncomplete="PF('confirmDlg').hide()" update=":tabview:fc:pgCal, :tabview:fc:growl" actionListener="#{buenaPracticaMB.deleteCalificacion}" styleClass="ui-confirmdialog-yes" icon="fa fa-check Fs14 white"/>
+            <p:commandButton value="SI" oncomplete="PF('confirmDlg').hide()" update=":tabview:fc:pgCal, :tabview:fc:growl" actionListener="#{baseLegalMB.deleteCalificacion}" styleClass="ui-confirmdialog-yes" icon="fa fa-check Fs14 white"/>
             <p:commandButton value="NO" onclick="PF('confirmDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
         </h:form>
     </p:confirmDialog>

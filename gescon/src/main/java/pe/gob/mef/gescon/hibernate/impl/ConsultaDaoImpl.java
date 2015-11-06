@@ -52,15 +52,17 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            sql.append("SELECT x.ID, x.NOMBRE, x.SUMILLA, x.IDCATEGORIA, x.CATEGORIA, ");
-            sql.append("       x.FECHA, x.IDTIPOCONOCIMIENTO, x.TIPOCONOCIMIENTO, x.IDESTADO, x.ESTADO ");
+            sql.append("SELECT x.ID, x.NOMBRE, x.SUMILLA, x.IDCATEGORIA, x.CATEGORIA, x.FECHA, ");
+            sql.append("       x.IDTIPOCONOCIMIENTO, x.TIPOCONOCIMIENTO, x.IDESTADO, x.ESTADO, x.SUMA, x.CONTADOR ");
             sql.append("FROM (SELECT ");
             sql.append("            a.nbaselegalid AS ID, a.vnumero AS NOMBRE, a.vnombre AS SUMILLA, ");
             sql.append("            a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
-            sql.append("            1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, c.vnombre AS ESTADO ");
+            sql.append("            1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, c.vnombre AS ESTADO, ");
+            sql.append("            NVL(SUM(e.ncalificacion),0) AS SUMA, NVL(COUNT(e.ncalificacion),0) AS CONTADOR ");
             sql.append("        FROM TBASELEGAL a ");
             sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
             sql.append("        INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
+            sql.append("        LEFT OUTER JOIN TCALIFICACION_BASELEGAL e ON a.nbaselegalid = e.nbaselegalid ");
             sql.append("        WHERE a.nactivo = :ACTIVO ");
             sql.append("        AND c.nestadoid IN (3,4,5,6) AND b.NESTADO = 1 ");
             if(StringUtils.isNotBlank(fCategoria)) {
@@ -75,20 +77,24 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fText != null) {
                 sql.append("    AND a.vnombre LIKE '%").append(fText).append("%' ");
             }
+            sql.append("        GROUP BY a.nbaselegalid, a.vnumero, a.vnombre, a.ncategoriaid, b.vnombre, ");
+            sql.append("        a.dfechapublicacion, 1, 'Base Legal', a.nestadoid, c.vnombre ");
             sql.append("        ) x ");
             sql.append("WHERE 1 IN (").append(fType).append(") "); //BASE LEGAL
             sql.append("UNION ");
-            sql.append("SELECT y.ID, y.NOMBRE, y.SUMILLA, y.IDCATEGORIA, y.CATEGORIA, ");
-            sql.append("       y.FECHA, y.IDTIPOCONOCIMIENTO, y.TIPOCONOCIMIENTO, y.IDESTADO, y.ESTADO ");
+            sql.append("SELECT y.ID, y.NOMBRE, y.SUMILLA, y.IDCATEGORIA, y.CATEGORIA, y.FECHA, ");
+            sql.append("       y.IDTIPOCONOCIMIENTO, y.TIPOCONOCIMIENTO, y.IDESTADO, y.ESTADO, y.SUMA, y.CONTADOR ");
             sql.append("FROM (SELECT ");
             sql.append("            a.npreguntaid AS ID, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, a.ncategoriaid AS IDCATEGORIA, ");
             sql.append("            b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, 2 AS IDTIPOCONOCIMIENTO, ");
-            sql.append("            'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
+            sql.append("            'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO, ");
+            sql.append("            NVL(SUM(e.ncalificacion),0) AS SUMA, NVL(COUNT(e.ncalificacion),0) AS CONTADOR ");
             sql.append("        FROM TPREGUNTA a ");
             sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
             sql.append("        INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
+            sql.append("        LEFT OUTER JOIN TCALIFICACION_PREGUNTA e ON a.npreguntaid = e.npreguntaid ");
             sql.append("        WHERE a.nactivo = :ACTIVO ");
-            sql.append("        AND c.nsituacionid = 6 AND b.NESTADO = 1");
+            sql.append("        AND c.nsituacionid = 6 AND b.NESTADO = 1 ");
             if(StringUtils.isNotBlank(fCategoria)) {
                 sql.append("    AND a.ncategoriaid IN (").append(fCategoria).append(") ");
             }
@@ -101,22 +107,26 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fText != null) {
                 sql.append("    AND a.vdetalle LIKE '%").append(fText).append("%' ");
             }
+            sql.append("        GROUP BY a.npreguntaid, a.vasunto, a.vdetalle, a.ncategoriaid, b.vnombre, ");
+            sql.append("        a.dfechapublicacion, 2, 'Preguntas y Respuestas', a.nsituacionid, c.vnombre ");
             sql.append("        ) y ");
             sql.append("WHERE 2 IN (").append(fType).append(") "); //PREGUNTAS Y RESPUESTAS
             sql.append("UNION ");
-            sql.append("SELECT z.ID, z.NOMBRE, z.SUMILLA, z.IDCATEGORIA, z.CATEGORIA, ");
-            sql.append("       z.FECHA, z.IDTIPOCONOCIMIENTO, z.TIPOCONOCIMIENTO, z.IDESTADO, z.ESTADO ");
+            sql.append("SELECT z.ID, z.NOMBRE, z.SUMILLA, z.IDCATEGORIA, z.CATEGORIA, z.FECHA, ");
+            sql.append("       z.IDTIPOCONOCIMIENTO, z.TIPOCONOCIMIENTO, z.IDESTADO, z.ESTADO, z.SUMA, z.CONTADOR ");
             sql.append("FROM (SELECT ");
             sql.append("            a.nconocimientoid AS ID, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
             sql.append("            a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
             sql.append("            a.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, d.vnombre AS TIPOCONOCIMIENTO, ");
-            sql.append("            a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
+            sql.append("            a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO, NVL(SUM(e.ncalificacion),0) AS SUMA, ");
+            sql.append("            NVL(COUNT(e.ncalificacion),0) AS CONTADOR ");
             sql.append("        FROM TCONOCIMIENTO a ");
             sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
             sql.append("        INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
             sql.append("        INNER JOIN MTTIPO_CONOCIMIENTO d ON a.ntpoconocimientoid = d.ntpoconocimientoid ");
+            sql.append("        LEFT OUTER JOIN TCALIFICACION e ON a.nconocimientoid = e.nconocimientoid ");
             sql.append("        WHERE a.nactivo = :ACTIVO ");
-            sql.append("        AND c.nsituacionid = 6 AND b.nestado = 1");
+            sql.append("        AND c.nsituacionid = 6 AND b.nestado = 1 ");
             if(StringUtils.isNotBlank(fCategoria)) {
                 sql.append("    AND a.ncategoriaid IN (").append(fCategoria).append(") ");
             }
@@ -129,8 +139,10 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fText != null) {
                 sql.append("    AND a.vdescripcion LIKE '%").append(fText).append("%' ");
             }
+            sql.append("        GROUP BY a.nconocimientoid, a.vtitulo, a.vdescripcion, a.ncategoriaid, b.vnombre, ");
+            sql.append("        a.dfechapublicacion, a.ntpoconocimientoid, d.vnombre, a.nsituacionid, c.vnombre ");
             sql.append("        ) z ");
-            sql.append("WHERE 3 IN (").append(fType).append(") "); //WIKI
+            sql.append("WHERE (3 IN (").append(fType).append(") OR 4 IN (").append(fType).append(") OR 5 IN (").append(fType).append(") OR 6 IN (").append(fType).append(")) "); //WIKI            
             sql.append("ORDER BY 7 DESC ");
 
             object = getHibernateTemplate().execute(

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.hibernate.dao.ConsultaDao;
@@ -43,6 +44,14 @@ public class ConsultaServiceImpl implements ConsultaService{
                     c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
                     c.setIdEstado((BigDecimal) map.get("IDESTADO"));
                     c.setEstado((String) map.get("ESTADO"));
+                    BigDecimal contador = (BigDecimal) map.get("CONTADOR");
+                    BigDecimal suma = (BigDecimal) map.get("SUMA");
+                    if(BigDecimal.ZERO.equals(contador)) {
+                        c.setCalificacion(BigDecimal.ZERO.intValue());
+                    } else {
+                        int calificacion = Math.round(Float.parseFloat(suma.toString()) / Integer.parseInt(contador.toString()));
+                        c.setCalificacion(calificacion);
+                    }
                     lista.add(c);
                 }
             }

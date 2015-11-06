@@ -35,6 +35,7 @@
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tvinculo.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/MtestadoBaselegal.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TseccionHist.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TcalificacionPregunta.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtsituacion.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TvinculoPregunta.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tasignacion.hbm.xml"/>
@@ -45,6 +46,7 @@
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Timplementacion.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TarchivoConocimiento.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtcategoria.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TcalificacionBaselegal.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tarchivo.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tmaestrodetalle.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtentidad.hbm.xml"/>

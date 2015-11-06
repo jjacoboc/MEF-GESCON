@@ -23,7 +23,9 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.ArchivoConocimientoService;
+import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.BaseLegalService;
+import pe.gob.mef.gescon.service.CalificacionPreguntaService;
 import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
@@ -41,6 +43,7 @@ import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Calificacion;
+import pe.gob.mef.gescon.web.bean.CalificacionPregunta;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Discusion;
@@ -418,20 +421,22 @@ public class ConsultaMB implements Serializable {
                     bl.setChkMancomunidades(bl.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     bl.setSelectedCategoria(categoriaService.getCategoriaById(bl.getSelectedBaseLegal().getNcategoriaid()));
+                    ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
+                    bl.getSelectedBaseLegal().setArchivo(aservice.getLastArchivoByBaseLegal(bl.getSelectedBaseLegal()));
                     bl.setListaTarget(service.getTbaselegalesLinkedById(bl.getSelectedBaseLegal().getNbaselegalid()));
                     JSFUtils.getSession().setAttribute("baseLegalMB", bl);
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/baselegal/ver.xhtml");
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/baselegal/vistaConsulta.xhtml");
                     break;
                 }
                 case 2: { //Preguntas y respuestas
                     PreguntaMB pr = new PreguntaMB();
                     PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-                    pr.setSelectedPregunta(service.getPreguntaById(BigDecimal.valueOf(id)));           
+                    pr.setSelectedPregunta(service.getPreguntaById(BigDecimal.valueOf(id)));
+                    CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                    pr.setSelectedCategoria(categoriaService.getCategoriaById(pr.getSelectedPregunta().getNcategoriaid()));
                     pr.setEntidad(service.getNomEntidadbyIdEntidad(pr.getSelectedPregunta().getNentidadid()));
-
                     pr.setListaSourceVinculos(new ArrayList<Consulta>());
                     pr.setListaTargetVinculos(new ArrayList<Consulta>());
-
                     pr.setListaTargetVinculosConocimiento(new ArrayList<Consulta>());
                     pr.setListaTargetVinculosBL(new ArrayList<Consulta>());
                     pr.setListaTargetVinculosPR(new ArrayList<Consulta>());
@@ -441,54 +446,46 @@ public class ConsultaMB implements Serializable {
                     pr.setListaTargetVinculosOM(new ArrayList<Consulta>());
 
                     HashMap filters = new HashMap();
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("1")));
                     filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    filters.put("ntipoconocimientoid", Constante.BASELEGAL);
                     pr.getListaTargetVinculosBL().addAll(service.getConcimientosVinculados(filters));
-
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("2")));
-                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    filters.put("ntipoconocimientoid", Constante.PREGUNTAS);
                     pr.getListaTargetVinculosPR().addAll(service.getConcimientosVinculados(filters));
-
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("3")));
-                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    filters.put("ntipoconocimientoid", Constante.WIKI);
                     pr.getListaTargetVinculosWK().addAll(service.getConcimientosVinculados(filters));
-
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("4")));
-                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    filters.put("ntipoconocimientoid", Constante.CONTENIDO);
                     pr.getListaTargetVinculosCT().addAll(service.getConcimientosVinculados(filters));
-
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("5")));
-                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    filters.put("ntipoconocimientoid", Constante.BUENAPRACTICA);
                     pr.getListaTargetVinculosBP().addAll(service.getConcimientosVinculados(filters));
-
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("6")));
-                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    filters.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA);
                     pr.getListaTargetVinculosOM().addAll(service.getConcimientosVinculados(filters));
-
-                    if (pr.getListaTargetVinculosBL() == null) {
-                    } else {
+                    if (pr.getListaTargetVinculosBL() != null) {
                         pr.getListaTargetVinculosConocimiento().addAll(pr.getListaTargetVinculosBL());
                     }
-                    if (pr.getListaTargetVinculosBP() == null) {
-                    } else {
+                    if (pr.getListaTargetVinculosBP() != null) {
                         pr.getListaTargetVinculosConocimiento().addAll(pr.getListaTargetVinculosBP());
                     }
-                    if (pr.getListaTargetVinculosCT() == null) {
-                    } else {
+                    if (pr.getListaTargetVinculosCT() != null) {
                         pr.getListaTargetVinculosConocimiento().addAll(pr.getListaTargetVinculosCT());
                     }
-                    if (pr.getListaTargetVinculosOM() == null) {
-                    } else {
+                    if (pr.getListaTargetVinculosOM() != null) {
                         pr.getListaTargetVinculosConocimiento().addAll(pr.getListaTargetVinculosOM());
                     }
-                    if (pr.getListaTargetVinculosWK() == null) {
-                    } else {
+                    if (pr.getListaTargetVinculosWK() != null) {
                         pr.getListaTargetVinculosConocimiento().addAll(pr.getListaTargetVinculosWK());
                     }
+                    CalificacionPreguntaService calificacionService = (CalificacionPreguntaService) ServiceFinder.findBean("CalificacionPreguntaService");
+                    pr.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(pr.getSelectedPregunta().getNpreguntaid()));
+                    if(CollectionUtils.isNotEmpty(pr.getListaCalificacion())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (CalificacionPregunta calificacion : pr.getListaCalificacion()) {
+                            User user = userService.getUserByLogin(calificacion.getVusuariocreacion());
+                            calificacion.setUsuarioNombre(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
                     JSFUtils.getSession().setAttribute("preguntaMB", pr);
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/pregunta/ver.xhtml");
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/pregunta/vistaConsulta.xhtml");
                     break;
-
                 }
                 case 3: { //Wiki
                     WikiMB mb = new WikiMB();

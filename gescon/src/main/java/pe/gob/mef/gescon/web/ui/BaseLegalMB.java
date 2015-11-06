@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.TransferEvent;
@@ -48,14 +49,17 @@ import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
 import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.BaseLegalService;
+import pe.gob.mef.gescon.service.CalificacionBaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.RangoService;
+import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.service.VinculoBaseLegalService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
 import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
+import pe.gob.mef.gescon.web.bean.CalificacionBaselegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.User;
 import pe.gob.mef.gescon.web.bean.VinculoBaselegal;
@@ -96,7 +100,11 @@ public class BaseLegalMB implements Serializable {
     private Categoria selectedCategoria;
     private List<BaseLegal> listaSource;
     private List<BaseLegal> listaTarget;
-    private DualListModel<BaseLegal> pickList;    
+    private DualListModel<BaseLegal> pickList;
+    private List<CalificacionBaselegal> listaCalificacion;
+    private CalificacionBaselegal selectedCalificacion;
+    private BigDecimal calificacion;
+    private String comentarioCalificacion;
 
     /**
      * Creates a new instance of BaseLegalMB
@@ -423,6 +431,38 @@ public class BaseLegalMB implements Serializable {
     public void setPickList(DualListModel<BaseLegal> pickList) {
         this.pickList = pickList;
     }
+
+    public List<CalificacionBaselegal> getListaCalificacion() {
+        return listaCalificacion;
+    }
+
+    public void setListaCalificacion(List<CalificacionBaselegal> listaCalificacion) {
+        this.listaCalificacion = listaCalificacion;
+    }
+
+    public CalificacionBaselegal getSelectedCalificacion() {
+        return selectedCalificacion;
+    }
+
+    public void setSelectedCalificacion(CalificacionBaselegal selectedCalificacion) {
+        this.selectedCalificacion = selectedCalificacion;
+    }
+
+    public BigDecimal getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(BigDecimal calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    public String getComentarioCalificacion() {
+        return comentarioCalificacion;
+    }
+
+    public void setComentarioCalificacion(String comentarioCalificacion) {
+        this.comentarioCalificacion = comentarioCalificacion;
+    }
     
     @PostConstruct
     public void init() {
@@ -467,6 +507,22 @@ public class BaseLegalMB implements Serializable {
         if (iter.hasNext() == true) {
             iter.remove();
             FacesContext.getCurrentInstance().renderResponse();
+        }
+    }
+    
+    public void clearCalificacion() {
+        try {
+            this.setSelectedCalificacion(null);
+            this.setComentarioCalificacion(StringUtils.EMPTY);
+            this.setCalificacion(null);
+            Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
+            if (iter.hasNext() == true) {
+                iter.remove();
+                FacesContext.getCurrentInstance().renderResponse();
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
         }
     }
     
@@ -1078,6 +1134,128 @@ public class BaseLegalMB implements Serializable {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void toAddCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void addCalificacion(ActionEvent event) {
+        try {
+            if (this.getCalificacion() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getComentarioCalificacion())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            CalificacionBaseLegalService calificacionService = (CalificacionBaseLegalService) ServiceFinder.findBean("CalificacionBaseLegalService");
+            CalificacionBaselegal cal = new CalificacionBaselegal();
+            cal.setNcalificacionid(calificacionService.getNextPK());
+            cal.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
+            cal.setNcalificacion(this.getCalificacion());
+            cal.setVcomentario(StringUtils.capitalize(this.getComentarioCalificacion().trim()));
+            cal.setDfechacreacion(new Date());
+            cal.setVusuariocreacion(user.getVlogin());
+            calificacionService.saveOrUpdate(cal);
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedBaseLegal().getNbaselegalid()));
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (CalificacionBaselegal c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
+            }
+            RequestContext.getCurrentInstance().execute("PF('calDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void toEditCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedCalificacion(this.getListaCalificacion().get(index));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void editCalificacion(ActionEvent event) {
+        try {
+            if (this.getSelectedCalificacion().getNcalificacion() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSelectedCalificacion().getVcomentario())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            CalificacionBaseLegalService calificacionService = (CalificacionBaseLegalService) ServiceFinder.findBean("CalificacionBaseLegalService");
+            this.getSelectedCalificacion().setNcalificacion(this.getSelectedCalificacion().getNcalificacion());
+            this.getSelectedCalificacion().setVcomentario(StringUtils.capitalize(this.getSelectedCalificacion().getVcomentario().trim()));
+            this.getSelectedCalificacion().setDfechamodificacion(new Date());
+            this.getSelectedCalificacion().setVusuariomodificacion(user.getVlogin());
+            calificacionService.saveOrUpdate(this.getSelectedCalificacion());
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedBaseLegal().getNbaselegalid()));
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (CalificacionBaselegal c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
+            }
+            RequestContext.getCurrentInstance().execute("PF('ecalDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void toDeleteCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedCalificacion(this.getListaCalificacion().get(index));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteCalificacion(ActionEvent event) {
+        try {
+            CalificacionBaseLegalService calificacionService = (CalificacionBaseLegalService) ServiceFinder.findBean("CalificacionBaseLegalService");
+            calificacionService.delete(this.getSelectedCalificacion().getNcalificacionid());
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedBaseLegal().getNbaselegalid()));
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (CalificacionBaselegal c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
             e.printStackTrace();
         }
     }
