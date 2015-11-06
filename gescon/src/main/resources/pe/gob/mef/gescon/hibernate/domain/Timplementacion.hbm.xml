@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 27/10/2015 06:08:14 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pe.gob.mef.gescon.hibernate.domain.Timplementacion" table="TIMPLEMENTACION" schema="GESCON" optimistic-lock="version">
+        <id name="nimplementacionid" type="big_decimal">
+            <column name="NIMPLEMENTACIONID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tconocimiento" class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" fetch="select">
+            <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="vdescripcion" type="string">
+            <column name="VDESCRIPCION" length="400" />
+        </property>
+        <property name="vtitulo" type="string">
+            <column name="VTITULO" length="20" />
+        </property>
+        <property name="vcontenido" type="string">
+            <column name="VCONTENIDO" length="1000" />
+        </property>
+        <property name="vmsjespecialista" type="string">
+            <column name="VMSJESPECIALISTA" length="250" />
+        </property>
+        <property name="vmsjmoderador" type="string">
+            <column name="VMSJMODERADOR" length="250" />
+        </property>
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
+        </property>
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
+        </property>
+        <property name="dfechacreacion" type="serializable">
+            <column name="DFECHACREACION" />
+        </property>
+        <property name="dfechamodificacion" type="serializable">
+            <column name="DFECHAMODIFICACION" />
+        </property>
+        <set name="tvinculoImplementacions" table="TVINCULO_IMPLEMENTACION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NIMPLEMENTACIONID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TvinculoImplementacion" />
+        </set>
+    </class>
+</hibernate-mapping>

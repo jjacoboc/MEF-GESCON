@@ -17,7 +17,6 @@
         </composite-id>
         <many-to-one name="tconocimiento" class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" update="false" insert="false" fetch="select">
             <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-            <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <many-to-one name="mtcategoria" class="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" update="false" insert="false" fetch="select">
             <column name="NCATEGORIAID" precision="22" scale="0" not-null="true" />

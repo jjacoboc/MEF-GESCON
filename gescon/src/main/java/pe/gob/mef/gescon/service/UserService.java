@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.web.bean.User;
 
 /**
@@ -19,4 +20,15 @@ public interface UserService {
     public void saveOrUpdate(User user) throws Exception;
     public List<User> getUsers() throws Exception;
     public User getUserByLogin(String login) throws Exception;
+    
+    /*
+       cnishimura create
+    */
+    /**
+     * @since cnishimura 31/10/2015
+     * @param nusuarioid
+     * @return
+     * @throws Exception 
+     */
+    User getMtuserById(BigDecimal nusuarioid) throws Exception;
 }

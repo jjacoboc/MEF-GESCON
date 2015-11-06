@@ -20,10 +20,6 @@
                                     <p:dataTable id="tbl" value="#{baseLegalMB.listaBaseLegal}" filteredValue="#{baseLegalMB.filteredListaBaseLegal}" 
                                                  var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
-                                        <p:column style="text-align: center; width: 20px;">
-                                            <f:facet name="header">ID</f:facet>
-                                            <h:outputText value="#{row.nbaselegalid}"/>
-                                        </p:column>
                                         <p:column style="text-align: center; width: 120px;" sortBy="#{row.vnumero}" filterBy="#{row.vnumero}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna01}"/></f:facet>
                                             <p:commandLink id="num" styleClass="ui-link Fs14 Unselectable" global="false">

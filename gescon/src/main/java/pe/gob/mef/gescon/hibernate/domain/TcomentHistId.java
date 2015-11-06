@@ -1,5 +1,5 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 27/10/2015 06:08:09 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -10,28 +10,19 @@ import java.math.BigDecimal;
 public class TcomentHistId  implements java.io.Serializable {
 
 
-     private BigDecimal ncomentariohid;
      private BigDecimal nhistorialid;
      private BigDecimal nconocimientoid;
-     private BigDecimal ntpoconocimientoid;
+     private BigDecimal ncomentariohid;
 
     public TcomentHistId() {
     }
 
-    public TcomentHistId(BigDecimal ncomentariohid, BigDecimal nhistorialid, BigDecimal nconocimientoid, BigDecimal ntpoconocimientoid) {
-       this.ncomentariohid = ncomentariohid;
+    public TcomentHistId(BigDecimal nhistorialid, BigDecimal nconocimientoid, BigDecimal ncomentariohid) {
        this.nhistorialid = nhistorialid;
        this.nconocimientoid = nconocimientoid;
-       this.ntpoconocimientoid = ntpoconocimientoid;
+       this.ncomentariohid = ncomentariohid;
     }
    
-    public BigDecimal getNcomentariohid() {
-        return this.ncomentariohid;
-    }
-    
-    public void setNcomentariohid(BigDecimal ncomentariohid) {
-        this.ncomentariohid = ncomentariohid;
-    }
     public BigDecimal getNhistorialid() {
         return this.nhistorialid;
     }
@@ -46,15 +37,34 @@ public class TcomentHistId  implements java.io.Serializable {
     public void setNconocimientoid(BigDecimal nconocimientoid) {
         this.nconocimientoid = nconocimientoid;
     }
-    public BigDecimal getNtpoconocimientoid() {
-        return this.ntpoconocimientoid;
+    public BigDecimal getNcomentariohid() {
+        return this.ncomentariohid;
     }
     
-    public void setNtpoconocimientoid(BigDecimal ntpoconocimientoid) {
-        this.ntpoconocimientoid = ntpoconocimientoid;
+    public void setNcomentariohid(BigDecimal ncomentariohid) {
+        this.ncomentariohid = ncomentariohid;
     }
 
 
+   public boolean equals(Object other) {
+         if ( (this == other ) ) return true;
+		 if ( (other == null ) ) return false;
+		 if ( !(other instanceof TcomentHistId) ) return false;
+		 TcomentHistId castOther = ( TcomentHistId ) other; 
+         
+		 return ( (this.getNhistorialid()==castOther.getNhistorialid()) || ( this.getNhistorialid()!=null && castOther.getNhistorialid()!=null && this.getNhistorialid().equals(castOther.getNhistorialid()) ) )
+ && ( (this.getNconocimientoid()==castOther.getNconocimientoid()) || ( this.getNconocimientoid()!=null && castOther.getNconocimientoid()!=null && this.getNconocimientoid().equals(castOther.getNconocimientoid()) ) )
+ && ( (this.getNcomentariohid()==castOther.getNcomentariohid()) || ( this.getNcomentariohid()!=null && castOther.getNcomentariohid()!=null && this.getNcomentariohid().equals(castOther.getNcomentariohid()) ) );
+   }
+   
+   public int hashCode() {
+         int result = 17;
+         
+         result = 37 * result + ( getNhistorialid() == null ? 0 : this.getNhistorialid().hashCode() );
+         result = 37 * result + ( getNconocimientoid() == null ? 0 : this.getNconocimientoid().hashCode() );
+         result = 37 * result + ( getNcomentariohid() == null ? 0 : this.getNcomentariohid().hashCode() );
+         return result;
+   }   
 
 
 }

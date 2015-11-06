@@ -1,5 +1,5 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 27/10/2015 06:08:09 PM by Hibernate Tools 4.3.1
 
 
 import java.math.BigDecimal;
@@ -12,15 +12,13 @@ public class TvinculoId  implements java.io.Serializable {
 
      private BigDecimal nvinculoid;
      private BigDecimal nconocimientoid;
-     private BigDecimal ntpoconocimientoid;
 
     public TvinculoId() {
     }
 
-    public TvinculoId(BigDecimal nvinculoid, BigDecimal nconocimientoid, BigDecimal ntpoconocimientoid) {
+    public TvinculoId(BigDecimal nvinculoid, BigDecimal nconocimientoid) {
        this.nvinculoid = nvinculoid;
        this.nconocimientoid = nconocimientoid;
-       this.ntpoconocimientoid = ntpoconocimientoid;
     }
    
     public BigDecimal getNvinculoid() {
@@ -37,15 +35,25 @@ public class TvinculoId  implements java.io.Serializable {
     public void setNconocimientoid(BigDecimal nconocimientoid) {
         this.nconocimientoid = nconocimientoid;
     }
-    public BigDecimal getNtpoconocimientoid() {
-        return this.ntpoconocimientoid;
-    }
-    
-    public void setNtpoconocimientoid(BigDecimal ntpoconocimientoid) {
-        this.ntpoconocimientoid = ntpoconocimientoid;
-    }
 
 
+   public boolean equals(Object other) {
+         if ( (this == other ) ) return true;
+		 if ( (other == null ) ) return false;
+		 if ( !(other instanceof TvinculoId) ) return false;
+		 TvinculoId castOther = ( TvinculoId ) other; 
+         
+		 return ( (this.getNvinculoid()==castOther.getNvinculoid()) || ( this.getNvinculoid()!=null && castOther.getNvinculoid()!=null && this.getNvinculoid().equals(castOther.getNvinculoid()) ) )
+ && ( (this.getNconocimientoid()==castOther.getNconocimientoid()) || ( this.getNconocimientoid()!=null && castOther.getNconocimientoid()!=null && this.getNconocimientoid().equals(castOther.getNconocimientoid()) ) );
+   }
+   
+   public int hashCode() {
+         int result = 17;
+         
+         result = 37 * result + ( getNvinculoid() == null ? 0 : this.getNvinculoid().hashCode() );
+         result = 37 * result + ( getNconocimientoid() == null ? 0 : this.getNconocimientoid().hashCode() );
+         return result;
+   }   
 
 
 }

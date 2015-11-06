@@ -1,19 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://java.sun.com/jsp/jstl/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
-
+      xmlns:p="http://primefaces.org/ui">
+    <style>
+        .ui-fieldset .ui-fieldset-legend {
+            padding-top: 4px;
+            padding-bottom:  4px;
+            padding-left:  5px;
+            padding-right:  5px;
+            font-size: 14px;
+        }
+        .ui-selectmanycheckbox tbody tr td label{
+            font-size: 12px;
+        }
+        .ui-selectmanycheckbox tbody tr td{
+            vertical-align: middle;
+        }
+        .ui-inputfield {
+            padding-top: 2px !important;
+            padding-bottom:  4px !important;
+            padding-left:  4px !important;
+            padding-right:  2px !important;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+        .ui-button .ui-button-text {
+            padding-top: 2px !important;
+            padding-bottom:  2px !important;
+            padding-left:  2px !important;
+            padding-right:  2px !important;
+            vertical-align: middle;
+        }
+        .ui-button span {
+            font-size: 14px;
+            vertical-align: middle;
+        }
+    </style>
     <h:form id="fm">
-        <h:panelGrid id="pgFiltro" columns="1" style="width: 100%;">
+        <h:panelGrid id="pgFiltro" columns="1">
             <h:outputText value="#{consultaMB.listaConsulta.size()} Resultados" rendered="#{not empty consultaMB.listaConsulta}" styleClass="FontBold" />
             <h:outputText value="0 Resultados" rendered="#{empty consultaMB.listaConsulta}" styleClass="FontBold" />
             <h:outputText value="FILTROS DE BÚSQUEDA" styleClass="FontBold" />
@@ -38,15 +64,15 @@ and open the template in the editor.
                     </h:panelGrid>
                 </p:dataList>
             </p:fieldset>
-            <p:fieldset legend="Rango">
+            <p:fieldset legend="Rango" styleClass="fieldset-consulta">
                 <h:panelGrid columns="4" styleClass="panelcolumns2">
                     <p:calendar id="fromDate" locale="es" value="#{consultaMB.fechaInicio}" maxdate="#{consultaMB.fechaFin}" size="10" 
-                                pattern="dd/MM/yyyy" readonlyInput="true" showButtonPanel="true" navigator="true" styleClass="Fs16">
+                                pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
                         <p:ajax event="dateSelect" update=":fm:toDate"/>
                     </p:calendar>
                     <h:outputText value="al" />
                     <p:calendar id="toDate" locale="es" value="#{consultaMB.fechaFin}" mindate="#{consultaMB.fechaInicio}" size="10" 
-                                pattern="dd/MM/yyyy" readonlyInput="true" showButtonPanel="true" navigator="true" styleClass="Fs12">
+                                pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
                         <p:ajax event="dateSelect" update=":fm:fromDate"/>
                     </p:calendar>
                     <p:commandButton icon="fa fa-fw fa-chevron-right" actionListener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>

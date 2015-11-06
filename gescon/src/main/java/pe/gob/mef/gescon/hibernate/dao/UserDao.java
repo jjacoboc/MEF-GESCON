@@ -19,4 +19,11 @@ public interface UserDao {
     public void saveOrUpdate(Mtuser mtuser) throws Exception;
     public List<Mtuser> getMtusers() throws Exception;
     public Mtuser getMtuserByLogin(String login) throws Exception;
+    /**
+     * cnishimura
+     * @param login
+     * @return
+     * @throws Exception 
+     */
+    Mtuser getMtuserById(BigDecimal nusuarioid) throws Exception;
 }

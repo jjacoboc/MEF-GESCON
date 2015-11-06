@@ -56,6 +56,11 @@
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvincHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tvinculo.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoBaselegal.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tobservacion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Thistorial.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Timplementacion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoImplementacion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcategoriaUser.hbm.xml</value>
             </list>
         </property>
         <property name="hibernateProperties">

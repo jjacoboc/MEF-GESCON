@@ -20,6 +20,7 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.UserDao;
+import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 
 /**
@@ -67,6 +68,13 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao{
     public Mtuser getMtuserByLogin(String login) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtuser.class);
         criteria.add(Restrictions.eq("vlogin", login));
+        return (Mtuser) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
+    }
+
+    @Override
+    public Mtuser getMtuserById(BigDecimal nusuarioid) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Mtuser.class);
+        criteria.add(Restrictions.eq("nusuarioid", nusuarioid));
         return (Mtuser) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
 }

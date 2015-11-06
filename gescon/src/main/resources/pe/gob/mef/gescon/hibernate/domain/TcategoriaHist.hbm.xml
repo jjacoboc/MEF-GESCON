@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 11/09/2015 05:20:11 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 27/10/2015 06:08:14 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.TcategoriaHist" table="TCATEGORIA_HIST" schema="GESCON">
+    <class name="pe.gob.mef.gescon.hibernate.domain.TcategoriaHist" table="TCATEGORIA_HIST" schema="GESCON" optimistic-lock="version">
         <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TcategoriaHistId">
             <key-property name="ncategoriahid" type="big_decimal">
                 <column name="NCATEGORIAHID" precision="22" scale="0" />
@@ -14,13 +14,11 @@
             <key-property name="nconocimientoid" type="big_decimal">
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" />
             </key-property>
-            <key-property name="ntpoconocimientoid" type="big_decimal">
-                <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" />
-            </key-property>
         </composite-id>
-        <property name="ncategoriaid" type="string">
-            <column name="NCATEGORIAID" length="25" />
-        </property>
+        <many-to-one name="thistorial" class="pe.gob.mef.gescon.hibernate.domain.Thistorial" update="false" insert="false" fetch="select">
+            <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
+            <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
         <property name="nusuariomod" type="big_decimal">
             <column name="NUSUARIOMOD" precision="22" scale="0" />
         </property>

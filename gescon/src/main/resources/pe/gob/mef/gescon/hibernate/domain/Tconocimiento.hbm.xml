@@ -1,46 +1,42 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 11/09/2015 05:20:11 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 27/10/2015 06:08:14 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" table="TCONOCIMIENTO" schema="GESCON">
-        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TconocimientoId">
-            <key-property name="nconocimientoid" type="big_decimal">
-                <column name="NCONOCIMIENTOID" precision="22" scale="0" />
-            </key-property>
-            <key-property name="ntpoconocimientoid" type="big_decimal">
-                <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" />
-            </key-property>
-        </composite-id>
-        <many-to-one name="mttipoConocimiento" class="pe.gob.mef.gescon.hibernate.domain.MttipoConocimiento" update="false" insert="false" fetch="select">
-            <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+    <class name="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" table="TCONOCIMIENTO" schema="GESCON" optimistic-lock="version">
+        <id name="nconocimientoid" type="big_decimal">
+            <column name="NCONOCIMIENTOID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="mttipoConocimiento" class="pe.gob.mef.gescon.hibernate.domain.MttipoConocimiento" fetch="select">
+            <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" not-null="true"  />
+        </many-to-one>
+        <many-to-one name="mtcategoria" class="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" fetch="select">
+            <column name="NCATEGORIAID" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <property name="vdescripcion" type="string">
-            <column name="VDESCRIPCION" length="25" />
+            <column name="VDESCRIPCION" length="400" />
         </property>
         <property name="vtitulo" type="string">
             <column name="VTITULO" length="20" />
         </property>
-        <property name="nusuariomod" type="big_decimal">
-            <column name="NUSUARIOMOD" precision="22" scale="0" />
+        <property name="vusuariomod" type="string">
+            <column name="VUSUARIOMOD" length="25" />
         </property>
-        <property name="nusuariocreacion" type="big_decimal">
-            <column name="NUSUARIOCREACION" precision="22" scale="0" />
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
         </property>
-        <property name="dfechacreacion" type="date">
-            <column name="DFECHACREACION" length="7" />
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" length="6" />
         </property>
-        <property name="nundejecutora" type="big_decimal">
-            <column name="NUNDEJECUTORA" precision="22" scale="0" />
+        <property name="vejecutora" type="string">
+            <column name="VEJECUTORA" length="4" />
         </property>
         <property name="varchivo" type="string">
-            <column name="VARCHIVO" length="100" />
-        </property>
-        <property name="vrango" type="string">
-            <column name="VRANGO" length="20" />
+            <column name="VARCHIVO" length="400" />
         </property>
         <property name="vnumero" type="string">
-            <column name="VNUMERO" length="20" />
+            <column name="VNUMERO" length="25" />
         </property>
         <property name="vtema" type="string">
             <column name="VTEMA" length="250" />
@@ -57,38 +53,54 @@
         <property name="vtipo" type="string">
             <column name="VTIPO" length="20" />
         </property>
+        <property name="vcontenido" type="string">
+            <column name="VCONTENIDO" length="1000" />
+        </property>
+        <property name="nestado" type="big_decimal">
+            <column name="NESTADO" precision="22" scale="0" />
+        </property>
+        <property name="nsituacion" type="big_decimal">
+            <column name="NSITUACION" precision="22" scale="0" />
+        </property>
+        <property name="ndias" type="big_decimal">
+            <column name="NDIAS" precision="22" scale="0" />
+        </property>
+        <property name="vobservacion" type="string">
+            <column name="VOBSERVACION" length="500" />
+        </property>
         <set name="tvinculos" table="TVINCULO" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-                <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
             </key>
             <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tvinculo" />
         </set>
-        <set name="tcomentarios" table="TCOMENTARIO" inverse="true" lazy="true" fetch="select">
+        <set name="tobservacions" table="TOBSERVACION" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-                <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
             </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tcomentario" />
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tobservacion" />
         </set>
-        <set name="tcategoriaConocimientos" table="TCATEGORIA_CONOCIMIENTO" inverse="true" lazy="true" fetch="select">
+        <set name="thistorials" table="THISTORIAL" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-                <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
             </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TcategoriaConocimiento" />
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Thistorial" />
+        </set>
+        <set name="timplementacions" table="TIMPLEMENTACION" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Timplementacion" />
         </set>
         <set name="tdiscusions" table="TDISCUSION" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-                <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
             </key>
             <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tdiscusion" />
         </set>
         <set name="tcalificacions" table="TCALIFICACION" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-                <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
             </key>
             <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tcalificacion" />
         </set>

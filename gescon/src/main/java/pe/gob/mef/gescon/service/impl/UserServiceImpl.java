@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.UserDao;
+import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.ServiceFinder;
@@ -62,6 +63,15 @@ public class UserServiceImpl implements UserService{
             user = null;
         }        
         return user;
+    }
+
+    @Override
+    public User getMtuserById(BigDecimal nusuarioid) throws Exception {
+        User user = new User();
+        UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
+        Mtuser mtuser = userDao.getMtuserById(nusuarioid);
+        BeanUtils.copyProperties(user, mtuser);
+         return user;
     }
     
 }

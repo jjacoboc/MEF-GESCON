@@ -5,14 +5,18 @@
  */
 package pe.gob.mef.gescon.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
+import pe.gob.mef.gescon.hibernate.dao.CategoriaDao;
 import pe.gob.mef.gescon.hibernate.dao.TipoConocimientoDao;
+import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
 import pe.gob.mef.gescon.hibernate.domain.MttipoConocimiento;
 import pe.gob.mef.gescon.service.TipoConocimientoService;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.TipoConocimiento;
 
 /**
@@ -34,5 +38,22 @@ public class TipoConocimientoServiceImpl implements TipoConocimientoService{
         }
         return tipoConocimientos;
     }
+
+    /**
+     * cnishimura
+     * @param ntpoconocimientoid
+     * @return
+     * @throws Exception 
+     */
+    @Override
+    public TipoConocimiento getTipoConocimientoById(BigDecimal ntpoconocimientoid) throws Exception {
+        TipoConocimiento tipoConocimiento = new TipoConocimiento();
+        TipoConocimientoDao tipoConocimientoDao = (TipoConocimientoDao) ServiceFinder.findBean("TipoConocimientoDao");
+        MttipoConocimiento mttipoConocimiento = tipoConocimientoDao.getMttipoConocimientoById(ntpoconocimientoid);
+        BeanUtils.copyProperties(tipoConocimiento, mttipoConocimiento);
+        return tipoConocimiento;
+    
+    }
+    
     
 }

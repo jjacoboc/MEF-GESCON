@@ -5,6 +5,7 @@
  */
 package pe.gob.mef.gescon.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import pe.gob.mef.gescon.web.bean.TipoConocimiento;
 
@@ -15,4 +16,12 @@ import pe.gob.mef.gescon.web.bean.TipoConocimiento;
 public interface TipoConocimientoService {
     
     public List<TipoConocimiento> getTipoConocimientos() throws Exception;
+    
+    
+    /**
+     * cnishimura
+     * @return
+     * @throws Exception 
+     */
+    public TipoConocimiento getTipoConocimientoById(BigDecimal ntpoconocimientoid) throws Exception;
 }

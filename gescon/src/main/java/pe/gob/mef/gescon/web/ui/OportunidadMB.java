@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -43,15 +45,22 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
+import pe.gob.mef.gescon.hibernate.domain.MttipoConocimiento;
+import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
 import pe.gob.mef.gescon.web.bean.Categoria;
-import pe.gob.mef.gescon.web.bean.OportunidadMejora;
 import pe.gob.mef.gescon.web.bean.User;
-import pe.gob.mef.gescon.hibernate.domain.Toportunidadmejora;
-import pe.gob.mef.gescon.service.OportunidadMejoraService;
+import pe.gob.mef.gescon.service.ConocimientoService;
+import pe.gob.mef.gescon.service.TipoConocimientoService;
+import pe.gob.mef.gescon.web.bean.Conocimiento;
+import pe.gob.mef.gescon.web.bean.TipoConocimiento;
+
+
+
 /**
  *
  * @author CNISHIMURA
@@ -64,22 +73,22 @@ public class OportunidadMB implements Serializable {
     private static final Log log = LogFactory.getLog(OportunidadMB.class);
     private final String temppath = "D:\\gescon\\temp\\";
     private String path = "D:\\gescon\\files\\om\\";
-    private List<OportunidadMejora> listaOportunidadMejora;
-    private OportunidadMejora selectedOportunidadMejora;
+    private List<Conocimiento> listaOportunidadMejora;
+    private Conocimiento selectedOportunidadMejora;
     private UploadedFile uploadFile;
     private StreamedContent content;
     private File file;
     private TreeNode tree;
-    private List<OportunidadMejora> listaSource;
-    private List<OportunidadMejora> listaTarget;
-    private DualListModel<OportunidadMejora> pickList;
+    private List<Conocimiento> listaSource;
+    private List<Conocimiento> listaTarget;
+    private DualListModel<Conocimiento> pickList;
     private List<String> listaTipoVinculo;
     private DataModel dataModel;
     private Categoria selectedCategoria;
     
-    private String titulo;
-    private String detalle;
-    private String contenido;
+    private String vtitulo;
+    private String vdetalle;
+    private String vcontenido;
     
     /**
      * Creates a new instance of BaseLegalMB
@@ -152,43 +161,43 @@ public class OportunidadMB implements Serializable {
         this.path = path;
     }
 
-    public List<OportunidadMejora> getListaOportunidadMejora() {
+    public List<Conocimiento> getListaOportunidadMejora() {
         return listaOportunidadMejora;
     }
 
-    public void setListaOportunidadMejora(List<OportunidadMejora> listaOportunidadMejora) {
+    public void setListaOportunidadMejora(List<Conocimiento> listaOportunidadMejora) {
         this.listaOportunidadMejora = listaOportunidadMejora;
     }
 
-    public OportunidadMejora getSelectedOportunidadMejora() {
+    public Conocimiento getSelectedOportunidadMejora() {
         return selectedOportunidadMejora;
     }
 
-    public void setSelectedOportunidadMejora(OportunidadMejora selectedOportunidadMejora) {
+    public void setSelectedOportunidadMejora(Conocimiento selectedOportunidadMejora) {
         this.selectedOportunidadMejora = selectedOportunidadMejora;
     }
 
-    public List<OportunidadMejora> getListaSource() {
+    public List<Conocimiento> getListaSource() {
         return listaSource;
     }
 
-    public void setListaSource(List<OportunidadMejora> listaSource) {
+    public void setListaSource(List<Conocimiento> listaSource) {
         this.listaSource = listaSource;
     }
 
-    public List<OportunidadMejora> getListaTarget() {
+    public List<Conocimiento> getListaTarget() {
         return listaTarget;
     }
 
-    public void setListaTarget(List<OportunidadMejora> listaTarget) {
+    public void setListaTarget(List<Conocimiento> listaTarget) {
         this.listaTarget = listaTarget;
     }
 
-    public DualListModel<OportunidadMejora> getPickList() {
+    public DualListModel<Conocimiento> getPickList() {
         return pickList;
     }
 
-    public void setPickList(DualListModel<OportunidadMejora> pickList) {
+    public void setPickList(DualListModel<Conocimiento> pickList) {
         this.pickList = pickList;
     }
     
@@ -222,8 +231,11 @@ public class OportunidadMB implements Serializable {
     public void setDataModel(DataModel dataModel) {
         this.dataModel = dataModel;
     }
-
+           
     public Categoria getSelectedCategoria() {
+        if ( null == selectedCategoria ){
+            selectedCategoria = new Categoria();
+        }
         return selectedCategoria;
     }
 
@@ -231,44 +243,17 @@ public class OportunidadMB implements Serializable {
         this.selectedCategoria = selectedCategoria;
     }
 
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public String getDetalle() {
-        return detalle;
-    }
-
-    public void setDetalle(String detalle) {
-        this.detalle = detalle;
-    }
-
-    public String getContenido() {
-        return contenido;
-    }
-
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
-    }
-
    
-        
-    
-    
+   
     @PostConstruct
     public void init() {
         
         try {
-            OportunidadMejoraService service = (OportunidadMejoraService) ServiceFinder.findBean("OportunidadMejoraService");
-            this.setListaOportunidadMejora(service.getOportunidadmejoras());
-           
-            this.setListaSource(new ArrayList<OportunidadMejora>());
-            this.setListaTarget(new ArrayList<OportunidadMejora>());
-            this.setPickList(new DualListModel<OportunidadMejora>(this.getListaSource(), this.getListaTarget()));
+            this.getOportunidadMejoras();
+            //this.setListaOportunidadMejora(getTempOportunidadMejora());
+            this.setListaSource(new ArrayList<Conocimiento>());
+            this.setListaTarget(new ArrayList<Conocimiento>());
+            this.setPickList(new DualListModel<Conocimiento>(this.getListaSource(), this.getListaTarget()));
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -276,10 +261,30 @@ public class OportunidadMB implements Serializable {
     
     }
     
+    void getOportunidadMejoras(){
+        ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+        try {
+            this.setListaOportunidadMejora(service.getConocimientos());
+        } catch (Exception ex) {
+            Logger.getLogger(OportunidadMB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
+    }
+    
+//    List<Conocimiento> getTempOportunidadMejora(){
+//        List<Conocimiento> oportunidadMejoras = new ArrayList<Conocimiento>();
+//        Conocimiento oportunidadMejora = new Conocimiento() ;
+//                          oportunidadMejoras.add(oportunidadMejora) ;
+//        
+//        oportunidadMejora = new Conocimiento() ;
+//        oportunidadMejoras.add(oportunidadMejora) ;
+//        
+//        return oportunidadMejoras ;
+//    }
     public void cleanAttributes() {
-        this.setContenido(StringUtils.EMPTY);
-        this.setTitulo(StringUtils.EMPTY);
-        this.setDetalle(StringUtils.EMPTY);
+        this.setVcontenido(StringUtils.EMPTY);
+        this.setVtitulo(StringUtils.EMPTY);
+        this.setVdetalle(StringUtils.EMPTY);
         this.setSelectedCategoria(null);
         this.setUploadFile(null);
         this.setFile(null);
@@ -298,7 +303,7 @@ public class OportunidadMB implements Serializable {
                 String id = (String)((SelectOneMenu) event.getSource()).getValue();
                 String index = JSFUtils.getRequestParameter("index");
                 this.getListaTipoVinculo().set(Integer.parseInt(index), id);
-               // this.getListaTarget().get(Integer.parseInt(index)).setNestadoid(BigDecimal.valueOf(Long.parseLong(id)));
+                this.getListaTarget().get(Integer.parseInt(index)).setNestado(BigDecimal.valueOf(Long.parseLong(id)));
             }
         } catch(Exception e) {
             e.getMessage();
@@ -407,10 +412,9 @@ public class OportunidadMB implements Serializable {
     }
 
     public void onNodeSelect(NodeSelectEvent event) {
-         try {
+        try {
             if (event != null) {
                 this.setSelectedCategoria((Categoria) event.getTreeNode().getData());
-                System.out.println( " getSelectedCategoria().getVnombre() " + getSelectedCategoria().getVnombre() );
             }
         } catch (Exception e) {
             e.getMessage();
@@ -428,71 +432,39 @@ public class OportunidadMB implements Serializable {
     }
 
     public void save(ActionEvent event) {
+
         try {
             if (CollectionUtils.isEmpty(this.getListaOportunidadMejora())) {
                 this.setListaOportunidadMejora(Collections.EMPTY_LIST);
             }
+
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
-            User user = loginMB.getUser();
-            OportunidadMejora oportunidad = new OportunidadMejora();
-           
-            oportunidad.setNactivo(BigDecimal.ONE);
-            oportunidad.setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_OPORTUNIDAD_MEJORA)));
+            final User user = loginMB.getUser();
+            Conocimiento oportunidad = new Conocimiento();
+            ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            Mtcategoria mtcategoria = new Mtcategoria() ;
+            mtcategoria.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            
+            oportunidad.setMtcategoria(mtcategoria);
+            oportunidad.setVtitulo(this.vtitulo);
+            oportunidad.setVdescripcion(this.vdetalle);
+            oportunidad.setVcontenido(this.vcontenido);
+            
+            System.out.println("user " + user.getVlogin());
             oportunidad.setVusuariocreacion(user.getVlogin());
+            
+            //oportunidad.setVusuariocreacion("CNISHIMURA");
             oportunidad.setDfechacreacion(new Date());
-            OportunidadMejoraService service = (OportunidadMejoraService) ServiceFinder.findBean("OportunidadService");
-            oportunidad.setNoportunidadmejoraid(service.getNextPK());
+            
             service.saveOrUpdate(oportunidad);
+            this.getOportunidadMejoras();
+            notificationSuccess("Registrar: Oportunidad Mejora");
             
-            Toportunidadmejora tOportunidadNegocio = new Toportunidadmejora();
-            
-            BeanUtils.copyProperties(tOportunidadNegocio, oportunidad);
-            
-//            ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-//            TarchivoId archivoId = new TarchivoId();
-//            archivoId.setNbaselegalid(base.getNbaselegalid());
-//            archivoId.setNarchivoid(aservice.getNextPK());
-//            
-//            Archivo archivo = new Archivo();
-//            archivo.setId(archivoId);
-//            archivo.setNversion(BigDecimal.ONE);
-//            archivo.setTbaselegal(tbaselegal);
-//            archivo.setVnombre(this.getUploadFile().getFileName());
-//            archivo.setVruta(path + base.getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
-//            archivo.setVusuariocreacion(user.getVlogin());
-//            archivo.setDfechacreacion(new Date());
-//            aservice.saveOrUpdate(archivo);            
-//            saveFile(archivo);
-            
-            for(OportunidadMejora v : this.getListaTarget()) {
-//                VinculoBaseLegalService vservice = (VinculoBaseLegalService) ServiceFinder.findBean("VinculoBaseLegalService");
-//                TvinculoBaselegalId id = new TvinculoBaselegalId();
-//                id.setNbaselegalid(tbaselegal.getNbaselegalid());
-//                id.setNvinculoid(vservice.getNextPK());
-//                VinculoBaselegal vinculo = new VinculoBaselegal();
-//                vinculo.setId(id);
-//                vinculo.setTbaselegal(tbaselegal);
-//                vinculo.setNbaselegalvinculadaid(v.getNbaselegalid());
-//                vinculo.setNtipovinculo(v.getNestadoid());
-//                vinculo.setDfechacreacion(new Date());
-//                vinculo.setVusuariocreacion(user.getVlogin());
-//                vservice.saveOrUpdate(vinculo);
-//                
-//                BaseLegal bl = service.getBaselegalById(v.getNbaselegalid());
-//                bl.setNestadoid(v.getNestadoid());
-//                bl.setDfechamodificacion(new Date());
-//                bl.setVusuariomodificacion(user.getVlogin());
-//                service.saveOrUpdate(bl);
-            }
-            
-//            this.setListaBaseLegal(service.getBaselegales());
-//            for(BaseLegal bl : this.getListaBaseLegal()) {
-//                bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
-//            }
             RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
+            notificationError(e, "Registrar : Oportunidad Mejora");
         }
     }
 
@@ -535,82 +507,7 @@ public class OportunidadMB implements Serializable {
     }
     
     public void edit(ActionEvent event) {
-//        try {
-//            if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
-//                this.setListaBaseLegal(Collections.EMPTY_LIST);
-//            }
-//            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
-//            User user = loginMB.getUser();
-//            if(this.getSelectedCategoria() != null){
-//                this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-//            }
-//            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre().trim().toUpperCase());
-//            this.getSelectedBaseLegal().setVnumero(this.getSelectedBaseLegal().getVnumero().trim().toUpperCase());
-//            this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
-//            this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
-//            this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
-//            this.getSelectedBaseLegal().setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
-//            this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
-//            this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
-//            this.getSelectedBaseLegal().setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
-//            this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
-//            this.getSelectedBaseLegal().setVusuariomodificacion(user.getVlogin());
-//            this.getSelectedBaseLegal().setDfechamodificacion(new Date());
-//            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
-//            service.saveOrUpdate(this.getSelectedBaseLegal());
-//            Tbaselegal tbaselegal = new Tbaselegal();
-//            BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
-//            
-//            ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-//            if(this.getUploadFile() != null) {                
-//                TarchivoId archivoId = new TarchivoId();
-//                archivoId.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
-//                archivoId.setNarchivoid(aservice.getNextPK());
-//
-//                Archivo archivo = new Archivo();
-//                archivo.setId(archivoId);
-//                int version = this.getSelectedBaseLegal().getArchivo().getNversion().intValue();
-//                archivo.setNversion(BigDecimal.valueOf(version + 1));
-//                archivo.setTbaselegal(tbaselegal);
-//                archivo.setVnombre(this.getUploadFile().getFileName());
-//                archivo.setVruta(path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
-//                archivo.setVusuariocreacion(user.getVlogin());
-//                archivo.setDfechacreacion(new Date());
-//                aservice.saveOrUpdate(archivo);
-//                saveFile(archivo);
-//            }            
-//            
-//            VinculoBaseLegalService vservice = (VinculoBaseLegalService) ServiceFinder.findBean("VinculoBaseLegalService");
-//            vservice.deleteByBaseLegal(this.getSelectedBaseLegal());
-//            for(BaseLegal v : this.getListaTarget()) {
-//                TvinculoBaselegalId id = new TvinculoBaselegalId();
-//                id.setNbaselegalid(tbaselegal.getNbaselegalid());
-//                id.setNvinculoid(vservice.getNextPK());
-//                VinculoBaselegal vinculo = new VinculoBaselegal();
-//                vinculo.setId(id);
-//                vinculo.setTbaselegal(tbaselegal);
-//                vinculo.setNbaselegalvinculadaid(v.getNbaselegalid());
-//                vinculo.setNtipovinculo(v.getNestadoid());
-//                vinculo.setDfechacreacion(new Date());
-//                vinculo.setVusuariocreacion(user.getVlogin());
-//                vservice.saveOrUpdate(vinculo);
-//                
-//                BaseLegal bl = service.getBaselegalById(v.getNbaselegalid());
-//                bl.setNestadoid(v.getNestadoid());
-//                bl.setDfechamodificacion(new Date());
-//                bl.setVusuariomodificacion(user.getVlogin());
-//                service.saveOrUpdate(bl);
-//            }
-//            
-//            this.setListaBaseLegal(service.getBaselegales());
-//            for(BaseLegal bl : this.getListaBaseLegal()) {
-//                bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
-//            }
-//            RequestContext.getCurrentInstance().execute("PF('editDialog').hide();");
-//        } catch (Exception e) {
-//            e.getMessage();
-//            e.printStackTrace();
-//        }
+
     }
     
     public void post(ActionEvent event) {
@@ -760,49 +657,150 @@ public class OportunidadMB implements Serializable {
 //        }
     }
     
+    /**
+     * Activa el registro
+     * @param event 
+     */
     public void activar(ActionEvent event) {
-//        try {
-//            if (event != null) {
-//                if (this.getSelectedBaseLegal()!= null) {
-//                    BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
-//                    this.getSelectedBaseLegal().setNactivo(BigDecimal.ONE);
-//                    this.getSelectedBaseLegal().setDfechamodificacion(new Date());
-////                    this.getSelectedMaestro().setVusumod(user.getUsuario());
-//                    service.saveOrUpdate(this.getSelectedBaseLegal());
-//                    this.setListaBaseLegal(service.getBaselegales());
-//                } else {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar la base legal a activar.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
-//            }
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            e.printStackTrace();
-//        }
+        try {
+            if (event != null) {
+                if (this.getSelectedOportunidadMejora()!= null) {
+                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    this.getSelectedOportunidadMejora().setNestado(BigDecimal.ONE);
+                    //this.getSelectedOportunidadMejora().setDfechamodificacion(new Date());
+                    // this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    service.saveOrUpdate(this.getSelectedOportunidadMejora());
+                    //this.setListaBaseLegal(service.getBaselegales());
+                   this.getOportunidadMejoras();
+                   this.notificationSuccess("activar: Oportunidad Mejora ");
+                } else {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar la oportunidad de mejora a activar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+            this.notificationError(e, "activar: Oportunidad Mejora ");
+        }
     }
 
+    /**
+     * Activa el registro
+     * @param event 
+     */
     public void desactivar(ActionEvent event) {
-//        try {
-//            if (event != null) {
-//                if (this.getSelectedBaseLegal() != null) {
-//                    BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
-//                    this.getSelectedBaseLegal().setNactivo(BigDecimal.ZERO);
-//                    this.getSelectedBaseLegal().setDfechamodificacion(new Date());
-////                    this.getSelectedMaestro().setVusumod(user.getUsuario());
-//                    service.saveOrUpdate(this.getSelectedBaseLegal());
-//                    this.setListaBaseLegal(service.getBaselegales());
-//                } else {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar la base legal a desactivar.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
-//            }
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            e.printStackTrace();
-//        }
+        try {
+            if (event != null) {
+                if (this.getSelectedOportunidadMejora() != null) {
+                   ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    this.getSelectedOportunidadMejora().setNestado(BigDecimal.ZERO);
+                    //this.getSelectedOportunidadMejora().setDfechamodificacion(new Date());
+//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    service.saveOrUpdate(this.getSelectedOportunidadMejora());
+                   this.getOportunidadMejoras();
+                   this.notificationSuccess("desactivar: Oportunidad Mejora ");
+                } else {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar la oportunidad de mejora a desactivar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+            this.notificationError(e, "desactivar: Oportunidad Mejora ");
+        }
+    }
+    /**
+     * Elimina el registro 
+     * @param event 
+     */
+    public void eliminar(ActionEvent event) {
+        try {
+            if (event != null) {
+                if (this.getSelectedOportunidadMejora() != null) {
+                   ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    this.getSelectedOportunidadMejora().setNestado(BigDecimal.ZERO);
+                    //this.getSelectedOportunidadMejora().setDfechamodificacion(new Date());
+                    //this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    service.delete(this.getSelectedOportunidadMejora());
+                   this.getOportunidadMejoras();
+                   this.notificationSuccess("Eliminar: Oportunidad Mejora ");
+                } else {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar la oportunidad de mejora a eliminars.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @return the vtitulo
+     */
+    public String getVtitulo() {
+        return vtitulo;
+    }
+
+    /**
+     * @param vtitulo the vtitulo to set
+     */
+    public void setVtitulo(String vtitulo) {
+        this.vtitulo = vtitulo;
+    }
+
+    /**
+     * @return the vdetalle
+     */
+    public String getVdetalle() {
+        return vdetalle;
+    }
+
+    /**
+     * @param vdetalle the vdetalle to set
+     */
+    public void setVdetalle(String vdetalle) {
+        this.vdetalle = vdetalle;
+    }
+
+    /**
+     * @return the vcontenido
+     */
+    public String getVcontenido() {
+        return vcontenido;
+    }
+
+    /**
+     * @param vcontenido the vcontenido to set
+     */
+    public void setVcontenido(String vcontenido) {
+        this.vcontenido = vcontenido;
     }
     
-    
+    public void notificationSuccess(String operation) {
+		String mensaje= "Operación: "+operation+" éxito" ;
+		Logger.getLogger(this.getClass().getName()).log(Level.INFO, mensaje );
+		FacesMessage msg = null;  
+		msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Notificación", mensaje); 
+		FacesContext.getCurrentInstance().addMessage(null, msg);  
+	}
+
+	public void notificationError(Exception e, String operation) {
+		//Logger.getLogger(this.getClass().getName()).log(Level.ERROR, "Operación "+operation+" Error ",e);
+		FacesMessage msg = null;  
+		msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Notificación: ", "Error "+e.getMessage());  
+		FacesContext.getCurrentInstance().addMessage(null, msg);  
+	}
+	
+	public void notificationError(String e, String operation) {
+		String mensaje= "Operación: "+e+" "+ operation ;
+		//Logger.getLogger(this.getClass().getName()).log(Level.ERROR, mensaje );
+		FacesMessage msg = null;  
+		msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Notificación: ", mensaje );  
+		FacesContext.getCurrentInstance().addMessage(null, msg);  
+	}
 
     
 }

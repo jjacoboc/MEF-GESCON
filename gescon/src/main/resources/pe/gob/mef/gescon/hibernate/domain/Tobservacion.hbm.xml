@@ -3,10 +3,10 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 27/10/2015 06:08:14 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Tcalificacion" table="TCALIFICACION" schema="GESCON" optimistic-lock="version">
-        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TcalificacionId">
-            <key-property name="ncalificacionid" type="big_decimal">
-                <column name="NCALIFICACIONID" precision="22" scale="0" />
+    <class name="pe.gob.mef.gescon.hibernate.domain.Tobservacion" table="TOBSERVACION" schema="GESCON" optimistic-lock="version">
+        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TobservacionId">
+            <key-property name="nobservacionid" type="big_decimal">
+                <column name="NOBSERVACIONID" precision="22" scale="0" />
             </key-property>
             <key-property name="nconocimientoid" type="big_decimal">
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" />
@@ -15,23 +15,23 @@
         <many-to-one name="tconocimiento" class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" update="false" insert="false" fetch="select">
             <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
         </many-to-one>
-        <property name="ncalificacion" type="big_decimal">
-            <column name="NCALIFICACION" precision="22" scale="0" />
+        <property name="vsumilla" type="string">
+            <column name="VSUMILLA" length="500" />
         </property>
         <property name="vusuariomodificacion" type="string">
             <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
+        <property name="ntipo" type="big_decimal">
+            <column name="NTIPO" precision="22" scale="0" />
+        </property>
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="25" />
         </property>
-        <property name="dfechacreacion" type="serializable">
-            <column name="DFECHACREACION" />
+        <property name="dfechacreacion" type="date">
+            <column name="DFECHACREACION" length="7" />
         </property>
-        <property name="dfechamodificacion" type="serializable">
-            <column name="DFECHAMODIFICACION" />
-        </property>
-        <property name="vcomentario" type="string">
-            <column name="VCOMENTARIO" length="400" />
+        <property name="dfechamodificacion" type="date">
+            <column name="DFECHAMODIFICACION" length="7" />
         </property>
     </class>
 </hibernate-mapping>

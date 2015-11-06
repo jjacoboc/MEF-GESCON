@@ -5,7 +5,14 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/WEB-INF/template.xhtml">
-
+    <style>
+        .ui-columnl {
+            width: 150px;
+        }
+        .ui-columnr {
+            width: 100%;
+        }
+    </style>
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
@@ -21,7 +28,7 @@
                         }
                     </h:outputScript>
                     <f:view>
-                        <h:panelGrid columns="2" width="100%" styleClass="TexAlLeft panelcolumns" columnClasses="panelcolumns">
+                        <h:panelGrid columns="2" width="100%" columnClasses="ui-columnl, ui-columnr" styleClass="TexAlLeft panelcolumns">
                             <h:panelGroup>
                                 <ui:include src="filtro.xhtml" />
                             </h:panelGroup>
@@ -42,47 +49,51 @@
                                                 </ui:repeat>
                                             </h:panelGroup>
                                         </p:panelGrid>
-                                        <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" mode="inline">
-                                            <h:panelGrid columns="1" width="100%">
-                                                <h:panelGrid columns="4" cellpadding="0" cellspacing="0">
-                                                    <h:outputText class="fa fa-fw fa-circle" style="font-size: 11px;"/>
-                                                    <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link"
-                                                                   update=":viewblDialogForm:pgViewbl, :viewprDialogForm:pgViewpr" >
-                                                        <h:panelGroup>
-                                                            <h:outputText value="#{c.codigo}" styleClass="Fs14 FontBold " rendered="#{not empty c.codigo}"/>
-                                                            <h:outputText value=" - " styleClass="Fs12 FontBold " rendered="#{not empty c.codigo}"/>
-                                                            <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
-                                                        </h:panelGroup>
-                                                        <f:param name="id" value="#{c.id}"/>
-                                                        <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
-                                                    </p:commandLink>
-                                                    <p:spacer width="15"/>
-                                                    <p:rating value="3.5" readonly="true" immediate="true" />
+                                        <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="width: 100%">
+                                            <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" mode="inline">
+                                                <h:panelGrid columns="1" width="100%">
+                                                    <h:panelGrid columns="5" cellpadding="0" cellspacing="0">
+                                                        <h:outputText class="fa fa-file-text-o red Fs14" rendered="#{c.idTipoConocimiento eq 1}"/>
+                                                        <h:outputText class="fa fa-question red Fs14" rendered="#{c.idTipoConocimiento eq 2}"/>
+                                                        <p:spacer width="5"/>
+                                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link"
+                                                                       update=":viewblDialogForm:pgViewbl, :viewprDialogForm:pgViewpr" >
+                                                            <h:panelGroup>
+                                                                <h:outputText value="#{c.codigo}" styleClass="Fs14 FontBold " rendered="#{not empty c.codigo}"/>
+                                                                <h:outputText value=" - " styleClass="Fs12 FontBold " rendered="#{not empty c.codigo}"/>
+                                                                <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
+                                                            </h:panelGroup>
+                                                            <f:param name="id" value="#{c.id}"/>
+                                                            <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
+                                                        </p:commandLink>
+                                                        <p:spacer width="15"/>
+                                                        <p:rating value="3.5" readonly="true" immediate="true" />
+                                                    </h:panelGrid>
+                                                    <h:panelGrid columns="2">
+                                                        <p:spacer width="8"/>
+                                                        <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
+                                                    </h:panelGrid>
+                                                    <h:panelGrid columns="14">
+                                                        <p:spacer width="8"/>
+                                                        <h:outputText value="Categoría:" styleClass="Fs12"/>
+                                                        <h:outputText value="#{c.categoria}" styleClass="FontBold Fs12" style="font-style: italic;"/>
+                                                        <p:spacer width="15"/>
+                                                        <h:outputText value="Tipo:" styleClass="Fs12"/>
+                                                        <h:outputText value="#{c.tipoConocimiento}" styleClass="FontBold Fs12" style="font-style: italic;"/>
+                                                        <p:spacer width="15"/>
+                                                        <h:outputText value="Fecha:" styleClass="Fs12"/>
+                                                        <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs12" style="font-style: italic;">
+                                                            <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                                        </h:outputText>
+                                                        <p:spacer width="15"/>
+                                                        <h:outputText value="Estado:" styleClass="Fs12"/>
+                                                        <h:outputText value="#{c.estado}" styleClass="FontBold Fs12" style="font-style: italic;"/>
+                                                        <p:spacer width="15"/>
+                                                        <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic;"/>
+                                                    </h:panelGrid>
                                                 </h:panelGrid>
-                                                <h:panelGrid columns="2">
-                                                    <p:spacer width="8"/>
-                                                    <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
-                                                </h:panelGrid>
-                                                <h:panelGrid columns="14">
-                                                    <p:spacer width="8"/>
-                                                    <h:outputText value="Categoría:" styleClass="Fs12"/>
-                                                    <h:outputText value="#{c.categoria}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                    <p:spacer width="15"/>
-                                                    <h:outputText value="Tipo:" styleClass="Fs12"/>
-                                                    <h:outputText value="#{c.tipoConocimiento}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                    <p:spacer width="15"/>
-                                                    <h:outputText value="Fecha:" styleClass="Fs12"/>
-                                                    <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs12" style="font-style: italic;">
-                                                        <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                                    </h:outputText>
-                                                    <p:spacer width="15"/>
-                                                    <h:outputText value="Estado:" styleClass="Fs12"/>
-                                                    <h:outputText value="#{c.estado}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                    <p:spacer width="15"/>
-                                                    <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic;"/>
-                                                </h:panelGrid>
-                                            </h:panelGrid>
-                                        </p:dataScroller>
+                                            </p:dataScroller>
+                                        </h:panelGrid>
                                     </h:panelGrid>
                                 </h:form>
 

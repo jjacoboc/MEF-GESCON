@@ -25,4 +25,9 @@
   <table-filter match-name="TBASELEGAL"/>
   <table-filter match-name="TARCHIVO"/>
   <table-filter match-name="TCONOCIMIENTO"/>
+  <table-filter match-name="TOBSERVACION"/>
+  <table-filter match-name="THISTORIAL"/>
+  <table-filter match-name="TIMPLEMENTACION"/>
+  <table-filter match-name="TVINCULOIMPLEMENTACION"/>
+  <table-filter match-name="TCATEGORIA_USER"/>
 </hibernate-reverse-engineering>

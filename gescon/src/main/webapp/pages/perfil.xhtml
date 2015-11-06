@@ -57,7 +57,7 @@
                                                 <f:setPropertyActionListener value="#{row}" target="#{perfilMB.selectedPerfil}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink styleClass="ui-link" actionListener="#{perfilMB.toAsig}" update="f:growl, :asigDialogForm:pgAsig" oncomplete="PF('asigDialog').show();" styleClass="ui-link" title="Asignar Politicas">
+                                            <p:commandLink actionListener="#{perfilMB.toAsig}" update="f:growl, :asigDialogForm:pgAsig" oncomplete="PF('asigDialog').show();" styleClass="ui-link" title="Asignar Politicas">
                                                 <f:param name="index" value="#{rowIndex}"/>
                                                 <h:outputText class="fa fa-briefcase Fs16" />
                                             </p:commandLink>
