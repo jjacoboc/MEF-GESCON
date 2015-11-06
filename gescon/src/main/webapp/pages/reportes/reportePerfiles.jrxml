@@ -8,9 +8,9 @@
 	<field name="NOMBRE_POLITICA" class="java.lang.String"/>
 	<field name="DESCRIPCION" class="java.lang.String"/>
 	<field name="USUARIO_CREACION" class="java.lang.String"/>
-	<field name="FECHA_CREACION" class="java.sql.Timestamp"/>
+	<field name="FECHA_CREACION" class="java.lang.String"/>
 	<field name="USUARIO_MODIFICACION" class="java.lang.String"/>
-	<field name="FECHA_MODIFICACION" class="java.sql.Timestamp"/>
+	<field name="FECHA_MODIFICACION" class="java.lang.String"/>
 	<field name="ESTADO" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
