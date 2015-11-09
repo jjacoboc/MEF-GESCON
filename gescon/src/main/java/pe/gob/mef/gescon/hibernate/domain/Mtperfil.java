@@ -1,6 +1,7 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -12,15 +13,19 @@ import java.util.Set;
 public class Mtperfil implements java.io.Serializable {
 
     private BigDecimal nperfilid;
-    private String vnombre;
-    private String vdescripcion;
     private BigDecimal nactivo;
     private String vusuariomodificacion;
     private String vusuariocreacion;
     private Date dfechacreacion;
     private Date dfechamodificacion;
-    private Set<TpoliticaPerfil> tpoliticaPerfils = new HashSet<TpoliticaPerfil>(0);
-    private Set<TuserPerfil> tuserPerfils = new HashSet<TuserPerfil>(0);
+    private String vdescripcion;
+    private String vnombre;
+    private String vdescripcion1232;
+    private String vdescripcion1234;
+    private String vdescripcion1236;
+    private String vdescripcion1238;
+    private Set tpoliticaPerfils = new HashSet(0);
+    private Set tuserPerfils = new HashSet(0);
 
     public Mtperfil() {
     }
@@ -29,14 +34,19 @@ public class Mtperfil implements java.io.Serializable {
         this.nperfilid = nperfilid;
     }
 
-    public Mtperfil(BigDecimal nperfilid, String vnombre, String vdescripcion, BigDecimal nactivo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Set<TpoliticaPerfil> tpoliticaPerfils, Set<TuserPerfil> tuserPerfils) {
+    public Mtperfil(BigDecimal nperfilid, BigDecimal nactivo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, String vdescripcion, String vnombre, String vdescripcion1232, String vdescripcion1234, String vdescripcion1236, String vdescripcion1238, Set tpoliticaPerfils, Set tuserPerfils) {
         this.nperfilid = nperfilid;
-        this.vnombre = vnombre;
-        this.vdescripcion = vdescripcion;
         this.nactivo = nactivo;
         this.vusuariomodificacion = vusuariomodificacion;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
+        this.dfechamodificacion = dfechamodificacion;
+        this.vdescripcion = vdescripcion;
+        this.vnombre = vnombre;
+        this.vdescripcion1232 = vdescripcion1232;
+        this.vdescripcion1234 = vdescripcion1234;
+        this.vdescripcion1236 = vdescripcion1236;
+        this.vdescripcion1238 = vdescripcion1238;
         this.tpoliticaPerfils = tpoliticaPerfils;
         this.tuserPerfils = tuserPerfils;
     }
@@ -47,28 +57,6 @@ public class Mtperfil implements java.io.Serializable {
 
     public void setNperfilid(BigDecimal nperfilid) {
         this.nperfilid = nperfilid;
-    }
-
-    /**
-     * @return the vnombre
-     */
-    public String getVnombre() {
-        return vnombre;
-    }
-
-    /**
-     * @param vnombre the vnombre to set
-     */
-    public void setVnombre(String vnombre) {
-        this.vnombre = vnombre;
-    }
-
-    public String getVdescripcion() {
-        return this.vdescripcion;
-    }
-
-    public void setVdescripcion(String vdescripcion) {
-        this.vdescripcion = vdescripcion;
     }
 
     public BigDecimal getNactivo() {
@@ -95,7 +83,7 @@ public class Mtperfil implements java.io.Serializable {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Date getDfechacreacion() {
+    public Serializable getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -103,33 +91,75 @@ public class Mtperfil implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    /**
-     * @return the dfechamodificacion
-     */
-    public Date getDfechamodificacion() {
-        return dfechamodificacion;
+    public Serializable getDfechamodificacion() {
+        return this.dfechamodificacion;
     }
 
-    /**
-     * @param dfechamodificacion the dfechamodificacion to set
-     */
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
     }
 
-    public Set<TpoliticaPerfil> getTpoliticaPerfils() {
+    public String getVdescripcion() {
+        return this.vdescripcion;
+    }
+
+    public void setVdescripcion(String vdescripcion) {
+        this.vdescripcion = vdescripcion;
+    }
+
+    public String getVnombre() {
+        return this.vnombre;
+    }
+
+    public void setVnombre(String vnombre) {
+        this.vnombre = vnombre;
+    }
+
+    public String getVdescripcion1232() {
+        return this.vdescripcion1232;
+    }
+
+    public void setVdescripcion1232(String vdescripcion1232) {
+        this.vdescripcion1232 = vdescripcion1232;
+    }
+
+    public String getVdescripcion1234() {
+        return this.vdescripcion1234;
+    }
+
+    public void setVdescripcion1234(String vdescripcion1234) {
+        this.vdescripcion1234 = vdescripcion1234;
+    }
+
+    public String getVdescripcion1236() {
+        return this.vdescripcion1236;
+    }
+
+    public void setVdescripcion1236(String vdescripcion1236) {
+        this.vdescripcion1236 = vdescripcion1236;
+    }
+
+    public String getVdescripcion1238() {
+        return this.vdescripcion1238;
+    }
+
+    public void setVdescripcion1238(String vdescripcion1238) {
+        this.vdescripcion1238 = vdescripcion1238;
+    }
+
+    public Set getTpoliticaPerfils() {
         return this.tpoliticaPerfils;
     }
 
-    public void setTpoliticaPerfils(Set<TpoliticaPerfil> tpoliticaPerfils) {
+    public void setTpoliticaPerfils(Set tpoliticaPerfils) {
         this.tpoliticaPerfils = tpoliticaPerfils;
     }
 
-    public Set<TuserPerfil> getTuserPerfils() {
+    public Set getTuserPerfils() {
         return this.tuserPerfils;
     }
 
-    public void setTuserPerfils(Set<TuserPerfil> tuserPerfils) {
+    public void setTuserPerfils(Set tuserPerfils) {
         this.tuserPerfils = tuserPerfils;
     }
 

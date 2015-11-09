@@ -1,5 +1,5 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
 import java.math.BigDecimal;
 
@@ -33,6 +33,30 @@ public class TmaestrodetalleId implements java.io.Serializable {
 
     public void setNdetalleid(BigDecimal ndetalleid) {
         this.ndetalleid = ndetalleid;
+    }
+
+    public boolean equals(Object other) {
+        if ((this == other)) {
+            return true;
+        }
+        if ((other == null)) {
+            return false;
+        }
+        if (!(other instanceof TmaestrodetalleId)) {
+            return false;
+        }
+        TmaestrodetalleId castOther = (TmaestrodetalleId) other;
+
+        return ((this.getNmaestroid() == castOther.getNmaestroid()) || (this.getNmaestroid() != null && castOther.getNmaestroid() != null && this.getNmaestroid().equals(castOther.getNmaestroid())))
+                && ((this.getNdetalleid() == castOther.getNdetalleid()) || (this.getNdetalleid() != null && castOther.getNdetalleid() != null && this.getNdetalleid().equals(castOther.getNdetalleid())));
+    }
+
+    public int hashCode() {
+        int result = 17;
+
+        result = 37 * result + (getNmaestroid() == null ? 0 : this.getNmaestroid().hashCode());
+        result = 37 * result + (getNdetalleid() == null ? 0 : this.getNdetalleid().hashCode());
+        return result;
     }
 
 }

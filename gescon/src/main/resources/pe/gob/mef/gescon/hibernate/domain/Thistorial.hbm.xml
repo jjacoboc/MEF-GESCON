@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 27/10/2015 06:08:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Thistorial" table="THISTORIAL" schema="GESCON" optimistic-lock="version">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Thistorial" table="THISTORIAL" schema="GESCON3" optimistic-lock="version">
         <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.ThistorialId">
-            <key-property name="nhistorialid" type="big_decimal">
-                <column name="NHISTORIALID" precision="22" scale="0" />
-            </key-property>
             <key-property name="nconocimientoid" type="big_decimal">
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="nhistorialid" type="big_decimal">
+                <column name="NHISTORIALID" precision="22" scale="0" />
             </key-property>
         </composite-id>
         <many-to-one name="tconocimiento" class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" update="false" insert="false" fetch="select">
@@ -21,14 +21,14 @@
         <property name="vtitulo" type="string">
             <column name="VTITULO" length="20" />
         </property>
-        <property name="nusuariomod" type="big_decimal">
-            <column name="NUSUARIOMOD" precision="22" scale="0" />
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
-        <property name="nusuariocreacion" type="big_decimal">
-            <column name="NUSUARIOCREACION" precision="22" scale="0" />
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
         </property>
-        <property name="dfechacreacion" type="date">
-            <column name="DFECHACREACION" length="7" />
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" />
         </property>
         <property name="nundejecutora" type="big_decimal">
             <column name="NUNDEJECUTORA" precision="22" scale="0" />
@@ -75,26 +75,53 @@
         <property name="vobservacion" type="string">
             <column name="VOBSERVACION" length="500" />
         </property>
-        <set name="tvincHists" table="TVINC_HIST" inverse="true" lazy="true" fetch="select">
+        <property name="dfechamodificacion" type="date">
+            <column name="DFECHAMODIFICACION" length="7" />
+        </property>
+        <property name="ncategoriaid" type="big_decimal">
+            <column name="NCATEGORIAID" precision="22" scale="0" />
+        </property>
+        <set name="timplementacionHists" table="TIMPLEMENTACION_HIST" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+                <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
             </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TvincHist" />
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TimplementacionHist" />
         </set>
-        <set name="tcomentHists" table="TCOMENT_HIST" inverse="true" lazy="true" fetch="select">
+        <set name="tdiscusionHists" table="TDISCUSION_HIST" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+                <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
             </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TcomentHist" />
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TdiscusionHist" />
         </set>
-        <set name="tcategoriaHists" table="TCATEGORIA_HIST" inverse="true" lazy="true" fetch="select">
+        <set name="tvinculoHists" table="TVINCULO_HIST" inverse="true" lazy="true" fetch="select">
             <key>
-                <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+                <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
             </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TcategoriaHist" />
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TvinculoHist" />
+        </set>
+        <set name="tcalificacionHists" table="TCALIFICACION_HIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+                <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TcalificacionHist" />
+        </set>
+        <set name="tseccionHists" table="TSECCION_HIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+                <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TseccionHist" />
+        </set>
+        <set name="tobservacionHists" table="TOBSERVACION_HIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+                <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TobservacionHist" />
         </set>
     </class>
 </hibernate-mapping>

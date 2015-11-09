@@ -1,6 +1,7 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -14,10 +15,10 @@ public class MttipoConocimiento implements java.io.Serializable {
     private BigDecimal ntpoconocimientoid;
     private String vnombre;
     private String vusuariomodificacion;
-    private String vusuariocreacion;    
+    private String vusuariocreacion;
     private Date dfechacreacion;
     private Date dfechamodificacion;
-    private Set<Tconocimiento> tconocimientos = new HashSet<Tconocimiento>(0);
+    private Set tconocimientos = new HashSet(0);
 
     public MttipoConocimiento() {
     }
@@ -26,7 +27,7 @@ public class MttipoConocimiento implements java.io.Serializable {
         this.ntpoconocimientoid = ntpoconocimientoid;
     }
 
-    public MttipoConocimiento(BigDecimal ntpoconocimientoid, String vnombre, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, Set<Tconocimiento> tconocimientos) {
+    public MttipoConocimiento(BigDecimal ntpoconocimientoid, String vnombre, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, Set tconocimientos) {
         this.ntpoconocimientoid = ntpoconocimientoid;
         this.vnombre = vnombre;
         this.vusuariomodificacion = vusuariomodificacion;
@@ -53,7 +54,7 @@ public class MttipoConocimiento implements java.io.Serializable {
     }
 
     public String getVusuariomodificacion() {
-        return vusuariomodificacion;
+        return this.vusuariomodificacion;
     }
 
     public void setVusuariomodificacion(String vusuariomodificacion) {
@@ -61,14 +62,14 @@ public class MttipoConocimiento implements java.io.Serializable {
     }
 
     public String getVusuariocreacion() {
-        return vusuariocreacion;
+        return this.vusuariocreacion;
     }
 
     public void setVusuariocreacion(String vusuariocreacion) {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Date getDfechacreacion() {
+    public Serializable getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -76,19 +77,19 @@ public class MttipoConocimiento implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public Date getDfechamodificacion() {
-        return dfechamodificacion;
+    public Serializable getDfechamodificacion() {
+        return this.dfechamodificacion;
     }
 
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
     }
 
-    public Set<Tconocimiento> getTconocimientos() {
+    public Set getTconocimientos() {
         return this.tconocimientos;
     }
 
-    public void setTconocimientos(Set<Tconocimiento> tconocimientos) {
+    public void setTconocimientos(Set tconocimientos) {
         this.tconocimientos = tconocimientos;
     }
 

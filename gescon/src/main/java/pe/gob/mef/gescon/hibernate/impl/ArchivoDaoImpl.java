@@ -58,7 +58,7 @@ public class ArchivoDaoImpl extends HibernateDaoSupport implements ArchivoDao{
     @Override
     public List<Tarchivo> getTarchivosByTbaselegal(Tbaselegal tbaselegal) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Tarchivo.class);
-        criteria.add(Restrictions.eq("id.nbaselegalid", tbaselegal.getNbaselegalid()));
+        criteria.add(Restrictions.eq("tbaselegal.nbaselegalid", tbaselegal.getNbaselegalid()));
         criteria.addOrder(Order.asc("nversion"));
         return (List<Tarchivo>) getHibernateTemplate().findByCriteria(criteria);
     }
@@ -68,7 +68,7 @@ public class ArchivoDaoImpl extends HibernateDaoSupport implements ArchivoDao{
         DetachedCriteria proj = DetachedCriteria.forClass(Tarchivo.class);
         proj.setProjection(Projections.max("nversion"));
         DetachedCriteria criteria = DetachedCriteria.forClass(Tarchivo.class);
-        criteria.add(Restrictions.eq("id.nbaselegalid", tbaselegal.getNbaselegalid()));
+        criteria.add(Restrictions.eq("tbaselegal.nbaselegalid", tbaselegal.getNbaselegalid()));
         criteria.add(Property.forName("nversion").eq(proj));
         return (Tarchivo) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }

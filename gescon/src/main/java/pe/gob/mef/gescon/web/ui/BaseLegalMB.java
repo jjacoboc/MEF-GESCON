@@ -43,7 +43,6 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.hibernate.domain.TarchivoId;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
 import pe.gob.mef.gescon.service.ArchivoService;
@@ -628,16 +627,12 @@ public class BaseLegalMB implements Serializable {
             BeanUtils.copyProperties(tbaselegal, base);
             
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-            TarchivoId archivoId = new TarchivoId();
-            archivoId.setNbaselegalid(base.getNbaselegalid());
-            archivoId.setNarchivoid(aservice.getNextPK());
-            
             Archivo archivo = new Archivo();
-            archivo.setId(archivoId);
-            archivo.setNversion(BigDecimal.ONE);
+            archivo.setNarchivoid(aservice.getNextPK());
             archivo.setTbaselegal(tbaselegal);
             archivo.setVnombre(this.getUploadFile().getFileName());
             archivo.setVruta(path + base.getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
+            archivo.setNversion(BigDecimal.ONE);
             archivo.setVusuariocreacion(user.getVlogin());
             archivo.setDfechacreacion(new Date());
             aservice.saveOrUpdate(archivo);            
@@ -678,7 +673,7 @@ public class BaseLegalMB implements Serializable {
     public void saveFile(Archivo archivo) {
         try {
             if (this.getUploadFile() != null) {
-                String id = archivo.getId().getNbaselegalid().toString();
+                String id = archivo.getNarchivoid().toString();
                 String version = archivo.getNversion().toString();
                 String newPath = path + id + "\\" + version + "\\";
                 File direc = new File(newPath);
@@ -741,13 +736,9 @@ public class BaseLegalMB implements Serializable {
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
             
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-            if(this.getUploadFile() != null) {                
-                TarchivoId archivoId = new TarchivoId();
-                archivoId.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
-                archivoId.setNarchivoid(aservice.getNextPK());
-
+            if(this.getUploadFile() != null) {
                 Archivo archivo = new Archivo();
-                archivo.setId(archivoId);
+                archivo.setNarchivoid(aservice.getNextPK());
                 int version = this.getSelectedBaseLegal().getArchivo().getNversion().intValue();
                 archivo.setNversion(BigDecimal.valueOf(version + 1));
                 archivo.setTbaselegal(tbaselegal);
@@ -821,13 +812,9 @@ public class BaseLegalMB implements Serializable {
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
             
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-            if(this.getUploadFile() != null) {                
-                TarchivoId archivoId = new TarchivoId();
-                archivoId.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
-                archivoId.setNarchivoid(aservice.getNextPK());
-
+            if(this.getUploadFile() != null) {
                 Archivo archivo = new Archivo();
-                archivo.setId(archivoId);
+                archivo.setNarchivoid(aservice.getNextPK());
                 int version = this.getSelectedBaseLegal().getArchivo().getNversion().intValue();
                 archivo.setNversion(BigDecimal.valueOf(version + 1));
                 archivo.setTbaselegal(tbaselegal);
@@ -837,7 +824,7 @@ public class BaseLegalMB implements Serializable {
                 archivo.setDfechacreacion(new Date());
                 aservice.saveOrUpdate(archivo);
                 saveFile(archivo);
-            }            
+            }
             
             VinculoBaseLegalService vservice = (VinculoBaseLegalService) ServiceFinder.findBean("VinculoBaseLegalService");
             vservice.deleteByBaseLegal(this.getSelectedBaseLegal());

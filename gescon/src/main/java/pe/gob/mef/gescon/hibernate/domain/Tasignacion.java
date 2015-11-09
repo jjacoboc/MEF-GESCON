@@ -1,6 +1,7 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 22/09/2015 05:59:19 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -25,189 +26,119 @@ public class Tasignacion implements java.io.Serializable {
     public Tasignacion() {
     }
 
-    public Tasignacion(BigDecimal nasignacionid, BigDecimal ntipoconocimientoid, BigDecimal nconocimientoid, BigDecimal nusuarioid, BigDecimal nestadoid, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, Date dfechaasignacion, Date dfechaatencion, Date dfecharecepcion) {
+    public Tasignacion(BigDecimal nasignacionid) {
+        this.nasignacionid = nasignacionid;
+    }
+
+    public Tasignacion(BigDecimal nasignacionid, BigDecimal ntipoconocimientoid, BigDecimal nconocimientoid, BigDecimal nusuarioid, BigDecimal nestadoid, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, Date dfechaasignacion, Date dfechaatencion, Date dfecharecepcion) {
         this.nasignacionid = nasignacionid;
         this.ntipoconocimientoid = ntipoconocimientoid;
         this.nconocimientoid = nconocimientoid;
         this.nusuarioid = nusuarioid;
         this.nestadoid = nestadoid;
         this.vusuariocreacion = vusuariocreacion;
-        this.dfechacreacion = dfechacreacion;
         this.vusuariomodificacion = vusuariomodificacion;
+        this.dfechacreacion = dfechacreacion;
         this.dfechamodificacion = dfechamodificacion;
         this.dfechaasignacion = dfechaasignacion;
         this.dfechaatencion = dfechaatencion;
         this.dfecharecepcion = dfecharecepcion;
     }
 
-    /**
-     * @return the nasignacionid
-     */
     public BigDecimal getNasignacionid() {
-        return nasignacionid;
+        return this.nasignacionid;
     }
 
-    /**
-     * @param nasignacionid the nasignacionid to set
-     */
     public void setNasignacionid(BigDecimal nasignacionid) {
         this.nasignacionid = nasignacionid;
     }
 
-    /**
-     * @return the ntipoconocimientoid
-     */
     public BigDecimal getNtipoconocimientoid() {
-        return ntipoconocimientoid;
+        return this.ntipoconocimientoid;
     }
 
-    /**
-     * @param ntipoconocimientoid the ntipoconocimientoid to set
-     */
     public void setNtipoconocimientoid(BigDecimal ntipoconocimientoid) {
         this.ntipoconocimientoid = ntipoconocimientoid;
     }
 
-    /**
-     * @return the nconocimientoid
-     */
     public BigDecimal getNconocimientoid() {
-        return nconocimientoid;
+        return this.nconocimientoid;
     }
 
-    /**
-     * @param nconocimientoid the nconocimientoid to set
-     */
     public void setNconocimientoid(BigDecimal nconocimientoid) {
         this.nconocimientoid = nconocimientoid;
     }
 
-    /**
-     * @return the nusuarioid
-     */
     public BigDecimal getNusuarioid() {
-        return nusuarioid;
+        return this.nusuarioid;
     }
 
-    /**
-     * @param nusuarioid the nusuarioid to set
-     */
     public void setNusuarioid(BigDecimal nusuarioid) {
         this.nusuarioid = nusuarioid;
     }
 
-    /**
-     * @return the nestadoid
-     */
     public BigDecimal getNestadoid() {
-        return nestadoid;
+        return this.nestadoid;
     }
 
-    /**
-     * @param nestadoid the nestadoid to set
-     */
     public void setNestadoid(BigDecimal nestadoid) {
         this.nestadoid = nestadoid;
     }
 
-    /**
-     * @return the vusuariocreacion
-     */
     public String getVusuariocreacion() {
-        return vusuariocreacion;
+        return this.vusuariocreacion;
     }
 
-    /**
-     * @param vusuariocreacion the vusuariocreacion to set
-     */
     public void setVusuariocreacion(String vusuariocreacion) {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    /**
-     * @return the vusuariomodificacion
-     */
     public String getVusuariomodificacion() {
-        return vusuariomodificacion;
+        return this.vusuariomodificacion;
     }
 
-    /**
-     * @param vusuariomodificacion the vusuariomodificacion to set
-     */
     public void setVusuariomodificacion(String vusuariomodificacion) {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    /**
-     * @return the dfechacreacion
-     */
-    public Date getDfechacreacion() {
-        return dfechacreacion;
+    public Serializable getDfechacreacion() {
+        return this.dfechacreacion;
     }
 
-    /**
-     * @param dfechacreacion the dfechacreacion to set
-     */
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
     }
 
-    /**
-     * @return the dfechamodificacion
-     */
     public Date getDfechamodificacion() {
-        return dfechamodificacion;
+        return this.dfechamodificacion;
     }
 
-    /**
-     * @param dfechamodificacion the dfechamodificacion to set
-     */
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
     }
 
-    /**
-     * @return the dfechaasignacion
-     */
-    public Date getDfechaasignacion() {
-        return dfechaasignacion;
+    public Serializable getDfechaasignacion() {
+        return this.dfechaasignacion;
     }
 
-    /**
-     * @param dfechaasignacion the dfechaasignacion to set
-     */
     public void setDfechaasignacion(Date dfechaasignacion) {
         this.dfechaasignacion = dfechaasignacion;
     }
 
-    /**
-     * @return the dfechaatencion
-     */
-    public Date getDfechaatencion() {
-        return dfechaatencion;
+    public Serializable getDfechaatencion() {
+        return this.dfechaatencion;
     }
 
-    /**
-     * @param dfechaatencion the dfechaatencion to set
-     */
     public void setDfechaatencion(Date dfechaatencion) {
         this.dfechaatencion = dfechaatencion;
     }
 
-    /**
-     * @return the dfecharecepcion
-     */
-    public Date getDfecharecepcion() {
-        return dfecharecepcion;
+    public Serializable getDfecharecepcion() {
+        return this.dfecharecepcion;
     }
 
-    /**
-     * @param dfecharecepcion the dfecharecepcion to set
-     */
     public void setDfecharecepcion(Date dfecharecepcion) {
         this.dfecharecepcion = dfecharecepcion;
     }
 
-    
-    
 }

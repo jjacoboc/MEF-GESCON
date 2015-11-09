@@ -17,7 +17,6 @@ import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
-import pe.gob.mef.gescon.web.bean.OportunidadMejora;
 
 /**
  *

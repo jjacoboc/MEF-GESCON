@@ -1,6 +1,7 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -11,8 +12,6 @@ public class Tmaestrodetalle implements java.io.Serializable {
 
     private TmaestrodetalleId id;
     private Mtmaestro mtmaestro;
-    private BigDecimal nmaestroid;
-    private BigDecimal ndetalleid;
     private String vnombre;
     private String vdescripcion;
     private String vusuariocreacion;
@@ -29,11 +28,9 @@ public class Tmaestrodetalle implements java.io.Serializable {
         this.mtmaestro = mtmaestro;
     }
 
-    public Tmaestrodetalle(TmaestrodetalleId id, Mtmaestro mtmaestro, BigDecimal nmaestroid, BigDecimal ndetalleid, String vnombre, String vdescripcion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, BigDecimal nactivo) {
+    public Tmaestrodetalle(TmaestrodetalleId id, Mtmaestro mtmaestro, String vnombre, String vdescripcion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, BigDecimal nactivo) {
         this.id = id;
         this.mtmaestro = mtmaestro;
-        this.nmaestroid = nmaestroid;
-        this.ndetalleid = ndetalleid;
         this.vnombre = vnombre;
         this.vdescripcion = vdescripcion;
         this.vusuariocreacion = vusuariocreacion;
@@ -57,34 +54,6 @@ public class Tmaestrodetalle implements java.io.Serializable {
 
     public void setMtmaestro(Mtmaestro mtmaestro) {
         this.mtmaestro = mtmaestro;
-    }
-
-    /**
-     * @return the nmaestroid
-     */
-    public BigDecimal getNmaestroid() {
-        return nmaestroid;
-    }
-
-    /**
-     * @param nmaestroid the nmaestroid to set
-     */
-    public void setNmaestroid(BigDecimal nmaestroid) {
-        this.nmaestroid = nmaestroid;
-    }
-
-    /**
-     * @return the ndetalleid
-     */
-    public BigDecimal getNdetalleid() {
-        return ndetalleid;
-    }
-
-    /**
-     * @param ndetalleid the ndetalleid to set
-     */
-    public void setNdetalleid(BigDecimal ndetalleid) {
-        this.ndetalleid = ndetalleid;
     }
 
     public String getVnombre() {
@@ -111,7 +80,7 @@ public class Tmaestrodetalle implements java.io.Serializable {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Date getDfechacreacion() {
+    public Serializable getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -127,7 +96,7 @@ public class Tmaestrodetalle implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Date getDfechamodificacion() {
+    public Serializable getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 

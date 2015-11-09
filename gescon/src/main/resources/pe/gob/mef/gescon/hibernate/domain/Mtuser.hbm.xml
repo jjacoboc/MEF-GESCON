@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 11/09/2015 05:20:11 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Mtuser" table="MTUSER" schema="GESCON">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Mtuser" table="MTUSER" schema="GESCON3" optimistic-lock="version">
         <id name="nusuarioid" type="big_decimal">
             <column name="NUSUARIOID" precision="22" scale="0" />
-            <generator class="assigned"></generator>
+            <generator class="assigned" />
         </id>
         <property name="vlogin" type="string">
             <column name="VLOGIN" length="20" />
@@ -17,11 +17,11 @@
         <property name="vapellidos" type="string">
             <column name="VAPELLIDOS" length="25" />
         </property>
-        <property name="dfechanacimiento" type="date">
-            <column name="DFECHANACIMIENTO" length="7" />
+        <property name="vcorreo" type="string">
+            <column name="VCORREO" length="30" />
         </property>
-        <property name="nestado" type="big_decimal">
-            <column name="NESTADO" precision="22" scale="0" />
+        <property name="nactivo" type="big_decimal">
+            <column name="NACTIVO" precision="22" scale="0" />
         </property>
         <property name="vusuariomodificacion" type="string">
             <column name="VUSUARIOMODIFICACION" length="25" />
@@ -30,47 +30,56 @@
             <column name="VUSUARIOCREACION" length="25" />
         </property>
         <property name="dfechacreacion" type="timestamp">
-            <column name="DFECHACREACION" length="6" />
+            <column name="DFECHACREACION" />
         </property>
         <property name="dfechamodificacion" type="timestamp">
-            <column name="DFECHAMODIFICACION" length="6" />
+            <column name="DFECHAMODIFICACION" />
+        </property>
+        <property name="dfechanacimiento" type="date">
+            <column name="DFECHANACIMIENTO" length="7" />
         </property>
         <property name="vsexo" type="string">
             <column name="VSEXO" length="25" />
         </property>
         <property name="vdni" type="string">
             <column name="VDNI" length="8" />
-        </property>        
+        </property>
         <property name="vdpto" type="string">
             <column name="VDPTO" length="25" />
-        </property>     
+        </property>
         <property name="vprov" type="string">
             <column name="VPROV" length="25" />
-        </property>          
+        </property>
         <property name="vdist" type="string">
             <column name="VDIST" length="25" />
-        </property>         
+        </property>
         <property name="vprofesion" type="string">
             <column name="VPROFESION" length="25" />
-        </property>        
+        </property>
         <property name="ventidad" type="string">
             <column name="VENTIDAD" length="25" />
-        </property>        
+        </property>
         <property name="vpliego" type="string">
             <column name="VPLIEGO" length="25" />
-        </property>   
+        </property>
         <property name="vcargo" type="string">
             <column name="VCARGO" length="25" />
-        </property> 
+        </property>
         <property name="varea" type="string">
             <column name="VAREA" length="25" />
-        </property>            
-        <property name="vsector" type="string">
-            <column name="VSECTOR" length="25" />
-        </property>              
+        </property>
         <property name="vgobierno" type="string">
             <column name="VGOBIERNO" length="25" />
-        </property>          
+        </property>
+        <property name="vsector" type="string">
+            <column name="VSECTOR" length="25" />
+        </property>
+        <set name="tcategoriaUsers" table="TCATEGORIA_USER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NUSUARIOID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TcategoriaUser" />
+        </set>
         <set name="tuserPerfils" table="TUSER_PERFIL" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NUSUARIOID" precision="22" scale="0" not-null="true" />

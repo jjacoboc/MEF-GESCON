@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 11/09/2015 05:20:11 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Tmaestrodetalle" table="TMAESTRODETALLE" schema="GESCON">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Tmaestrodetalle" table="TMAESTRODETALLE" schema="GESCON3" optimistic-lock="version">
         <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TmaestrodetalleId">
             <key-property name="nmaestroid" type="big_decimal">
                 <column name="NMAESTROID" precision="22" scale="0" />
@@ -15,12 +15,6 @@
         <many-to-one name="mtmaestro" class="pe.gob.mef.gescon.hibernate.domain.Mtmaestro" update="false" insert="false" fetch="select">
             <column name="NMAESTROID" precision="22" scale="0" not-null="true" />
         </many-to-one>
-        <property name="nmaestroid" type="big_decimal" update="false" insert="false">
-            <column name="NMAESTROID" precision="22" scale="0" />
-        </property>
-        <property name="ndetalleid" type="big_decimal" update="false" insert="false"> 
-            <column name="NDETALLEID" precision="22" scale="0" />
-        </property>
         <property name="vnombre" type="string">
             <column name="VNOMBRE" length="25" />
         </property>
@@ -31,13 +25,13 @@
             <column name="VUSUARIOCREACION" length="25" />
         </property>
         <property name="dfechacreacion" type="timestamp">
-            <column name="DFECHACREACION" length="7" />
+            <column name="DFECHACREACION" />
         </property>
         <property name="vusuariomodificacion" type="string">
             <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
         <property name="dfechamodificacion" type="timestamp">
-            <column name="DFECHAMODIFICACION" length="7" />
+            <column name="DFECHAMODIFICACION" />
         </property>
         <property name="nactivo" type="big_decimal">
             <column name="NACTIVO" precision="22" scale="0" />

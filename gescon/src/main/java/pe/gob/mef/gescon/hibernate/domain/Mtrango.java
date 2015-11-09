@@ -1,6 +1,7 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 22/09/2015 05:59:19 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -78,7 +79,7 @@ public class Mtrango implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Date getDfechacreacion() {
+    public Serializable getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -86,7 +87,7 @@ public class Mtrango implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public Date getDfechamodificacion() {
+    public Serializable getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 

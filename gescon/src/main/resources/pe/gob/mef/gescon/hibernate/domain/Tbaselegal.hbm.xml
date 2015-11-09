@@ -1,24 +1,24 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 12/10/2015 03:16:22 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Tbaselegal" table="TBASELEGAL" schema="GESCON" optimistic-lock="version">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Tbaselegal" table="TBASELEGAL" schema="GESCON3" optimistic-lock="version">
         <id name="nbaselegalid" type="big_decimal">
             <column name="NBASELEGALID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <property name="nestadoid" type="big_decimal">
+        <many-to-one name="mtcategoria" class="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" fetch="select">
+            <column name="NCATEGORIAID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="mtestadoBaselegal" class="pe.gob.mef.gescon.hibernate.domain.MtestadoBaselegal" fetch="select">
             <column name="NESTADOID" precision="22" scale="0" />
-        </property>
-        <property name="nrangoid" type="big_decimal">
+        </many-to-one>
+        <many-to-one name="mtrango" class="pe.gob.mef.gescon.hibernate.domain.Mtrango" fetch="select">
             <column name="NRANGOID" precision="22" scale="0" />
-        </property>
+        </many-to-one>
         <property name="vnombre" type="string">
             <column name="VNOMBRE" length="250" />
-        </property>
-        <property name="ncategoriaid" type="big_decimal">
-            <column name="NCATEGORIAID" precision="22" scale="0" />
         </property>
         <property name="vnumero" type="string">
             <column name="VNUMERO" length="50" />

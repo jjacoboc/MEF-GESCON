@@ -1,31 +1,30 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 27/10/2015 06:08:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Tdiscusion" table="TDISCUSION" schema="GESCON" optimistic-lock="version">
-        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TdiscusionId">
-            <key-property name="ndiscusionid" type="big_decimal">
-                <column name="NDISCUSIONID" precision="22" scale="0" />
-            </key-property>
-            <key-property name="nconocimientoid" type="big_decimal">
-                <column name="NCONOCIMIENTOID" precision="22" scale="0" />
-            </key-property>
-        </composite-id>
-        <many-to-one name="tconocimiento" class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" update="false" insert="false" fetch="select">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Tdiscusion" table="TDISCUSION" schema="GESCON3" optimistic-lock="version">
+        <id name="ndiscusionid" type="big_decimal">
+            <column name="NDISCUSIONID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tconocimiento" class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" fetch="select">
             <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <property name="vdiscusion" type="string">
             <column name="VDISCUSION" length="500" />
         </property>
-        <property name="nusuariomod" type="big_decimal">
-            <column name="NUSUARIOMOD" precision="22" scale="0" />
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
-        <property name="nusuariocreacion" type="big_decimal">
-            <column name="NUSUARIOCREACION" precision="22" scale="0" />
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
         </property>
-        <property name="dfechacreacion" type="date">
-            <column name="DFECHACREACION" length="7" />
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" />
+        </property>
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" />
         </property>
     </class>
 </hibernate-mapping>

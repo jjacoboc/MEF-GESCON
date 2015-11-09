@@ -1,6 +1,7 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -19,7 +20,7 @@ public class Mtmaestro implements java.io.Serializable {
     private String vusuariomodificacion;
     private Date dfechamodificacion;
     private BigDecimal nactivo;
-    private Set<Tmaestrodetalle> tmaestrodetalles = new HashSet<Tmaestrodetalle>(0);
+    private Set tmaestrodetalles = new HashSet(0);
 
     public Mtmaestro() {
     }
@@ -28,7 +29,7 @@ public class Mtmaestro implements java.io.Serializable {
         this.nmaestroid = nmaestroid;
     }
 
-    public Mtmaestro(BigDecimal nmaestroid, String vnombre, String vdescripcion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, BigDecimal nactivo, Set<Tmaestrodetalle> tmaestrodetalles) {
+    public Mtmaestro(BigDecimal nmaestroid, String vnombre, String vdescripcion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, BigDecimal nactivo, Set tmaestrodetalles) {
         this.nmaestroid = nmaestroid;
         this.vnombre = vnombre;
         this.vdescripcion = vdescripcion;
@@ -72,7 +73,7 @@ public class Mtmaestro implements java.io.Serializable {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Date getDfechacreacion() {
+    public Serializable getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -88,7 +89,7 @@ public class Mtmaestro implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Date getDfechamodificacion() {
+    public Serializable getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 
@@ -104,11 +105,11 @@ public class Mtmaestro implements java.io.Serializable {
         this.nactivo = nactivo;
     }
 
-    public Set<Tmaestrodetalle> getTmaestrodetalles() {
+    public Set getTmaestrodetalles() {
         return this.tmaestrodetalles;
     }
 
-    public void setTmaestrodetalles(Set<Tmaestrodetalle> tmaestrodetalles) {
+    public void setTmaestrodetalles(Set tmaestrodetalles) {
         this.tmaestrodetalles = tmaestrodetalles;
     }
 

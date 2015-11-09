@@ -42,25 +42,29 @@
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tasignacion.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tbaselegal.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tcalificacion.hbm.xml</value>
-                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcategoriaConocimiento.hbm.xml</value>
-                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcategoriaHist.hbm.xml</value>
-                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcomentHist.hbm.xml</value>
-                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tcomentario.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcalificacionHist.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcategoriaUser.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tconocimiento.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tdiscusion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TdiscusionHist.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Thistorial.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Timplementacion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TimplementacionHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tmaestrodetalle.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tmensaje.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tobservacion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TobservacionHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tpass.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TpoliticaPerfil.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tpregunta.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tseccion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TseccionHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TuserPerfil.hbm.xml</value>
-                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvincHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tvinculo.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoBaselegal.hbm.xml</value>
-                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tobservacion.hbm.xml</value>
-                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Thistorial.hbm.xml</value>
-                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Timplementacion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoImplementacion.hbm.xml</value>
-                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcategoriaUser.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoImplementacionHist.hbm.xml</value>
             </list>
         </property>
         <property name="hibernateProperties">

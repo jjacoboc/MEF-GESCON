@@ -1,6 +1,7 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 22/09/2015 05:59:19 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  */
 public class Tarchivo implements java.io.Serializable {
 
-    private TarchivoId id;
+    private BigDecimal narchivoid;
     private Tbaselegal tbaselegal;
     private String vnombre;
     private String vruta;
@@ -22,13 +23,13 @@ public class Tarchivo implements java.io.Serializable {
     public Tarchivo() {
     }
 
-    public Tarchivo(TarchivoId id, Tbaselegal tbaselegal) {
-        this.id = id;
+    public Tarchivo(BigDecimal narchivoid, Tbaselegal tbaselegal) {
+        this.narchivoid = narchivoid;
         this.tbaselegal = tbaselegal;
     }
 
-    public Tarchivo(TarchivoId id, Tbaselegal tbaselegal, String vnombre, String vruta, BigDecimal nversion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion) {
-        this.id = id;
+    public Tarchivo(BigDecimal narchivoid, Tbaselegal tbaselegal, String vnombre, String vruta, BigDecimal nversion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion) {
+        this.narchivoid = narchivoid;
         this.tbaselegal = tbaselegal;
         this.vnombre = vnombre;
         this.vruta = vruta;
@@ -39,12 +40,12 @@ public class Tarchivo implements java.io.Serializable {
         this.dfechamodificacion = dfechamodificacion;
     }
 
-    public TarchivoId getId() {
-        return this.id;
+    public BigDecimal getNarchivoid() {
+        return this.narchivoid;
     }
 
-    public void setId(TarchivoId id) {
-        this.id = id;
+    public void setNarchivoid(BigDecimal narchivoid) {
+        this.narchivoid = narchivoid;
     }
 
     public Tbaselegal getTbaselegal() {
@@ -87,7 +88,7 @@ public class Tarchivo implements java.io.Serializable {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Date getDfechacreacion() {
+    public Serializable getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -103,11 +104,12 @@ public class Tarchivo implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Date getDfechamodificacion() {
+    public Serializable getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
     }
+
 }

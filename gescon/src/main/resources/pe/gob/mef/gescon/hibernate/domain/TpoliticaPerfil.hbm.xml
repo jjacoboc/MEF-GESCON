@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 11/09/2015 05:20:11 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfil" table="TPOLITICA_PERFIL" schema="GESCON">
+    <class name="pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfil" table="TPOLITICA_PERFIL" schema="GESCON3" optimistic-lock="version">
         <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfilId">
             <key-property name="npoliticaid" type="big_decimal">
                 <column name="NPOLITICAID" precision="22" scale="0" />
@@ -18,17 +18,17 @@
         <many-to-one name="mtpolitica" class="pe.gob.mef.gescon.hibernate.domain.Mtpolitica" update="false" insert="false" fetch="select">
             <column name="NPOLITICAID" precision="22" scale="0" not-null="true" />
         </many-to-one>
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
+        </property>
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="25" />
         </property>
         <property name="dfechacreacion" type="timestamp">
-            <column name="DFECHACREACION" length="6" />
-        </property>
-        <property name="vusuariomodificacion" type="string">
-            <column name="VUSUARIOMODIFICACION" length="25" />
+            <column name="DFECHACREACION" />
         </property>
         <property name="dfechamodificacion" type="timestamp">
-            <column name="DFECHAMODIFICACION" length="6" />
+            <column name="DFECHAMODIFICACION" />
         </property>
     </class>
 </hibernate-mapping>

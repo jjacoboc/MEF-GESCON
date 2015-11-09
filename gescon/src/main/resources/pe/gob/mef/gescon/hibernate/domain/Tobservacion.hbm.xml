@@ -1,18 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 27/10/2015 06:08:14 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Tobservacion" table="TOBSERVACION" schema="GESCON" optimistic-lock="version">
-        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TobservacionId">
-            <key-property name="nobservacionid" type="big_decimal">
-                <column name="NOBSERVACIONID" precision="22" scale="0" />
-            </key-property>
-            <key-property name="nconocimientoid" type="big_decimal">
-                <column name="NCONOCIMIENTOID" precision="22" scale="0" />
-            </key-property>
-        </composite-id>
-        <many-to-one name="tconocimiento" class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" update="false" insert="false" fetch="select">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Tobservacion" table="TOBSERVACION" schema="GESCON3" optimistic-lock="version">
+        <id name="nobservacionid" type="big_decimal">
+            <column name="NOBSERVACIONID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tconocimiento" class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" fetch="select">
             <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <property name="vsumilla" type="string">

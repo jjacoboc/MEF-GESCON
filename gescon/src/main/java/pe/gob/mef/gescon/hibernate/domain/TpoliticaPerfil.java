@@ -1,6 +1,7 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -25,13 +26,14 @@ public class TpoliticaPerfil implements java.io.Serializable {
         this.mtpolitica = mtpolitica;
     }
 
-    public TpoliticaPerfil(TpoliticaPerfilId id, Mtperfil mtperfil, Mtpolitica mtpolitica, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion) {
+    public TpoliticaPerfil(TpoliticaPerfilId id, Mtperfil mtperfil, Mtpolitica mtpolitica, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion) {
         this.id = id;
         this.mtperfil = mtperfil;
         this.mtpolitica = mtpolitica;
         this.vusuariomodificacion = vusuariomodificacion;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
+        this.dfechamodificacion = dfechamodificacion;
     }
 
     public TpoliticaPerfilId getId() {
@@ -74,7 +76,7 @@ public class TpoliticaPerfil implements java.io.Serializable {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Date getDfechacreacion() {
+    public Serializable getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -82,8 +84,8 @@ public class TpoliticaPerfil implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public Date getDfechamodificacion() {
-        return dfechamodificacion;
+    public Serializable getDfechamodificacion() {
+        return this.dfechamodificacion;
     }
 
     public void setDfechamodificacion(Date dfechamodificacion) {
