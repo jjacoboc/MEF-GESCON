@@ -4,7 +4,43 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
-
+    <script>
+        function setInnerText() {
+            var el = document.getElementById(":f:descHtml");
+            var sel, range, innerText = "";
+            if (typeof document.selection !== "undefined" &amp;&amp; typeof document.body.createTextRange !== "undefined") {
+                range = document.body.createTextRange();
+                range.moveToElementText(el);
+                innerText = range.text;
+            } else if (typeof window.getSelection !== "undefined" &amp;&amp; typeof document.createRange !== "undefined") {
+                sel = window.getSelection();
+                sel.selectAllChildren(el);
+                innerText = "" + sel;
+                sel.removeAllRanges();
+            }
+            document.getElementById(":f:descPlain").value = innerText;
+        }
+        function setInnerTextSection() {
+            var el = document.getElementById(":secDialogForm:txtHtml");
+            var sel, range, innerText = "";
+            if (typeof document.selection !== "undefined" &amp;&amp; typeof document.body.createTextRange !== "undefined") {
+                range = document.body.createTextRange();
+                range.moveToElementText(el);
+                innerText = range.text;
+            } else if (typeof window.getSelection !== "undefined" &amp;&amp; typeof document.createRange !== "undefined") {
+                sel = window.getSelection();
+                sel.selectAllChildren(el);
+                innerText = "" + sel;
+                sel.removeAllRanges();
+            }
+            document.getElementById(":secDialogForm:txtPlain").value = innerText;
+        }
+    </script>
+    <style>
+        .ui-picklist-filter {
+            font-size: 14px !important;
+        }
+    </style>
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
@@ -18,67 +54,137 @@
                                     <h:panelGroup>
                                         <p:commandButton value="#{msgs.wk_btn_categoria}" actionListener="#{wikiMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
                                         <p:spacer width="15"/>
-                                        <h:outputText value="#{wikiMB.selectedCategoria.vnombre}" />
+                                        <h:outputText value="#{wikiMB.selectedCategoria.vnombre}" styleClass="Fs14"/>
                                     </h:panelGroup>
 
                                     <h:outputText value="#{msgs.wk_lbl_nombre}"/>
-                                    <p:inputText value="#{wikiMB.nombre}" size="150" style="text-transform: uppercase;" maxlength="25"/>
+                                    <p:inputText value="#{wikiMB.nombre}" size="110" styleClass="Fs14" maxlength="25"/>
 
-                                    <h:outputText value="#{msgs.wk_lbl_detalle}"/>
-                                    <p:editor value="#{wikiMB.descripcion}"/>
+                                    <h:outputText value="#{msgs.wk_lbl_descripcion}"/>
+                                    <p:editor id="descHtml" value="#{wikiMB.descripcionHtml}" />
+                                    <p:inputTextarea id="descPlain" value="#{wikiMB.descripcionPlain}" rendered="false"/>
 
+                                    <p:spacer/>
+
+                                    <p:commandButton value="#{msgs.wk_btn_seccion}" actionListener="#{wikiMB.toAddSection}" update=":secDialogForm:pgSec" oncomplete="PF('secDialog').show();" styleClass="ui-link Fs14"/>
+                                    <h:outputText value="#{msgs.wk_lbl_detalle}" rendered="#{not empty wikiMB.listaSeccion}"/>
+                                    <p:fieldset rendered="#{not empty wikiMB.listaSeccion}">
+                                        <table style="">
+                                            <ui:repeat value="#{wikiMB.listaSeccion}" var="s" varStatus="vs">
+                                                <tr class="Underline FontBold"><td><h:outputText value="#{s.vtitulo}"/></td></tr>
+                                                <tr><td><h:outputText value="#{s.detalle}" escape="false" styleClass="Fs14"/></td></tr>
+                                                <tr><td><p:spacer/></td></tr>
+                                            </ui:repeat>
+                                        </table>
+                                    </p:fieldset>
+
+                                    <p:spacer/>                                    
                                     <h:outputText value="#{msgs.wk_lbl_vinculo}"/>
                                 </h:panelGrid>
                                 <p:fieldset>
                                     <h:panelGrid id="pgNewVinc" columns="1" cellpadding="0" cellspacing="0" width="100%">
-                                        <p:commandButton value="#{msgs.wk_btn_vinculo}" styleClass="ui-link Fs14"/>
-                                        <p:tabView>
+                                        <p:commandButton value="#{msgs.wk_btn_vinculo}" actionListener="#{wikiMB.toAddLink}" update=":pickDialogForm:pgPick" oncomplete="PF('pickDialog').show();" styleClass="ui-link Fs14"/>
+                                        <p:tabView id="tabview">
                                             <p:tab title="Bases Legales">
-                                                <p:dataTable emptyMessage="Ninguna base legal vinculada." style="width: 600px;">
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna07}"/>
-                                                    <p:column headerText="#{msgs.bl_lbl_columna08}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}"/>
+                                                <p:dataTable value="#{wikiMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
+                                                             emptyMessage="Ninguna base legal vinculada." >
+                                                    <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                                        <h:outputText value="#{p.codigo}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                                        <h:outputText value="#{p.nombre}" />
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Contenidos">
-                                                <p:dataTable emptyMessage="Ningún contenido vinculado." style="width: 600px;">
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna07}"/>
-                                                    <p:column headerText="#{msgs.bl_lbl_columna08}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}"/>
+                                                <p:dataTable value="#{wikiMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ningún contenido vinculado." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Buenas Prácticas">
-                                                <p:dataTable emptyMessage="Ninguna buena práctica vinculada." style="width: 600px;">
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna07}"/>
-                                                    <p:column headerText="#{msgs.bl_lbl_columna08}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}"/>
+                                                <p:dataTable value="#{wikiMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna buena práctica vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Oportunidades de Mejora">
-                                                <p:dataTable emptyMessage="Ninguna oportunidad de mejora vinculada." style="width: 600px;">
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna07}"/>
-                                                    <p:column headerText="#{msgs.bl_lbl_columna08}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}"/>
+                                                <p:dataTable value="#{wikiMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna oportunidad de mejora vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Wikis">
-                                                <p:dataTable emptyMessage="Ningún wiki vinculado." style="width: 600px;">
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna07}"/>
-                                                    <p:column headerText="#{msgs.bl_lbl_columna08}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}"/>
+                                                <p:dataTable value="#{wikiMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ningún wiki vinculado." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Respuestas">
-                                                <p:dataTable emptyMessage="Ninguna respuesta vinculada." style="width: 600px;">
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna07}"/>
-                                                    <p:column headerText="#{msgs.bl_lbl_columna08}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}"/>
-                                                    <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}"/>
+                                                <p:dataTable value="#{wikiMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna respuesta vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
                                                 </p:dataTable>
                                             </p:tab>
                                         </p:tabView>
@@ -86,7 +192,7 @@
                                 </p:fieldset>
                                 <h:panelGrid columns="2" width="100%">
                                     <h:panelGroup>
-                                        <p:commandButton value="Registrar"/>
+                                        <p:commandButton value="Registrar" onclick="setInnerText()"/>
                                         <p:spacer width="10"/>
                                         <p:commandButton value="Cancelar" ajax="false" action="/pages/wiki/lista.xhtml"/>
                                     </h:panelGroup>
@@ -94,7 +200,7 @@
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
-                        
+
                         <p:dialog id="catDlg" header="#{msgs.wk_lbl_pnlCategoria}" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
                             <h:form id="catDialogForm">
                                 <h:panelGrid id="pgCat" columns="1">
@@ -109,20 +215,50 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
+                        <p:dialog id="secDlg" header="#{msgs.wk_lbl_pnlSeccion}" widgetVar="secDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="secDialogForm">
+                                <h:panelGrid id="pgSec" columns="1">
+                                    <h:outputText value="#{msgs.wk_lbl_titulo}"/>
+                                    <p:inputText value="#{wikiMB.titulo}" size="100" maxlength="100"/>
+
+                                    <h:outputText value="#{msgs.wk_lbl_detalle2}"/>
+                                    <p:editor id="txtHtml" value="#{wikiMB.detalleHtml}" />
+                                    <p:inputTextarea id="txtPlain" value="#{wikiMB.detallePlain}" rendered="false"/>
+
+                                    <p:commandButton value="#{msgs.wk_btn_addseccion}" actionListener="#{wikiMB.addSection}" onclick="setInnerTextSection();" update=":f:pgNew" oncomplete="PF('secDialog').hide();" styleClass="ui-link Fs14"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
                         <p:dialog id="pickDlg" header="#{msgs.wk_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="pickDialogForm">
                                 <h:panelGrid id="pgPick" columns="1">
-                                    <h:panelGrid columns="2" styleClass="pickListPanelColumns">
-                                        <p:pickList value="#{baseLegalMB.pickList}" var="p" itemValue="#{p}" itemLabel="#{p.vnumero} - #{p.vnombre}"
-                                                    converter="converterPickListBaseLegal" showSourceFilter="true" showTargetFilter="true" 
-                                                    filterMatchMode="contains">
-                                            <p:ajax event="transfer" listener="#{baseLegalMB.onTransfer}" 
-                                                    update=":f:pgNew, :f:pgNewVinc"/>
-                                            <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
-                                            <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
-                                        </p:pickList>
-                                    </h:panelGrid>
+                                    <h:outputText value="Tipo de Conocimiento:"/>
+                                    <p:selectOneMenu value="#{wikiMB.idTipoConocimiento}" styleClass="Wid20">
+                                        <p:ajax event="change" listener="#{wikiMB.onListTipoConocimientoChange}" update=":pickDialogForm:pgPick"/>
+                                        <f:selectItem itemValue="" itemLabel="Seleccione" />
+                                        <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
+                                    </p:selectOneMenu>
+                                    <p:pickList value="#{wikiMB.pickList}" var="p" itemValue="#{p}" converter="converterPickListConocimiento" 
+                                                itemLabel="#{p.codigo} #{p.nombre} #{p.categoria} #{p.estado}" showSourceFilter="true" 
+                                                showTargetFilter="true" filterMatchMode="contains" styleClass="wk-picklist-list">
+                                        <p:ajax event="transfer" listener="#{wikiMB.onTransfer}" update=":f:tabview"/>
+                                        <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
+                                        <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
+
+                                        <p:column style="width: 60%;">
+                                            <h:outputText value="#{p.codigo}" rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value=" - " rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value="#{p.nombre}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center;">
+                                            <h:outputText value="#{p.categoria}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center;">
+                                            <h:outputText value="#{p.estado}" />
+                                        </p:column>
+                                    </p:pickList>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>

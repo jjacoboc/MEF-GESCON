@@ -13,7 +13,7 @@ import java.util.Set;
 public class Timplementacion implements java.io.Serializable {
 
     private BigDecimal nimplementacionid;
-    private Tconocimiento tconocimiento;
+    private BigDecimal nconocimientoid;
     private String vdescripcion;
     private String vtitulo;
     private String vcontenido;
@@ -28,14 +28,13 @@ public class Timplementacion implements java.io.Serializable {
     public Timplementacion() {
     }
 
-    public Timplementacion(BigDecimal nimplementacionid, Tconocimiento tconocimiento) {
+    public Timplementacion(BigDecimal nimplementacionid) {
         this.nimplementacionid = nimplementacionid;
-        this.tconocimiento = tconocimiento;
     }
 
-    public Timplementacion(BigDecimal nimplementacionid, Tconocimiento tconocimiento, String vdescripcion, String vtitulo, String vcontenido, String vmsjespecialista, String vmsjmoderador, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, Set tvinculoImplementacions) {
+    public Timplementacion(BigDecimal nimplementacionid, BigDecimal nconocimientoid, String vdescripcion, String vtitulo, String vcontenido, String vmsjespecialista, String vmsjmoderador, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, Set tvinculoImplementacions) {
         this.nimplementacionid = nimplementacionid;
-        this.tconocimiento = tconocimiento;
+        this.nconocimientoid = nconocimientoid;
         this.vdescripcion = vdescripcion;
         this.vtitulo = vtitulo;
         this.vcontenido = vcontenido;
@@ -56,12 +55,12 @@ public class Timplementacion implements java.io.Serializable {
         this.nimplementacionid = nimplementacionid;
     }
 
-    public Tconocimiento getTconocimiento() {
-        return this.tconocimiento;
+    public BigDecimal getNconocimientoid() {
+        return this.nconocimientoid;
     }
 
-    public void setTconocimiento(Tconocimiento tconocimiento) {
-        this.tconocimiento = tconocimiento;
+    public void setNconocimientoid(BigDecimal nconocimientoid) {
+        this.nconocimientoid = nconocimientoid;
     }
 
     public String getVdescripcion() {

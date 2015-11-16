@@ -19,6 +19,7 @@ public interface TipoConocimientoDao {
     
     /**
      * cnishimura
+     * @param ntpoconocimientoid
      * @return
      * @throws Exception 
      */

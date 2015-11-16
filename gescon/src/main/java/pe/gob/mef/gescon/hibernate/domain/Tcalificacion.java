@@ -10,8 +10,8 @@ import java.util.Date;
  */
 public class Tcalificacion implements java.io.Serializable {
 
-    private TcalificacionId id;
-    private Tconocimiento tconocimiento;
+    private BigDecimal ncalificacionid;
+    private BigDecimal nconocimientoid;
     private BigDecimal ncalificacion;
     private String vusuariomodificacion;
     private String vusuariocreacion;
@@ -23,14 +23,13 @@ public class Tcalificacion implements java.io.Serializable {
     public Tcalificacion() {
     }
 
-    public Tcalificacion(TcalificacionId id, Tconocimiento tconocimiento) {
-        this.id = id;
-        this.tconocimiento = tconocimiento;
+    public Tcalificacion(BigDecimal ncalificacionid) {
+        this.ncalificacionid = ncalificacionid;
     }
 
-    public Tcalificacion(TcalificacionId id, Tconocimiento tconocimiento, BigDecimal ncalificacion, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, String vcomentario, BigDecimal nestado) {
-        this.id = id;
-        this.tconocimiento = tconocimiento;
+    public Tcalificacion(BigDecimal ncalificacionid, BigDecimal nconocimientoid, BigDecimal ncalificacion, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, String vcomentario, BigDecimal nestado) {
+        this.ncalificacionid = ncalificacionid;
+        this.nconocimientoid = nconocimientoid;
         this.ncalificacion = ncalificacion;
         this.vusuariomodificacion = vusuariomodificacion;
         this.vusuariocreacion = vusuariocreacion;
@@ -40,20 +39,20 @@ public class Tcalificacion implements java.io.Serializable {
         this.nestado = nestado;
     }
 
-    public TcalificacionId getId() {
-        return this.id;
+    public BigDecimal getNcalificacionid() {
+        return this.ncalificacionid;
     }
 
-    public void setId(TcalificacionId id) {
-        this.id = id;
+    public void setNcalificacionid(BigDecimal ncalificacionid) {
+        this.ncalificacionid = ncalificacionid;
     }
 
-    public Tconocimiento getTconocimiento() {
-        return this.tconocimiento;
+    public BigDecimal getNconocimientoid() {
+        return this.nconocimientoid;
     }
 
-    public void setTconocimiento(Tconocimiento tconocimiento) {
-        this.tconocimiento = tconocimiento;
+    public void setNconocimientoid(BigDecimal nconocimientoid) {
+        this.nconocimientoid = nconocimientoid;
     }
 
     public BigDecimal getNcalificacion() {

@@ -5,6 +5,11 @@
     xmlns:ps="http://primefaces.org/spark"
     xmlns:ui="http://java.sun.com/jsf/facelets"
     xmlns:p="http://primefaces.org/ui">
+    <style>
+        .submenu {
+            width: 205px !important;
+        }
+    </style>
     <h:form>
         <ps:menu style="box-shadow: 3px 3px 5px #888888;">
             <f:facet name="options">
@@ -17,18 +22,21 @@
             <p:menuitem icon="fa fa-home" url="/pages/indexAdmin.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid eq msgs.administrador}"/>
             <p:menuitem icon="fa fa-home" url="/index.xhtml" rendered="#{loginMB.user eq null}"/>
             
-            <p:separator />
+            <p:separator rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}"/>
             
             <p:submenu label="Administración" icon="fa fa-gears" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
                 <p:menuitem value="Tablas Maestras" icon="fa fa-table" url="/pages/maestro.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
                 <p:menuitem value="Perfiles de Usuario" icon="fa fa-newspaper-o" url="/pages/perfil.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
                 <p:menuitem value="Politicas de Acceso" icon="fa fa-briefcase" url="/pages/politica.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
-                <p:menuitem value="Parametros" icon="fa fa-tags" url="/pages/parametro.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
+                <p:menuitem value="Parametros" icon="fa fa-sliders" url="/pages/parametro.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
                 <p:menuitem value="Alertas" icon="fa fa-bullhorn" url="/pages/alerta.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
                 <p:menuitem value="Categorias" icon="fa fa-tags" url="/pages/categoria.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
                 <p:menuitem value="Base Legal" icon="fa fa-file-text-o" url="/pages/baseLegal.xhtml" />
                 <p:menuitem value="Preguntas" icon="fa fa-question" url="/pages/pregunta.xhtml" />
-                <p:menuitem value="Wiki" icon="fa fa-question" url="/pages/wiki/lista.xhtml" />
+                <p:menuitem value="Wiki" icon="fa fa-puzzle-piece" url="/pages/wiki/lista.xhtml" />
+                <p:menuitem value="Contenido" icon="fa fa-caret-square-o-right" url="#" />
+                <p:menuitem value="Buenas Practicas" icon="fa fa-check-square-o" url="#" />
+                <p:menuitem value="Oportunidad de Mejora" icon="fa fa-signal" url="#" />
             </p:submenu>
             
                         

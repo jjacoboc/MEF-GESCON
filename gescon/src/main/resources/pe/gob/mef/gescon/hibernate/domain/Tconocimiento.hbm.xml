@@ -8,15 +8,15 @@
             <column name="NCONOCIMIENTOID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="mtcategoria" class="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" fetch="select">
+        <property name="ncategoriaid" type="big_decimal">
             <column name="NCATEGORIAID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
-        <many-to-one name="mtsituacion" class="pe.gob.mef.gescon.hibernate.domain.Mtsituacion" fetch="select">
+        </property>
+        <property name="nsituacionid" type="big_decimal">
             <column name="NSITUACIONID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
-        <many-to-one name="mttipoConocimiento" class="pe.gob.mef.gescon.hibernate.domain.MttipoConocimiento" fetch="select">
+        </property>
+        <property name="ntipoconocimientoid" type="big_decimal">
             <column name="NTPOCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
+        </property>
         <property name="vdescripcion" type="string">
             <column name="VDESCRIPCION" length="400" />
         </property>
@@ -59,11 +59,11 @@
         <property name="vcontenido" type="string">
             <column name="VCONTENIDO" length="4000" />
         </property>
-        <property name="nestado" type="big_decimal">
-            <column name="NESTADO" precision="22" scale="0" />
-        </property>
         <property name="ndias" type="big_decimal">
             <column name="NDIAS" precision="22" scale="0" />
+        </property>
+        <property name="nactivo" type="big_decimal">
+            <column name="NACTIVO" precision="22" scale="0" />
         </property>
         <property name="vobservacion" type="string">
             <column name="VOBSERVACION" length="500" />
@@ -74,18 +74,6 @@
         <property name="ndestacado" type="big_decimal">
             <column name="NDESTACADO" precision="22" scale="0" />
         </property>
-        <set name="tvinculos" table="TVINCULO" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tvinculo" />
-        </set>
-        <set name="tobservacions" table="TOBSERVACION" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tobservacion" />
-        </set>
         <set name="thistorials" table="THISTORIAL" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
@@ -97,24 +85,6 @@
                 <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
             </key>
             <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Timplementacion" />
-        </set>
-        <set name="tdiscusions" table="TDISCUSION" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tdiscusion" />
-        </set>
-        <set name="tseccions" table="TSECCION" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="NCONOCIMIENTOID" precision="22" scale="0" />
-            </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tseccion" />
-        </set>
-        <set name="tcalificacions" table="TCALIFICACION" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-            </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tcalificacion" />
         </set>
     </class>
 </hibernate-mapping>

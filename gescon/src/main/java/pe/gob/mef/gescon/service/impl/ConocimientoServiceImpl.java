@@ -41,24 +41,11 @@ public class ConocimientoServiceImpl implements ConocimientoService{
         List<Conocimiento> conocimientos = new ArrayList<Conocimiento>();
         ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
         List<Tconocimiento> lista = conocimientoDao.getTconocimientos();
-        CategoriaDao categoriaDao = (CategoriaDao) ServiceFinder.findBean("CategoriaDao");
-        TipoConocimientoDao tipoConocimientoDao = (TipoConocimientoDao) ServiceFinder.findBean("TipoConocimientoDao");
         Conocimiento conocimiento = new Conocimiento();
-        Mtcategoria mtcategoria = new Mtcategoria();
-        MttipoConocimiento mttipoConocimiento = new MttipoConocimiento();
         for (Tconocimiento tconocimiento : lista) {
-            mttipoConocimiento = tipoConocimientoDao.getMttipoConocimientoById(tconocimiento.getMttipoConocimiento().getNtpoconocimientoid());
-            mtcategoria = categoriaDao.getMtcategoriaById(tconocimiento.getMtcategoria().getNcategoriaid() );
             BeanUtils.copyProperties(conocimiento, tconocimiento);
-            
-            conocimiento.setMtcategoria(mtcategoria);
-            conocimiento.setMttipoConocimiento(mttipoConocimiento);
-            conocimientos.add(conocimiento);
-            
-            conocimiento     = new Conocimiento();
-            mtcategoria        = new Mtcategoria();
-            mttipoConocimiento = new MttipoConocimiento();
-            
+            conocimientos.add(conocimiento);            
+            conocimiento     = new Conocimiento();            
         }
         return conocimientos;
     }
@@ -67,17 +54,8 @@ public class ConocimientoServiceImpl implements ConocimientoService{
     public void saveOrUpdate(Conocimiento conocimiento) throws Exception {
         Tconocimiento tconocimiento = new Tconocimiento();
         BeanUtils.copyProperties(tconocimiento, conocimiento);
-        ConocimientoDao conocimientoDao         = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
-        TipoConocimientoDao tipoConocimientoDao = (TipoConocimientoDao) ServiceFinder.findBean("TipoConocimientoDao");
-        CategoriaDao categoriaDao               = (CategoriaDao) ServiceFinder.findBean("CategoriaDao");
-        final MttipoConocimiento mttipoConocimiento = tipoConocimientoDao.getMttipoConocimientoById(BigDecimal.valueOf(Constante.ID_OPORTUNIDAD_MEJORAS));
-        final Mtcategoria mtcategoria = categoriaDao.getMtcategoriaById(conocimiento.getMtcategoria().getNcategoriaid());
+        ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
         tconocimiento.setNconocimientoid( conocimientoDao.getNextPK() );
-        tconocimiento.setMttipoConocimiento( mttipoConocimiento );
-        tconocimiento.setMtcategoria( mtcategoria );
-                        
-        tconocimiento.setNestado(BigDecimal.ONE);
-        
         conocimientoDao.saveOrUpdate(tconocimiento);
     }
 

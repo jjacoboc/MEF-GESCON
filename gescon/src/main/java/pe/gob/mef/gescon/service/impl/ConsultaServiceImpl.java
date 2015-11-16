@@ -33,7 +33,7 @@ public class ConsultaServiceImpl implements ConsultaService{
             if(!CollectionUtils.isEmpty(consulta)) {
                 for(HashMap map : consulta) {
                     Consulta c = new Consulta();
-                    c.setId((BigDecimal) map.get("ID"));
+                    c.setIdconocimiento((BigDecimal) map.get("ID"));
                     c.setCodigo((String) map.get("NUMERO"));
                     c.setNombre((String) map.get("NOMBRE"));
                     c.setSumilla((String) map.get("SUMILLA"));

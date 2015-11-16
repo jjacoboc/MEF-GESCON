@@ -58,6 +58,7 @@ and open the template in the editor.
     text-decoration: none;
     margin-right: 0px;
 }
+
 .ui-commandlink:hover{
     color: white !important;
 }
@@ -67,8 +68,20 @@ and open the template in the editor.
     text-decoration: none;
     margin-right: 0px;
 }
+
 .ui-link:hover{
     color: #D0525D !important;
 }
+
 .ui-growl-item {width: 128px !important;}
 .ui-growl-item-container {width: 169px !important;}
+
+.wk-picklist-list div ul {
+    font-size: 10px !important;
+    width: 500px !important;
+    height: 300px !important;
+}
+
+.wk-picklist-list div ul li {
+    font-size: 12px !important;
+}

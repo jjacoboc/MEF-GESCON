@@ -11,7 +11,7 @@ import java.util.Date;
 public class TvinculoImplementacion implements java.io.Serializable {
 
     private BigDecimal nimplvinculoid;
-    private Timplementacion timplementacion;
+    private BigDecimal nimplementacionid;
     private String vusuariocreacion;
     private Date dfechacreacion;
     private String vusuariomodificacion;
@@ -21,14 +21,13 @@ public class TvinculoImplementacion implements java.io.Serializable {
     public TvinculoImplementacion() {
     }
 
-    public TvinculoImplementacion(BigDecimal nimplvinculoid, Timplementacion timplementacion) {
+    public TvinculoImplementacion(BigDecimal nimplvinculoid) {
         this.nimplvinculoid = nimplvinculoid;
-        this.timplementacion = timplementacion;
     }
 
-    public TvinculoImplementacion(BigDecimal nimplvinculoid, Timplementacion timplementacion, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, BigDecimal nconocimientovinc) {
+    public TvinculoImplementacion(BigDecimal nimplvinculoid, BigDecimal nimplementacionid, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, BigDecimal nconocimientovinc) {
         this.nimplvinculoid = nimplvinculoid;
-        this.timplementacion = timplementacion;
+        this.nimplementacionid = nimplementacionid;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
         this.vusuariomodificacion = vusuariomodificacion;
@@ -44,12 +43,12 @@ public class TvinculoImplementacion implements java.io.Serializable {
         this.nimplvinculoid = nimplvinculoid;
     }
 
-    public Timplementacion getTimplementacion() {
-        return this.timplementacion;
+    public BigDecimal getNimplementacionid() {
+        return this.nimplementacionid;
     }
 
-    public void setTimplementacion(Timplementacion timplementacion) {
-        this.timplementacion = timplementacion;
+    public void setNimplementacionid(BigDecimal nimplementacionid) {
+        this.nimplementacionid = nimplementacionid;
     }
 
     public String getVusuariocreacion() {

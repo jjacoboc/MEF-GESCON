@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
@@ -14,14 +13,13 @@ import java.util.Date;
  *
  * @author JJacobo
  */
-public class Wiki implements Serializable {
+public class Seccion implements Serializable{
     
+    private BigDecimal nseccionid;
     private BigDecimal nconocimientoid;
-    private BigDecimal ncategoriaid;
-    private BigDecimal nsituacionid;
-    private BigDecimal ntipoconocimientoid;
     private String vtitulo;
-    private BigDecimal ndestacado;
+    private String vruta;
+    private BigDecimal norden;
     private String vusuariocreacion;
     private Date dfechacreacion;
     private String vusuariomodificacion;
@@ -29,8 +27,16 @@ public class Wiki implements Serializable {
     private String detalleHtml;
     private String detallePlain;
     
-    public Wiki(){
+    public void Seccion(){
         
+    }
+
+    public BigDecimal getNseccionid() {
+        return nseccionid;
+    }
+
+    public void setNseccionid(BigDecimal nseccionid) {
+        this.nseccionid = nseccionid;
     }
 
     public BigDecimal getNconocimientoid() {
@@ -41,30 +47,6 @@ public class Wiki implements Serializable {
         this.nconocimientoid = nconocimientoid;
     }
 
-    public BigDecimal getNcategoriaid() {
-        return ncategoriaid;
-    }
-
-    public void setNcategoriaid(BigDecimal ncategoriaid) {
-        this.ncategoriaid = ncategoriaid;
-    }
-
-    public BigDecimal getNsituacionid() {
-        return nsituacionid;
-    }
-
-    public void setNsituacionid(BigDecimal nsituacionid) {
-        this.nsituacionid = nsituacionid;
-    }
-
-    public BigDecimal getNtipoconocimientoid() {
-        return ntipoconocimientoid;
-    }
-
-    public void setNtipoconocimientoid(BigDecimal ntipoconocimientoid) {
-        this.ntipoconocimientoid = ntipoconocimientoid;
-    }
-
     public String getVtitulo() {
         return vtitulo;
     }
@@ -73,12 +55,20 @@ public class Wiki implements Serializable {
         this.vtitulo = vtitulo;
     }
 
-    public BigDecimal getNdestacado() {
-        return ndestacado;
+    public String getVruta() {
+        return vruta;
     }
 
-    public void setNdestacado(BigDecimal ndestacado) {
-        this.ndestacado = ndestacado;
+    public void setVruta(String vruta) {
+        this.vruta = vruta;
+    }
+
+    public BigDecimal getNorden() {
+        return norden;
+    }
+
+    public void setNorden(BigDecimal norden) {
+        this.norden = norden;
     }
 
     public String getVusuariocreacion() {

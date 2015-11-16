@@ -26,13 +26,13 @@
         <div id="layout-topbar-indent">
             <h:form id="headerForm">
                 <p:link outcome="/index.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}">
-                    <h:graphicImage name="gescon.png" styleClass="Fleft" library="images" class="Fleft" width="200px;" height="40px;"/>
+                    <h:graphicImage name="logo_gescon_2.jpg" styleClass="Fleft" library="images" class="Fleft" width="200px;" height="50px;"/>
                 </p:link>
                 <p:link outcome="/pages/indexAdmin.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid eq msgs.administrador}">
-                    <h:graphicImage name="gescon.png" styleClass="Fleft" library="images" class="Fleft" width="200px;" height="40px;"/>
+                    <h:graphicImage name="logo_gescon_2.jpg" styleClass="Fleft" library="images" class="Fleft" width="200px;" height="50px;"/>
                 </p:link>
                 <p:link outcome="/index.xhtml" rendered="#{loginMB.user eq null}">
-                    <h:graphicImage name="gescon.png" styleClass="Fleft" library="images" class="Fleft" width="200px;" height="40px;"/>
+                    <h:graphicImage name="logo_gescon_2.jpg" styleClass="Fleft" library="images" class="Fleft" width="230px;" height="60px;"/>
                 </p:link>
                 <a href="#" id="mobile-menu-button" class="BordRad3 white ShowOnMobile"><i class="fa fa-bars"></i> Menu</a>
                 <a href="#" id="mobile-menu-button-gray" class="BordRad3 white ShowOnMobile"><i class="fa fa-caret-down"></i> Top Menu</a>
@@ -101,7 +101,7 @@
                     <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
                     <h:panelGrid id="pgAsg" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAsignadas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
-                                     paginatorPosition="top" selectionMode="single" selection="#{loginMB.selectedNotification}" rowKey="#{row.id}"
+                                     paginatorPosition="top" selectionMode="single" selection="#{loginMB.selectedNotification}" rowKey="#{row.idconocimiento}"
                                      emptyMessage="Ningún registro encontrado." style="width: 1200px;">
                             <p:ajax event="rowSelect" listener="#{loginMB.goToKnowledge}"/>
                             <p:column style="width: 180px;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">

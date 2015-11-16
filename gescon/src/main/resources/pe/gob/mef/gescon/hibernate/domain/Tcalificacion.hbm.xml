@@ -4,17 +4,13 @@
 <!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="pe.gob.mef.gescon.hibernate.domain.Tcalificacion" table="TCALIFICACION" schema="GESCON3" optimistic-lock="version">
-        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TcalificacionId">
-            <key-property name="ncalificacionid" type="big_decimal">
-                <column name="NCALIFICACIONID" precision="22" scale="0" />
-            </key-property>
-            <key-property name="nconocimientoid" type="big_decimal">
-                <column name="NCONOCIMIENTOID" precision="22" scale="0" />
-            </key-property>
-        </composite-id>
-        <many-to-one name="tconocimiento" class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" update="false" insert="false" fetch="select">
-            <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
+        <id name="ncalificacionid" type="big_decimal">
+            <column name="NCALIFICACIONID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="nconocimientoid" type="big_decimal">
+            <column name="NCONOCIMIENTOID" precision="22" scale="0" />
+        </property>
         <property name="ncalificacion" type="big_decimal">
             <column name="NCALIFICACION" precision="22" scale="0" />
         </property>

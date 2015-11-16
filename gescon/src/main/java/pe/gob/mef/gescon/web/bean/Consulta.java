@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Date;
 import pe.gob.mef.gescon.util.DateUtils;
 
@@ -14,9 +15,10 @@ import pe.gob.mef.gescon.util.DateUtils;
  *
  * @author JJacobo
  */
-public class Consulta implements Serializable{
+public class Consulta implements Serializable, Comparable<Consulta>{
     
     private BigDecimal id;
+    private BigDecimal idconocimiento;
     private String codigo;
     private String nombre;
     private String sumilla;
@@ -36,18 +38,27 @@ public class Consulta implements Serializable{
         
     }
 
-    /**
-     * @return the id
-     */
     public BigDecimal getId() {
+        id = BigDecimal.valueOf(Long.parseLong(idTipoConocimiento.toString() + idconocimiento.toString()));
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(BigDecimal id) {
         this.id = id;
+    }
+
+    /**
+     * @return the idconocimiento
+     */
+    public BigDecimal getIdconocimiento() {
+        return idconocimiento;
+    }
+
+    /**
+     * @param idconocimiento the idconocimiento to set
+     */
+    public void setIdconocimiento(BigDecimal idconocimiento) {
+        this.idconocimiento = idconocimiento;
     }
 
     /**
@@ -268,5 +279,25 @@ public class Consulta implements Serializable{
      */
     public void setElapsedTime(String elapsedTime) {
         this.elapsedTime = elapsedTime;
+    }
+    
+    @Override
+    public int compareTo(Consulta o) {
+        return Comparators.ID.compare(this, o);
+    }
+    
+    public static class Comparators {
+        public static Comparator<Consulta> ID = new Comparator<Consulta>() {
+            @Override
+            public int compare(Consulta o1, Consulta o2) {
+                return o1.getId().intValue() - o2.getId().intValue();
+            }
+        };
+        public static Comparator<Consulta> IDTIPOCONOCIMIENTO = new Comparator<Consulta>() {
+            @Override
+            public int compare(Consulta o1, Consulta o2) {
+                return o1.getIdTipoConocimiento().intValue() - o2.getIdTipoConocimiento().intValue();
+            }
+        };
     }
 }

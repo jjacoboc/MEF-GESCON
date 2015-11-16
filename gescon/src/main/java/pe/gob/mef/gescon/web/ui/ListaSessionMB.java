@@ -17,6 +17,7 @@ import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.EstadoBaseLegalService;
 import pe.gob.mef.gescon.service.RangoService;
 import pe.gob.mef.gescon.service.SituacionService;
+import pe.gob.mef.gescon.service.TipoConocimientoService;
 import pe.gob.mef.gescon.util.ServiceFinder;
 
 /**
@@ -33,6 +34,7 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaEstadoBaseLegal;
     private List<SelectItem> listaEstadoBaseLegalVinculo;
     private List<SelectItem> listaSituacion;
+    private List<SelectItem> listaTipoConocimiento;
     private List<SelectItem> filterEstado;
     
     /**
@@ -151,6 +153,18 @@ public class ListaSessionMB implements Serializable{
      */
     public void setListaSituacion(List<SelectItem> listaSituacion) {
         this.listaSituacion = listaSituacion;
+    }
+
+    public List<SelectItem> getListaTipoConocimiento() throws Exception {
+        if(listaTipoConocimiento == null){
+            TipoConocimientoService service = (TipoConocimientoService) ServiceFinder.findBean("TipoConocimientoService");
+            listaTipoConocimiento =  new Items(service.getTipoConocimientos(), null, "ntpoconocimientoid","vnombre").getItems();
+        }
+        return listaTipoConocimiento;
+    }
+
+    public void setListaTipoConocimiento(List<SelectItem> listaTipoConocimiento) {
+        this.listaTipoConocimiento = listaTipoConocimiento;
     }
 
     /**

@@ -46,6 +46,10 @@ public class Constante implements Serializable {
     
     public static BigDecimal BASELEGAL = new BigDecimal(1);
     public static BigDecimal PREGUNTAS = new BigDecimal(2);
+    public static BigDecimal WIKI = new BigDecimal(3);
+    public static BigDecimal CONTENIDO = new BigDecimal(4);
+    public static BigDecimal BUENAPRACTICA = new BigDecimal(5);
+    public static BigDecimal OPORTUNIDADMEJORA = new BigDecimal(6);
     
     /**
      * CNISHIMURA

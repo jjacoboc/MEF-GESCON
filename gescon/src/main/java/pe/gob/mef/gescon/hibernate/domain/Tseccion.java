@@ -11,7 +11,7 @@ import java.util.Date;
 public class Tseccion implements java.io.Serializable {
 
     private BigDecimal nseccionid;
-    private Tconocimiento tconocimiento;
+    private BigDecimal nconocimientoid;
     private String vtitulo;
     private String vruta;
     private BigDecimal norden;
@@ -27,9 +27,9 @@ public class Tseccion implements java.io.Serializable {
         this.nseccionid = nseccionid;
     }
 
-    public Tseccion(BigDecimal nseccionid, Tconocimiento tconocimiento, String vtitulo, String vruta, BigDecimal norden, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion) {
+    public Tseccion(BigDecimal nseccionid, BigDecimal nconocimientoid, String vtitulo, String vruta, BigDecimal norden, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion) {
         this.nseccionid = nseccionid;
-        this.tconocimiento = tconocimiento;
+        this.nconocimientoid = nconocimientoid;
         this.vtitulo = vtitulo;
         this.vruta = vruta;
         this.norden = norden;
@@ -47,12 +47,12 @@ public class Tseccion implements java.io.Serializable {
         this.nseccionid = nseccionid;
     }
 
-    public Tconocimiento getTconocimiento() {
-        return this.tconocimiento;
+    public BigDecimal getNconocimientoid() {
+        return this.nconocimientoid;
     }
 
-    public void setTconocimiento(Tconocimiento tconocimiento) {
-        this.tconocimiento = tconocimiento;
+    public void setNconocimientoid(BigDecimal nconocimientoid) {
+        this.nconocimientoid = nconocimientoid;
     }
 
     public String getVtitulo() {

@@ -11,7 +11,7 @@ import java.util.Date;
 public class Tdiscusion implements java.io.Serializable {
 
     private BigDecimal ndiscusionid;
-    private Tconocimiento tconocimiento;
+    private BigDecimal nconocimientoid;
     private String vdiscusion;
     private String vusuariomodificacion;
     private String vusuariocreacion;
@@ -21,14 +21,13 @@ public class Tdiscusion implements java.io.Serializable {
     public Tdiscusion() {
     }
 
-    public Tdiscusion(BigDecimal ndiscusionid, Tconocimiento tconocimiento) {
+    public Tdiscusion(BigDecimal ndiscusionid) {
         this.ndiscusionid = ndiscusionid;
-        this.tconocimiento = tconocimiento;
     }
 
-    public Tdiscusion(BigDecimal ndiscusionid, Tconocimiento tconocimiento, String vdiscusion, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion) {
+    public Tdiscusion(BigDecimal ndiscusionid, BigDecimal nconocimientoid, String vdiscusion, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion) {
         this.ndiscusionid = ndiscusionid;
-        this.tconocimiento = tconocimiento;
+        this.nconocimientoid = nconocimientoid;
         this.vdiscusion = vdiscusion;
         this.vusuariomodificacion = vusuariomodificacion;
         this.vusuariocreacion = vusuariocreacion;
@@ -44,12 +43,12 @@ public class Tdiscusion implements java.io.Serializable {
         this.ndiscusionid = ndiscusionid;
     }
 
-    public Tconocimiento getTconocimiento() {
-        return this.tconocimiento;
+    public BigDecimal getNconocimientoid() {
+        return this.nconocimientoid;
     }
 
-    public void setTconocimiento(Tconocimiento tconocimiento) {
-        this.tconocimiento = tconocimiento;
+    public void setNconocimientoid(BigDecimal nconocimientoid) {
+        this.nconocimientoid = nconocimientoid;
     }
 
     public String getVdiscusion() {

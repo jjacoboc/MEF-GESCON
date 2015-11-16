@@ -10,7 +10,7 @@ import java.util.Date;
 public class Tobservacion implements java.io.Serializable {
 
     private BigDecimal nobservacionid;
-    private Tconocimiento tconocimiento;
+    private BigDecimal nconocimientoid;
     private String vsumilla;
     private String vusuariomodificacion;
     private BigDecimal ntipo;
@@ -21,14 +21,13 @@ public class Tobservacion implements java.io.Serializable {
     public Tobservacion() {
     }
 
-    public Tobservacion(BigDecimal nobservacionid, Tconocimiento tconocimiento) {
+    public Tobservacion(BigDecimal nobservacionid) {
         this.nobservacionid = nobservacionid;
-        this.tconocimiento = tconocimiento;
     }
 
-    public Tobservacion(BigDecimal nobservacionid, Tconocimiento tconocimiento, String vsumilla, String vusuariomodificacion, BigDecimal ntipo, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion) {
+    public Tobservacion(BigDecimal nobservacionid, BigDecimal nconocimientoid, String vsumilla, String vusuariomodificacion, BigDecimal ntipo, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion) {
         this.nobservacionid = nobservacionid;
-        this.tconocimiento = tconocimiento;
+        this.nconocimientoid = nconocimientoid;
         this.vsumilla = vsumilla;
         this.vusuariomodificacion = vusuariomodificacion;
         this.ntipo = ntipo;
@@ -45,12 +44,12 @@ public class Tobservacion implements java.io.Serializable {
         this.nobservacionid = nobservacionid;
     }
 
-    public Tconocimiento getTconocimiento() {
-        return this.tconocimiento;
+    public BigDecimal getNconocimientoid() {
+        return this.nconocimientoid;
     }
 
-    public void setTconocimiento(Tconocimiento tconocimiento) {
-        this.tconocimiento = tconocimiento;
+    public void setNconocimientoid(BigDecimal nconocimientoid) {
+        this.nconocimientoid = nconocimientoid;
     }
 
     public String getVsumilla() {

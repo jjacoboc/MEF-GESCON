@@ -8,9 +8,9 @@
             <column name="NIMPLEMENTACIONID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="tconocimiento" class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" fetch="select">
-            <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
+        <property name="nconocimientoid" type="big_decimal">
+            <column name="NCONOCIMIENTOID" precision="22" scale="0" />
+        </property>
         <property name="vdescripcion" type="string">
             <column name="VDESCRIPCION" length="400" />
         </property>

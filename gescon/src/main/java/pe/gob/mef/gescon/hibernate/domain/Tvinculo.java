@@ -11,8 +11,9 @@ import java.util.Date;
 public class Tvinculo implements java.io.Serializable {
 
     private BigDecimal nvinculoid;
-    private Tconocimiento tconocimiento;
+    private BigDecimal nconocimientoid;
     private BigDecimal nconocimientovinc;
+    private BigDecimal ntipoconocimientovinc;
     private String vusuariomodificacion;
     private Date dfechacreacion;
     private Date dfechamodificacion;
@@ -21,15 +22,15 @@ public class Tvinculo implements java.io.Serializable {
     public Tvinculo() {
     }
 
-    public Tvinculo(BigDecimal nvinculoid, Tconocimiento tconocimiento) {
+    public Tvinculo(BigDecimal nvinculoid) {
         this.nvinculoid = nvinculoid;
-        this.tconocimiento = tconocimiento;
     }
 
-    public Tvinculo(BigDecimal nvinculoid, Tconocimiento tconocimiento, BigDecimal nconocimientovinc, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, String vusuariocreacion) {
+    public Tvinculo(BigDecimal nvinculoid, BigDecimal nconocimientoid, BigDecimal nconocimientovinc, BigDecimal ntipoconocimientovinc, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, String vusuariocreacion) {
         this.nvinculoid = nvinculoid;
-        this.tconocimiento = tconocimiento;
+        this.nconocimientoid = nconocimientoid;
         this.nconocimientovinc = nconocimientovinc;
+        this.ntipoconocimientovinc = ntipoconocimientovinc;
         this.vusuariomodificacion = vusuariomodificacion;
         this.dfechacreacion = dfechacreacion;
         this.dfechamodificacion = dfechamodificacion;
@@ -44,12 +45,12 @@ public class Tvinculo implements java.io.Serializable {
         this.nvinculoid = nvinculoid;
     }
 
-    public Tconocimiento getTconocimiento() {
-        return this.tconocimiento;
+    public BigDecimal getNconocimientoid() {
+        return this.nconocimientoid;
     }
 
-    public void setTconocimiento(Tconocimiento tconocimiento) {
-        this.tconocimiento = tconocimiento;
+    public void setNconocimientoid(BigDecimal nconocimientoid) {
+        this.nconocimientoid = nconocimientoid;
     }
 
     public BigDecimal getNconocimientovinc() {
@@ -58,6 +59,14 @@ public class Tvinculo implements java.io.Serializable {
 
     public void setNconocimientovinc(BigDecimal nconocimientovinc) {
         this.nconocimientovinc = nconocimientovinc;
+    }
+
+    public BigDecimal getNtipoconocimientovinc() {
+        return ntipoconocimientovinc;
+    }
+
+    public void setNtipoconocimientovinc(BigDecimal ntipoconocimientovinc) {
+        this.ntipoconocimientovinc = ntipoconocimientovinc;
     }
 
     public String getVusuariomodificacion() {
