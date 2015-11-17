@@ -11,8 +11,8 @@ import java.util.Date;
 public class Tpregunta implements java.io.Serializable {
 
     private BigDecimal npreguntaid;
-    private Mtcategoria mtcategoria;
-    private Mtsituacion mtsituacion;
+    private BigDecimal ncategoriaid;
+    private BigDecimal nsituacionid;
     private String vasunto;
     private String vdetalle;
     private BigDecimal nentidadid;
@@ -31,16 +31,14 @@ public class Tpregunta implements java.io.Serializable {
     public Tpregunta() {
     }
 
-    public Tpregunta(BigDecimal npreguntaid, Mtcategoria mtcategoria, Mtsituacion mtsituacion) {
+    public Tpregunta(BigDecimal npreguntaid) {
         this.npreguntaid = npreguntaid;
-        this.mtcategoria = mtcategoria;
-        this.mtsituacion = mtsituacion;
     }
 
-    public Tpregunta(BigDecimal npreguntaid, Mtcategoria mtcategoria, Mtsituacion mtsituacion, String vasunto, String vdetalle, BigDecimal nentidadid, String vdatoadicional, String vrespuesta, String vmsjusuario2, String vmsjespecialista, BigDecimal nactivo, String vmsjmoderador, String vmsjusuario1, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion) {
+    public Tpregunta(BigDecimal npreguntaid, BigDecimal ncategoriaid, BigDecimal nsituacionid, String vasunto, String vdetalle, BigDecimal nentidadid, String vdatoadicional, String vrespuesta, String vmsjusuario2, String vmsjespecialista, BigDecimal nactivo, String vmsjmoderador, String vmsjusuario1, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion) {
         this.npreguntaid = npreguntaid;
-        this.mtcategoria = mtcategoria;
-        this.mtsituacion = mtsituacion;
+        this.ncategoriaid = ncategoriaid;
+        this.nsituacionid = nsituacionid;
         this.vasunto = vasunto;
         this.vdetalle = vdetalle;
         this.nentidadid = nentidadid;
@@ -65,20 +63,20 @@ public class Tpregunta implements java.io.Serializable {
         this.npreguntaid = npreguntaid;
     }
 
-    public Mtcategoria getMtcategoria() {
-        return this.mtcategoria;
+    public BigDecimal getNcategoriaid() {
+        return this.ncategoriaid;
     }
 
-    public void setMtcategoria(Mtcategoria mtcategoria) {
-        this.mtcategoria = mtcategoria;
+    public void setNcategoriaid(BigDecimal ncategoriaid) {
+        this.ncategoriaid = ncategoriaid;
     }
 
-    public Mtsituacion getMtsituacion() {
-        return this.mtsituacion;
+    public BigDecimal getNsituacionid() {
+        return this.nsituacionid;
     }
 
-    public void setMtsituacion(Mtsituacion mtsituacion) {
-        this.mtsituacion = mtsituacion;
+    public void setNsituacionid(BigDecimal nsituacionid) {
+        this.nsituacionid = nsituacionid;
     }
 
     public String getVasunto() {
@@ -177,7 +175,7 @@ public class Tpregunta implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -185,7 +183,7 @@ public class Tpregunta implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 

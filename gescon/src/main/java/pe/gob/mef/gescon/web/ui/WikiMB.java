@@ -29,6 +29,7 @@ import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.WikiService;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Categoria;
+import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Seccion;
 import pe.gob.mef.gescon.web.bean.Wiki;
@@ -574,6 +575,9 @@ public class WikiMB implements Serializable {
 
     public void save(ActionEvent event) {
         try {
+            Conocimiento wiki = new Conocimiento();
+            wiki.setVtitulo(this.getNombre());
+            wiki.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             Seccion seccion = new Seccion();
             seccion.setVtitulo(this.getTitulo());
             seccion.setDetalleHtml(this.getDetalleHtml());

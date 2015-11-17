@@ -46,12 +46,14 @@ import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
 import pe.gob.mef.gescon.service.ArchivoService;
+import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.VinculoBaseLegalService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
+import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.User;
@@ -67,8 +69,8 @@ public class BaseLegalMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(BaseLegalMB.class);
-    private final String temppath = "D:\\gescon\\temp\\";
-    private String path = "D:\\gescon\\files\\bl\\";
+    private final String temppath = "\\\\OSC2018\\gescon\\temp\\";
+    private String path = "\\\\OSC2018\\gescon\\files\\bl\\";
     private List<BaseLegal> listaBaseLegal;
     private List<BaseLegal> filteredListaBaseLegal;
     private BaseLegal selectedBaseLegal;
@@ -631,8 +633,8 @@ public class BaseLegalMB implements Serializable {
             archivo.setNarchivoid(aservice.getNextPK());
             archivo.setTbaselegal(tbaselegal);
             archivo.setVnombre(this.getUploadFile().getFileName());
-            archivo.setVruta(path + base.getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
             archivo.setNversion(BigDecimal.ONE);
+            archivo.setVruta(path + base.getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
             archivo.setVusuariocreacion(user.getVlogin());
             archivo.setDfechacreacion(new Date());
             aservice.saveOrUpdate(archivo);            
@@ -658,7 +660,18 @@ public class BaseLegalMB implements Serializable {
                 bl.setVusuariomodificacion(user.getVlogin());
                 service.saveOrUpdate(bl);
             }
-            
+
+            Asignacion asignacion = new Asignacion();
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.BASELEGAL);
+            asignacion.setNconocimientoid(base.getNbaselegalid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(this.getSelectedCategoria().getNcategoriaid()));
+            asignacion.setDfechaasignacion(new Date());
+            asignacion.setDfechacreacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+
             this.setListaBaseLegal(service.getBaselegales());
             for(BaseLegal bl : this.getListaBaseLegal()) {
                 bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));

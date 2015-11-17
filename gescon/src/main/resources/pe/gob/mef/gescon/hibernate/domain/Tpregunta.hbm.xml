@@ -8,12 +8,12 @@
             <column name="NPREGUNTAID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="mtcategoria" class="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" fetch="select">
-            <column name="NCATEGORIAID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
-        <many-to-one name="mtsituacion" class="pe.gob.mef.gescon.hibernate.domain.Mtsituacion" fetch="select">
-            <column name="NSITUACIONID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
+        <property name="ncategoriaid" type="big_decimal">
+            <column name="NCATEGORIAID" precision="22" scale="0" />
+        </property>
+        <property name="nsituacionid" type="big_decimal">
+            <column name="NSITUACIONID" precision="22" scale="0" />
+        </property>
         <property name="vasunto" type="string">
             <column name="VASUNTO" length="100" />
         </property>

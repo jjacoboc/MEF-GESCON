@@ -36,9 +36,9 @@
                                             <f:convertDateTime dateStyle="medium" type="date" locale="es" />
                                         </h:outputText>
                                     </p:column>
-                                    <p:column style="text-align: center; width: 140px;" sortBy="#{row.nsituacion}" filterBy="#{row.nsituacion}" filterMatchMode="contains" priority="4">
+                                    <p:column style="text-align: center; width: 140px;" sortBy="#{row.nsituacionid}" filterBy="#{row.nsituacionid}" filterMatchMode="contains" priority="4">
                                         <f:facet name="header"><h:outputText value="SITUACION"/></f:facet>
-                                        <h:outputText value="#{row.nsituacion}" >
+                                        <h:outputText value="#{row.nsituacionid}" >
                                             <f:converter converterId="converterSituacion"/>
                                         </h:outputText>
                                     </p:column>

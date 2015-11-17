@@ -17,275 +17,214 @@ import pe.gob.mef.gescon.hibernate.domain.MttipoConocimiento;
  */
 public class Conocimiento  implements java.io.Serializable {
 
-     private BigDecimal nconocimientoid;
-     private MttipoConocimiento mttipoConocimiento;
-     private Mtcategoria mtcategoria;
-     private String vdescripcion;
-     private String vtitulo;
-     private String vusuariomod;
-     private String vusuariocreacion;
-     private Date dfechacreacion;
-     private String vejecutora;
-     private String varchivo;
-     private String vnumero;
-     private String vtema;
-     private String vdesextra;
-     private String vautor;
-     private String vfuente;
-     private String vtipo;
-     private String vcontenido;
-     private BigDecimal nestado;
-     private BigDecimal nsituacion;
-     private BigDecimal ndias;
-     private String vobservacion;
-     private Set tvinculos = new HashSet(0);
-     private Set tobservacions = new HashSet(0);
-     private Set thistorials = new HashSet(0);
-     private Set timplementacions = new HashSet(0);
-     private Set tdiscusions = new HashSet(0);
-     private Set tcalificacions = new HashSet(0);
+    private BigDecimal nconocimientoid;
+    private BigDecimal ncategoriaid;
+    private BigDecimal nsituacionid;
+    private BigDecimal ntipoconocimientoid;
+    private String vdescripcion;
+    private String vtitulo;
+    private String vusuariomodificacion;
+    private String vusuariocreacion;
+    private Date dfechacreacion;
+    private String vejecutora;
+    private String varchivo;
+    private String vnumero;
+    private String vtema;
+    private String vdesextra;
+    private String vautor;
+    private String vfuente;
+    private String vtipo;
+    private String vcontenido;
+    private BigDecimal ndias;
+    private BigDecimal nactivo;
+    private String vobservacion;
+    private Date dfechamodificacion;
+    private BigDecimal ndestacado;
 
     public Conocimiento() {
     }
-	
-    public Conocimiento(BigDecimal nconocimientoid, MttipoConocimiento mttipoConocimiento, Mtcategoria mtcategoria) {
-        this.nconocimientoid = nconocimientoid;
-        this.mttipoConocimiento = mttipoConocimiento;
-        this.mtcategoria = mtcategoria;
-    }
-    public Conocimiento(BigDecimal nconocimientoid, MttipoConocimiento mttipoConocimiento, Mtcategoria mtcategoria, String vdescripcion, String vtitulo, String vusuariomod, String vusuariocreacion, Date dfechacreacion, String vejecutora, String varchivo, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, String vcontenido, BigDecimal nestado, BigDecimal nsituacion, BigDecimal ndias, String vobservacion, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tcalificacions) {
-       this.nconocimientoid = nconocimientoid;
-       this.mttipoConocimiento = mttipoConocimiento;
-       this.mtcategoria = mtcategoria;
-       this.vdescripcion = vdescripcion;
-       this.vtitulo = vtitulo;
-       this.vusuariomod = vusuariomod;
-       this.vusuariocreacion = vusuariocreacion;
-       this.dfechacreacion = dfechacreacion;
-       this.vejecutora = vejecutora;
-       this.varchivo = varchivo;
-       this.vnumero = vnumero;
-       this.vtema = vtema;
-       this.vdesextra = vdesextra;
-       this.vautor = vautor;
-       this.vfuente = vfuente;
-       this.vtipo = vtipo;
-       this.vcontenido = vcontenido;
-       this.nestado = nestado;
-       this.nsituacion = nsituacion;
-       this.ndias = ndias;
-       this.vobservacion = vobservacion;
-       this.tvinculos = tvinculos;
-       this.tobservacions = tobservacions;
-       this.thistorials = thistorials;
-       this.timplementacions = timplementacions;
-       this.tdiscusions = tdiscusions;
-       this.tcalificacions = tcalificacions;
-    }
-   
+
     public BigDecimal getNconocimientoid() {
-        return this.nconocimientoid;
+        return nconocimientoid;
     }
-    
+
     public void setNconocimientoid(BigDecimal nconocimientoid) {
         this.nconocimientoid = nconocimientoid;
     }
-       
-    public String getVdescripcion() {
-        return this.vdescripcion;
+
+    public BigDecimal getNcategoriaid() {
+        return ncategoriaid;
     }
-    
+
+    public void setNcategoriaid(BigDecimal ncategoriaid) {
+        this.ncategoriaid = ncategoriaid;
+    }
+
+    public BigDecimal getNsituacionid() {
+        return nsituacionid;
+    }
+
+    public void setNsituacionid(BigDecimal nsituacionid) {
+        this.nsituacionid = nsituacionid;
+    }
+
+    public BigDecimal getNtipoconocimientoid() {
+        return ntipoconocimientoid;
+    }
+
+    public void setNtipoconocimientoid(BigDecimal ntipoconocimientoid) {
+        this.ntipoconocimientoid = ntipoconocimientoid;
+    }
+
+    public String getVdescripcion() {
+        return vdescripcion;
+    }
+
     public void setVdescripcion(String vdescripcion) {
         this.vdescripcion = vdescripcion;
     }
+
     public String getVtitulo() {
-        return this.vtitulo;
+        return vtitulo;
     }
-    
+
     public void setVtitulo(String vtitulo) {
         this.vtitulo = vtitulo;
     }
-    public String getVusuariomod() {
-        return this.vusuariomod;
+
+    public String getVusuariomodificacion() {
+        return vusuariomodificacion;
     }
-    
-    public void setVusuariomod(String vusuariomod) {
-        this.vusuariomod = vusuariomod;
+
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
+
     public String getVusuariocreacion() {
-        return this.vusuariocreacion;
+        return vusuariocreacion;
     }
-    
+
     public void setVusuariocreacion(String vusuariocreacion) {
         this.vusuariocreacion = vusuariocreacion;
     }
+
     public Date getDfechacreacion() {
-        return this.dfechacreacion;
+        return dfechacreacion;
     }
-    
+
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
     }
+
     public String getVejecutora() {
-        return this.vejecutora;
+        return vejecutora;
     }
-    
+
     public void setVejecutora(String vejecutora) {
         this.vejecutora = vejecutora;
     }
+
     public String getVarchivo() {
-        return this.varchivo;
+        return varchivo;
     }
-    
+
     public void setVarchivo(String varchivo) {
         this.varchivo = varchivo;
     }
+
     public String getVnumero() {
-        return this.vnumero;
+        return vnumero;
     }
-    
+
     public void setVnumero(String vnumero) {
         this.vnumero = vnumero;
     }
+
     public String getVtema() {
-        return this.vtema;
+        return vtema;
     }
-    
+
     public void setVtema(String vtema) {
         this.vtema = vtema;
     }
+
     public String getVdesextra() {
-        return this.vdesextra;
+        return vdesextra;
     }
-    
+
     public void setVdesextra(String vdesextra) {
         this.vdesextra = vdesextra;
     }
+
     public String getVautor() {
-        return this.vautor;
+        return vautor;
     }
-    
+
     public void setVautor(String vautor) {
         this.vautor = vautor;
     }
+
     public String getVfuente() {
-        return this.vfuente;
+        return vfuente;
     }
-    
+
     public void setVfuente(String vfuente) {
         this.vfuente = vfuente;
     }
+
     public String getVtipo() {
-        return this.vtipo;
+        return vtipo;
     }
-    
+
     public void setVtipo(String vtipo) {
         this.vtipo = vtipo;
     }
+
     public String getVcontenido() {
-        return this.vcontenido;
+        return vcontenido;
     }
-    
+
     public void setVcontenido(String vcontenido) {
         this.vcontenido = vcontenido;
     }
-    public BigDecimal getNestado() {
-        return this.nestado;
-    }
-    
-    public void setNestado(BigDecimal nestado) {
-        this.nestado = nestado;
-    }
-    public BigDecimal getNsituacion() {
-        return this.nsituacion;
-    }
-    
-    public void setNsituacion(BigDecimal nsituacion) {
-        this.nsituacion = nsituacion;
-    }
+
     public BigDecimal getNdias() {
-        return this.ndias;
+        return ndias;
     }
-    
+
     public void setNdias(BigDecimal ndias) {
         this.ndias = ndias;
     }
-    public String getVobservacion() {
-        return this.vobservacion;
+
+    public BigDecimal getNactivo() {
+        return nactivo;
     }
-    
+
+    public void setNactivo(BigDecimal nactivo) {
+        this.nactivo = nactivo;
+    }
+
+    public String getVobservacion() {
+        return vobservacion;
+    }
+
     public void setVobservacion(String vobservacion) {
         this.vobservacion = vobservacion;
     }
-    public Set getTvinculos() {
-        return this.tvinculos;
-    }
-    
-    public void setTvinculos(Set tvinculos) {
-        this.tvinculos = tvinculos;
-    }
-    public Set getTobservacions() {
-        return this.tobservacions;
-    }
-    
-    public void setTobservacions(Set tobservacions) {
-        this.tobservacions = tobservacions;
-    }
-    public Set getThistorials() {
-        return this.thistorials;
-    }
-    
-    public void setThistorials(Set thistorials) {
-        this.thistorials = thistorials;
-    }
-    public Set getTimplementacions() {
-        return this.timplementacions;
-    }
-    
-    public void setTimplementacions(Set timplementacions) {
-        this.timplementacions = timplementacions;
-    }
-    public Set getTdiscusions() {
-        return this.tdiscusions;
-    }
-    
-    public void setTdiscusions(Set tdiscusions) {
-        this.tdiscusions = tdiscusions;
-    }
-    public Set getTcalificacions() {
-        return this.tcalificacions;
-    }
-    
-    public void setTcalificacions(Set tcalificacions) {
-        this.tcalificacions = tcalificacions;
+
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
     }
 
-    /**
-     * @return the mtcategoria
-     */
-    public Mtcategoria getMtcategoria() {
-        return mtcategoria;
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
 
-    /**
-     * @param mtcategoria the mtcategoria to set
-     */
-    public void setMtcategoria(Mtcategoria mtcategoria) {
-        this.mtcategoria = mtcategoria;
+    public BigDecimal getNdestacado() {
+        return ndestacado;
     }
 
-    /**
-     * @return the mttipoConocimiento
-     */
-    public MttipoConocimiento getMttipoConocimiento() {
-        return mttipoConocimiento;
+    public void setNdestacado(BigDecimal ndestacado) {
+        this.ndestacado = ndestacado;
     }
-
-    /**
-     * @param mttipoConocimiento the mttipoConocimiento to set
-     */
-    public void setMttipoConocimiento(MttipoConocimiento mttipoConocimiento) {
-        this.mttipoConocimiento = mttipoConocimiento;
-    }
-
 }

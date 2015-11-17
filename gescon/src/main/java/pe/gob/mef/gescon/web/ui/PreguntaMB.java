@@ -604,7 +604,7 @@ public class PreguntaMB implements Serializable {
             pregunta.setVdatoadicional(this.getDatoAdicional().trim());
             pregunta.setNactivo(BigDecimal.ONE);
             pregunta.setDfechacreacion(new Date());
-            pregunta.setNsituacion(BigDecimal.valueOf(Long.parseLong("1")));
+            pregunta.setNsituacionid(BigDecimal.valueOf(Long.parseLong("1")));
             service.saveOrUpdate(pregunta);
 
             Asignacion asignacion = new Asignacion();
@@ -682,7 +682,7 @@ public class PreguntaMB implements Serializable {
                 listaAsignacion = service.obtenerPreguntaxAsig(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS);
                 flistaPregunta = service.obtenerPreguntas(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS);
 
-                situacion = Integer.parseInt(this.getSelectedPregunta().getNsituacion().toString());
+                situacion = Integer.parseInt(this.getSelectedPregunta().getNsituacionid().toString());
 
                 if (listaAsignacion.isEmpty() || flistaPregunta.isEmpty()) {
                     this.setfButton("false");
@@ -742,7 +742,7 @@ public class PreguntaMB implements Serializable {
 
                 this.cat1 = this.getSelectedPregunta().getNcategoriaid();
 
-                situacion = Integer.parseInt(this.getSelectedPregunta().getNsituacion().toString());
+                situacion = Integer.parseInt(this.getSelectedPregunta().getNsituacionid().toString());
 
                 if (situacion == 1) {
                     if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjmoderador())) {
@@ -798,7 +798,7 @@ public class PreguntaMB implements Serializable {
     public void Rechazar(ActionEvent event) {
         try {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setNsituacion(BigDecimal.valueOf(Long.parseLong("7")));
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("7")));
             service.saveOrUpdate(this.getSelectedPregunta());
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -942,9 +942,9 @@ public class PreguntaMB implements Serializable {
             cat2 = this.getSelectedPregunta().getNcategoriaid();
 
             if (Integer.parseInt(cat1.toString()) != Integer.parseInt(cat2.toString())) {
-                this.getSelectedPregunta().setNsituacion(BigDecimal.valueOf(Long.parseLong("3")));
+                this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("3")));
             } else {
-                this.getSelectedPregunta().setNsituacion(BigDecimal.valueOf(Long.parseLong("6")));
+                this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("6")));
             }
 
             service.saveOrUpdate(this.getSelectedPregunta());
@@ -1132,7 +1132,7 @@ public class PreguntaMB implements Serializable {
             }
 
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setNsituacion(BigDecimal.valueOf(Long.parseLong("6")));
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("6")));
             service.saveOrUpdate(this.getSelectedPregunta());
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -1170,7 +1170,7 @@ public class PreguntaMB implements Serializable {
             }
 
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setNsituacion(BigDecimal.valueOf(Long.parseLong("5")));
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("5")));
             service.saveOrUpdate(this.getSelectedPregunta());
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -1203,7 +1203,7 @@ public class PreguntaMB implements Serializable {
             }
 
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setNsituacion(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("2")));
             service.saveOrUpdate(this.getSelectedPregunta());
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");

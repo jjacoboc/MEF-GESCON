@@ -10,6 +10,7 @@ import java.util.List;
 import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.User;
+import pe.gob.mef.gescon.web.bean.Categoria;
 
 /**
  *
@@ -25,5 +26,6 @@ public interface AsignacionService {
     public List<Consulta> getNotificationsAssignedPanelByUser(User user) throws Exception;
     public List<Consulta> getNotificationsReceivedPanelByUser(User user) throws Exception;
     public List<Consulta> getNotificationsServedPanelByUser(User user) throws Exception;
+    public BigDecimal getModeratorByCategoria(BigDecimal ncategoriaid) throws Exception;
     public void saveOrUpdate(Asignacion asignacion) throws Exception;
 }

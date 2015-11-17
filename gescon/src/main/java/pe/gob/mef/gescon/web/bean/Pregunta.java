@@ -29,7 +29,7 @@ public class Pregunta implements Serializable {
     private String vrespuesta;
     private String vmsjusuario2;
     private String vmsjespecialista;
-    private BigDecimal nsituacion;
+    private BigDecimal nsituacionid;
     private String vmsjmoderador;
     private String vmsjusuario1;
 
@@ -234,17 +234,17 @@ public class Pregunta implements Serializable {
     }
 
     /**
-     * @return the nsituacion
+     * @return the nsituacionid
      */
-    public BigDecimal getNsituacion() {
-        return nsituacion;
+    public BigDecimal getNsituacionid() {
+        return nsituacionid;
     }
 
     /**
-     * @param nsituacion the nsituacion to set
+     * @param nsituacionid the nsituacionid to set
      */
-    public void setNsituacion(BigDecimal nsituacion) {
-        this.nsituacion = nsituacion;
+    public void setNsituacionid(BigDecimal nsituacionid) {
+        this.nsituacionid = nsituacionid;
     }
 
     /**
