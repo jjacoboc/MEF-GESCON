@@ -20,10 +20,6 @@ public class Mtperfil implements java.io.Serializable {
     private Date dfechamodificacion;
     private String vdescripcion;
     private String vnombre;
-    private String vdescripcion1232;
-    private String vdescripcion1234;
-    private String vdescripcion1236;
-    private String vdescripcion1238;
     private Set tpoliticaPerfils = new HashSet(0);
     private Set tuserPerfils = new HashSet(0);
 
@@ -34,7 +30,7 @@ public class Mtperfil implements java.io.Serializable {
         this.nperfilid = nperfilid;
     }
 
-    public Mtperfil(BigDecimal nperfilid, BigDecimal nactivo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, String vdescripcion, String vnombre, String vdescripcion1232, String vdescripcion1234, String vdescripcion1236, String vdescripcion1238, Set tpoliticaPerfils, Set tuserPerfils) {
+    public Mtperfil(BigDecimal nperfilid, BigDecimal nactivo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, String vdescripcion, String vnombre, Set tpoliticaPerfils, Set tuserPerfils) {
         this.nperfilid = nperfilid;
         this.nactivo = nactivo;
         this.vusuariomodificacion = vusuariomodificacion;
@@ -43,10 +39,6 @@ public class Mtperfil implements java.io.Serializable {
         this.dfechamodificacion = dfechamodificacion;
         this.vdescripcion = vdescripcion;
         this.vnombre = vnombre;
-        this.vdescripcion1232 = vdescripcion1232;
-        this.vdescripcion1234 = vdescripcion1234;
-        this.vdescripcion1236 = vdescripcion1236;
-        this.vdescripcion1238 = vdescripcion1238;
         this.tpoliticaPerfils = tpoliticaPerfils;
         this.tuserPerfils = tuserPerfils;
     }
@@ -113,38 +105,6 @@ public class Mtperfil implements java.io.Serializable {
 
     public void setVnombre(String vnombre) {
         this.vnombre = vnombre;
-    }
-
-    public String getVdescripcion1232() {
-        return this.vdescripcion1232;
-    }
-
-    public void setVdescripcion1232(String vdescripcion1232) {
-        this.vdescripcion1232 = vdescripcion1232;
-    }
-
-    public String getVdescripcion1234() {
-        return this.vdescripcion1234;
-    }
-
-    public void setVdescripcion1234(String vdescripcion1234) {
-        this.vdescripcion1234 = vdescripcion1234;
-    }
-
-    public String getVdescripcion1236() {
-        return this.vdescripcion1236;
-    }
-
-    public void setVdescripcion1236(String vdescripcion1236) {
-        this.vdescripcion1236 = vdescripcion1236;
-    }
-
-    public String getVdescripcion1238() {
-        return this.vdescripcion1238;
-    }
-
-    public void setVdescripcion1238(String vdescripcion1238) {
-        this.vdescripcion1238 = vdescripcion1238;
     }
 
     public Set getTpoliticaPerfils() {

@@ -41,7 +41,7 @@ public class ParametroMB implements Serializable{
     private static final Log log = LogFactory.getLog(ParametroMB.class);
     private BigDecimal id;
     private String nombre;
-    private String valor;
+    private BigDecimal valor;
     private String descripcion;
     private BigDecimal activo;
     private List<Parametro> listaParametro;
@@ -80,20 +80,22 @@ public class ParametroMB implements Serializable{
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
+
     /**
-     * @return the nombre
+     * @return the valor
      */
-    public String getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
     /**
-     * @param valor the nombre to set
+     * @param valor the valor to set
      */
-    public void setValor(String valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
+    
+
 
     /**
      * @return the descripcion
@@ -166,7 +168,7 @@ public class ParametroMB implements Serializable{
         this.setId(BigDecimal.ZERO);
         this.setDescripcion(StringUtils.EMPTY);
         this.setNombre(StringUtils.EMPTY);
-        this.setValor(StringUtils.EMPTY);
+        this.setValor(null);
         this.setActivo(BigDecimal.ONE);
         this.setSelectedParametro(null);
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
@@ -192,7 +194,7 @@ public class ParametroMB implements Serializable{
             }
             Parametro parametro = new Parametro();
             parametro.setVnombre(this.getNombre().trim().toUpperCase());
-            parametro.setVvalor(this.getValor().trim());
+            parametro.setNvalor(this.getValor());
             parametro.setVdescripcion(this.getDescripcion().trim());
             if (!errorValidation(parametro)) {
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -235,11 +237,6 @@ public class ParametroMB implements Serializable{
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if(StringUtils.isBlank(this.getSelectedParametro().getVvalor())) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Nombre requerido. Ingrese el valor del parametro.");
-                    FacesContext.getCurrentInstance().addMessage(null, message);
-                    return;
-                }
                 if(StringUtils.isBlank(this.getSelectedParametro().getVdescripcion())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Descripción requerida. Ingrese la descripción del parametro.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
@@ -248,7 +245,7 @@ public class ParametroMB implements Serializable{
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user = loginMB.getUser();
                 this.getSelectedParametro().setVnombre(this.getSelectedParametro().getVnombre().trim().toUpperCase());
-                this.getSelectedParametro().setVvalor(this.getSelectedParametro().getVvalor().trim());
+                this.getSelectedParametro().setNvalor(this.getSelectedParametro().getNvalor());
                 this.getSelectedParametro().setVdescripcion(this.getSelectedParametro().getVdescripcion().trim());
                 this.getSelectedParametro().setVusuariomodificacion(user.getVlogin());
                 this.getSelectedParametro().setDfechamodificacion(new Date());
@@ -320,7 +317,7 @@ public class ParametroMB implements Serializable{
                 error = true;
                 return error;
             } 
-            else if (parametro.getVvalor()== null || parametro.getVvalor().isEmpty()) {
+            else if (parametro.getNvalor()== null) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Valor requerido. Ingrese el valor del parametro.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;

@@ -64,10 +64,8 @@ public class BaseLegalServiceImpl implements BaseLegalService{
             bl.setVnumero((String) m.get("NUMERO"));
             bl.setVnombre((String) m.get("NOMBRE"));
             bl.setVsumilla((String) m.get("SUMILLA"));
-            bl.setNcategoriaid((BigDecimal) m.get("IDCATEGORIA"));
-            bl.setVcategoria((String) m.get("CATEGORIA"));
+            bl.setNcategoriaid((BigDecimal) m.get("IDCATEGORIA"));  
             bl.setNestadoid((BigDecimal) m.get("IDESTADO"));
-            bl.setVestado((String) m.get("ESTADO"));
             bl.setDfechapublicacion((Date) m.get("FECHA"));
             baseLegales.add(bl);
         }
@@ -86,9 +84,7 @@ public class BaseLegalServiceImpl implements BaseLegalService{
             bl.setVnombre((String) m.get("NOMBRE"));
             bl.setVsumilla((String) m.get("SUMILLA"));
             bl.setNcategoriaid((BigDecimal) m.get("IDCATEGORIA"));
-            bl.setVcategoria((String) m.get("CATEGORIA"));
             bl.setNestadoid((BigDecimal) m.get("IDESTADO"));
-            bl.setVestado((String) m.get("ESTADO"));
             bl.setDfechapublicacion((Date) m.get("FECHA"));
             baseLegales.add(bl);
         }

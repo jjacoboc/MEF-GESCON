@@ -13,9 +13,9 @@ import java.util.Set;
 public class Tbaselegal implements java.io.Serializable {
 
     private BigDecimal nbaselegalid;
-    private Mtcategoria mtcategoria;
-    private MtestadoBaselegal mtestadoBaselegal;
-    private Mtrango mtrango;
+    private BigDecimal ncategoriaid;
+    private BigDecimal nestadoid;
+    private BigDecimal nrangoid;
     private String vnombre;
     private String vnumero;
     private String vsumilla;
@@ -40,11 +40,11 @@ public class Tbaselegal implements java.io.Serializable {
         this.nbaselegalid = nbaselegalid;
     }
 
-    public Tbaselegal(BigDecimal nbaselegalid, Mtcategoria mtcategoria, MtestadoBaselegal mtestadoBaselegal, Mtrango mtrango, String vnombre, String vnumero, String vsumilla, Date dfechapublicacion, String vtema, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal ngobnacional, BigDecimal ngobregional, BigDecimal ngoblocal, BigDecimal nmancomunidades, BigDecimal nactivo, Set tvinculoBaselegals, Set tarchivos) {
+    public Tbaselegal(BigDecimal nbaselegalid, BigDecimal ncategoriaid, BigDecimal nestadoid, BigDecimal nrangoid, String vnombre, String vnumero, String vsumilla, Date dfechapublicacion, String vtema, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal ngobnacional, BigDecimal ngobregional, BigDecimal ngoblocal, BigDecimal nmancomunidades, BigDecimal nactivo, Set tvinculoBaselegals, Set tarchivos) {
         this.nbaselegalid = nbaselegalid;
-        this.mtcategoria = mtcategoria;
-        this.mtestadoBaselegal = mtestadoBaselegal;
-        this.mtrango = mtrango;
+        this.ncategoriaid = ncategoriaid;
+        this.nestadoid = nestadoid;
+        this.nrangoid = nrangoid;
         this.vnombre = vnombre;
         this.vnumero = vnumero;
         this.vsumilla = vsumilla;
@@ -71,30 +71,49 @@ public class Tbaselegal implements java.io.Serializable {
         this.nbaselegalid = nbaselegalid;
     }
 
-    public Mtcategoria getMtcategoria() {
-        return this.mtcategoria;
+    /**
+     * @return the ncategoriaid
+     */
+    public BigDecimal getNcategoriaid() {
+        return ncategoriaid;
     }
 
-    public void setMtcategoria(Mtcategoria mtcategoria) {
-        this.mtcategoria = mtcategoria;
+    /**
+     * @param ncategoriaid the ncategoriaid to set
+     */
+    public void setNcategoriaid(BigDecimal ncategoriaid) {
+        this.ncategoriaid = ncategoriaid;
     }
 
-    public MtestadoBaselegal getMtestadoBaselegal() {
-        return this.mtestadoBaselegal;
+    /**
+     * @return the nestadoid
+     */
+    public BigDecimal getNestadoid() {
+        return nestadoid;
     }
 
-    public void setMtestadoBaselegal(MtestadoBaselegal mtestadoBaselegal) {
-        this.mtestadoBaselegal = mtestadoBaselegal;
+    /**
+     * @param nestadoid the nestadoid to set
+     */
+    public void setNestadoid(BigDecimal nestadoid) {
+        this.nestadoid = nestadoid;
     }
 
-    public Mtrango getMtrango() {
-        return this.mtrango;
+    /**
+     * @return the nrangoid
+     */
+    public BigDecimal getNrangoid() {
+        return nrangoid;
     }
 
-    public void setMtrango(Mtrango mtrango) {
-        this.mtrango = mtrango;
+    /**
+     * @param nrangoid the nrangoid to set
+     */
+    public void setNrangoid(BigDecimal nrangoid) {
+        this.nrangoid = nrangoid;
     }
 
+    
     public String getVnombre() {
         return this.vnombre;
     }

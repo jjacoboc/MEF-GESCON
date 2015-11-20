@@ -343,8 +343,8 @@ public class MaestroMB implements Serializable {
 
     public void getDetalles(ActionEvent event) {
         try {
-            int rowIndex = Integer.valueOf(JSFUtils.getRequestParameter("rowIndex"));
-            this.setSelectedMaestro(this.getListaMaestro().get(rowIndex));
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedMaestro(this.getListaMaestro().get(index));
             MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
             this.setListaMaestroDetalle(service.getDetallesByMaestro(this.getSelectedMaestro()));
         } catch (Exception e) {

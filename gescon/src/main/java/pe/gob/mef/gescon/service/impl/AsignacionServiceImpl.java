@@ -172,6 +172,18 @@ public class AsignacionServiceImpl implements AsignacionService{
     }
     
     @Override
+    public BigDecimal getEspecialistaByCategoria(BigDecimal ncategoriaid) throws Exception {
+        AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
+        return asignacionDao.getEspecialistaByMtcategoria(ncategoriaid);
+    }
+    
+    @Override
+    public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception {
+        AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
+        return asignacionDao.getUserCreacionByPregunta(npreguntaid);
+    }
+    
+    @Override
     public void saveOrUpdate(Asignacion asignacion) throws Exception {
         Tasignacion tasignacion = new Tasignacion();
         BeanUtils.copyProperties(tasignacion, asignacion);

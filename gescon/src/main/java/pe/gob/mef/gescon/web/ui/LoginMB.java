@@ -5,6 +5,9 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -14,19 +17,24 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
 import pe.gob.mef.gescon.hibernate.domain.Mtsituacion;
+import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.AsignacionService;
+import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.PassService;
 import pe.gob.mef.gescon.service.PerfilService;
@@ -35,6 +43,7 @@ import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
+import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Pass;
@@ -65,6 +74,8 @@ public class LoginMB implements Serializable {
     private List<Consulta> listaNotificacionesAtendidas;
     private Consulta selectedNotification;
     private Asignacion selectedAsignacion;
+    private BaseLegal selectedBaseLegal;
+    private List<BaseLegal> listaTarget;
     private Pregunta selectedPregunta;
     private List<Pregunta> flistaPregunta;
     private List<Asignacion> listaAsignacion;
@@ -234,6 +245,34 @@ public class LoginMB implements Serializable {
      */
     public void setSelectedAsignacion(Asignacion selectedAsignacion) {
         this.selectedAsignacion = selectedAsignacion;
+    }
+
+    /**
+     * @return the selectedBaseLegal
+     */
+    public BaseLegal getSelectedBaseLegal() {
+        return selectedBaseLegal;
+    }
+
+    /**
+     * @param selectedBaseLegal the selectedBaseLegal to set
+     */
+    public void setSelectedBaseLegal(BaseLegal selectedBaseLegal) {
+        this.selectedBaseLegal = selectedBaseLegal;
+    }
+
+    /**
+     * @return the listaTarget
+     */
+    public List<BaseLegal> getListaTarget() {
+        return listaTarget;
+    }
+
+    /**
+     * @param listaTarget the listaTarget to set
+     */
+    public void setListaTarget(List<BaseLegal> listaTarget) {
+        this.listaTarget = listaTarget;
     }
 
     /**
@@ -628,9 +667,12 @@ public class LoginMB implements Serializable {
             Integer id = ((Consulta) event.getObject()).getIdconocimiento().intValue();
             switch (tipo) {
                 case 1: {
-                    pagina = "/gescon/faces/pages/baseLegal.xhtml";
-                    FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
-                    FacesContext.getCurrentInstance().responseComplete();
+                    BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+                    this.setSelectedBaseLegal(service.getBaselegalById(BigDecimal.valueOf(id)));
+                    ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
+                    this.selectedBaseLegal.setArchivo(aservice.getLastArchivoByBaseLegal(this.getSelectedBaseLegal()));
+ 
+                    RequestContext.getCurrentInstance().execute("PF('seeBaseDialog').show();");
                     break;
                 }
                 case 2: {
@@ -722,6 +764,7 @@ public class LoginMB implements Serializable {
                         this.fSInfMod = "false";
                         this.fMsjUsu1 = "false";
                     }
+                    RequestContext.getCurrentInstance().execute("PF('seePregDialog').show();");
                     break;
                 }
             }
@@ -756,7 +799,7 @@ public class LoginMB implements Serializable {
         try {
 
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long)2));
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 2));
             service.saveOrUpdate(this.getSelectedPregunta());
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -769,8 +812,8 @@ public class LoginMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
             asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(this.getSelectedPregunta().getNcategoriaid()));
-            
+            asignacion.setNusuarioid(serviceasig.getEspecialistaByCategoria(this.getSelectedPregunta().getNcategoriaid()));
+
             asignacion.setDfechacreacion(new Date());
             asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
@@ -799,7 +842,7 @@ public class LoginMB implements Serializable {
     public void Rechazar(ActionEvent event) {
         try {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long)7));
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 7));
             service.saveOrUpdate(this.getSelectedPregunta());
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -891,7 +934,7 @@ public class LoginMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
             asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("4")));
+            asignacion.setNusuarioid(serviceasig.getUserCreacionByPregunta(this.getSelectedPregunta().getNpreguntaid()));
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
@@ -933,7 +976,7 @@ public class LoginMB implements Serializable {
         try {
 
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long)6));
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 6));
             service.saveOrUpdate(this.getSelectedPregunta());
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -1027,7 +1070,7 @@ public class LoginMB implements Serializable {
             }
 
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long)5));
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 5));
             service.saveOrUpdate(this.getSelectedPregunta());
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -1040,7 +1083,7 @@ public class LoginMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
             asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("2")));
+            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(this.getSelectedPregunta().getNcategoriaid()));
             asignacion.setDfechacreacion(new Date());
             asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
@@ -1079,7 +1122,7 @@ public class LoginMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
             asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("4")));
+            asignacion.setNusuarioid(serviceasig.getUserCreacionByPregunta(this.getSelectedPregunta().getNpreguntaid()));
             asignacion.setDfechacreacion(new Date());
             asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
@@ -1130,7 +1173,7 @@ public class LoginMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
             asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("3")));
+            asignacion.setNusuarioid(serviceasig.getEspecialistaByCategoria(this.getSelectedPregunta().getNcategoriaid()));
             asignacion.setDfechacreacion(new Date());
             asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
@@ -1180,7 +1223,7 @@ public class LoginMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
             asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("2")));
+            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(this.getSelectedPregunta().getNcategoriaid()));
             asignacion.setDfechacreacion(new Date());
             asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
@@ -1224,6 +1267,20 @@ public class LoginMB implements Serializable {
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    public StreamedContent getPdf() throws IOException, Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        } else {
+            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+            String fileName = JSFUtils.getRequestParameter("fileName");
+            FileInputStream fis = new FileInputStream(new File(fileName));
+            return new DefaultStreamedContent(fis, "application/pdf");
         }
     }
 

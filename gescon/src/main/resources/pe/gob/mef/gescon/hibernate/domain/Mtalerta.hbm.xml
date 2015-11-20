@@ -8,9 +8,9 @@
             <column name="NALERTAID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="mtparametro" class="pe.gob.mef.gescon.hibernate.domain.Mtparametro" fetch="select">
-            <column name="NPARAMETROID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
+        <property name="nparametroid" type="big_decimal">
+            <column name="NPARAMETROID" precision="22" scale="0"/>
+        </property>
         <property name="vnombre" type="string">
             <column name="VNOMBRE" length="25" />
         </property>

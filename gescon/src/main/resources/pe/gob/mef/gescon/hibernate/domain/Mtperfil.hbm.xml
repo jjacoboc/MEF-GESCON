@@ -29,18 +29,6 @@
         <property name="vnombre" type="string">
             <column name="VNOMBRE" length="25" />
         </property>
-        <property name="vdescripcion1232" type="string">
-            <column name="VDESCRIPCION__1232" length="20" />
-        </property>
-        <property name="vdescripcion1234" type="string">
-            <column name="VDESCRIPCION__1234" length="20" />
-        </property>
-        <property name="vdescripcion1236" type="string">
-            <column name="VDESCRIPCION__1236" length="20" />
-        </property>
-        <property name="vdescripcion1238" type="string">
-            <column name="VDESCRIPCION__1238" length="20" />
-        </property>
         <set name="tpoliticaPerfils" table="TPOLITICA_PERFIL" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NPERFILID" precision="22" scale="0" not-null="true" />

@@ -184,7 +184,9 @@
                                                 <h:outputText value="#{t.vnombre}"/>
                                             </p:column>
                                             <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
-                                                <h:outputText value="#{t.vcategoria}"/>
+                                                <h:outputText value="#{t.ncategoriaid}">
+                                                <f:converter converterId="converterCategoria"/>
+                                                </h:outputText>
                                             </p:column>
                                             <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
                                                 <h:outputText value="#{t.nestadoid}">
@@ -280,7 +282,7 @@
                                                 <h:outputText value="#{t.vnombre}"/>
                                             </p:column>
                                             <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
-                                                <h:outputText value="#{t.vcategoria}"/>
+                                                <h:outputText value="#{t.ncategoriaid}"/>
                                             </p:column>
                                             <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
                                                 <h:outputText value="#{t.nestadoid}">
@@ -385,7 +387,7 @@
                                                 <h:outputText value="#{t.vnombre}"/>
                                             </p:column>
                                             <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
-                                                <h:outputText value="#{t.vcategoria}"/>
+                                                <h:outputText value="#{t.ncategoriaid}"/>
                                             </p:column>
                                             <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
                                                 <h:outputText value="#{t.nestadoid}">
@@ -494,7 +496,7 @@
                                                 <h:outputText value="#{t.vnombre}"/>
                                             </p:column>
                                             <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
-                                                <h:outputText value="#{t.vcategoria}"/>
+                                                <h:outputText value="#{t.ncategoriaid}"/>
                                             </p:column>
                                             <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
                                                 <h:outputText value="#{t.nestadoid}">
@@ -534,7 +536,7 @@
                                             <p:spacer height="17"/>
                                             <p:dataTable value="#{baseLegalMB.listaTipoVinculo}" var="t" styleClass="hide-column-names"
                                                          style="width: 120px;" rowIndexVar="rowIndex" rendered="#{not empty baseLegalMB.listaTipoVinculo}">
-                                                <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_tipovinculo}"/></f:facet>
+                                                
                                                 <p:column >
                                                     <p:selectOneMenu value="#{baseLegalMB.listaTipoVinculo[rowIndex]}" panelStyle="font-size: 10px;">
                                                         <f:param name="index" value="#{rowIndex}"/>
