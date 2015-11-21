@@ -95,6 +95,19 @@
     -->
     
     <filter>
+        <filter-name>Character Encoding Filter</filter-name>
+        <filter-class>pe.gof.mef.gescon.common.CharacterEncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>Character Encoding Filter</filter-name>
+        <url-pattern>/faces/pages/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>Character Encoding Filter</filter-name>
+        <url-pattern>/pages/*</url-pattern>
+    </filter-mapping>
+    
+    <filter>
         <filter-name>PrimeFaces FileUpload Filter</filter-name>
         <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
     </filter>

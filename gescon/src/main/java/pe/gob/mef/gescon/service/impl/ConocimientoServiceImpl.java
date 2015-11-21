@@ -10,18 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
-import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.hibernate.dao.CategoriaDao;
 import pe.gob.mef.gescon.hibernate.dao.ConocimientoDao;
-import pe.gob.mef.gescon.hibernate.dao.TipoConocimientoDao;
-import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
-import pe.gob.mef.gescon.hibernate.domain.MttipoConocimiento;
 import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.util.ServiceFinder;
-import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
-import pe.gob.mef.gescon.web.bean.TipoConocimiento;
 
 /**
  *

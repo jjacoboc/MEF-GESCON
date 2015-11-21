@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -25,13 +26,26 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.hibernate.domain.ThistorialId;
+import pe.gob.mef.gescon.hibernate.domain.TseccionHistId;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.ConocimientoService;
+import pe.gob.mef.gescon.service.HistorialService;
+import pe.gob.mef.gescon.service.SeccionHistService;
+import pe.gob.mef.gescon.service.SeccionService;
+import pe.gob.mef.gescon.service.VinculoService;
 import pe.gob.mef.gescon.service.WikiService;
+import pe.gob.mef.gescon.util.GcmFileUtils;
+import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
+import pe.gob.mef.gescon.web.bean.Historial;
 import pe.gob.mef.gescon.web.bean.Seccion;
+import pe.gob.mef.gescon.web.bean.SeccionHist;
+import pe.gob.mef.gescon.web.bean.User;
+import pe.gob.mef.gescon.web.bean.Vinculo;
 import pe.gob.mef.gescon.web.bean.Wiki;
 
 /**
@@ -42,7 +56,7 @@ import pe.gob.mef.gescon.web.bean.Wiki;
 @ViewScoped
 public class WikiMB implements Serializable {
 
-    private final String path = "D:\\gescon\\files\\wk\\";
+    private final String path = "wk/";
     private List<Wiki> listaWiki;
     private Wiki selectedWiki;
     private TreeNode tree;
@@ -438,7 +452,7 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void toAddLink(ActionEvent event) {
         try {
             this.setIdTipoConocimiento(null);
@@ -575,20 +589,99 @@ public class WikiMB implements Serializable {
 
     public void save(ActionEvent event) {
         try {
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             Conocimiento wiki = new Conocimiento();
-            wiki.setVtitulo(this.getNombre());
+            wiki.setNtipoconocimientoid(Constante.WIKI);
+            wiki.setNconocimientoid(conocimientoService.getNextPK());
             wiki.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-            Seccion seccion = new Seccion();
-            seccion.setVtitulo(this.getTitulo());
-            seccion.setDetalleHtml(this.getDetalleHtml());
-            seccion.setDetallePlain(this.getDetallePlain());
-            if (CollectionUtils.isEmpty(this.getListaSeccion())) {
-                this.setListaSeccion(new ArrayList<Seccion>());
-                seccion.setNorden(BigDecimal.ONE);
+            wiki.setVtitulo(this.getNombre());
+            wiki.setNactivo(BigDecimal.ONE);
+            if (this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE)) {
+                wiki.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
             } else {
-                seccion.setNorden(BigDecimal.valueOf(this.getListaSeccion().size() + 1));
+                wiki.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
             }
-            this.getListaSeccion().add(seccion);
+            String np0 = this.path.concat(wiki.getNconocimientoid().toString()).concat("/0/");
+            wiki.setVruta(np0);
+            wiki.setDfechacreacion(new Date());
+            wiki.setVusuariocreacion(user.getVlogin());
+            conocimientoService.saveOrUpdate(wiki);
+
+            GcmFileUtils.writeStringToFileServer(np0, "html.txt", this.getDescripcionHtml());
+            GcmFileUtils.writeStringToFileServer(np0, "plain.txt", this.getDescripcionPlain());
+
+            String np1 = this.path.concat(wiki.getNconocimientoid().toString()).concat("/1/");
+            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+            ThistorialId thistorialId = new ThistorialId();
+            thistorialId.setNconocimientoid(wiki.getNconocimientoid());
+            thistorialId.setNhistorialid(historialService.getNextPK());
+            Historial historial = new Historial();
+            historial.setId(thistorialId);
+            historial.setNtipoconocimientoid(Constante.WIKI);
+            historial.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            historial.setVtitulo(this.getNombre());
+            historial.setNactivo(BigDecimal.ONE);
+            historial.setNsituacionid(wiki.getNsituacionid());
+            historial.setVruta(np1);
+            historial.setDfechacreacion(new Date());
+            historial.setVusuariocreacion(user.getVlogin());
+            
+            GcmFileUtils.writeStringToFileServer(np1, "html.txt", this.getDescripcionHtml());
+            GcmFileUtils.writeStringToFileServer(np1, "plain.txt", this.getDescripcionPlain());
+            
+            if (CollectionUtils.isNotEmpty(this.getListaSeccion())) {
+                String url0 = this.path.concat(wiki.getNconocimientoid().toString()).concat("/0/s");
+                String url1 = this.path.concat(wiki.getNconocimientoid().toString()).concat("/1/s");
+                SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
+                SeccionHistService seccionHistService = (SeccionHistService) ServiceFinder.findBean("SeccionHistService");
+                for (Seccion seccion : this.getListaSeccion()) {
+                    String ruta0 = url0.concat(seccion.getNorden().toString()).concat("/");
+                    seccion.setVruta(ruta0);
+                    seccion.setNseccionid(seccionService.getNextPK());
+                    seccion.setNconocimientoid(wiki.getNconocimientoid());
+                    seccion.setDfechacreacion(new Date());
+                    seccion.setVusuariocreacion(user.getVlogin());
+                    seccionService.saveOrUpdate(seccion);
+                    GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", this.getDetalleHtml());
+                    GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", this.getDetallePlain());
+                    
+                    String ruta1 = url1.concat(seccion.getNorden().toString()).concat("/");
+                    TseccionHistId tseccionHistId = new TseccionHistId();
+                    tseccionHistId.setNconocimientoid(thistorialId.getNconocimientoid());
+                    tseccionHistId.setNhistorialid(thistorialId.getNhistorialid());
+                    tseccionHistId.setNseccionhid(seccionHistService.getNextPK());
+                    SeccionHist seccionHist = new SeccionHist();
+                    seccionHist.setId(tseccionHistId);
+                    seccionHist.setNorden(seccion.getNorden());
+                    seccionHist.setVruta(ruta1);
+                    seccionHist.setVtitulo(seccion.getVtitulo());
+                    seccionHist.setVusuariocreacion(user.getVlogin());
+                    seccionHist.setDfechacreacion(new Date());
+                    seccionHistService.saveOrUpdate(seccionHist);
+                }
+                
+                this.getListaTargetVinculos().clear();
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+                
+                VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    Vinculo vinculo = new Vinculo();
+                    vinculo.setNvinculoid(vinculoService.getNextPK());
+                    vinculo.setNconocimientoid(wiki.getNconocimientoid());
+                    vinculo.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculo.setDfechacreacion(new Date());
+                    vinculo.setVusuariocreacion(user.getVlogin());
+                    vinculoService.saveOrUpdate(vinculo);
+                }
+            }
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

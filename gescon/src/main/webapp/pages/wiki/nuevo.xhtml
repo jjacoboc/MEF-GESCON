@@ -6,6 +6,7 @@
                 template="/WEB-INF/template.xhtml">
     <script>
         function setInnerText() {
+            alert('setInnerText:begin');
             var el = document.getElementById(":f:descHtml");
             var sel, range, innerText = "";
             if (typeof document.selection !== "undefined" &amp;&amp; typeof document.body.createTextRange !== "undefined") {
@@ -19,6 +20,7 @@
                 sel.removeAllRanges();
             }
             document.getElementById(":f:descPlain").value = innerText;
+            alert('setInnerText:end');
         }
         function setInnerTextSection() {
             var el = document.getElementById(":secDialogForm:txtHtml");
@@ -72,7 +74,7 @@
                                         <table style="">
                                             <ui:repeat value="#{wikiMB.listaSeccion}" var="s" varStatus="vs">
                                                 <tr class="Underline FontBold"><td><h:outputText value="#{s.vtitulo}"/></td></tr>
-                                                <tr><td><h:outputText value="#{s.detalle}" escape="false" styleClass="Fs14"/></td></tr>
+                                                <tr><td><h:outputText value="#{s.detalleHtml}" escape="false" styleClass="Fs14"/></td></tr>
                                                 <tr><td><p:spacer/></td></tr>
                                             </ui:repeat>
                                         </table>
@@ -192,7 +194,7 @@
                                 </p:fieldset>
                                 <h:panelGrid columns="2" width="100%">
                                     <h:panelGroup>
-                                        <p:commandButton value="Registrar" onclick="setInnerText()"/>
+                                        <p:commandButton value="Registrar" actionListener="#{wikiMB.save}" onclick="setInnerText();"/>
                                         <p:spacer width="10"/>
                                         <p:commandButton value="Cancelar" ajax="false" action="/pages/wiki/lista.xhtml"/>
                                     </h:panelGroup>
@@ -220,7 +222,7 @@
                             <h:form id="secDialogForm">
                                 <h:panelGrid id="pgSec" columns="1">
                                     <h:outputText value="#{msgs.wk_lbl_titulo}"/>
-                                    <p:inputText value="#{wikiMB.titulo}" size="100" maxlength="100"/>
+                                    <p:inputText value="#{wikiMB.titulo}" size="100" styleClass="Fs14" maxlength="100"/>
 
                                     <h:outputText value="#{msgs.wk_lbl_detalle2}"/>
                                     <p:editor id="txtHtml" value="#{wikiMB.detalleHtml}" />

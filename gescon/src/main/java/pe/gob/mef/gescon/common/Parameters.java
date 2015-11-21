@@ -50,7 +50,7 @@ public class Parameters implements Serializable {
      * @return
      */
     public static String getParameters() {
-        return "pe.gob.mef.airhsp.parameters";
+        return "pe.gob.mef.gescon.parameters";
     }
     
     public static List<GeneralBean> getListaAnoSec() {

@@ -38,6 +38,14 @@ public class Constante implements Serializable {
     public static String ESTADO_OPORTUNIDAD_MEJORA = "1";
     public static String ESTADO_BASELEGAL_PUBLICADO = "3";
     public static String ESTADO_BASELEGAL_CONCORDADO = "5";
+    public static String SITUACION_POR_VERIFICAR = "1";
+    public static String SITUACION_ASIGNADO = "2";
+    public static String SITUACION_DERIVADO = "3";
+    public static String SITUACION_OBSERVADO = "4";
+    public static String SITUACION_POR_PUBLICAR = "5";
+    public static String SITUACION_PUBLICADO = "6";
+    public static String SITUACION_RECHAZADO = "7";
+    
     public static int ADMINISTRADOR =21;
     public static int ESPECIALISTA =2;
     public static int MODERADOR =1;

@@ -1,7 +1,6 @@
 package pe.gob.mef.gescon.hibernate.domain;
 // Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.util.Date;
@@ -131,16 +130,14 @@ public class Mtcategoria implements java.io.Serializable {
     public void setVusuariocreacion(String vusuariocreacion) {
         this.vusuariocreacion = vusuariocreacion;
     }
-
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
 
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
     }
-
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 

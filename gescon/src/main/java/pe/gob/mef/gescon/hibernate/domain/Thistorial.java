@@ -141,7 +141,7 @@ public class Thistorial implements java.io.Serializable {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
 

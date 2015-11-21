@@ -41,9 +41,15 @@
                                                 <f:convertDateTime dateStyle="medium" type="both" locale="es" />
                                             </h:outputText>
                                         </p:column>
+                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.dfechamodificacion}" filterBy="#{row.dfechamodificacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="FECHA MODIFICACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechamodificacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
                                         <p:column style="text-align: center; width: 70px;">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink actionListener="#{alertaMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="Editar Alerta">
+                                            <p:commandLink actionListener="#{alertaMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="Editar Alerta">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{alertaMB.selectedAlerta}" />
                                             </p:commandLink>

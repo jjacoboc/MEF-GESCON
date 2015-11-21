@@ -103,7 +103,7 @@
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAsignadas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
                                      paginatorPosition="top" selectionMode="single" selection="#{loginMB.selectedNotification}" rowKey="#{row.idconocimiento}"
                                      emptyMessage="Ningún registro encontrado." style="width: 1200px;">
-                            <p:ajax event="rowSelect" listener="#{loginMB.goToKnowledge}" oncomplete="PF('seePregDialog').show();" update=":seePregDialogForm:pgSeePreg "/>
+                            <p:ajax event="rowSelect" listener="#{loginMB.goToKnowledge}"  update=":seePregDialogForm:pgSeePreg, :seeBaseDialogForm:pgSeeBase "/>
                             <p:column style="width: 180px;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
                                 <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
                                 <h:outputText value="#{row.categoria}" />
@@ -139,7 +139,7 @@
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesRecibidas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
                                      paginatorPosition="top" selectionMode="single" selection="#{loginMB.selectedNotification}" rowKey="#{row.id}"
                                      emptyMessage="Ningún registro encontrado." style="width: 1200px;">
-                            <p:ajax event="rowSelect" listener="#{loginMB.goToKnowledge}" oncomplete="PF('seePregDialog').show();" update=":seePregDialogForm:pgSeePreg "/>
+                            <p:ajax event="rowSelect" listener="#{loginMB.goToKnowledge}"  update=":seePregDialogForm:pgSeePreg, :seeBaseDialogForm:pgSeeBase "/>
                             <p:column style="width: 180px;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
                                 <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
                                 <h:outputText value="#{row.categoria}" />
@@ -446,6 +446,98 @@
                         <p:captcha label="Captcha" />
                         <p:commandButton update="pgReg" actionListener="#{userMB.save}" value="Registrar" />
                     </p:scrollPanel>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog id="seeBaseDlg" header="#{msgs.bl_lbl_pnlView}" widgetVar="seeBaseDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                <h:form id="seeBaseDialogForm">
+                    <h:panelGrid id="pgSeeBase" columns="3">
+                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                        <h:outputText value="#{msgs.bl_lbl_categoria}"/>
+                        <h:outputText value="#{loginMB.selectedBaseLegal.ncategoriaid}" >
+                            <f:converter converterId="converterCategoria"/>
+                        </h:outputText>
+
+                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                        <h:outputText value="#{msgs.bl_lbl_archivo}"/>
+                        <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                            <p:lightBox>
+                                <h:outputLink value="#">
+                                    <h:panelGrid columns="2">
+                                        <p:graphicImage library="images" name="pdf.png"/>
+                                        <h:outputText id="fileName" value="#{loginMB.selectedBaseLegal.archivo.vnombre}"/>
+                                    </h:panelGrid>
+                                </h:outputLink>
+                                <f:facet name="inline">
+                                    <p:media player="pdf" cache="false" value="#{loginMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                        <f:param name="fileName" value="#{loginMB.selectedBaseLegal.archivo.vruta}"/>
+                                    </p:media>
+                                </f:facet>
+                            </p:lightBox>
+                        </h:panelGrid>
+
+                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                        <h:outputText value="#{msgs.bl_lbl_nombre}"/>
+                        <h:outputText value="#{loginMB.selectedBaseLegal.vnombre}" />
+
+                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                        <h:outputText value="#{msgs.bl_lbl_numero}"/>
+                        <h:outputText value="#{loginMB.selectedBaseLegal.vnumero}" />
+
+                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                        <h:outputText value="#{msgs.bl_lbl_rango}"/>
+                        <h:outputText value="#{loginMB.selectedBaseLegal.nrangoid}" >
+                            <f:converter converterId="converterRango"/>
+                        </h:outputText>
+
+                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                        <h:outputText value="#{msgs.bl_lbl_ambito}"/>                                
+                        <h:panelGrid columns="4">
+                            <p:selectBooleanCheckbox value="#{loginMB.selectedBaseLegal.ngobnacional eq 1}" itemLabel="Gobierno Nacional"  />
+                            <p:selectBooleanCheckbox value="#{loginMB.selectedBaseLegal.ngobregional eq 1}" itemLabel="Gobierno Regional" />
+                            <p:selectBooleanCheckbox value="#{loginMB.selectedBaseLegal.ngoblocal eq 1}" itemLabel="Gobierno Local" />
+                            <p:selectBooleanCheckbox value="#{loginMB.selectedBaseLegal.nmancomunidades eq 1}" itemLabel="Mancomunidades" />
+                        </h:panelGrid>
+
+                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                        <h:outputText value="#{msgs.bl_lbl_sumilla}"/>
+                        <h:outputText value="#{loginMB.selectedBaseLegal.vsumilla}" />
+
+                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                        <h:outputText value="#{msgs.bl_lbl_fecha}"/>
+                        <h:outputText value="#{loginMB.selectedBaseLegal.dfechapublicacion}" >
+                            <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                        </h:outputText>
+
+                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                        <h:outputText value="#{msgs.bl_lbl_tema}"/>
+                        <h:outputText value="#{loginMB.selectedBaseLegal.vtema}" />
+
+                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                        <h:outputText value="#{msgs.bl_lbl_vinculo}"/>
+                        <p:spacer/>
+                    </h:panelGrid>
+                    <p:fieldset>
+                        <h:panelGrid id="pgViewVinc" columns="1" cellpadding="0" cellspacing="0">
+                            <p:dataTable value="#{loginMB.listaTarget}" var="t" rowIndexVar="rowIndex"
+                                         emptyMessage="Ninguna base legal vinculada." style="width: 900px;">
+                                <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                    <h:outputText value="#{t.vnumero}"/>
+                                </p:column>
+                                <p:column headerText="#{msgs.bl_lbl_columna08}">
+                                    <h:outputText value="#{t.vnombre}"/>
+                                </p:column>
+                                <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                    <h:outputText value="#{t.vcategoria}"/>
+                                </p:column>
+                                <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                    <h:outputText value="#{t.nestadoid}">
+                                        <f:converter converterId="converterEstadoBaseLegal"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGrid>
+                    </p:fieldset>
                 </h:form>
             </p:dialog>
 
@@ -893,7 +985,7 @@
                         <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
                         <p:tree id="cats" value="#{loginMB.tree}" var="node" animate="true" cache="true"  
                                 selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                            <p:ajax event="select" listener="#{loginMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":respPregDialogForm:cat,editRespPregDialogForm:catedit,editPregDialogForm:catedit" />
+                            <p:ajax event="select" listener="#{loginMB.onNodeSelect}" oncomplete="PF('catPregDialog').hide();" update="respPregDialogForm:cat,editRespPregDialogForm:catedit,editPregDialogForm:catedit" />
                             <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                 <h:outputText value="#{node.vnombre}"/>
                             </p:treeNode>

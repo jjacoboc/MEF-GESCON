@@ -42,9 +42,15 @@
                                                 <f:convertDateTime dateStyle="medium" type="both" locale="es" />
                                             </h:outputText>
                                         </p:column>
+                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.dfechamodificacion}" filterBy="#{row.dfechamodificacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="FECHA MODIFICACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechamodificacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
                                         <p:column style="text-align: center; width: 70px;">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink actionListener="#{parametroMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="Editar Parámetro">
+                                            <p:commandLink actionListener="#{parametroMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="Editar Parámetro">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
                                             </p:commandLink>
@@ -71,7 +77,7 @@
 
                                     <h:outputText value="*"/>
                                     <h:outputText value="Valor:"/>
-                                    <pe:inputNumber value="#{parametroMB.valor}" styleClass="Fs14" maxlength="10" /> 
+                                    <pe:inputNumber value="#{parametroMB.valor}" styleClass="Fs14" decimalPlaces="0" /> 
 
                                     <h:outputText value="*"/>
                                     <h:outputText value="Descripción:"/>
@@ -95,7 +101,7 @@
 
                                     <h:outputText value="*"/>
                                     <h:outputText value="Valor"/>
-                                    <p:inputText size="50" value="#{parametroMB.selectedParametro.vvalor}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" />
+                                    <p:inputText size="50" value="#{parametroMB.selectedParametro.nvalor}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" />
 
                                     <h:outputText value="*"/>
                                     <h:outputText value="Descripción:"/>

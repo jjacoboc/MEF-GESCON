@@ -133,14 +133,14 @@ public class Mtuser  implements java.io.Serializable {
     public void setVusuariocreacion(String vusuariocreacion) {
         this.vusuariocreacion = vusuariocreacion;
     }
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
     
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
     }
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
     

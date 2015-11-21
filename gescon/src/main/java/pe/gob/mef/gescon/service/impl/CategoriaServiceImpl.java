@@ -75,7 +75,11 @@ public class CategoriaServiceImpl implements CategoriaService {
         Categoria categoria = new Categoria();
         CategoriaDao categoriaDao = (CategoriaDao) ServiceFinder.findBean("CategoriaDao");
         Mtcategoria mtcategoria = categoriaDao.getMtcategoriaById(id);
-        BeanUtils.copyProperties(categoria, mtcategoria);
+        if(mtcategoria != null) {
+            BeanUtils.copyProperties(categoria, mtcategoria);
+        } else {
+            categoria = null;
+        }
         return categoria;
     }
 

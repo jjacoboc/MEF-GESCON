@@ -27,5 +27,7 @@ public interface AsignacionService {
     public List<Consulta> getNotificationsReceivedPanelByUser(User user) throws Exception;
     public List<Consulta> getNotificationsServedPanelByUser(User user) throws Exception;
     public BigDecimal getModeratorByCategoria(BigDecimal ncategoriaid) throws Exception;
+    public BigDecimal getEspecialistaByCategoria(BigDecimal ncategoriaid) throws Exception;
+    public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception;
     public void saveOrUpdate(Asignacion asignacion) throws Exception;
 }

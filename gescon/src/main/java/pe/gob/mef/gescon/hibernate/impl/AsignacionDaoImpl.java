@@ -233,10 +233,10 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         sql.append("SELECT a.npreguntaid AS ID, '' AS NUMERO, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, ");
         sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
         sql.append("       2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
-        sql.append("       a.nsituacion AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
         sql.append("FROM TPREGUNTA a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
-        sql.append("INNER JOIN MTSITUACION c ON a.nsituacion = c.nsituacionid ");
+        sql.append("INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.npreguntaid AND t.ntipoconocimientoid = 2 ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is not null) ");
@@ -269,7 +269,41 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         final StringBuilder sql = new StringBuilder();
         sql.append("SELECT NUSUARIOID FROM TCATEGORIA_USER  ");
         sql.append("WHERE ncategoriaid = ").append(ncategoriaid).append(" ");
+        sql.append("AND nperfilid = ").append(Constante.MODERADOR).append(" ");
+
+        return (BigDecimal) getHibernateTemplate().execute(
+                new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws HibernateException {
+                        Query query = session.createSQLQuery(sql.toString());
+                        return query.uniqueResult();
+                    }
+                });
+    }
+    
+    @Override
+    public BigDecimal getEspecialistaByMtcategoria(BigDecimal ncategoriaid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        sql.append("SELECT NUSUARIOID FROM TCATEGORIA_USER  ");
+        sql.append("WHERE ncategoriaid = ").append(ncategoriaid).append(" ");
         sql.append("AND nperfilid = ").append(Constante.ESPECIALISTA).append(" ");
+
+        return (BigDecimal) getHibernateTemplate().execute(
+                new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws HibernateException {
+                        Query query = session.createSQLQuery(sql.toString());
+                        return query.uniqueResult();
+                    }
+                });
+    }
+    
+    @Override
+    public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        sql.append("SELECT NUSUARIOID FROM MTUSER WHERE VLOGIN= (SELECT VUSUARIOCREACION FROM TPREGUNTA  ");
+        sql.append("WHERE npreguntaid = ").append(npreguntaid).append(" )");
+
 
         return (BigDecimal) getHibernateTemplate().execute(
                 new HibernateCallback() {

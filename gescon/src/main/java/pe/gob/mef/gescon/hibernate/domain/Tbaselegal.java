@@ -1,7 +1,6 @@
 package pe.gob.mef.gescon.hibernate.domain;
 // Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -95,6 +94,7 @@ public class Tbaselegal implements java.io.Serializable {
         this.nrangoid = nrangoid;
     }
 
+    
     public String getVnombre() {
         return this.vnombre;
     }
@@ -119,7 +119,7 @@ public class Tbaselegal implements java.io.Serializable {
         this.vsumilla = vsumilla;
     }
 
-    public Serializable getDfechapublicacion() {
+    public Date getDfechapublicacion() {
         return this.dfechapublicacion;
     }
 
@@ -151,7 +151,7 @@ public class Tbaselegal implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -159,7 +159,7 @@ public class Tbaselegal implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 

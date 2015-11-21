@@ -13,7 +13,7 @@ public class Mtalerta  implements java.io.Serializable {
 
 
      private BigDecimal nalertaid;
-     private Mtparametro mtparametro;
+     private BigDecimal nparametroid;
      private String vnombre;
      private String vdescripcion;
      private BigDecimal nactivo;
@@ -35,13 +35,13 @@ public class Mtalerta  implements java.io.Serializable {
     }
 
 	
-    public Mtalerta(BigDecimal nalertaid, Mtparametro mtparametro) {
+    public Mtalerta(BigDecimal nalertaid, BigDecimal nparametroid) {
         this.nalertaid = nalertaid;
-        this.mtparametro = mtparametro;
+        this.nparametroid = nparametroid;
     }
-    public Mtalerta(BigDecimal nalertaid, Mtparametro mtparametro, String vnombre, String vdescripcion, BigDecimal nactivo, BigDecimal nuseraplica, Date dfechini, Date dfechfin, String vcondicion1, String vcondicion2, BigDecimal nvalor1, BigDecimal nvalor2, BigDecimal ntipo1, BigDecimal ntipo2, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion) {
+    public Mtalerta(BigDecimal nalertaid, BigDecimal nparametroid, String vnombre, String vdescripcion, BigDecimal nactivo, BigDecimal nuseraplica, Date dfechini, Date dfechfin, String vcondicion1, String vcondicion2, BigDecimal nvalor1, BigDecimal nvalor2, BigDecimal ntipo1, BigDecimal ntipo2, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion) {
        this.nalertaid = nalertaid;
-       this.mtparametro = mtparametro;
+       this.nparametroid = nparametroid;
        this.vnombre = vnombre;
        this.vdescripcion = vdescripcion;
        this.nactivo = nactivo;
@@ -67,13 +67,21 @@ public class Mtalerta  implements java.io.Serializable {
     public void setNalertaid(BigDecimal nalertaid) {
         this.nalertaid = nalertaid;
     }
-    public Mtparametro getMtparametro() {
-        return this.mtparametro;
+
+    /**
+     * @return the nparametroid
+     */
+    public BigDecimal getNparametroid() {
+        return nparametroid;
     }
-    
-    public void setMtparametro(Mtparametro mtparametro) {
-        this.mtparametro = mtparametro;
+
+    /**
+     * @param nparametroid the nparametroid to set
+     */
+    public void setNparametroid(BigDecimal nparametroid) {
+        this.nparametroid = nparametroid;
     }
+
     public String getVnombre() {
         return this.vnombre;
     }
@@ -172,14 +180,14 @@ public class Mtalerta  implements java.io.Serializable {
     public void setVusuariomodificacion(String vusuariomodificacion) {
         this.vusuariomodificacion = vusuariomodificacion;
     }
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
     
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
     }
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
     

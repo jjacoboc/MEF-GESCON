@@ -590,13 +590,14 @@ public class BaseLegalMB implements Serializable {
         }
     }
     
-    public void toSave(ActionEvent event) {
+    public String toSave() {
         try {
             this.cleanAttributes();
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+        return "/pages/baselegal/nuevo?faces-redirect=true";
     }
 
     public void save(ActionEvent event) {
@@ -676,7 +677,6 @@ public class BaseLegalMB implements Serializable {
             for(BaseLegal bl : this.getListaBaseLegal()) {
                 bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
             }
-            RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -705,7 +705,7 @@ public class BaseLegalMB implements Serializable {
         }
     }
     
-    public void toEdit(ActionEvent event) {
+    public String toEdit() {
         try {
             this.cleanAttributes();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
@@ -714,11 +714,16 @@ public class BaseLegalMB implements Serializable {
             this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
             this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
             this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
-            loadPickList(event);
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
+            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+            this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+        return "/pages/baselegal/editar?faces-redirect=true";
     }
     
     public void edit(ActionEvent event) {
@@ -794,6 +799,27 @@ public class BaseLegalMB implements Serializable {
             e.getMessage();
             e.printStackTrace();
         }
+    }
+    
+    public String toPost() {
+        try {
+            this.cleanAttributes();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
+            this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
+            this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
+            this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
+            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+            this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return "/pages/baselegal/publicar?faces-redirect=true";
     }
     
     public void post(ActionEvent event) {
@@ -872,15 +898,24 @@ public class BaseLegalMB implements Serializable {
         }
     }
     
-    public void toView(ActionEvent event) {
+    public String toView() {
         try {
+            this.cleanAttributes();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
             this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
-            loadPickList(event);
+            this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
+            this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
+            this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
+            this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
+            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+        return "/pages/baselegal/ver?faces-redirect=true";
     }
     
     public void loadPickList(ActionEvent event) {
@@ -918,7 +953,7 @@ public class BaseLegalMB implements Serializable {
                         index = Collections.binarySearch(this.getListaSource(), ele, BaseLegal.Comparators.ID);
                         if(this.getListaTarget() == null) this.setListaTarget(new ArrayList<BaseLegal>());
                         this.getListaTarget().add(this.getListaSource().get(index));
-                        this.getListaTipoVinculo().add(BigDecimal.ZERO.toString());
+//                        this.getListaTipoVinculo().add(BigDecimal.ZERO.toString());
                         this.getListaSource().remove(index);
                     }
                 }
@@ -929,7 +964,7 @@ public class BaseLegalMB implements Serializable {
                         if(this.getListaSource() == null) this.setListaSource(new ArrayList<BaseLegal>());
                         this.getListaSource().add(this.getListaTarget().get(index));
                         this.getListaTarget().remove(index);
-                        this.getListaTipoVinculo().remove(index);
+//                        this.getListaTipoVinculo().remove(index);
                     }
                 }
             }

@@ -27,7 +27,7 @@ public class Conocimiento  implements java.io.Serializable {
     private String vusuariocreacion;
     private Date dfechacreacion;
     private String vejecutora;
-    private String varchivo;
+    private String vruta;
     private String vnumero;
     private String vtema;
     private String vdesextra;
@@ -124,12 +124,12 @@ public class Conocimiento  implements java.io.Serializable {
         this.vejecutora = vejecutora;
     }
 
-    public String getVarchivo() {
-        return varchivo;
+    public String getVruta() {
+        return vruta;
     }
 
-    public void setVarchivo(String varchivo) {
-        this.varchivo = varchivo;
+    public void setVruta(String vruta) {
+        this.vruta = vruta;
     }
 
     public String getVnumero() {

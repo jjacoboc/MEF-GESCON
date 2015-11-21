@@ -34,6 +34,7 @@ import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Pregunta;
+import pe.gob.mef.gescon.web.bean.User;
 
 //import pe.gob.mef.gescon.web.bean.Politica;
 /**
@@ -593,6 +594,9 @@ public class PreguntaMB implements Serializable {
             }
             BigDecimal idpregunta;
 
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            
             Pregunta pregunta = new Pregunta();
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             idpregunta = service.getNextPK();
@@ -604,17 +608,17 @@ public class PreguntaMB implements Serializable {
             pregunta.setVdatoadicional(this.getDatoAdicional().trim());
             pregunta.setNactivo(BigDecimal.ONE);
             pregunta.setDfechacreacion(new Date());
+            pregunta.setVusuariocreacion(user.getVlogin());
             pregunta.setNsituacionid(BigDecimal.valueOf(Long.parseLong("1")));
             service.saveOrUpdate(pregunta);
 
             Asignacion asignacion = new Asignacion();
-            LoginMB mb = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             asignacion.setNasignacionid(serviceasig.getNextPK());
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
             asignacion.setNconocimientoid(idpregunta);
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("2")));
+            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(pregunta.getNcategoriaid()));
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);

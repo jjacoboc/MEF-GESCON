@@ -19,10 +19,8 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     
     private BigDecimal nbaselegalid;
     private BigDecimal nrangoid;
-    private String vrango;
     private String vnombre;
     private BigDecimal ncategoriaid;
-    private String vcategoria;
     private String vnumero;
     private String vsumilla;
     private Date dfechapublicacion;
@@ -37,7 +35,6 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     private BigDecimal nmancomunidades;
     private BigDecimal nactivo;
     private BigDecimal nestadoid;
-    private String vestado;
     private Archivo archivo;
     private List<Archivo> listaArchivo;
     
@@ -74,20 +71,6 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     }
 
     /**
-     * @return the vrango
-     */
-    public String getVrango() {
-        return vrango;
-    }
-
-    /**
-     * @param vrango the vrango to set
-     */
-    public void setVrango(String vrango) {
-        this.vrango = vrango;
-    }
-
-    /**
      * @return the vnombre
      */
     public String getVnombre() {
@@ -113,20 +96,6 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
      */
     public void setNcategoriaid(BigDecimal ncategoriaid) {
         this.ncategoriaid = ncategoriaid;
-    }
-
-    /**
-     * @return the vcategoria
-     */
-    public String getVcategoria() {
-        return vcategoria;
-    }
-
-    /**
-     * @param vcategoria the vcategoria to set
-     */
-    public void setVcategoria(String vcategoria) {
-        this.vcategoria = vcategoria;
     }
 
     /**
@@ -326,20 +295,6 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     }
 
     /**
-     * @return the vestado
-     */
-    public String getVestado() {
-        return vestado;
-    }
-
-    /**
-     * @param vestado the vestado to set
-     */
-    public void setVestado(String vestado) {
-        this.vestado = vestado;
-    }
-
-    /**
      * @return the archivo
      */
     public Archivo getArchivo() {
@@ -366,7 +321,7 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     public void setListaArchivo(List<Archivo> listaArchivo) {
         this.listaArchivo = listaArchivo;
     }
-    
+ 
     @Override
     public int compareTo(BaseLegal o) {
         return Comparators.ID.compare(this, o);

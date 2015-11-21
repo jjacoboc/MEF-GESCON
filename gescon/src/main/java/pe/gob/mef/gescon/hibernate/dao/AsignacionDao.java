@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
-import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
 import pe.gob.mef.gescon.hibernate.domain.Tasignacion;
 
 /**
@@ -27,5 +26,7 @@ public interface AsignacionDao {
     public List<HashMap> getNotificationsReceivedPanelByMtuser(Mtuser mtuser) throws Exception;
     public List<HashMap> getNotificationsServedPanelByMtuser(Mtuser mtuser) throws Exception;
     public BigDecimal getModeratorByMtcategoria(BigDecimal ncategoriaid) throws Exception;
+    public BigDecimal getEspecialistaByMtcategoria(BigDecimal ncategoriaid) throws Exception;
+    public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception;
     public void saveOrUpdate(Tasignacion tasignacion) throws Exception;
 }

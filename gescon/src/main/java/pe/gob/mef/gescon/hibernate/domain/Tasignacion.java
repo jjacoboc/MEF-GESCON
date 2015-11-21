@@ -101,7 +101,7 @@ public class Tasignacion implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -117,7 +117,7 @@ public class Tasignacion implements java.io.Serializable {
         this.dfechamodificacion = dfechamodificacion;
     }
 
-    public Serializable getDfechaasignacion() {
+    public Date getDfechaasignacion() {
         return this.dfechaasignacion;
     }
 
@@ -125,7 +125,7 @@ public class Tasignacion implements java.io.Serializable {
         this.dfechaasignacion = dfechaasignacion;
     }
 
-    public Serializable getDfechaatencion() {
+    public Date getDfechaatencion() {
         return this.dfechaatencion;
     }
 
@@ -133,7 +133,7 @@ public class Tasignacion implements java.io.Serializable {
         this.dfechaatencion = dfechaatencion;
     }
 
-    public Serializable getDfecharecepcion() {
+    public Date getDfecharecepcion() {
         return this.dfecharecepcion;
     }
 
