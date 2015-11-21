@@ -22,7 +22,7 @@ public class Tconocimiento implements java.io.Serializable {
     private String vusuariocreacion;
     private Date dfechacreacion;
     private String vejecutora;
-    private String varchivo;
+    private String vruta;
     private String vnumero;
     private String vtema;
     private String vdesextra;
@@ -45,7 +45,7 @@ public class Tconocimiento implements java.io.Serializable {
         this.nconocimientoid = nconocimientoid;
     }
 
-    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vejecutora, String varchivo, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
+    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vejecutora, String vruta, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
         this.nconocimientoid = nconocimientoid;
         this.ncategoriaid = ncategoriaid;
         this.nsituacionid = nsituacionid;
@@ -56,7 +56,7 @@ public class Tconocimiento implements java.io.Serializable {
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
         this.vejecutora = vejecutora;
-        this.varchivo = varchivo;
+        this.vruta = vruta;
         this.vnumero = vnumero;
         this.vtema = vtema;
         this.vdesextra = vdesextra;
@@ -152,12 +152,12 @@ public class Tconocimiento implements java.io.Serializable {
         this.vejecutora = vejecutora;
     }
 
-    public String getVarchivo() {
-        return this.varchivo;
+    public String getVruta() {
+        return this.vruta;
     }
 
-    public void setVarchivo(String varchivo) {
-        this.varchivo = varchivo;
+    public void setVruta(String vruta) {
+        this.vruta = vruta;
     }
 
     public String getVnumero() {

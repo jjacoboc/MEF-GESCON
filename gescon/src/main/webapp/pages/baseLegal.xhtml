@@ -187,9 +187,11 @@
                                                 <h:outputText value="#{t.vcategoria}"/>
                                             </p:column>
                                             <p:column style="width: 80px; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
-                                                <h:outputText value="#{t.nestadoid}">
-                                                    <f:converter converterId="converterEstadoBaseLegal"/>
-                                                </h:outputText>
+                                                
+                                                <p:selectOneMenu value="#{t.nestadoid}" panelStyle="font-size: 10px;">
+                                                    <f:selectItem itemLabel="Seleccione" itemValue="0" />
+                                                    <f:selectItems value="#{listaSessionMB.listaEstadoBaseLegalVinculo}"/>
+                                                </p:selectOneMenu>
                                             </p:column>
                                         </p:dataTable>
                                     </h:panelGrid>
@@ -530,22 +532,7 @@
                                             <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
                                             <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
                                         </p:pickList>
-                                        <h:panelGrid columns="1">
-                                            <p:spacer height="17"/>
-                                            <p:dataTable value="#{baseLegalMB.listaTipoVinculo}" var="t" styleClass="hide-column-names"
-                                                         style="width: 120px;" rowIndexVar="rowIndex" rendered="#{not empty baseLegalMB.listaTipoVinculo}">
-                                                <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_tipovinculo}"/></f:facet>
-                                                <p:column >
-                                                    <p:selectOneMenu value="#{baseLegalMB.listaTipoVinculo[rowIndex]}" panelStyle="font-size: 10px;">
-                                                        <f:param name="index" value="#{rowIndex}"/>
-                                                        <p:ajax event="change" listener="#{baseLegalMB.handleChangeValue}" 
-                                                                update=":newDialogForm:pgNewVinc, :editDialogForm:pgEditVinc, :postDialogForm:pgPostVinc, :pickDialogForm:pgPick"/>
-                                                        <f:selectItem itemLabel="Seleccione" itemValue="0" />
-                                                        <f:selectItems value="#{listaSessionMB.listaEstadoBaseLegalVinculo}"/>
-                                                    </p:selectOneMenu>
-                                                </p:column>
-                                            </p:dataTable>
-                                        </h:panelGrid>
+                                        
                                     </h:panelGrid>
                                 </h:panelGrid>
                             </h:form>

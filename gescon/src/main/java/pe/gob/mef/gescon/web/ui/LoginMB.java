@@ -963,7 +963,6 @@ public class LoginMB implements Serializable {
 
     public void savePubEdit(ActionEvent event) throws Exception {
         try {
-
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
 
             this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta());
@@ -982,7 +981,6 @@ public class LoginMB implements Serializable {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-
     }
 
     public void toResp(ActionEvent event) {

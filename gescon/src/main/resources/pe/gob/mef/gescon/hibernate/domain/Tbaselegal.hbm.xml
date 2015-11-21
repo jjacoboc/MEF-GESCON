@@ -8,15 +8,15 @@
             <column name="NBASELEGALID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="mtcategoria" class="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" fetch="select">
+        <property name="ncategoriaid" type="big_decimal">
             <column name="NCATEGORIAID" precision="22" scale="0" />
-        </many-to-one>
-        <many-to-one name="mtestadoBaselegal" class="pe.gob.mef.gescon.hibernate.domain.MtestadoBaselegal" fetch="select">
+        </property>
+        <property name="nestadoid" type="big_decimal">
             <column name="NESTADOID" precision="22" scale="0" />
-        </many-to-one>
-        <many-to-one name="mtrango" class="pe.gob.mef.gescon.hibernate.domain.Mtrango" fetch="select">
+        </property>
+        <property name="nrangoid" type="big_decimal">
             <column name="NRANGOID" precision="22" scale="0" />
-        </many-to-one>
+        </property>
         <property name="vnombre" type="string">
             <column name="VNOMBRE" length="250" />
         </property>
