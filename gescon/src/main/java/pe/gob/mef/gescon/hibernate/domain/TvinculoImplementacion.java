@@ -59,7 +59,7 @@ public class TvinculoImplementacion implements java.io.Serializable {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -75,7 +75,7 @@ public class TvinculoImplementacion implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 

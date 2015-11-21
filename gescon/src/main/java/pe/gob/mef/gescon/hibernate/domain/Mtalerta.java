@@ -180,14 +180,14 @@ public class Mtalerta  implements java.io.Serializable {
     public void setVusuariomodificacion(String vusuariomodificacion) {
         this.vusuariomodificacion = vusuariomodificacion;
     }
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
     
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
     }
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
     

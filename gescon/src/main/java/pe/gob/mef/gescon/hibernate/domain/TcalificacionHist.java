@@ -88,7 +88,7 @@ public class TcalificacionHist implements java.io.Serializable {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -104,7 +104,7 @@ public class TcalificacionHist implements java.io.Serializable {
         this.ncalificacion = ncalificacion;
     }
 
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 

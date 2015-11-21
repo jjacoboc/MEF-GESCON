@@ -138,7 +138,7 @@ public class Tbaselegal implements java.io.Serializable {
         this.vsumilla = vsumilla;
     }
 
-    public Serializable getDfechapublicacion() {
+    public Date getDfechapublicacion() {
         return this.dfechapublicacion;
     }
 
@@ -170,7 +170,7 @@ public class Tbaselegal implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -178,7 +178,7 @@ public class Tbaselegal implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 

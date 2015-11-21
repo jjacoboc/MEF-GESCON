@@ -41,22 +41,30 @@
                                                 <f:convertDateTime dateStyle="medium" type="both" locale="es" />
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 70px;">
+                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.dfechamodificacion}" filterBy="#{row.dfechamodificacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="FECHA MODIFICACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechamodificacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
+                                        
+                                        <p:column style="text-align: center; width: 90px;">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink actionListener="#{politicaMB.toUpdate}" update="f:growl, :editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="Editar Parámetro">
+                                            <p:commandLink actionListener="#{politicaMB.toUpdate}" update=":editDialogForm:pgEdit"  oncomplete="PF('editDialog').show();" styleClass="ui-link" title="Editar Politica">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{politicaMB.selectedPolitica}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Política" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
+                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Politica" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{politicaMB.selectedPolitica}" />
                                             </p:commandLink>
-                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Política" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
+                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Politica" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{politicaMB.selectedPolitica}" />
                                             </p:commandLink>
                                         </p:column>
+                                        
                                     </p:dataTable>
                                 </h:panelGrid>
                             </p:panel>

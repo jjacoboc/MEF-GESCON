@@ -20,7 +20,7 @@
                                     <p:dataTable id="tbl" value="#{perfilMB.listaPerfils}" 
                                                  var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                                        <p:column style="text-align: center; width: 20px;">
+                                        <p:column style="text-align: center; width: 20px;" rendered="false">
                                             <f:facet name="header">ID</f:facet>
                                             <h:outputText value="#{row.nperfilid}"/>
                                         </p:column>
@@ -38,6 +38,22 @@
                                             <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
                                             <h:outputText value="#{row.nactivo}">
                                                 <f:converter converterId="converterSiNo"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
+                                            <h:outputText value="#{row.vusuariocreacion}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 150px;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechacreacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.dfechamodificacion}" filterBy="#{row.dfechamodificacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="FECHA MODIFICACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechamodificacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
                                             </h:outputText>
                                         </p:column>
 

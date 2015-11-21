@@ -81,7 +81,7 @@ public class Mtsituacion implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -89,7 +89,7 @@ public class Mtsituacion implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 

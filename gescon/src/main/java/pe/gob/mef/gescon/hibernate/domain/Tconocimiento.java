@@ -136,7 +136,7 @@ public class Tconocimiento implements java.io.Serializable {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Serializable getDfechacreacion() {
+    public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
 
@@ -240,7 +240,7 @@ public class Tconocimiento implements java.io.Serializable {
         this.vobservacion = vobservacion;
     }
 
-    public Serializable getDfechamodificacion() {
+    public Date getDfechamodificacion() {
         return this.dfechamodificacion;
     }
 

@@ -61,7 +61,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
             sql.append("        INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
             sql.append("        WHERE a.nactivo = :ACTIVO ");
-            sql.append("        AND c.nestadoid IN (3,4,5,6) ");
+            sql.append("        AND c.nestadoid IN (3,4,5,6) AND b.NESTADO = 1 ");
             if(StringUtils.isNotBlank(fCategoria)) {
                 sql.append("    AND a.ncategoriaid IN (").append(fCategoria).append(") ");
             }
@@ -84,7 +84,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
             sql.append("        INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
             sql.append("        WHERE a.nactivo = :ACTIVO ");
-            sql.append("        AND c.nsituacionid = 6 ");
+            sql.append("        AND c.nsituacionid = 6 AND b.NESTADO = 1");
             if(StringUtils.isNotBlank(fCategoria)) {
                 sql.append("    AND a.ncategoriaid IN (").append(fCategoria).append(") ");
             }

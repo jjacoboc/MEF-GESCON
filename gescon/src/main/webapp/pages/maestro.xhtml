@@ -4,7 +4,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
-    
+
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
@@ -18,7 +18,7 @@
                                     <p:dataTable id="tbl" value="#{maestroMB.listaMaestro}" 
                                                  var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                                        <p:column style="text-align: center; width: 20px;">
+                                        <p:column style="text-align: center; width: 20px;" rendered="false">
                                             <f:facet name="header">ID</f:facet>
                                             <h:outputText value="#{row.nmaestroid}"/>
                                         </p:column>
@@ -36,6 +36,22 @@
                                             <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
                                             <h:outputText value="#{row.nactivo}">
                                                 <f:converter converterId="converterSiNo"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
+                                            <h:outputText value="#{row.vusuariocreacion}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 150px;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechacreacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.dfechamodificacion}" filterBy="#{row.dfechamodificacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="FECHA MODIFICACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechamodificacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
                                             </h:outputText>
                                         </p:column>
 
@@ -63,8 +79,8 @@
 
                                         </p:column>
                                     </p:dataTable>
-                                    
-                                    
+
+
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
@@ -74,7 +90,7 @@
                                 <h:panelGrid id="pgNew" columns="3" cellpadding="5" style="text-align: left;width: 100%">
                                     <h:outputLabel value="*"/>
                                     <h:outputLabel value="Nombre:"/>
-                                        <p:inputText size="50" value="#{maestroMB.nombre}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" /> 
+                                    <p:inputText size="50" value="#{maestroMB.nombre}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" /> 
 
                                     <h:outputLabel value="*"/>
                                     <h:outputLabel value="Descripción:"/>
@@ -157,8 +173,14 @@
                                                 <f:convertDateTime dateStyle="medium" type="both" locale="es" />
                                             </h:outputText>
                                         </p:column>
+                                        <p:column style="text-align: center; width: 150px;" sortBy="#{row.dfechamodificacion}" filterBy="#{row.dfechamodificacion}" filterMatchMode="contains" priority="6">
+                                            <f:facet name="header"><h:outputText value="FECHA MODIFICACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechamodificacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
                                         <p:column style="text-align: center; width: 40px;">
-                                            <p:commandLink actionListener="#{maestroMB.toUpdate}" update="f:growl, :editdDialogForm:pgEditd" oncomplete="PF('editdDialog').show();" styleClass="ui-link" title="Editar Detalle">
+                                            <p:commandLink actionListener="#{maestroMB.toUpdate}" update=":editdDialogForm:pgEditd" oncomplete="PF('editdDialog').show();" styleClass="ui-link" title="Editar Detalle">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:setPropertyActionListener value="#{row}" target="#{maestroMB.selectedMaestroDetalle}" />
                                             </p:commandLink>

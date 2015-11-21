@@ -653,6 +653,7 @@ public class LoginMB implements Serializable {
         try {
             if (event != null) {
                 this.setSelectedCategoria((Categoria) event.getTreeNode().getData());
+                this.selectedPregunta.setNcategoriaid(this.selectedCategoria.getNcategoriaid());
             }
         } catch (Exception e) {
             e.getMessage();
