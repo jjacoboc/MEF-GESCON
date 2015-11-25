@@ -64,6 +64,7 @@ public class CategoriaDaoImpl extends HibernateDaoSupport implements CategoriaDa
     public List<Mtcategoria> getMtcategoriasPrimerNivel() throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtcategoria.class);
         criteria.add(Restrictions.eq("nnivel", BigDecimal.ONE));
+        criteria.add(Restrictions.eq("nestado", BigDecimal.ONE));
         criteria.addOrder(Order.asc("ncategoriaid"));
         return (List<Mtcategoria>) getHibernateTemplate().findByCriteria(criteria);
     }
@@ -72,6 +73,7 @@ public class CategoriaDaoImpl extends HibernateDaoSupport implements CategoriaDa
     public List<Mtcategoria> getMtcategoriaHijos(Mtcategoria mtcategoria) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtcategoria.class);
         criteria.add(Restrictions.eq("ncategoriasup", mtcategoria.getNcategoriaid()));
+        criteria.add(Restrictions.eq("nestado", BigDecimal.ONE));
         criteria.addOrder(Order.asc("nnivel"));
         criteria.addOrder(Order.asc("ncategoriaid"));
         return (List<Mtcategoria>) getHibernateTemplate().findByCriteria(criteria);

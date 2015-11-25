@@ -5,9 +5,12 @@
  */
 package pe.gob.mef.gescon.util;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ResourceBundle;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
+import jcifs.smb.SmbFileInputStream;
 import jcifs.smb.SmbFileOutputStream;
 import pe.gob.mef.gescon.common.Parameters;
 
@@ -43,5 +46,38 @@ public class GcmFileUtils {
             e.getMessage();
             e.printStackTrace();
         }
+    }
+    
+    public static String readStringFromFileServer(String path, String filename) {
+        String filepath;
+        String user;
+        String password;
+        String url;
+        String lineReader;
+        String string = null;
+        try {
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+            filepath = bundle.getString("filepath");
+            user = bundle.getString("user");
+            password = bundle.getString("password");
+            url = filepath + path;
+            
+            NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, user, password);
+            SmbFile sf = new SmbFile(url.concat(filename), auth);
+            
+            if(sf.exists()) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(new SmbFileInputStream(sf)));
+                StringBuilder builder = new StringBuilder();
+                while ((lineReader = reader.readLine()) != null) {
+                    builder.append(lineReader).append("\n");
+                }
+                reader.close();
+                string = builder.toString();
+            }
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return string;
     }
 }

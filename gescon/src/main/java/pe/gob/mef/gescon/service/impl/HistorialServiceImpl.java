@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.HistorialDao;
 import pe.gob.mef.gescon.hibernate.domain.Thistorial;
 import pe.gob.mef.gescon.service.HistorialService;
@@ -19,6 +20,7 @@ import pe.gob.mef.gescon.web.bean.Historial;
  *
  * @author JJacobo
  */
+@Repository(value = "HistorialService")
 public class HistorialServiceImpl implements HistorialService {
 
     @Override

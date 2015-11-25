@@ -73,6 +73,9 @@
     <property name="ndestacado" type="big_decimal">
       <column name="NDESTACADO" precision="22" scale="0"/>
     </property>
+    <property name="dfechapublicacion" type="timestamp">
+      <column name="DFECHAPUBLICACION"/>
+    </property>
     <set fetch="select" inverse="true" lazy="true" name="thistorials" table="THISTORIAL">
       <key>
         <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>

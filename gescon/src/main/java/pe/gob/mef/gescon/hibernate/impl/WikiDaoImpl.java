@@ -42,6 +42,7 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
     public List<HashMap> getConcimientosVinculados(HashMap filters) {
         String nconocimientoid = (String) filters.get("nconocimientoid");
         String ntipoconocimientoid = (String) filters.get("ntipoconocimientoid");
+        Boolean flag = (Boolean) filters.get("flag");
         Object object = null;
         final StringBuilder sql = new StringBuilder();
         if(StringUtils.isNotBlank(ntipoconocimientoid) && 
@@ -57,8 +58,13 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
             sql.append("    INNER JOIN MTCATEGORIA c ON b.ncategoriaid = c.ncategoriaid ");
             sql.append("    INNER JOIN MTSITUACION d ON b.nsituacionid = d.nsituacionid ");
             sql.append("    INNER JOIN MTTIPO_CONOCIMIENTO e ON b.ntpoconocimientoid = e.ntpoconocimientoid ");
-            sql.append("ON a.nconocimientovinc = b.nconocimientoid AND a.ntipoconocimientovinc = b.ntpoconocimientoid ");
+            sql.append("ON a.nconocimientovinc = b.nconocimientoid ");
+            sql.append("AND a.ntipoconocimientovinc = b.ntpoconocimientoid ");
+            sql.append("AND b.nactivo = :ACTIVO ");
             sql.append("WHERE a.nconocimientoid = ").append(nconocimientoid).append(" ");
+            if(flag) {
+                sql.append("AND a.ntipoconocimientovinc = ").append(ntipoconocimientoid).append(" ");
+            }
             sql.append("ORDER BY 7 DESC ");
         }
         if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
@@ -71,7 +77,9 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
             sql.append("INNER JOIN TPREGUNTA b ");
             sql.append("    INNER JOIN MTCATEGORIA c ON b.ncategoriaid = c.ncategoriaid ");
             sql.append("    INNER JOIN MTSITUACION d ON b.nsituacionid = d.nsituacionid ");
-            sql.append("ON a.nconocimientovinc = b.npreguntaid AND a.ntipoconocimientovinc = 2 ");
+            sql.append("ON a.nconocimientovinc = b.npreguntaid ");
+            sql.append("AND a.ntipoconocimientovinc = 2 ");
+            sql.append("AND b.nactivo = :ACTIVO ");
             sql.append("WHERE a.nconocimientoid = ").append(nconocimientoid).append(" ");
             sql.append("ORDER BY 7 DESC ");
         }
@@ -85,7 +93,9 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
             sql.append("INNER JOIN TBASELEGAL b ");
             sql.append("    INNER JOIN MTCATEGORIA c ON b.ncategoriaid = c.ncategoriaid ");
             sql.append("    INNER JOIN MTESTADO_BASELEGAL d ON b.nestadoid = d.nestadoid ");
-            sql.append("ON a.nconocimientovinc = b.nbaselegalid AND a.ntipoconocimientovinc = 1 ");
+            sql.append("ON a.nconocimientovinc = b.nbaselegalid ");
+            sql.append("AND a.ntipoconocimientovinc = 1 ");
+            sql.append("AND b.nactivo = :ACTIVO ");
             sql.append("WHERE a.nconocimientoid = ").append(nconocimientoid).append(" ");
             sql.append("ORDER BY 7 DESC ");
         }

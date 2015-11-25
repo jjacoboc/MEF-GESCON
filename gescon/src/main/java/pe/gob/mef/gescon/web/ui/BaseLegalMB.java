@@ -719,6 +719,7 @@ public class BaseLegalMB implements Serializable {
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -815,6 +816,7 @@ public class BaseLegalMB implements Serializable {
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();

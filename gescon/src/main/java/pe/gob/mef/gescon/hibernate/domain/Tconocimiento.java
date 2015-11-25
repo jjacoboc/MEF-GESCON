@@ -35,6 +35,7 @@ public class Tconocimiento implements java.io.Serializable {
     private String vobservacion;
     private Date dfechamodificacion;
     private BigDecimal ndestacado;
+    private Date dfechapublicacion;
     private Set thistorials = new HashSet(0);
     private Set timplementacions = new HashSet(0);
 
@@ -45,7 +46,7 @@ public class Tconocimiento implements java.io.Serializable {
         this.nconocimientoid = nconocimientoid;
     }
 
-    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vejecutora, String vruta, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
+    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vejecutora, String vruta, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Date dfechapublicacion, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
         this.nconocimientoid = nconocimientoid;
         this.ncategoriaid = ncategoriaid;
         this.nsituacionid = nsituacionid;
@@ -68,6 +69,7 @@ public class Tconocimiento implements java.io.Serializable {
         this.vobservacion = vobservacion;
         this.dfechamodificacion = dfechamodificacion;
         this.ndestacado = ndestacado;
+        this.dfechapublicacion = dfechapublicacion;
         this.thistorials = thistorials;
         this.timplementacions = timplementacions;
     }
@@ -254,6 +256,14 @@ public class Tconocimiento implements java.io.Serializable {
 
     public void setNdestacado(BigDecimal ndestacado) {
         this.ndestacado = ndestacado;
+    }
+
+    public Date getDfechapublicacion() {
+        return dfechapublicacion;
+    }
+
+    public void setDfechapublicacion(Date dfechapublicacion) {
+        this.dfechapublicacion = dfechapublicacion;
     }
 
     public Set getThistorials() {

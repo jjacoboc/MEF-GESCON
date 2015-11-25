@@ -21,7 +21,7 @@ import pe.gob.mef.gescon.web.bean.Conocimiento;
  * @author JJacobo
  */
 @Repository(value = "ConocimientoService")
-public class ConocimientoServiceImpl implements ConocimientoService{
+public class ConocimientoServiceImpl implements ConocimientoService {
 
     @Override
     public BigDecimal getNextPK() throws Exception {
@@ -37,8 +37,8 @@ public class ConocimientoServiceImpl implements ConocimientoService{
         Conocimiento conocimiento = new Conocimiento();
         for (Tconocimiento tconocimiento : lista) {
             BeanUtils.copyProperties(conocimiento, tconocimiento);
-            conocimientos.add(conocimiento);            
-            conocimiento     = new Conocimiento();            
+            conocimientos.add(conocimiento);
+            conocimiento = new Conocimiento();
         }
         return conocimientos;
     }
@@ -48,7 +48,6 @@ public class ConocimientoServiceImpl implements ConocimientoService{
         Tconocimiento tconocimiento = new Tconocimiento();
         BeanUtils.copyProperties(tconocimiento, conocimiento);
         ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
-        tconocimiento.setNconocimientoid( conocimientoDao.getNextPK() );
         conocimientoDao.saveOrUpdate(tconocimiento);
     }
 
@@ -58,9 +57,7 @@ public class ConocimientoServiceImpl implements ConocimientoService{
         BeanUtils.copyProperties(tconocimiento, conocimiento);
         ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
         conocimientoDao.delete(tconocimiento);
-        
+
     }
-    
-    
-    
+
 }

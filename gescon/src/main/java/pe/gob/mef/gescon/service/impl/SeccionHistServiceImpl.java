@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.SeccionHistDao;
 import pe.gob.mef.gescon.hibernate.domain.TseccionHist;
 import pe.gob.mef.gescon.service.SeccionHistService;
@@ -19,6 +20,7 @@ import pe.gob.mef.gescon.web.bean.SeccionHist;
  *
  * @author JJacobo
  */
+@Repository(value = "SeccionHistService")
 public class SeccionHistServiceImpl implements SeccionHistService {
 
     @Override

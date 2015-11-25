@@ -58,9 +58,9 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         final StringBuilder sql = new StringBuilder();
         sql.append("SELECT COUNT(1) FROM TASIGNACION t ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
-        sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
+        sql.append("AND ((t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
         sql.append("OR (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is null) ");
-        sql.append("OR (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is not null) ");
+        sql.append("OR (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is not null)) ");
 
         return (BigDecimal) getHibernateTemplate().execute(
                 new HibernateCallback() {
