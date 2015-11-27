@@ -35,6 +35,8 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     private BigDecimal nmancomunidades;
     private BigDecimal nactivo;
     private BigDecimal nestadoid;
+    private String vmsjusuariocreacion;
+    private String vmsjmoderador;
     private Archivo archivo;
     private List<Archivo> listaArchivo;
     
@@ -292,6 +294,34 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
      */
     public void setNestadoid(BigDecimal nestadoid) {
         this.nestadoid = nestadoid;
+    }
+
+    /**
+     * @return the vmsjusuariocreacion
+     */
+    public String getVmsjusuariocreacion() {
+        return vmsjusuariocreacion;
+    }
+
+    /**
+     * @param vmsjusuariocreacion the vmsjusuariocreacion to set
+     */
+    public void setVmsjusuariocreacion(String vmsjusuariocreacion) {
+        this.vmsjusuariocreacion = vmsjusuariocreacion;
+    }
+
+    /**
+     * @return the vmsjmoderador
+     */
+    public String getVmsjmoderador() {
+        return vmsjmoderador;
+    }
+
+    /**
+     * @param vmsjmoderador the vmsjmoderador to set
+     */
+    public void setVmsjmoderador(String vmsjmoderador) {
+        this.vmsjmoderador = vmsjmoderador;
     }
 
     /**

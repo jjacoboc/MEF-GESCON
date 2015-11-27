@@ -59,6 +59,12 @@
         <property name="nactivo" type="big_decimal">
             <column name="NACTIVO" precision="22" scale="0" />
         </property>
+        <property name="vmsjusuariocreacion" type="string">
+            <column name="VMSJUSUARIOCREACION" length="400" />
+        </property>
+        <property name="vmsjmoderador" type="string">
+            <column name="VMSJMODERADOR" length="400" />
+        </property>
         <set name="tvinculoBaselegals" table="TVINCULO_BASELEGAL" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NBASELEGALID" precision="22" scale="0" not-null="true" />

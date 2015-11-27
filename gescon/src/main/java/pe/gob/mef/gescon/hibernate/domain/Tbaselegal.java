@@ -29,6 +29,8 @@ public class Tbaselegal implements java.io.Serializable {
     private BigDecimal ngoblocal;
     private BigDecimal nmancomunidades;
     private BigDecimal nactivo;
+    private String vmsjusuariocreacion;
+    private String vmsjmoderador;
     private Set tvinculoBaselegals = new HashSet(0);
     private Set tarchivos = new HashSet(0);
 
@@ -205,6 +207,34 @@ public class Tbaselegal implements java.io.Serializable {
 
     public void setNactivo(BigDecimal nactivo) {
         this.nactivo = nactivo;
+    }
+
+    /**
+     * @return the vmsjusuariocreacion
+     */
+    public String getVmsjusuariocreacion() {
+        return vmsjusuariocreacion;
+    }
+
+    /**
+     * @param vmsjusuariocreacion the vmsjusuariocreacion to set
+     */
+    public void setVmsjusuariocreacion(String vmsjusuariocreacion) {
+        this.vmsjusuariocreacion = vmsjusuariocreacion;
+    }
+
+    /**
+     * @return the vmsjmoderador
+     */
+    public String getVmsjmoderador() {
+        return vmsjmoderador;
+    }
+
+    /**
+     * @param vmsjmoderador the vmsjmoderador to set
+     */
+    public void setVmsjmoderador(String vmsjmoderador) {
+        this.vmsjmoderador = vmsjmoderador;
     }
 
     public Set getTvinculoBaselegals() {

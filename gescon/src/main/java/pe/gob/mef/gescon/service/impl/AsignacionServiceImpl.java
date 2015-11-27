@@ -29,14 +29,14 @@ import pe.gob.mef.gescon.web.bean.Categoria;
  * @author JJacobo
  */
 @Repository(value = "AsignacionService")
-public class AsignacionServiceImpl implements AsignacionService{
+public class AsignacionServiceImpl implements AsignacionService {
 
     @Override
     public BigDecimal getNextPK() throws Exception {
         AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
         return asignacionDao.getNextPK();
     }
-    
+
     @Override
     public BigDecimal getNumberNotificationsByUser(User user) throws Exception {
         Mtuser mtuser = new Mtuser();
@@ -44,7 +44,7 @@ public class AsignacionServiceImpl implements AsignacionService{
         AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
         return asignacionDao.getNumberNotificationsByMtuser(mtuser);
     }
-    
+
     @Override
     public BigDecimal getNumberNotificationsAssignedByUser(User user) throws Exception {
         Mtuser mtuser = new Mtuser();
@@ -52,7 +52,7 @@ public class AsignacionServiceImpl implements AsignacionService{
         AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
         return asignacionDao.getNumberNotificationsAssignedByMtuser(mtuser);
     }
-    
+
     @Override
     public BigDecimal getNumberNotificationsReceivedByUser(User user) throws Exception {
         Mtuser mtuser = new Mtuser();
@@ -60,7 +60,7 @@ public class AsignacionServiceImpl implements AsignacionService{
         AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
         return asignacionDao.getNumberNotificationsReceivedByMtuser(mtuser);
     }
-    
+
     @Override
     public BigDecimal getNumberNotificationsServedByUser(User user) throws Exception {
         Mtuser mtuser = new Mtuser();
@@ -68,7 +68,7 @@ public class AsignacionServiceImpl implements AsignacionService{
         AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
         return asignacionDao.getNumberNotificationsServedByMtuser(mtuser);
     }
-    
+
     @Override
     public List<Consulta> getNotificationsAssignedPanelByUser(User user) {
         List<Consulta> lista = new ArrayList<Consulta>();
@@ -77,8 +77,8 @@ public class AsignacionServiceImpl implements AsignacionService{
             BeanUtils.copyProperties(mtuser, user);
             AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
             List<HashMap> consulta = asignacionDao.getNotificationsAssignedPanelByMtuser(mtuser);
-            if(!CollectionUtils.isEmpty(consulta)) {
-                for(HashMap map : consulta) {
+            if (!CollectionUtils.isEmpty(consulta)) {
+                for (HashMap map : consulta) {
                     Consulta c = new Consulta();
                     c.setIdconocimiento((BigDecimal) map.get("ID"));
                     c.setCodigo((String) map.get("NUMERO"));
@@ -94,13 +94,13 @@ public class AsignacionServiceImpl implements AsignacionService{
                     lista.add(c);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
         return lista;
     }
-    
+
     @Override
     public List<Consulta> getNotificationsReceivedPanelByUser(User user) {
         List<Consulta> lista = new ArrayList<Consulta>();
@@ -109,8 +109,8 @@ public class AsignacionServiceImpl implements AsignacionService{
             BeanUtils.copyProperties(mtuser, user);
             AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
             List<HashMap> consulta = asignacionDao.getNotificationsReceivedPanelByMtuser(mtuser);
-            if(!CollectionUtils.isEmpty(consulta)) {
-                for(HashMap map : consulta) {
+            if (!CollectionUtils.isEmpty(consulta)) {
+                for (HashMap map : consulta) {
                     Consulta c = new Consulta();
                     c.setIdconocimiento((BigDecimal) map.get("ID"));
                     c.setCodigo((String) map.get("NUMERO"));
@@ -126,13 +126,13 @@ public class AsignacionServiceImpl implements AsignacionService{
                     lista.add(c);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
         return lista;
     }
-    
+
     @Override
     public List<Consulta> getNotificationsServedPanelByUser(User user) {
         List<Consulta> lista = new ArrayList<Consulta>();
@@ -141,8 +141,8 @@ public class AsignacionServiceImpl implements AsignacionService{
             BeanUtils.copyProperties(mtuser, user);
             AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
             List<HashMap> consulta = asignacionDao.getNotificationsServedPanelByMtuser(mtuser);
-            if(!CollectionUtils.isEmpty(consulta)) {
-                for(HashMap map : consulta) {
+            if (!CollectionUtils.isEmpty(consulta)) {
+                for (HashMap map : consulta) {
                     Consulta c = new Consulta();
                     c.setIdconocimiento((BigDecimal) map.get("ID"));
                     c.setCodigo((String) map.get("NUMERO"));
@@ -158,31 +158,37 @@ public class AsignacionServiceImpl implements AsignacionService{
                     lista.add(c);
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
         return lista;
     }
-    
+
     @Override
     public BigDecimal getModeratorByCategoria(BigDecimal ncategoriaid) throws Exception {
         AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
         return asignacionDao.getModeratorByMtcategoria(ncategoriaid);
     }
-    
+
     @Override
     public BigDecimal getEspecialistaByCategoria(BigDecimal ncategoriaid) throws Exception {
         AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
         return asignacionDao.getEspecialistaByMtcategoria(ncategoriaid);
     }
-    
+
     @Override
     public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception {
         AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
         return asignacionDao.getUserCreacionByPregunta(npreguntaid);
     }
-    
+
+    @Override
+    public BigDecimal getUserCreacionByBaseLegal(BigDecimal nbaselegalid) throws Exception {
+        AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
+        return asignacionDao.getUserCreacionByBaseLegal(nbaselegalid);
+    }
+
     @Override
     public void saveOrUpdate(Asignacion asignacion) throws Exception {
         Tasignacion tasignacion = new Tasignacion();

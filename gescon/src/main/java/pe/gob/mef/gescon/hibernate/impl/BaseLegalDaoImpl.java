@@ -147,6 +147,36 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
         }
         return (List<HashMap>) object;
     }
+    
+    @Override
+    public List<HashMap> obtenerBaseLegalxAsig(final BigDecimal baselegalid,final BigDecimal usuarioid, final BigDecimal tpoconocimientoid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        Object object = null;
+        try {
+            sql.append("select nasignacionid AS IDASIGNACION, ntipoconocimientoid AS TPOCONOCIMIENTO , nconocimientoid AS IDPREGUNTA, nusuarioid AS IDUSUARIO, nestadoid AS ESTADO, VUSUARIOCREACION AS USUCREA, VUSUARIOMODIFICACION AS USUMOD, ");
+            sql.append(" DFECHACREACION AS FECHACREA, DFECHAMODIFICACION AS FECHAMOD, DFECHAASIGNACION as FECHAASIG, DFECHAATENCION AS FECHAATEN, DFECHARECEPCION AS FECHARECEP ");
+            sql.append(" from TASIGNACION ");
+            sql.append(" WHERE NCONOCIMIENTOID =:BASE  AND NUSUARIOID=:USUARIO AND NTIPOCONOCIMIENTOID=:TIPOCONOCIMIENTO AND NESTADOID=1");
+            
+            object = getHibernateTemplate().execute(
+                    new HibernateCallback() {
+                        @Override
+                        public Object doInHibernate(Session session) throws HibernateException {
+                            Query query = session.createSQLQuery(sql.toString())
+                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                                    .setParameter("BASE", baselegalid)
+                                    .setParameter("USUARIO", usuarioid)
+                                    .setParameter("TIPOCONOCIMIENTO", tpoconocimientoid);
+                            return query.list();
+                        }
+                    });
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return (List<HashMap>) object;
+
+    }
 
     @Override
     @Transactional(readOnly = false)

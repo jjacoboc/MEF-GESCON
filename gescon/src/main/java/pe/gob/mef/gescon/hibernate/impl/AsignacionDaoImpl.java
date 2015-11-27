@@ -280,7 +280,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
                     }
                 });
     }
-    
+
     @Override
     public BigDecimal getEspecialistaByMtcategoria(BigDecimal ncategoriaid) throws Exception {
         final StringBuilder sql = new StringBuilder();
@@ -297,13 +297,28 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
                     }
                 });
     }
-    
+
     @Override
     public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception {
         final StringBuilder sql = new StringBuilder();
         sql.append("SELECT NUSUARIOID FROM MTUSER WHERE VLOGIN= (SELECT VUSUARIOCREACION FROM TPREGUNTA  ");
         sql.append("WHERE npreguntaid = ").append(npreguntaid).append(" )");
 
+        return (BigDecimal) getHibernateTemplate().execute(
+                new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws HibernateException {
+                        Query query = session.createSQLQuery(sql.toString());
+                        return query.uniqueResult();
+                    }
+                });
+    }
+
+    @Override
+    public BigDecimal getUserCreacionByBaseLegal(BigDecimal nbaselegalid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        sql.append("SELECT NUSUARIOID FROM MTUSER WHERE VLOGIN= (SELECT VUSUARIOCREACION FROM TBASELEGAL  ");
+        sql.append("WHERE nbaselegalid = ").append(nbaselegalid).append(" )");
 
         return (BigDecimal) getHibernateTemplate().execute(
                 new HibernateCallback() {

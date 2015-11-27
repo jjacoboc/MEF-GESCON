@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 
 /**
@@ -20,5 +21,6 @@ public interface BaseLegalService {
     public BaseLegal getBaselegalById(BigDecimal id) throws Exception;
     public List<BaseLegal> getTbaselegalesLinkedById(final BigDecimal id) throws Exception;
     public List<BaseLegal> getTbaselegalesNotLinkedById(final BigDecimal id) throws Exception;
+    List<Asignacion> obtenerBaseLegalxAsig(BigDecimal baselegalid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     public void saveOrUpdate(BaseLegal baseLegal) throws Exception;
 }

@@ -28,5 +28,6 @@ public interface AsignacionDao {
     public BigDecimal getModeratorByMtcategoria(BigDecimal ncategoriaid) throws Exception;
     public BigDecimal getEspecialistaByMtcategoria(BigDecimal ncategoriaid) throws Exception;
     public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception;
+    public BigDecimal getUserCreacionByBaseLegal(BigDecimal nbaselegalid) throws Exception;
     public void saveOrUpdate(Tasignacion tasignacion) throws Exception;
 }
