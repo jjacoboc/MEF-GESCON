@@ -33,7 +33,8 @@ public class WikiServiceImpl implements WikiService {
             if(!CollectionUtils.isEmpty(consulta)) {
                 for(HashMap map : consulta) {
                     Consulta c = new Consulta();
-                    c.setIdconocimiento((BigDecimal) map.get("ID"));
+                    c.setId((BigDecimal) map.get("ID"));
+                    c.setIdconocimiento((BigDecimal) map.get("IDCONOCIMIENTO"));
                     c.setCodigo((String) map.get("NUMERO"));
                     c.setNombre((String) map.get("NOMBRE"));
                     c.setSumilla((String) map.get("SUMILLA"));

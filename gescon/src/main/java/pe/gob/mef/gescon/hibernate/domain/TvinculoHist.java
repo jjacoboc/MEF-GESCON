@@ -12,9 +12,11 @@ public class TvinculoHist implements java.io.Serializable {
     private TvinculoHistId id;
     private Thistorial thistorial;
     private BigDecimal nconocimientovinc;
-    private BigDecimal nusuariomod;
-    private BigDecimal nusuariocreacion;
+    private String vusuariomodificacion;
+    private String vusuariocreacion;
     private Date dfechacreacion;
+    private Date dfechamodificacion;
+    private BigDecimal ntipoconocimientovinc;
 
     public TvinculoHist() {
     }
@@ -24,13 +26,15 @@ public class TvinculoHist implements java.io.Serializable {
         this.thistorial = thistorial;
     }
 
-    public TvinculoHist(TvinculoHistId id, Thistorial thistorial, BigDecimal nconocimientovinc, BigDecimal nusuariomod, BigDecimal nusuariocreacion, Date dfechacreacion) {
+    public TvinculoHist(TvinculoHistId id, Thistorial thistorial, BigDecimal nconocimientovinc, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal ntipoconocimientovinc) {
         this.id = id;
         this.thistorial = thistorial;
         this.nconocimientovinc = nconocimientovinc;
-        this.nusuariomod = nusuariomod;
-        this.nusuariocreacion = nusuariocreacion;
+        this.vusuariomodificacion = vusuariomodificacion;
+        this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
+        this.dfechamodificacion = dfechamodificacion;
+        this.ntipoconocimientovinc = ntipoconocimientovinc;
     }
 
     public TvinculoHistId getId() {
@@ -57,20 +61,20 @@ public class TvinculoHist implements java.io.Serializable {
         this.nconocimientovinc = nconocimientovinc;
     }
 
-    public BigDecimal getNusuariomod() {
-        return this.nusuariomod;
+    public String getVusuariomodificacion() {
+        return this.vusuariomodificacion;
     }
 
-    public void setNusuariomod(BigDecimal nusuariomod) {
-        this.nusuariomod = nusuariomod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public BigDecimal getNusuariocreacion() {
-        return this.nusuariocreacion;
+    public String getVusuariocreacion() {
+        return this.vusuariocreacion;
     }
 
-    public void setNusuariocreacion(BigDecimal nusuariocreacion) {
-        this.nusuariocreacion = nusuariocreacion;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     public Date getDfechacreacion() {
@@ -79,6 +83,22 @@ public class TvinculoHist implements java.io.Serializable {
 
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
+    }
+
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
+    }
+
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
+    }
+
+    public BigDecimal getNtipoconocimientovinc() {
+        return ntipoconocimientovinc;
+    }
+
+    public void setNtipoconocimientovinc(BigDecimal ntipoconocimientovinc) {
+        this.ntipoconocimientovinc = ntipoconocimientovinc;
     }
 
 }

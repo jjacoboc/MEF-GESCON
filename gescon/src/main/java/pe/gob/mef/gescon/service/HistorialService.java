@@ -17,6 +17,7 @@ public interface HistorialService {
     
     BigDecimal getNextPK() throws Exception;
     Historial getHistorialById(BigDecimal idhistorial) throws Exception;
+    Historial getLastHistorialByConocimiento(BigDecimal idconocimiento) throws Exception;
     List<Historial> getHistoriales() throws Exception;
     List<Historial> getHistorialesByConocimiento(BigDecimal idconocimiento) throws Exception;
     void saveOrUpdate(final Historial historial) throws Exception;

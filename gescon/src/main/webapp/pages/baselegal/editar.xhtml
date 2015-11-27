@@ -100,7 +100,9 @@
                                                 <h:outputText value="#{t.vnombre}"/>
                                             </p:column>
                                             <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
-                                                <h:outputText value="#{t.vcategoria}"/>
+                                                <h:outputText value="#{t.ncategoriaid}">
+                                                    <f:converter converterId="converterCategoria"/>
+                                                </h:outputText>
                                             </p:column>
                                             <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
                                                 <h:outputText value="#{t.nestadoid}">

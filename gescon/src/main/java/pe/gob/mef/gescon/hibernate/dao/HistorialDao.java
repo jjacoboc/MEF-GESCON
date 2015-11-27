@@ -17,6 +17,7 @@ public interface HistorialDao {
     
     BigDecimal getNextPK() throws Exception;
     Thistorial getThistorialById(BigDecimal idhistorial) throws Exception;
+    Thistorial getLastThistorialByTconocimiento(BigDecimal idconocimiento) throws Exception;
     List<Thistorial> getThistoriales() throws Exception;
     List<Thistorial> getThistorialesByTconocimiento(BigDecimal idconocimiento) throws Exception;
     void saveOrUpdate(final Thistorial thistorial) throws Exception;

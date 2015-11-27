@@ -98,7 +98,6 @@
 
             <p:dialog id="asgDlg" header="Bandeja de Asignados" widgetVar="asgDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
                 <h:form id="asgDialogForm">
-                    <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
                     <h:panelGrid id="pgAsg" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAsignadas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
                                      paginatorPosition="top" selectionMode="single" selection="#{loginMB.selectedNotification}" rowKey="#{row.idconocimiento}"
@@ -134,7 +133,6 @@
 
             <p:dialog id="rcbDlg" header="Bandeja de Recibidos" widgetVar="rcbDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
                 <h:form id="rcbDialogForm">
-                    <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
                     <h:panelGrid id="pgRcb" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesRecibidas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
                                      paginatorPosition="top" selectionMode="single" selection="#{loginMB.selectedNotification}" rowKey="#{row.id}"
@@ -170,7 +168,6 @@
 
             <p:dialog id="srvDlg" header="Bandeja de Atendidos" widgetVar="srvDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
                 <h:form id="srvDialogForm">
-                    <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
                     <h:panelGrid id="pgSrv" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAtendidas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
                                      paginatorPosition="top" emptyMessage="Ningún registro encontrado." style="width: 1200px;">

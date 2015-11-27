@@ -13,6 +13,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
@@ -21,6 +23,7 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.HistorialDao;
+import pe.gob.mef.gescon.hibernate.domain.Tarchivo;
 import pe.gob.mef.gescon.hibernate.domain.Thistorial;
 
 /**
@@ -56,6 +59,16 @@ public class HistorialDaoImpl extends HibernateDaoSupport implements HistorialDa
     public Thistorial getThistorialById(BigDecimal idhistorial) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Thistorial.class);
         criteria.add(Restrictions.eq("id.nhistorialid", idhistorial));
+        return (Thistorial) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
+    }
+    
+    @Override
+    public Thistorial getLastThistorialByTconocimiento(BigDecimal idconocimiento) throws Exception {
+        DetachedCriteria proj = DetachedCriteria.forClass(Thistorial.class);
+        proj.setProjection(Projections.max("nnumversion"));
+        DetachedCriteria criteria = DetachedCriteria.forClass(Thistorial.class);
+        criteria.add(Restrictions.eq("id.nconocimientoid", idconocimiento));
+        criteria.add(Property.forName("nnumversion").eq(proj));
         return (Thistorial) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
     
