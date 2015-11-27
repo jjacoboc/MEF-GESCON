@@ -49,7 +49,7 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
                 (ntipoconocimientoid.equals("3") || ntipoconocimientoid.equals("4") || 
                 ntipoconocimientoid.equals("5") || ntipoconocimientoid.equals("6"))) {
             sql.append("SELECT ");
-            sql.append("    a.nconocimientovinc as ID, '' AS NUMERO, b.vtitulo AS NOMBRE, b.vdescripcion AS SUMILLA, ");
+            sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, '' AS NUMERO, b.vtitulo AS NOMBRE, b.vdescripcion AS SUMILLA, ");
             sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
             sql.append("    b.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, e.vnombre AS TIPOCONOCIMIENTO, ");
             sql.append("    b.nsituacionid AS IDESTADO, d.vnombre AS ESTADO ");
@@ -69,7 +69,7 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
         }
         if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
             sql.append("SELECT ");
-            sql.append("    a.nconocimientovinc as ID, '' AS NUMERO, b.vasunto AS NOMBRE , b.vdetalle AS SUMILLA, ");
+            sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, '' AS NUMERO, b.vasunto AS NOMBRE , b.vdetalle AS SUMILLA, ");
             sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
             sql.append("    2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
             sql.append("    b.nsituacionid AS IDESTADO, d.vnombre AS ESTADO ");
@@ -85,7 +85,7 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
         }
         if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("1")) {
             sql.append("SELECT ");
-            sql.append("    a.nconocimientovinc as ID, '' AS NUMERO, b.vnombre AS NOMBRE , b.vsumilla AS SUMILLA, ");
+            sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, b.vnumero AS NUMERO, b.vnombre AS NOMBRE , b.vsumilla AS SUMILLA, ");
             sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
             sql.append("    1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, ");
             sql.append("    b.nestadoid AS IDESTADO, d.vnombre AS ESTADO ");

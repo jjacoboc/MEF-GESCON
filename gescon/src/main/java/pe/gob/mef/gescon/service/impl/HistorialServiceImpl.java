@@ -37,6 +37,19 @@ public class HistorialServiceImpl implements HistorialService {
         BeanUtils.copyProperties(historial, thistorial);
         return historial;
     }
+    
+    @Override
+    public Historial getLastHistorialByConocimiento(BigDecimal idconocimiento) throws Exception {
+        HistorialDao historialDao = (HistorialDao) ServiceFinder.findBean("HistorialDao");
+        Thistorial thistorial = historialDao.getLastThistorialByTconocimiento(idconocimiento);
+        Historial historial = new Historial();
+        if(thistorial != null) {
+            BeanUtils.copyProperties(historial, thistorial);
+        } else {
+            historial = null;
+        }
+        return historial;
+    }
 
     @Override
     public List<Historial> getHistoriales() throws Exception {

@@ -21,4 +21,5 @@ public interface VinculoDao {
     List<Tvinculo> getTvinculosByTconocimientoAndTtipoconocimiento(BigDecimal idconocimiento, BigDecimal idtipoconocimiento) throws Exception;
     Tvinculo getTvinculoById(BigDecimal idvinculo) throws Exception;
     void saveOrUpdate(Tvinculo tvinculo) throws Exception;
+    void deleteByTconocimiento(BigDecimal idconocimiento) throws Exception;
 }

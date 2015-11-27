@@ -21,4 +21,5 @@ public interface VinculoService {
     List<Vinculo> getVinculosByConocimientoAndTipoconocimiento(BigDecimal idconocimiento, BigDecimal idtipoconocimiento) throws Exception;
     Vinculo getVinculoById(BigDecimal idvinculo) throws Exception;
     void saveOrUpdate(Vinculo vinculo) throws Exception;
+    void deleteByConocimiento(BigDecimal idconocimiento) throws Exception;
 }

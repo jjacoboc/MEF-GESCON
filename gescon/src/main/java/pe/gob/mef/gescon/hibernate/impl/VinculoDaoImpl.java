@@ -26,7 +26,7 @@ import pe.gob.mef.gescon.hibernate.domain.Tvinculo;
  * @author JJacobo
  */
 @Repository(value = "VinculoDao")
-public class VinculoDaoImpl extends HibernateDaoSupport  implements VinculoDao {
+public class VinculoDaoImpl extends HibernateDaoSupport implements VinculoDao {
 
     /**
      * Crea una nueva instancia de VinculoDaoImpl
@@ -84,4 +84,19 @@ public class VinculoDaoImpl extends HibernateDaoSupport  implements VinculoDao {
         getHibernateTemplate().saveOrUpdate(tvinculo);
     }
     
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteByTconocimiento(final BigDecimal idconocimiento) throws Exception {
+        getHibernateTemplate().execute(
+                new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws HibernateException {
+                        StringBuilder sql = new StringBuilder();
+                        sql.append("DELETE FROM TVINCULO WHERE NCONOCIMIENTOID = ");
+                        sql.append(idconocimiento.toString());
+                        Query query = session.createSQLQuery(sql.toString());
+                        return query.executeUpdate();
+                    }
+                });
+    }
 }

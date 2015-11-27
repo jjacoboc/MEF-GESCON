@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -24,6 +24,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -32,11 +33,13 @@ import org.primefaces.model.TreeNode;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.domain.ThistorialId;
 import pe.gob.mef.gescon.hibernate.domain.TseccionHistId;
+import pe.gob.mef.gescon.hibernate.domain.TvinculoHistId;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.HistorialService;
 import pe.gob.mef.gescon.service.SeccionHistService;
 import pe.gob.mef.gescon.service.SeccionService;
+import pe.gob.mef.gescon.service.VinculoHistService;
 import pe.gob.mef.gescon.service.VinculoService;
 import pe.gob.mef.gescon.service.WikiService;
 import pe.gob.mef.gescon.util.GcmFileUtils;
@@ -50,6 +53,7 @@ import pe.gob.mef.gescon.web.bean.Seccion;
 import pe.gob.mef.gescon.web.bean.SeccionHist;
 import pe.gob.mef.gescon.web.bean.User;
 import pe.gob.mef.gescon.web.bean.Vinculo;
+import pe.gob.mef.gescon.web.bean.VinculoHist;
 
 /**
  *
@@ -352,6 +356,11 @@ public class WikiMB implements Serializable {
             this.setListaTargetVinculosPR(new ArrayList());
             this.setListaTargetVinculosWK(new ArrayList());
             this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
+            if (iter.hasNext() == true) {
+                iter.remove();
+                FacesContext.getCurrentInstance().renderResponse();
+            }
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -363,6 +372,11 @@ public class WikiMB implements Serializable {
             this.setSelectedSeccion(null);
             this.setTitulo(StringUtils.EMPTY);
             this.setDetalleHtml(StringUtils.EMPTY);
+            Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
+            if (iter.hasNext() == true) {
+                iter.remove();
+                FacesContext.getCurrentInstance().renderResponse();
+            }
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -448,10 +462,20 @@ public class WikiMB implements Serializable {
 
     public void addSection(ActionEvent event) {
         try {
+            if(StringUtils.isBlank(this.getTitulo())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título de la sección requerido. Ingrese el título de la sección a agregar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isBlank(this.getDetalleHtml())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Detalle de la sección requerido. Ingrese el detalle de la sección a agregar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
             Seccion seccion = new Seccion();
             seccion.setVtitulo(this.getTitulo());
             seccion.setDetalleHtml(this.getDetalleHtml());
-            seccion.setDetallePlain(this.getDetallePlain());
+            seccion.setDetallePlain(Jsoup.parse(seccion.getDetalleHtml()).text());
             if (CollectionUtils.isEmpty(this.getListaSeccion())) {
                 this.setListaSeccion(new ArrayList<Seccion>());
                 seccion.setNorden(BigDecimal.ONE);
@@ -459,17 +483,37 @@ public class WikiMB implements Serializable {
                 seccion.setNorden(BigDecimal.valueOf(this.getListaSeccion().size() + 1));
             }
             this.getListaSeccion().add(seccion);
+            RequestContext.getCurrentInstance().execute("PF('secDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void toEditSection(ActionEvent event) {
+        try {
+            this.clearSection();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedSeccion(this.getListaSeccion().get(index));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
     
-    public void toEditSection(ActionEvent event) {
+    public void editSection(ActionEvent event) {
         try {
-            this.clearSection();
-            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            this.setSelectedSeccion(this.getListaSeccion().get(index));
+            if(StringUtils.isBlank(this.getSelectedSeccion().getVtitulo())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título de la sección requerido. Ingrese el título de la sección a agregar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isBlank(this.getSelectedSeccion().getDetalleHtml())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Detalle de la sección requerido. Ingrese el detalle de la sección a agregar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            RequestContext.getCurrentInstance().execute("PF('esecDialog').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -609,11 +653,11 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public String toSave() {
         try {
             this.clearAll();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
@@ -622,6 +666,21 @@ public class WikiMB implements Serializable {
 
     public void save(ActionEvent event) {
         try {
+            if(this.getSelectedCategoria() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isBlank(this.getNombre())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título del wiki requerido. Ingrese el título del wiki a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isBlank(this.getDescripcionHtml())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción del wiki requerido. Ingrese la descripción del wiki a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
@@ -659,6 +718,7 @@ public class WikiMB implements Serializable {
             historial.setNactivo(BigDecimal.ONE);
             historial.setNsituacionid(wiki.getNsituacionid());
             historial.setVruta(np1);
+            historial.setNnumversion(BigDecimal.ONE);
             historial.setDfechacreacion(new Date());
             historial.setVusuariocreacion(user.getVlogin());
             historialService.saveOrUpdate(historial);
@@ -680,9 +740,8 @@ public class WikiMB implements Serializable {
                     seccion.setVusuariocreacion(user.getVlogin());
                     seccionService.saveOrUpdate(seccion);
 
-                    this.setDetallePlain(Jsoup.parse(this.getDetalleHtml()).text());
-                    GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", this.getDetalleHtml());
-                    GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", this.getDetallePlain());
+                    GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", seccion.getDetalleHtml());
+                    GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", seccion.getDetallePlain());
 
                     String ruta1 = url1.concat(seccion.getNorden().toString()).concat("/");
                     TseccionHistId tseccionHistId = new TseccionHistId();
@@ -713,6 +772,7 @@ public class WikiMB implements Serializable {
 
             if (CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                 VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+                VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
                 for (Consulta consulta : this.getListaTargetVinculos()) {
                     Vinculo vinculo = new Vinculo();
                     vinculo.setNvinculoid(vinculoService.getNextPK());
@@ -722,15 +782,27 @@ public class WikiMB implements Serializable {
                     vinculo.setDfechacreacion(new Date());
                     vinculo.setVusuariocreacion(user.getVlogin());
                     vinculoService.saveOrUpdate(vinculo);
+                    
+                    TvinculoHistId vinculoHistId = new TvinculoHistId();
+                    vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
+                    vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
+                    vinculoHistId.setNhistorialid(thistorialId.getNhistorialid());
+                    VinculoHist vinculoHist = new VinculoHist();
+                    vinculoHist.setId(vinculoHistId);
+                    vinculoHist.setNconocimientovinc(vinculo.getNconocimientovinc());
+                    vinculoHist.setDfechacreacion(new Date());
+                    vinculoHist.setVusuariocreacion(user.getVlogin());
+                    vinculoHistService.saveOrUpdate(vinculoHist);
                 }
             }
-
+            this.setListaWiki(conocimientoService.getConocimientos());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/wiki/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public String toView() {
         try {
             this.clearAll();
@@ -762,13 +834,13 @@ public class WikiMB implements Serializable {
             this.setListaTargetVinculosOM(wikiService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.WIKI.toString());
             this.setListaTargetVinculosWK(wikiService.getConcimientosVinculados(map));
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
         return "/pages/wiki/ver?faces-redirect=true";
     }
-    
+
     public String toEdit() {
         try {
             this.clearAll();
@@ -800,17 +872,159 @@ public class WikiMB implements Serializable {
             this.setListaTargetVinculosOM(wikiService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.WIKI.toString());
             this.setListaTargetVinculosWK(wikiService.getConcimientosVinculados(map));
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
         return "/pages/wiki/editar?faces-redirect=true";
     }
-    
+
+    public void edit(ActionEvent event) {
+        try {
+            if(this.getSelectedCategoria() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isBlank(this.getSelectedWiki().getVtitulo())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título del wiki requerido. Ingrese el título del wiki a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isBlank(this.getDescripcionHtml())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción del wiki requerido. Ingrese la descripción del wiki a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            this.getSelectedWiki().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            this.getSelectedWiki().setDfechamodificacion(new Date());
+            this.getSelectedWiki().setVusuariomodificacion(user.getVlogin());
+            conocimientoService.saveOrUpdate(this.getSelectedWiki());
+
+            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
+            GcmFileUtils.writeStringToFileServer(this.getSelectedWiki().getVruta(), "html.txt", this.getDescripcionHtml());
+            GcmFileUtils.writeStringToFileServer(this.getSelectedWiki().getVruta(), "plain.txt", this.getDescripcionPlain());
+
+            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+            Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedWiki().getNconocimientoid());
+            int lastversion;
+            if(lastHistorial != null) {
+                lastversion = lastHistorial.getNnumversion().intValue();
+            } else {
+                lastversion = 0;
+            }
+            String url = this.path.concat(this.getSelectedWiki().getNconocimientoid().toString()).concat("/").concat(Integer.toString(lastversion + 1)).concat("/");
+
+            ThistorialId thistorialId = new ThistorialId();
+            thistorialId.setNconocimientoid(this.getSelectedWiki().getNconocimientoid());
+            thistorialId.setNhistorialid(historialService.getNextPK());
+            Historial historial = new Historial();
+            historial.setId(thistorialId);
+            historial.setNtipoconocimientoid(Constante.WIKI);
+            historial.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            historial.setVtitulo(this.getSelectedWiki().getVtitulo());
+            historial.setNactivo(BigDecimal.ONE);
+            historial.setNsituacionid(this.getSelectedWiki().getNsituacionid());
+            historial.setVruta(url);
+            historial.setNnumversion(BigDecimal.valueOf(lastversion + 1));
+            historial.setDfechacreacion(new Date());
+            historial.setVusuariocreacion(user.getVlogin());
+            historialService.saveOrUpdate(historial);
+
+            GcmFileUtils.writeStringToFileServer(url, "html.txt", this.getDescripcionHtml());
+            GcmFileUtils.writeStringToFileServer(url, "plain.txt", this.getDescripcionPlain());
+
+            if (CollectionUtils.isNotEmpty(this.getListaSeccion())) {
+                String url0 = this.getSelectedWiki().getVruta().concat("s");
+                String url1 = url.concat("s");
+                SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
+                SeccionHistService seccionHistService = (SeccionHistService) ServiceFinder.findBean("SeccionHistService");
+                for (Seccion seccion : this.getListaSeccion()) {
+                    String ruta0 = url0.concat(seccion.getNorden().toString()).concat("/");
+                    seccion.setVruta(ruta0);
+                    if (seccion.getNseccionid() != null) {
+                        seccion.setDfechamodificacion(new Date());
+                        seccion.setVusuariomodificacion(user.getVlogin());
+                    } else {
+                        seccion.setNseccionid(seccionService.getNextPK());
+                        seccion.setNconocimientoid(this.getSelectedWiki().getNconocimientoid());
+                        seccion.setDfechacreacion(new Date());
+                        seccion.setVusuariocreacion(user.getVlogin());
+                    }
+                    seccionService.saveOrUpdate(seccion);
+
+                    seccion.setDetallePlain(Jsoup.parse(seccion.getDetalleHtml()).text());
+                    GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", seccion.getDetalleHtml());
+                    GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", seccion.getDetallePlain());
+
+                    String ruta1 = url1.concat(seccion.getNorden().toString()).concat("/");
+                    TseccionHistId tseccionHistId = new TseccionHistId();
+                    tseccionHistId.setNconocimientoid(thistorialId.getNconocimientoid());
+                    tseccionHistId.setNhistorialid(thistorialId.getNhistorialid());
+                    tseccionHistId.setNseccionhid(seccionHistService.getNextPK());
+                    SeccionHist seccionHist = new SeccionHist();
+                    seccionHist.setId(tseccionHistId);
+                    seccionHist.setNorden(seccion.getNorden());
+                    seccionHist.setVruta(ruta1);
+                    seccionHist.setVtitulo(seccion.getVtitulo());
+                    seccionHist.setVusuariocreacion(user.getVlogin());
+                    seccionHist.setDfechacreacion(new Date());
+                    seccionHistService.saveOrUpdate(seccionHist);
+
+                    GcmFileUtils.writeStringToFileServer(ruta1, "html.txt", seccion.getDetalleHtml());
+                    GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", seccion.getDetallePlain());
+                }
+            }
+
+            this.getListaTargetVinculos().clear();
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+
+            if (CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+                VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
+                vinculoService.deleteByConocimiento(this.getSelectedWiki().getNconocimientoid());
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    Vinculo vinculo = new Vinculo();
+                    vinculo.setNvinculoid(vinculoService.getNextPK());
+                    vinculo.setNconocimientoid(this.getSelectedWiki().getNconocimientoid());
+                    vinculo.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculo.setDfechacreacion(new Date());
+                    vinculo.setVusuariocreacion(user.getVlogin());
+                    vinculoService.saveOrUpdate(vinculo);
+                    
+                    TvinculoHistId vinculoHistId = new TvinculoHistId();
+                    vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
+                    vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
+                    vinculoHistId.setNhistorialid(thistorialId.getNhistorialid());
+                    VinculoHist vinculoHist = new VinculoHist();
+                    vinculoHist.setId(vinculoHistId);
+                    vinculoHist.setNconocimientovinc(vinculo.getNconocimientovinc());
+                    vinculoHist.setDfechacreacion(new Date());
+                    vinculoHist.setVusuariocreacion(user.getVlogin());
+                    vinculoHistService.saveOrUpdate(vinculoHist);
+                }
+            }
+            this.setListaWiki(conocimientoService.getConocimientos());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/wiki/lista.xhtml");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
     public void activar(ActionEvent event) {
         try {
             if (event != null) {
-                if (this.getSelectedWiki()!= null) {
+                if (this.getSelectedWiki() != null) {
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     this.getSelectedWiki().setNactivo(BigDecimal.ONE);
                     this.getSelectedWiki().setDfechamodificacion(new Date());

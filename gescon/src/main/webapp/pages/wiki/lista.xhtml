@@ -30,7 +30,9 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 15%;" priority="3">
                                             <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna03}"/></f:facet>
-                                            <h:outputText value="#{row.dfechapublicacion}"/>
+                                            <h:outputText value="#{row.dfechapublicacion}">
+                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                            </h:outputText>
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" priority="4">
                                             <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna04}"/></f:facet>
@@ -45,7 +47,7 @@
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink title="Actualizar Wiki" styleClass="ui-link"
+                                            <p:commandLink ajax="false" action="#{wikiMB.toEdit}" styleClass="ui-link" title="Actualizar Wiki"
                                                            rendered="#{loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />

@@ -85,4 +85,9 @@ public class VinculoServiceImpl implements VinculoService {
         vinculoDao.saveOrUpdate(tvinculo);
     }
 
+    @Override
+    public void deleteByConocimiento(BigDecimal idconocimiento) throws Exception {
+        VinculoDao vinculoDao = (VinculoDao) ServiceFinder.findBean("VinculoDao");
+        vinculoDao.deleteByTconocimiento(idconocimiento);
+    }
 }
