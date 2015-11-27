@@ -72,7 +72,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
                 sql.append("    AND a.dfechapublicacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
             sql.append("        ) x ");
-            sql.append("WHERE 1 IN (").append(fType).append(") ");
+            sql.append("WHERE 1 IN (").append(fType).append(") "); //BASE LEGAL
             sql.append("UNION ");
             sql.append("SELECT y.ID, y.NUMERO, y.NOMBRE, y.SUMILLA, y.IDCATEGORIA, y.CATEGORIA, ");
             sql.append("       y.FECHA, y.IDTIPOCONOCIMIENTO, y.TIPOCONOCIMIENTO, y.IDESTADO, y.ESTADO ");
@@ -95,7 +95,32 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
                 sql.append("    AND a.dfechacreacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
             sql.append("        ) y ");
-            sql.append("WHERE 2 IN (").append(fType).append(") ");
+            sql.append("WHERE 2 IN (").append(fType).append(") "); //PREGUNTAS Y RESPUESTAS
+            sql.append("UNION ");
+            sql.append("SELECT z.ID, z.NUMERO, z.NOMBRE, z.SUMILLA, z.IDCATEGORIA, z.CATEGORIA, ");
+            sql.append("       z.FECHA, z.IDTIPOCONOCIMIENTO, z.TIPOCONOCIMIENTO, z.IDESTADO, z.ESTADO ");
+            sql.append("FROM (SELECT ");
+            sql.append("            a.nconocimientoid AS ID, '' AS NUMERO, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
+            sql.append("            a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
+            sql.append("            a.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, d.vnombre AS TIPOCONOCIMIENTO, ");
+            sql.append("            a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
+            sql.append("        FROM TCONOCIMIENTO a ");
+            sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
+            sql.append("        INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
+            sql.append("        INNER JOIN MTTIPO_CONOCIMIENTO d ON a.ntpoconocimientoid = d.ntpoconocimientoid ");
+            sql.append("        WHERE a.nactivo = :ACTIVO ");
+            sql.append("        AND c.nsituacionid = 6 AND b.nestado = 1");
+            if(StringUtils.isNotBlank(fCategoria)) {
+                sql.append("    AND a.ncategoriaid IN (").append(fCategoria).append(") ");
+            }
+            if(fFromDate != null) {
+                sql.append("    AND a.dfechacreacion >= TO_DATE('").append(sdf.format(fFromDate)).append("','dd/mm/yyyy') ");
+            }
+            if(fToDate != null) {
+                sql.append("    AND a.dfechacreacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
+            }
+            sql.append("        ) z ");
+            sql.append("WHERE 3 IN (").append(fType).append(") "); //WIKI
             sql.append("ORDER BY 7 DESC ");
 
             object = getHibernateTemplate().execute(

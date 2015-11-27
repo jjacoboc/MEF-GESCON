@@ -16,6 +16,7 @@ import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 public interface ConocimientoDao {
     BigDecimal getNextPK() throws Exception;
     List<Tconocimiento> getTconocimientos() throws Exception;
+    Tconocimiento getTconocimientoById(BigDecimal id) throws Exception;
     void saveOrUpdate(Tconocimiento tconocimiento) throws Exception;
     void delete(Tconocimiento tconocimiento) throws Exception;
 }

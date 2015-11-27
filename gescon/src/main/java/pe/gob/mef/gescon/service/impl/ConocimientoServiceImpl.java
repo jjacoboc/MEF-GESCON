@@ -42,6 +42,15 @@ public class ConocimientoServiceImpl implements ConocimientoService {
         }
         return conocimientos;
     }
+    
+    @Override
+    public Conocimiento getConocimientoById(BigDecimal id) throws Exception {
+        ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
+        Tconocimiento tconocimiento = conocimientoDao.getTconocimientoById(id);
+        Conocimiento conocimiento = new Conocimiento();        
+        BeanUtils.copyProperties(conocimiento, tconocimiento);        
+        return conocimiento;
+    }
 
     @Override
     public void saveOrUpdate(Conocimiento conocimiento) throws Exception {

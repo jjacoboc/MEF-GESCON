@@ -13,7 +13,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -53,8 +55,15 @@ public class ConocimientoDaoImpl extends HibernateDaoSupport implements Conocimi
     @Override
     public List<Tconocimiento> getTconocimientos() throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Tconocimiento.class);
-                         criteria.addOrder(Order.desc("nconocimientoid"));
+        criteria.addOrder(Order.desc("nconocimientoid"));
         return (List<Tconocimiento>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public Tconocimiento getTconocimientoById(BigDecimal id) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tconocimiento.class);
+        criteria.add(Restrictions.eq("nconocimientoid",id));
+        return (Tconocimiento) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
 
     @Override

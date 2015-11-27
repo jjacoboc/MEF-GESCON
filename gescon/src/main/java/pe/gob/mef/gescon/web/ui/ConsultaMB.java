@@ -15,20 +15,27 @@ import java.util.HashMap;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
+import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.PreguntaService;
+import pe.gob.mef.gescon.service.SeccionService;
 import pe.gob.mef.gescon.service.TipoConocimientoService;
+import pe.gob.mef.gescon.service.WikiService;
+import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
@@ -36,6 +43,7 @@ import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Pregunta;
+import pe.gob.mef.gescon.web.bean.Seccion;
 import pe.gob.mef.gescon.web.bean.TipoConocimiento;
 
 /**
@@ -431,6 +439,39 @@ public class ConsultaMB implements Serializable {
                     this.setSelectedPregunta(service.getPreguntaById(BigDecimal.valueOf(id)));
                     RequestContext.getCurrentInstance().execute("PF('viewprDialog').show();");
                     break;
+                }
+                case 3: { //Wiki
+                    WikiMB mb = new WikiMB();
+                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    mb.setSelectedWiki(service.getConocimientoById(BigDecimal.valueOf(id)));
+                    CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                    mb.setSelectedCategoria(categoriaService.getCategoriaById(mb.getSelectedWiki().getNcategoriaid()));
+                    mb.setDescripcionHtml(GcmFileUtils.readStringFromFileServer(mb.getSelectedWiki().getVruta(), "html.txt"));
+                    SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
+                    mb.setListaSeccion(seccionService.getSeccionesByConocimiento(mb.getSelectedWiki().getNconocimientoid()));
+                    if (CollectionUtils.isNotEmpty(mb.getListaSeccion())) {
+                        for (Seccion seccion : mb.getListaSeccion()) {
+                            seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
+                        }
+                    }
+                    WikiService wikiService = (WikiService) ServiceFinder.findBean("WikiService");
+                    HashMap map = new HashMap();
+                    map.put("nconocimientoid", mb.getSelectedWiki().getNconocimientoid().toString());
+                    map.put("flag", true);
+                    map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+                    mb.setListaTargetVinculosBL(wikiService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+                    mb.setListaTargetVinculosPR(wikiService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+                    mb.setListaTargetVinculosBP(wikiService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+                    mb.setListaTargetVinculosCT(wikiService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+                    mb.setListaTargetVinculosOM(wikiService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.WIKI.toString());
+                    mb.setListaTargetVinculosWK(wikiService.getConcimientosVinculados(map));
+                    JSFUtils.getSession().setAttribute("wikiMB", mb);
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("wiki/ver.xhtml");
                 }
             }
             

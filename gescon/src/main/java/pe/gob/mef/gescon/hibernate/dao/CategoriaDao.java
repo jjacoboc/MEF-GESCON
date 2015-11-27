@@ -15,10 +15,11 @@ import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
  */
 public interface CategoriaDao {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<Mtcategoria> getMtcategorias() throws Exception;
-    public List<Mtcategoria> getMtcategoriasPrimerNivel() throws Exception;
-    public List<Mtcategoria> getMtcategoriaHijos(Mtcategoria mtcategoria) throws Exception;
-    public Mtcategoria getMtcategoriaById(BigDecimal id) throws Exception;
-    public void saveOrUpdate(Mtcategoria mtcategoria) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<Mtcategoria> getMtcategorias() throws Exception;
+    List<Mtcategoria> getMtcategoriasActived() throws Exception;
+    List<Mtcategoria> getMtcategoriasPrimerNivel() throws Exception;
+    List<Mtcategoria> getMtcategoriaHijos(Mtcategoria mtcategoria) throws Exception;
+    Mtcategoria getMtcategoriaById(BigDecimal id) throws Exception;
+    void saveOrUpdate(Mtcategoria mtcategoria) throws Exception;
 }

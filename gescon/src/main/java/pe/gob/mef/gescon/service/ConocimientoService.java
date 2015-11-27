@@ -7,7 +7,6 @@ package pe.gob.mef.gescon.service;
 
 import java.math.BigDecimal;
 import java.util.List;
-import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 
 /**
@@ -18,6 +17,7 @@ public interface ConocimientoService {
     
     BigDecimal getNextPK() throws Exception;
     List<Conocimiento> getConocimientos() throws Exception;
+    Conocimiento getConocimientoById(BigDecimal id) throws Exception;
     void saveOrUpdate(Conocimiento conocimiento) throws Exception;
     void delete(Conocimiento conocimiento) throws Exception;
 }

@@ -53,7 +53,7 @@
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;" rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}"/>
-                                            <p:commandLink title="Publicar Wiki" styleClass="ui-link"
+                                            <p:commandLink ajax="false" action="#{wikiMB.toPost}" styleClass="ui-link" title="Publicar Wiki"
                                                            rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
