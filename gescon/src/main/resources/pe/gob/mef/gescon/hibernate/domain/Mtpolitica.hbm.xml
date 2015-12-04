@@ -27,7 +27,10 @@
             <column name="DFECHAMODIFICACION" />
         </property>
         <property name="vnombre" type="string">
-            <column name="VNOMBRE" length="25" />
+            <column name="VNOMBRE" length="100" />
+        </property>
+        <property name="nmoduloid" type="big_decimal">
+            <column name="NMODULOID" precision="22" scale="0" />
         </property>
         <set name="tpoliticaPerfils" table="TPOLITICA_PERFIL" inverse="true" lazy="true" fetch="select">
             <key>

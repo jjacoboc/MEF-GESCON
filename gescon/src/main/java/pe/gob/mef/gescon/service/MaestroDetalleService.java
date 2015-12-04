@@ -16,7 +16,8 @@ import pe.gob.mef.gescon.web.bean.MaestroDetalle;
  */
 public interface MaestroDetalleService {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<MaestroDetalle> getDetallesByMaestro(Maestro maestro) throws Exception;
-    public void saveOrUpdate(MaestroDetalle maestroDetalle) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<MaestroDetalle> getDetallesByMaestro(Maestro maestro) throws Exception;
+    List<MaestroDetalle> getDetallesActivosByMaestro(Maestro maestro) throws Exception;
+    void saveOrUpdate(MaestroDetalle maestroDetalle) throws Exception;
 }

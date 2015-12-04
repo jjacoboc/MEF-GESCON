@@ -7,7 +7,9 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.domain.TmaestrodetalleId;
 
 /**
@@ -26,6 +28,8 @@ public class MaestroDetalle implements Serializable {
     private String vusuariomodificacion;
     private Date dfechamodificacion;
     private BigDecimal nactivo;
+    private String vfechacreacion;
+    private String vfechamodificacion;
     
     public void MaestroDetalle(){
         
@@ -169,5 +173,29 @@ public class MaestroDetalle implements Serializable {
      */
     public void setNactivo(BigDecimal nactivo) {
         this.nactivo = nactivo;
+    }
+
+    public String getVfechacreacion() {
+        if(dfechacreacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechacreacion = sdf.format(dfechacreacion);
+        }
+        return vfechacreacion;
+    }
+
+    public void setVfechacreacion(String vfechacreacion) {
+        this.vfechacreacion = vfechacreacion;
+    }
+
+    public String getVfechamodificacion() {
+        if(dfechamodificacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechamodificacion = sdf.format(dfechamodificacion);
+        }
+        return vfechamodificacion;
+    }
+
+    public void setVfechamodificacion(String vfechamodificacion) {
+        this.vfechamodificacion = vfechamodificacion;
     }
 }

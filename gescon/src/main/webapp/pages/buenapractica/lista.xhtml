@@ -12,49 +12,49 @@
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-                            <p:panel header="#{msgs.wk_lbl_pnlTitulo}" styleClass="TexAlLeft">
+                            <p:panel header="#{msgs.bp_lbl_pnlTitulo}" styleClass="TexAlLeft">
                                 <h:panelGrid columns="1">
-                                    <p:commandButton  value="Nuevo" ajax="false" action="#{wikiMB.toSave}" styleClass="Fleft" icon="fa fa-plus white" 
+                                    <p:commandButton  value="Nuevo" ajax="false" action="#{buenaPracticaMB.toSave}" styleClass="Fleft" icon="fa fa-plus white" 
                                                       rendered="#{loginMB.perfil.nperfilid eq msgs.especialista or loginMB.perfil.nperfilid eq msgs.administrador}"/>
-                                    <p:dataTable id="tbl" value="#{wikiMB.listaWiki}" filteredValue="#{wikiMB.filteredListaWiki}" paginator="true" rowHover="true"
-                                                 var="row" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" paginatorPosition="top" 
-                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="#{msgs.lbl_listavacia}">
+                                    <p:dataTable id="tbl" value="#{buenaPracticaMB.listaBuenaPractica}" filteredValue="#{buenaPracticaMB.filteredListaBuenaPractica}" 
+                                                 var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true"
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
                                         <p:column style="width: 47%" priority="1">
-                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna01}"/></f:facet>
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna01}"/></f:facet>
                                             <h:outputText value="#{row.vtitulo}"/>
                                         </p:column>
                                         <p:column style="text-align: center; width: 18%" priority="2">
-                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna02}"/></f:facet>
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna02}"/></f:facet>
                                             <h:outputText value="#{row.ncategoriaid}">
                                                 <f:converter converterId="converterCategoria"/>
                                             </h:outputText>
                                         </p:column>
                                         <p:column style="text-align: center; width: 15%;" priority="3">
-                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna03}"/></f:facet>
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna03}"/></f:facet>
                                             <h:outputText value="#{row.dfechapublicacion}">
                                                 <f:convertDateTime dateStyle="medium" type="date" locale="es" />
                                             </h:outputText>
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" priority="4">
-                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna04}"/></f:facet>
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna04}"/></f:facet>
                                             <h:outputText value="#{row.nsituacionid}">
                                                 <f:converter converterId="converterSituacion"/>
                                             </h:outputText>
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" priority="5">
-                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna05}"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{wikiMB.toView}" styleClass="ui-link" title="Ver Wiki">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna05}"/></f:facet>
+                                            <p:commandLink ajax="false" action="#{buenaPracticaMB.toView}" styleClass="ui-link" title="Ver Wiki">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{wikiMB.toEdit}" styleClass="ui-link" title="Actualizar Wiki"
+                                            <p:commandLink ajax="false" action="#{buenaPracticaMB.toEdit}" styleClass="ui-link" title="Actualizar Wiki"
                                                            rendered="#{loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;" rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}"/>
-                                            <p:commandLink ajax="false" action="#{wikiMB.toPost}" styleClass="ui-link" title="Publicar Wiki"
+                                            <p:commandLink ajax="false" action="#{buenaPracticaMB.toPost}" styleClass="ui-link" title="Publicar Wiki"
                                                            rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
@@ -74,16 +74,16 @@
                             </p:panel>
                         </h:form>
                         
-                        <p:confirmDialog appendTo="@(body)" message="#{msgs.wk_msg_activar}" header="#{msgs.wk_lbl_pnlActivar}" widgetVar="confirmActDlg" style="font-size: 10px;">
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.bp_msg_activar}" header="#{msgs.bp_lbl_pnlActivar}" widgetVar="confirmActDlg" style="font-size: 10px;">
                             <h:form id="confirmActDlgForm">
-                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{wikiMB.activar}"/>
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{buenaPracticaMB.activar}"/>
                                 <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmActDlg').hide()" type="button" />
                             </h:form>
                         </p:confirmDialog>
 
-                        <p:confirmDialog appendTo="@(body)" message="#{msgs.wk_msg_desactivar}" header="#{msgs.wk_lbl_pnlDesactivar}" widgetVar="confirmDesDlg" style="font-size: 10px;">
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.bp_msg_desactivar}" header="#{msgs.bp_lbl_pnlDesactivar}" widgetVar="confirmDesDlg" style="font-size: 10px;">
                             <h:form id="confirmDesDlgForm">
-                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{wikiMB.desactivar}"/>
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{buenaPracticaMB.desactivar}"/>
                                 <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDesDlg').hide()" type="button" />
                             </h:form>
                         </p:confirmDialog>

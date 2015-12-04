@@ -27,7 +27,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
@@ -37,8 +36,6 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
-import pe.gob.mef.gescon.hibernate.domain.Mtsituacion;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
 import pe.gob.mef.gescon.service.ArchivoService;
@@ -1802,6 +1799,26 @@ public class LoginMB implements Serializable {
             e.getMessage();
             e.printStackTrace();
         }
+    }
+    
+    public String redirect() {
+        String page = null;
+        try {
+            page = (String) JSFUtils.getRequestParameter("page");
+            JSFUtils.getSession().removeAttribute("administracionMB");
+            JSFUtils.getSession().removeAttribute("baseLegalMB");
+            JSFUtils.getSession().removeAttribute("categoriaMB");
+            JSFUtils.getSession().removeAttribute("consultaMB");
+            JSFUtils.getSession().removeAttribute("consultaMB");
+            JSFUtils.getSession().removeAttribute("listaSessionMB");
+            JSFUtils.getSession().removeAttribute("wikiMB");
+            JSFUtils.getSession().removeAttribute("buenaPracticaMB");
+            JSFUtils.getSession().removeAttribute("oportunidadMB");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return page.concat("?faces-redirect=true");
     }
 
     public void logout() {

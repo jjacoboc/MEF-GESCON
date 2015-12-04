@@ -5,8 +5,6 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -21,12 +19,10 @@ import javax.faces.event.AjaxBehaviorEvent;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
@@ -38,7 +34,6 @@ import pe.gob.mef.gescon.service.WikiService;
 import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
-import pe.gob.mef.gescon.web.bean.Archivo;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
@@ -424,14 +419,18 @@ public class ConsultaMB implements Serializable {
             int idTipo = Integer.parseInt((String) JSFUtils.getRequestParameter("idTipo"));
             switch(idTipo) {
                 case 1: { //Base Legal
+                    BaseLegalMB bl = new BaseLegalMB();
                     BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
-                    this.setSelectedBaseLegal(service.getBaselegalById(BigDecimal.valueOf(id)));
-                    ArchivoService sservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-                    Archivo archivo = sservice.getLastArchivoByBaseLegal(this.getSelectedBaseLegal());
-                    this.getSelectedBaseLegal().setArchivo(archivo);
-                    FileInputStream fis = new FileInputStream(new File(archivo.getVruta()));
-                    setContent(new DefaultStreamedContent(fis, "application/pdf"));
-                    RequestContext.getCurrentInstance().execute("PF('viewblDialog').show();");
+                    bl.setSelectedBaseLegal(service.getBaselegalById(BigDecimal.valueOf(id)));
+                    bl.setChkGobNacional(bl.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
+                    bl.setChkGobRegional(bl.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
+                    bl.setChkGobLocal(bl.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
+                    bl.setChkMancomunidades(bl.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
+                    CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                    bl.setSelectedCategoria(categoriaService.getCategoriaById(bl.getSelectedBaseLegal().getNcategoriaid()));
+                    bl.setListaTarget(service.getTbaselegalesLinkedById(bl.getSelectedBaseLegal().getNbaselegalid()));
+                    JSFUtils.getSession().setAttribute("baseLegalMB", bl);
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("baselegal/ver.xhtml");
                     break;
                 }
                 case 2: { //Preguntas y respuestas
@@ -454,24 +453,59 @@ public class ConsultaMB implements Serializable {
                             seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
                         }
                     }
-                    WikiService wikiService = (WikiService) ServiceFinder.findBean("WikiService");
+                    ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     HashMap map = new HashMap();
                     map.put("nconocimientoid", mb.getSelectedWiki().getNconocimientoid().toString());
                     map.put("flag", true);
                     map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
-                    mb.setListaTargetVinculosBL(wikiService.getConcimientosVinculados(map));
+                    mb.setListaTargetVinculosBL(conocimientoService.getConcimientosVinculados(map));
                     map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
-                    mb.setListaTargetVinculosPR(wikiService.getConcimientosVinculados(map));
+                    mb.setListaTargetVinculosPR(conocimientoService.getConcimientosVinculados(map));
                     map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
-                    mb.setListaTargetVinculosBP(wikiService.getConcimientosVinculados(map));
+                    mb.setListaTargetVinculosBP(conocimientoService.getConcimientosVinculados(map));
                     map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
-                    mb.setListaTargetVinculosCT(wikiService.getConcimientosVinculados(map));
+                    mb.setListaTargetVinculosCT(conocimientoService.getConcimientosVinculados(map));
                     map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
-                    mb.setListaTargetVinculosOM(wikiService.getConcimientosVinculados(map));
+                    mb.setListaTargetVinculosOM(conocimientoService.getConcimientosVinculados(map));
                     map.put("ntipoconocimientoid", Constante.WIKI.toString());
-                    mb.setListaTargetVinculosWK(wikiService.getConcimientosVinculados(map));
+                    mb.setListaTargetVinculosWK(conocimientoService.getConcimientosVinculados(map));
                     JSFUtils.getSession().setAttribute("wikiMB", mb);
                     FacesContext.getCurrentInstance().getExternalContext().redirect("wiki/ver.xhtml");
+                    break;
+                }
+                case 5: { //Buen Practica
+                    BuenaPracticaMB bp = new BuenaPracticaMB();
+                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    bp.setSelectedBuenaPractica(service.getConocimientoById(BigDecimal.valueOf(id)));
+                    CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                    bp.setSelectedCategoria(categoriaService.getCategoriaById(bp.getSelectedBuenaPractica().getNcategoriaid()));
+                    bp.setDescripcionHtml(GcmFileUtils.readStringFromFileServer(bp.getSelectedBuenaPractica().getVruta(), "html.txt"));
+                    SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
+                    bp.setListaSeccion(seccionService.getSeccionesByConocimiento(bp.getSelectedBuenaPractica().getNconocimientoid()));
+                    if (CollectionUtils.isNotEmpty(bp.getListaSeccion())) {
+                        for (Seccion seccion : bp.getListaSeccion()) {
+                            seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
+                        }
+                    }
+                    ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    HashMap map = new HashMap();
+                    map.put("nconocimientoid", bp.getSelectedBuenaPractica().getNconocimientoid().toString());
+                    map.put("flag", true);
+                    map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+                    bp.setListaTargetVinculosBL(conocimientoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+                    bp.setListaTargetVinculosPR(conocimientoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+                    bp.setListaTargetVinculosBP(conocimientoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+                    bp.setListaTargetVinculosCT(conocimientoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+                    bp.setListaTargetVinculosOM(conocimientoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.WIKI.toString());
+                    bp.setListaTargetVinculosWK(conocimientoService.getConcimientosVinculados(map));
+                    JSFUtils.getSession().setAttribute("buenaPracticaMB", bp);
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("buenapractica/ver.xhtml");
+                    break;
                 }
             }
             

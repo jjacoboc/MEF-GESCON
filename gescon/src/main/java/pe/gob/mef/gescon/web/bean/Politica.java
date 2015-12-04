@@ -7,7 +7,9 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import pe.gob.mef.gescon.common.Constante;
 
 /**
  *
@@ -16,6 +18,7 @@ import java.util.Date;
 public class Politica implements Serializable{
     
     private BigDecimal npoliticaid;
+    private BigDecimal nmoduloid;
     private String vnombre;
     private String vdescripcion;
     private BigDecimal nactivo;
@@ -23,6 +26,8 @@ public class Politica implements Serializable{
     private Date dfechacreacion;
     private String vusuariomodificacion;
     private Date dfechamodificacion;
+    private String vfechacreacion;
+    private String vfechamodificacion;
     
     public void Politica(){
         
@@ -40,6 +45,14 @@ public class Politica implements Serializable{
      */
     public void setNpoliticaid(BigDecimal npoliticaid) {
         this.npoliticaid = npoliticaid;
+    }
+
+    public BigDecimal getNmoduloid() {
+        return nmoduloid;
+    }
+
+    public void setNmoduloid(BigDecimal nmoduloid) {
+        this.nmoduloid = nmoduloid;
     }
 
     /**
@@ -138,5 +151,29 @@ public class Politica implements Serializable{
      */
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
+    }
+
+    public String getVfechacreacion() {
+        if(dfechacreacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechacreacion = sdf.format(dfechacreacion);
+        }
+        return vfechacreacion;
+    }
+
+    public void setVfechacreacion(String vfechacreacion) {
+        this.vfechacreacion = vfechacreacion;
+    }
+
+    public String getVfechamodificacion() {
+        if(dfechamodificacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechamodificacion = sdf.format(dfechamodificacion);
+        }
+        return vfechamodificacion;
+    }
+
+    public void setVfechamodificacion(String vfechamodificacion) {
+        this.vfechamodificacion = vfechamodificacion;
     }
 }

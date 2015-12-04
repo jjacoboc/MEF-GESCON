@@ -23,21 +23,23 @@
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.wk_lbl_categoria}"/>
+                                        <p:spacer width="10" rendered="#{wikiMB.selectedWiki.nsituacionid ge msgs.situacionPublicado}"/>
+                                        <h:outputText value="#{wikiMB.selectedCategoria.vnombre}" styleClass="Fs14 FontBold black" rendered="#{wikiMB.selectedWiki.nsituacionid ge msgs.situacionPublicado}"/>
                                     </h:panelGroup>
                                     <h:panelGroup rendered="#{wikiMB.selectedWiki.nsituacionid lt msgs.situacionPublicado}">
                                         <p:commandButton value="#{msgs.wk_btn_categoria}" actionListener="#{wikiMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
                                         <p:spacer width="15"/>
                                         <h:outputText value="#{wikiMB.selectedCategoria.vnombre}" styleClass="Fs18 FontBold black"/>
                                     </h:panelGroup>
-                                    <h:outputText value="#{wikiMB.selectedCategoria.vnombre}" styleClass="Fs14 FontBold black" rendered="#{wikiMB.selectedWiki.nsituacionid ge msgs.situacionPublicado}"/>
 
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.wk_lbl_nombre}"/>
+                                        <p:spacer width="10" rendered="#{wikiMB.selectedWiki.nsituacionid ge msgs.situacionPublicado}"/>
+                                        <h:outputText value="#{wikiMB.selectedWiki.vtitulo}" styleClass="Fs14 FontBold black" rendered="#{wikiMB.selectedWiki.nsituacionid ge msgs.situacionPublicado}"/>
                                     </h:panelGroup>
-                                    <p:inputText value="#{wikiMB.selectedWiki.vtitulo}" size="110" styleClass="Fs14" maxlength="25" rendered="#{wikiMB.selectedWiki.nsituacionid lt msgs.situacionPublicado}"/>
-                                    <h:outputText value="#{wikiMB.selectedWiki.vtitulo}" styleClass="Fs14 FontBold black" rendered="#{wikiMB.selectedWiki.nsituacionid ge msgs.situacionPublicado}"/>
+                                    <p:inputText value="#{wikiMB.selectedWiki.vtitulo}" size="110" styleClass="Fs14" maxlength="100" rendered="#{wikiMB.selectedWiki.nsituacionid lt msgs.situacionPublicado}"/>
 
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -46,8 +48,8 @@
                                     </h:panelGroup>
                                     <p:editor id="descHtml" value="#{wikiMB.descripcionHtml}" />
                                     
-                                    <h:outputText value="#{msgs.wk_lbl_detalle}" rendered="#{not empty wikiMB.listaSeccion}"/>
-                                    <p:fieldset rendered="#{not empty wikiMB.listaSeccion}">
+                                    <h:outputText value="#{msgs.wk_lbl_detalle}"/>
+                                    <p:fieldset>
                                         <p:commandButton value="#{msgs.wk_btn_seccion}" actionListener="#{wikiMB.toAddSection}" update=":secDialogForm:pgSec" oncomplete="PF('secDialog').show();" styleClass="ui-link Fs14"/>
                                         <table style="">
                                             <ui:repeat value="#{wikiMB.listaSeccion}" var="s" varStatus="vs">

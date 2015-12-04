@@ -7,9 +7,11 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import pe.gob.mef.gescon.common.Constante;
 
 /**
  *
@@ -39,6 +41,9 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     private String vmsjmoderador;
     private Archivo archivo;
     private List<Archivo> listaArchivo;
+    private String vfechapublicacion;
+    private String vfechacreacion;
+    private String vfechamodificacion;
     
     public void BaseLegal(){
         
@@ -350,6 +355,42 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
      */
     public void setListaArchivo(List<Archivo> listaArchivo) {
         this.listaArchivo = listaArchivo;
+    }
+
+    public String getVfechapublicacion() {
+        if(dfechapublicacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_MEDIUM);
+            vfechapublicacion = sdf.format(dfechapublicacion);
+        }
+        return vfechapublicacion;
+    }
+
+    public void setVfechapublicacion(String vfechapublicacion) {
+        this.vfechapublicacion = vfechapublicacion;
+    }
+
+    public String getVfechacreacion() {
+        if(dfechacreacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechacreacion = sdf.format(dfechacreacion);
+        }
+        return vfechacreacion;
+    }
+
+    public void setVfechacreacion(String vfechacreacion) {
+        this.vfechacreacion = vfechacreacion;
+    }
+
+    public String getVfechamodificacion() {
+        if(dfechamodificacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechamodificacion = sdf.format(dfechamodificacion);
+        }
+        return vfechamodificacion;
+    }
+
+    public void setVfechamodificacion(String vfechamodificacion) {
+        this.vfechamodificacion = vfechamodificacion;
     }
  
     @Override

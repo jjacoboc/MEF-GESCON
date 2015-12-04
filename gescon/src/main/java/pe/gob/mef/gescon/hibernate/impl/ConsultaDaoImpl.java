@@ -47,7 +47,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
         final Date fFromDate = (Date) filters.get("fFromDate");
         final Date fToDate = (Date) filters.get("fToDate");
         final String fType = (String) filters.get("fType");
-        SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_SIMPLE_DATE);
+        SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_SHORT);
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {

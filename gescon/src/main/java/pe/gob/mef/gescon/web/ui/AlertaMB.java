@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.web.ui;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -47,6 +48,7 @@ public class AlertaMB implements Serializable {
     private String descripcion;
     private BigDecimal activo;
     private List<Alerta> listaAlerta;
+    private List<Alerta> filteredListaAlerta;
     private Alerta selectedAlerta;
     private BigDecimal selectedParametro;
     private BigDecimal useraplica;
@@ -135,6 +137,14 @@ public class AlertaMB implements Serializable {
      */
     public void setListaAlerta(List<Alerta> listaAlerta) {
         this.listaAlerta = listaAlerta;
+    }
+
+    public List<Alerta> getFilteredListaAlerta() {
+        return filteredListaAlerta;
+    }
+
+    public void setFilteredListaAlerta(List<Alerta> filteredListaAlerta) {
+        this.filteredListaAlerta = filteredListaAlerta;
     }
 
     /**
@@ -335,6 +345,23 @@ public class AlertaMB implements Serializable {
             FacesContext.getCurrentInstance().renderResponse();
         }
     }
+    
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if(!CollectionUtils.isEmpty(this.getFilteredListaAlerta())) {
+                    this.setSelectedAlerta(this.getFilteredListaAlerta().get(index));
+                } else {
+                    this.setSelectedAlerta(this.getListaAlerta().get(index));
+                }
+                this.setFilteredListaAlerta(new ArrayList());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     public void toSave(ActionEvent event) {
         try {
@@ -351,8 +378,8 @@ public class AlertaMB implements Serializable {
                 this.setListaAlerta(Collections.EMPTY_LIST);
             }
             Alerta alerta = new Alerta();
-            alerta.setVnombre(this.getNombre().trim().toUpperCase());
-            alerta.setVdescripcion(this.getDescripcion().trim());
+            alerta.setVnombre(this.getNombre());
+            alerta.setVdescripcion(this.getDescripcion());
             alerta.setNparametroid(this.getSelectedParametro());
             alerta.setDfechini(this.getFechfin());
             alerta.setDfechfin(this.getFechfin());
@@ -368,6 +395,8 @@ public class AlertaMB implements Serializable {
                 User user = loginMB.getUser();
                 AlertaService service = (AlertaService) ServiceFinder.findBean("AlertaService");
                 alerta.setNalertaid(service.getNextPK());
+                alerta.setVnombre(StringUtils.upperCase(this.getNombre().trim()));
+                alerta.setVdescripcion(StringUtils.capitalize(this.getDescripcion().trim()));
                 alerta.setNactivo(BigDecimal.ONE);
                 alerta.setDfechacreacion(new Date());
                 alerta.setVusuariocreacion(user.getVlogin());
@@ -385,10 +414,7 @@ public class AlertaMB implements Serializable {
     public void toUpdate(ActionEvent event) {
         try {
             if (event != null) {
-//                if(this.getSelectedMaestro() == null) {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Seleccione el maestro que desea editar.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
+                this.setSelectedRow(event);
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -411,19 +437,10 @@ public class AlertaMB implements Serializable {
                 }
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user = loginMB.getUser();
-                this.getSelectedAlerta().setVnombre(this.getSelectedAlerta().getVnombre().toUpperCase());
-                this.getSelectedAlerta().setVdescripcion(this.getSelectedAlerta().getVdescripcion().toUpperCase());
+                this.getSelectedAlerta().setVnombre(StringUtils.upperCase(this.getSelectedAlerta().getVnombre().trim()));
+                this.getSelectedAlerta().setVdescripcion(StringUtils.capitalize(this.getSelectedAlerta().getVdescripcion().trim()));
                 this.getSelectedAlerta().setVusuariomodificacion(user.getVlogin());
                 this.getSelectedAlerta().setDfechamodificacion(new Date());
-                this.getSelectedAlerta().setDfechini(this.getSelectedAlerta().getDfechini());
-                this.getSelectedAlerta().setDfechfin(this.getSelectedAlerta().getDfechfin());
-                this.getSelectedAlerta().setNuseraplica(this.getSelectedAlerta().getNuseraplica());
-                this.getSelectedAlerta().setNcondicion1(this.getSelectedAlerta().getNcondicion1());
-                this.getSelectedAlerta().setNcondicion2(this.getSelectedAlerta().getNcondicion2());
-                this.getSelectedAlerta().setNtipo1(this.getSelectedAlerta().getNtipo1());
-                this.getSelectedAlerta().setNtipo2(this.getSelectedAlerta().getNtipo2());
-                this.getSelectedAlerta().setNvalor1(this.getSelectedAlerta().getNvalor1());
-                this.getSelectedAlerta().setNvalor2(this.getSelectedAlerta().getNvalor2());
 
                 AlertaService service = (AlertaService) ServiceFinder.findBean("AlertaService");
                 service.saveOrUpdate(this.getSelectedAlerta());

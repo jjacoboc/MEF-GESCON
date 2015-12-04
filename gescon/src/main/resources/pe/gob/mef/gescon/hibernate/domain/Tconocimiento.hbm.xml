@@ -20,7 +20,7 @@
       <column length="400" name="VDESCRIPCION"/>
     </property>
     <property name="vtitulo" type="string">
-      <column length="20" name="VTITULO"/>
+      <column length="100" name="VTITULO"/>
     </property>
     <property name="vusuariomodificacion" type="string">
       <column length="25" name="VUSUARIOMODIFICACION"/>

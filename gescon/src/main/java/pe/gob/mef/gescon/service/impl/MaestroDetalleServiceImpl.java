@@ -45,6 +45,21 @@ public class MaestroDetalleServiceImpl implements MaestroDetalleService{
         }
         return maestros;
     }
+    
+    @Override
+    public List<MaestroDetalle> getDetallesActivosByMaestro(Maestro maestro) throws Exception {
+        List<MaestroDetalle> maestros = new ArrayList<MaestroDetalle>();
+        MaestroDetalleDao maestroDetalleDao = (MaestroDetalleDao) ServiceFinder.findBean("MaestroDetalleDao");
+        Mtmaestro mtmaestro = new Mtmaestro();
+        BeanUtils.copyProperties(mtmaestro, maestro);
+        List<Tmaestrodetalle> lista = maestroDetalleDao.getDetallesActivosByMaestro(mtmaestro);
+        for(Tmaestrodetalle tdetalle : lista) {
+            MaestroDetalle detalle = new MaestroDetalle();
+            BeanUtils.copyProperties(detalle, tdetalle);
+            maestros.add(detalle);
+        }
+        return maestros;
+    }
 
     @Override
     public void saveOrUpdate(MaestroDetalle maestroDetalle) throws Exception {

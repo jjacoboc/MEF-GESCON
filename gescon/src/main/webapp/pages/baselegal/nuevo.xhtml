@@ -35,7 +35,9 @@
                                                 </h:panelGrid>
                                             </h:outputLink>
                                             <f:facet name="inline">
-                                                <p:media player="pdf" cache="false" value="#{baseLegalMB.content}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}"/>
+                                                <p:media player="pdf" cache="false" value="#{baseLegalMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                                    <f:param name="fileName" value="#{msgs.pdftemppath}#{baseLegalMB.uploadFile.fileName}"/>
+                                                </p:media>
                                             </f:facet>
                                         </p:lightBox>
                                     </h:panelGrid>
@@ -100,7 +102,9 @@
                                                 <h:outputText value="#{t.vnombre}"/>
                                             </p:column>
                                             <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
-                                                <h:outputText value="#{t.vcategoria}"/>
+                                                <h:outputText value="#{t.ncategoriaid}">
+                                                    <f:converter converterId="converterCategoria"/>
+                                                </h:outputText>
                                             </p:column>
                                             <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
                                                 <p:selectOneMenu value="#{t.nestadoid}" style="width: 110px;" panelStyle="font-size: 10px;">

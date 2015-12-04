@@ -35,7 +35,7 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.wk_lbl_nombre}"/>
                                     </h:panelGroup>
-                                    <p:inputText value="#{wikiMB.nombre}" size="110" styleClass="Fs14" maxlength="25"/>
+                                    <p:inputText value="#{wikiMB.nombre}" size="110" styleClass="Fs14" maxlength="100"/>
 
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -46,8 +46,8 @@
 
                                     <p:spacer/>
                                     
-                                    <h:outputText value="#{msgs.wk_lbl_detalle}" rendered="#{not empty wikiMB.listaSeccion}"/>
-                                    <p:fieldset rendered="#{not empty wikiMB.listaSeccion}">
+                                    <h:outputText value="#{msgs.wk_lbl_detalle}"/>
+                                    <p:fieldset>
                                         <p:commandButton value="#{msgs.wk_btn_seccion}" actionListener="#{wikiMB.toAddSection}" update=":secDialogForm:pgSec" oncomplete="PF('secDialog').show();" styleClass="ui-link Fs14"/>
                                         <table class="Wid100">
                                             <ui:repeat value="#{wikiMB.listaSeccion}" var="s" varStatus="vs">

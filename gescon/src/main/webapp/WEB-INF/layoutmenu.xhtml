@@ -25,18 +25,42 @@
             <p:separator rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}"/>
             
             <p:submenu label="Administración" icon="fa fa-gears" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
-                <p:menuitem value="Tablas Maestras" icon="fa fa-table" url="/pages/maestro.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
-                <p:menuitem value="Perfiles de Usuario" icon="fa fa-newspaper-o" url="/pages/perfil.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
-                <p:menuitem value="Politicas de Acceso" icon="fa fa-briefcase" url="/pages/politica.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
-                <p:menuitem value="Parametros" icon="fa fa-sliders" url="/pages/parametro.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
-                <p:menuitem value="Alertas" icon="fa fa-bullhorn" url="/pages/alerta.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
-                <p:menuitem value="Categorias" icon="fa fa-tags" url="/pages/categoria.xhtml" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}"/>
-                <p:menuitem value="Base Legal" icon="fa fa-file-text-o" url="/pages/baselegal/lista.xhtml" />
-                <p:menuitem value="Preguntas" icon="fa fa-question" url="/pages/pregunta.xhtml" />
-                <p:menuitem value="Wiki" icon="fa fa-puzzle-piece" url="/pages/wiki/lista.xhtml" />
-                <p:menuitem value="Contenido" icon="fa fa-caret-square-o-right" url="/pages/Contenido/contenido.xhtml" />
-                <p:menuitem value="Buenas Practicas" icon="fa fa-check-square-o" url="#" />
-                <p:menuitem value="Oportunidad de Mejora" icon="fa fa-signal" url="#" />
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Tablas Maestras" icon="fa fa-table" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <f:param name="page" value="/pages/maestro"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Perfiles de Usuario" icon="fa fa-newspaper-o" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <f:param name="page" value="/pages/perfil"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Politicas de Acceso" icon="fa fa-briefcase" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <f:param name="page" value="/pages/politica"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Parametros" icon="fa fa-sliders" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <f:param name="page" value="/pages/parametro"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Alertas" icon="fa fa-bullhorn" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <f:param name="page" value="/pages/alerta"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Categorias" icon="fa fa-tags" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <f:param name="page" value="/pages/categoria"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Base Legal" icon="fa fa-file-text-o">
+                    <f:param name="page" value="/pages/baselegal/lista"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Preguntas" icon="fa fa-question">
+                    <f:param name="page" value="/pages/pregunta"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Wiki" icon="fa fa-puzzle-piece">
+                    <f:param name="page" value="/pages/wiki/lista"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Contenido" icon="fa fa-caret-square-o-right">
+                    <f:param name="page" value="/pages/contenido/contenido"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Buenas Practicas" icon="fa fa-check-square-o">
+                    <f:param name="page" value="/pages/buenapractica/lista"/>
+                </p:menuitem>
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Oportunidad de Mejora" icon="fa fa-signal" >
+                    <f:param name="page" value="/pages/oportunidad/lista"/>
+                </p:menuitem>
             </p:submenu>
             
                         

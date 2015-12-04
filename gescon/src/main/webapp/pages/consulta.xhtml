@@ -19,12 +19,12 @@
                 <div class="ContainerIndent TexAlCenter">
                     <h:outputScript>
                         $(function() {
-                        $(".ui-datascroller-content").css("height", $("#center").height());
-                        $("#fcLink").click(recall);
-                        $("#bcLink").click(recall);
+                            $(".ui-datascroller-content").css("height", $("#center").height());
+                            $("#fcLink").click(recall);
+                            $("#bcLink").click(recall);
                         });
                         function recall() {
-                        $(".ui-datascroller-content").css("height", $("#center").height() - 47);
+                            $(".ui-datascroller-content").css("height", $("#center").height() - 47);
                         }
                     </h:outputScript>
                     <f:view>
@@ -56,9 +56,9 @@
                                                         <h:outputText class="fa fa-file-text-o red Fs14" rendered="#{c.idTipoConocimiento eq 1}"/>
                                                         <h:outputText class="fa fa-question red Fs14" rendered="#{c.idTipoConocimiento eq 2}"/>
                                                         <h:outputText class="fa fa-puzzle-piece red Fs14" rendered="#{c.idTipoConocimiento eq 3}"/>
+                                                        <h:outputText class="fa fa-check-square-o red Fs14" rendered="#{c.idTipoConocimiento eq 5}"/>
                                                         <p:spacer width="5"/>
-                                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link"
-                                                                       update=":viewblDialogForm:pgViewbl, :viewprDialogForm:pgViewpr" >
+                                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link" update=":viewprDialogForm:pgViewpr" >
                                                             <h:panelGroup>
                                                                 <h:outputText value="#{c.codigo}" styleClass="Fs14 FontBold " rendered="#{not empty c.codigo}"/>
                                                                 <h:outputText value=" - " styleClass="Fs12 FontBold " rendered="#{not empty c.codigo}"/>
@@ -97,62 +97,6 @@
                                         </h:panelGrid>
                                     </h:panelGrid>
                                 </h:form>
-
-                                <p:dialog id="viewblDlg" header="Base Legal" widgetVar="viewblDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 12px;">
-                                    <h:form id="viewblDialogForm">
-                                        <h:panelGrid id="pgViewbl" columns="2">
-                                            <h:outputText value="Categoría:" styleClass="FontBold"/>
-                                            <h:outputText value="#{consultaMB.selectedBaseLegal.ncategoriaid}" >
-                                                <f:converter converterId="converterCategoria"/>
-                                            </h:outputText>
-
-                                            <h:outputText value="Archivo:" styleClass="FontBold"/>
-                                            <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                                <p:lightBox>
-                                                    <h:outputLink value="#">
-                                                        <h:panelGrid columns="2">
-                                                            <p:graphicImage library="images" name="pdf.png"/>
-                                                            <h:outputText id="fileName" value="#{consultaMB.selectedBaseLegal.archivo.vnombre}"/>
-                                                        </h:panelGrid>
-                                                    </h:outputLink>
-                                                    <f:facet name="inline">
-                                                        <p:media player="pdf" cache="false" value="#{consultaMB.content}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}"/>
-                                                    </f:facet>
-                                                </p:lightBox>
-                                            </h:panelGrid>
-
-                                            <h:outputText value="Nombre:" styleClass="FontBold"/>
-                                            <h:outputText value="#{consultaMB.selectedBaseLegal.vnombre}" />
-
-                                            <h:outputText value="Número de Norma:" styleClass="FontBold" style="white-space: nowrap;"/>
-                                            <h:outputText value="#{consultaMB.selectedBaseLegal.vnumero}" />
-
-                                            <h:outputText value="Rango de Norma:" styleClass="FontBold" style="white-space: nowrap;"/>
-                                            <h:outputText value="#{consultaMB.selectedBaseLegal.nrangoid}" >
-                                                <f:converter converterId="converterRango"/>
-                                            </h:outputText>
-
-                                            <h:outputText value="Ambito:" styleClass="FontBold"/>                                
-                                            <h:panelGrid columns="4">
-                                                <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.ngobnacional eq 1}" itemLabel="Gobierno Nacional"  />
-                                                <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.ngobregional eq 1}" itemLabel="Gobierno Regional" />
-                                                <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.ngoblocal eq 1}" itemLabel="Gobierno Local" />
-                                                <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.nmancomunidades eq 1}" itemLabel="Mancomunidades" />
-                                            </h:panelGrid>
-
-                                            <h:outputText value="Sumilla:" styleClass="FontBold"/>
-                                            <h:outputText value="#{consultaMB.selectedBaseLegal.vsumilla}" />
-
-                                            <h:outputText value="Fecha Publicación:" styleClass="FontBold" style="white-space: nowrap;"/>
-                                            <h:outputText value="#{consultaMB.selectedBaseLegal.dfechapublicacion}" >
-                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                            </h:outputText>
-
-                                            <h:outputText value="Tema:" styleClass="FontBold"/>
-                                            <h:outputText value="#{consultaMB.selectedBaseLegal.vtema}" />
-                                        </h:panelGrid>
-                                    </h:form>
-                                </p:dialog>
 
                                 <p:dialog id="viewprDlg" header="Pregunta y Respuesta" widgetVar="viewprDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                                     <h:form id="viewprDialogForm">

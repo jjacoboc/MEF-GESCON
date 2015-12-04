@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.web.ui;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -40,10 +41,12 @@ public class PoliticaMB implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(PoliticaMB.class);
     private BigDecimal id;
+    private BigDecimal moduloid;
     private String nombre;
     private String descripcion;
     private BigDecimal activo;
     private List<Politica> listaPolitica;
+    private List<Politica> filteredListaPolitica;
     private Politica selectedPolitica;
 
     /**
@@ -64,6 +67,14 @@ public class PoliticaMB implements Serializable {
      */
     public void setId(BigDecimal id) {
         this.id = id;
+    }
+
+    public BigDecimal getModuloid() {
+        return moduloid;
+    }
+
+    public void setModuloid(BigDecimal moduloid) {
+        this.moduloid = moduloid;
     }
 
     /**
@@ -122,6 +133,14 @@ public class PoliticaMB implements Serializable {
         this.listaPolitica = listaPolitica;
     }
 
+    public List<Politica> getFilteredListaPolitica() {
+        return filteredListaPolitica;
+    }
+
+    public void setFilteredListaPolitica(List<Politica> filteredListaPolitica) {
+        this.filteredListaPolitica = filteredListaPolitica;
+    }
+
     /**
      * @return the selectedMaestro
      */
@@ -130,7 +149,7 @@ public class PoliticaMB implements Serializable {
     }
 
     /**
-     * @param selectedMaestro the selectedMaestro to set
+     * @param selectedPolitica
      */
     public void setSelectedPolitica(Politica selectedPolitica) {
         this.selectedPolitica = selectedPolitica;
@@ -140,7 +159,7 @@ public class PoliticaMB implements Serializable {
     public void init() {
         try {
             PoliticaService service = (PoliticaService) ServiceFinder.findBean("PoliticaService");
-            listaPolitica = service.getPoliticas();
+            this.setListaPolitica(service.getPoliticas());
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -149,6 +168,7 @@ public class PoliticaMB implements Serializable {
 
     public void cleanAttributes() {
         this.setId(BigDecimal.ZERO);
+        this.setModuloid(null);
         this.setDescripcion(StringUtils.EMPTY);
         this.setNombre(StringUtils.EMPTY);
         this.setActivo(BigDecimal.ONE);
@@ -157,6 +177,23 @@ public class PoliticaMB implements Serializable {
         if (iter.hasNext() == true) {
             iter.remove();
             FacesContext.getCurrentInstance().renderResponse();
+        }
+    }
+    
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if(!CollectionUtils.isEmpty(this.getFilteredListaPolitica())) {
+                    this.setSelectedPolitica(this.getFilteredListaPolitica().get(index));
+                } else {
+                    this.setSelectedPolitica(this.getListaPolitica().get(index));
+                }
+                this.setFilteredListaPolitica(new ArrayList());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -175,9 +212,12 @@ public class PoliticaMB implements Serializable {
                 this.setListaPolitica(Collections.EMPTY_LIST);
             }
             Politica politica = new Politica();
-            politica.setVnombre(this.getNombre().trim().toUpperCase());
-            politica.setVdescripcion(this.getDescripcion().trim());
+            politica.setNmoduloid(this.getModuloid());
+            politica.setVnombre(this.getNombre());
+            politica.setVdescripcion(this.getDescripcion());
             if (!errorValidation(politica)) {
+                politica.setVnombre(StringUtils.upperCase(this.getNombre().trim()));
+                politica.setVdescripcion(StringUtils.capitalize(this.getDescripcion().trim()));
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user = loginMB.getUser();
                 PoliticaService service = (PoliticaService) ServiceFinder.findBean("PoliticaService");
@@ -199,10 +239,7 @@ public class PoliticaMB implements Serializable {
     public void toUpdate(ActionEvent event) {
         try {
             if (event != null) {
-//                if(this.getSelectedMaestro() == null) {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Seleccione el maestro que desea editar.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
+                this.setSelectedRow(event);
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -213,20 +250,25 @@ public class PoliticaMB implements Serializable {
     public void update(ActionEvent event) {
         try {
             if (event != null) {
+                if (this.getSelectedPolitica().getNmoduloid() == null) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Módulo requerido. Ingrese el nombre de la política acceso.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
                 if (StringUtils.isBlank(this.getSelectedPolitica().getVnombre())) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Nombre requerido. Ingrese el nombre de politica.");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Nombre requerido. Ingrese el nombre de la política acceso.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
                 if (StringUtils.isBlank(this.getSelectedPolitica().getVdescripcion())) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Descripción requerida. Ingrese la descripción de politica.");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Descripción requerida. Ingrese la descripción de la política acceso.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user = loginMB.getUser();
-                this.getSelectedPolitica().setVnombre(this.getSelectedPolitica().getVnombre().toUpperCase());
-                this.getSelectedPolitica().setVdescripcion(this.getSelectedPolitica().getVdescripcion().toUpperCase());
+                this.getSelectedPolitica().setVnombre(StringUtils.upperCase(this.getSelectedPolitica().getVnombre().trim()));
+                this.getSelectedPolitica().setVdescripcion(StringUtils.capitalize(this.getSelectedPolitica().getVdescripcion().trim()));
                 this.getSelectedPolitica().setVusuariomodificacion(user.getVlogin());
                 this.getSelectedPolitica().setDfechamodificacion(new Date());
                 PoliticaService service = (PoliticaService) ServiceFinder.findBean("PoliticaService");
@@ -291,13 +333,18 @@ public class PoliticaMB implements Serializable {
         FacesMessage message;
         boolean error = false;
         try {
-            if (politica.getVnombre() == null || politica.getVnombre().isEmpty()) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Nombre requerido. Ingrese el nombre del maestro.");
+            if (politica.getNmoduloid() == null) {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Módulo requerido. Seleccione el módulo de la política de acceso.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                error = true;
+                return error;
+            } if (politica.getVnombre() == null || politica.getVnombre().isEmpty()) {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Nombre requerido. Ingrese el nombre de la política de acceso.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;
                 return error;
             } else if (politica.getVdescripcion() == null || politica.getVdescripcion().isEmpty()) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción requerida. Ingrese la descripción del maestro.");
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción requerida. Ingrese la descripción de la política de acceso.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;
                 return error;

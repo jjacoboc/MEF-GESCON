@@ -70,7 +70,7 @@ public class BaseLegalMB implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(BaseLegalMB.class);
     private final String temppath = "\\\\OSC2018\\gescon\\temp\\";
-    private String path = "\\\\OSC2018\\gescon\\files\\bl\\";
+    private final String path = "\\\\OSC2018\\gescon\\files\\bl\\";
     private List<BaseLegal> listaBaseLegal;
     private List<BaseLegal> filteredListaBaseLegal;
     private BaseLegal selectedBaseLegal;
@@ -465,6 +465,23 @@ public class BaseLegalMB implements Serializable {
         }
     }
     
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if(!CollectionUtils.isEmpty(this.getFilteredListaBaseLegal())) {
+                    this.setSelectedBaseLegal(this.getFilteredListaBaseLegal().get(index));
+                } else {
+                    this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+                }
+                this.setFilteredListaBaseLegal(new ArrayList());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
     public void handleChangeValue(AjaxBehaviorEvent event) {
         try {
             if(event != null) {
@@ -495,7 +512,7 @@ public class BaseLegalMB implements Serializable {
                     fileOutStream.write(f.getContents());
                     fileOutStream.flush();
                     fileOutStream.close();
-                    this.content = new DefaultStreamedContent(f.getInputstream(), "application/pdf", f.getFileName());
+                    this.setContent(new DefaultStreamedContent(f.getInputstream(), "application/pdf", f.getFileName()));
 //                    } else {
 //                        this.setFile(null);
 //                    }
@@ -709,7 +726,11 @@ public class BaseLegalMB implements Serializable {
         try {
             this.cleanAttributes();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            if(!CollectionUtils.isEmpty(this.getFilteredListaBaseLegal())) {
+                this.setSelectedBaseLegal(this.getFilteredListaBaseLegal().get(index));
+            } else {
+                this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            }
             this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
             this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
             this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
@@ -720,6 +741,7 @@ public class BaseLegalMB implements Serializable {
             this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
+            this.setFilteredListaBaseLegal(new ArrayList());
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -806,7 +828,11 @@ public class BaseLegalMB implements Serializable {
         try {
             this.cleanAttributes();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            if(!CollectionUtils.isEmpty(this.getFilteredListaBaseLegal())) {
+                this.setSelectedBaseLegal(this.getFilteredListaBaseLegal().get(index));
+            } else {
+                this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            }
             this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
             this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
             this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
@@ -817,6 +843,7 @@ public class BaseLegalMB implements Serializable {
             this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
+            this.setFilteredListaBaseLegal(new ArrayList());
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -904,7 +931,11 @@ public class BaseLegalMB implements Serializable {
         try {
             this.cleanAttributes();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            if(!CollectionUtils.isEmpty(this.getFilteredListaBaseLegal())) {
+                this.setSelectedBaseLegal(this.getFilteredListaBaseLegal().get(index));
+            } else {
+                this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            }
             this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
             this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
             this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
@@ -913,6 +944,7 @@ public class BaseLegalMB implements Serializable {
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+            this.setFilteredListaBaseLegal(new ArrayList());
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();

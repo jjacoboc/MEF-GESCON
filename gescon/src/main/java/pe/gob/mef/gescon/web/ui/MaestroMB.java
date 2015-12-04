@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.web.ui;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -47,8 +48,10 @@ public class MaestroMB implements Serializable {
     private String descripcion;
     private BigDecimal activo;
     private List<Maestro> listaMaestro;
+    private List<Maestro> filteredListaMaestro;
     private Maestro selectedMaestro;
     private List<MaestroDetalle> listaMaestroDetalle;
+    private List<MaestroDetalle> filteredListaMaestroDetalle;
     private MaestroDetalle selectedMaestroDetalle;
 
     /**
@@ -127,6 +130,14 @@ public class MaestroMB implements Serializable {
         this.listaMaestro = listaMaestro;
     }
 
+    public List<Maestro> getFilteredListaMaestro() {
+        return filteredListaMaestro;
+    }
+
+    public void setFilteredListaMaestro(List<Maestro> filteredListaMaestro) {
+        this.filteredListaMaestro = filteredListaMaestro;
+    }
+
     /**
      * @return the selectedMaestro
      */
@@ -153,6 +164,14 @@ public class MaestroMB implements Serializable {
      */
     public void setListaMaestroDetalle(List<MaestroDetalle> listaMaestroDetalle) {
         this.listaMaestroDetalle = listaMaestroDetalle;
+    }
+
+    public List<MaestroDetalle> getFilteredListaMaestroDetalle() {
+        return filteredListaMaestroDetalle;
+    }
+
+    public void setFilteredListaMaestroDetalle(List<MaestroDetalle> filteredListaMaestroDetalle) {
+        this.filteredListaMaestroDetalle = filteredListaMaestroDetalle;
     }
 
     /**
@@ -190,6 +209,23 @@ public class MaestroMB implements Serializable {
         if (iter.hasNext() == true) {
             iter.remove();
             FacesContext.getCurrentInstance().renderResponse();
+        }
+    }
+    
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if(!CollectionUtils.isEmpty(this.getFilteredListaMaestro())) {
+                    this.setSelectedMaestro(this.getFilteredListaMaestro().get(index));
+                } else {
+                    this.setSelectedMaestro(this.getListaMaestro().get(index));
+                }
+                this.setFilteredListaMaestro(new ArrayList());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -232,10 +268,7 @@ public class MaestroMB implements Serializable {
     public void toUpdate(ActionEvent event) {
         try {
             if (event != null) {
-//                if(this.getSelectedMaestro() == null) {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Seleccione el maestro que desea editar.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
+                this.setSelectedRow(event);
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -343,12 +376,29 @@ public class MaestroMB implements Serializable {
 
     public void getDetalles(ActionEvent event) {
         try {
-            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            this.setSelectedMaestro(this.getListaMaestro().get(index));
+            this.setSelectedRow(event);
             MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
             this.setListaMaestroDetalle(service.getDetallesByMaestro(this.getSelectedMaestro()));
+            this.setFilteredListaMaestro(new ArrayList());
         } catch (Exception e) {
             e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void setSelectedDetailRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if(!CollectionUtils.isEmpty(this.getFilteredListaMaestroDetalle())) {
+                    this.setSelectedMaestroDetalle(this.getFilteredListaMaestroDetalle().get(index));
+                } else {
+                    this.setSelectedMaestroDetalle(this.getListaMaestroDetalle().get(index));
+                }
+                this.setFilteredListaMaestroDetalle(new ArrayList());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         }
     }
@@ -370,14 +420,24 @@ public class MaestroMB implements Serializable {
                 maestroDetalle.setNactivo(BigDecimal.ONE);
                 maestroDetalle.setDfechacreacion(new Date());
                 maestroDetalle.setVusuariocreacion(user.getVlogin());
-                TmaestrodetalleId id = new TmaestrodetalleId();
-                id.setNdetalleid(maestroDetalle.getNdetalleid());
-                id.setNmaestroid(maestroDetalle.getNmaestroid());
-                maestroDetalle.setId(id);
+                TmaestrodetalleId tmaestrodetalleId = new TmaestrodetalleId();
+                tmaestrodetalleId.setNdetalleid(maestroDetalle.getNdetalleid());
+                tmaestrodetalleId.setNmaestroid(maestroDetalle.getNmaestroid());
+                maestroDetalle.setId(tmaestrodetalleId);
                 service.saveOrUpdate(maestroDetalle);
                 this.setListaMaestroDetalle(service.getDetallesByMaestro(this.getSelectedMaestro()));
                 this.cleanAttributes();
                 RequestContext.getCurrentInstance().execute("PF('newdDialog').hide();");
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    public void toUpdateDetail(ActionEvent event) {
+        try {
+            if (event != null) {
+                this.setSelectedDetailRow(event);
             }
         } catch (Exception e) {
             log.error(e.getMessage());

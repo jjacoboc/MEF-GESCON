@@ -8,7 +8,7 @@
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
-                <div class="ContainerIndent TexAlCenter">                    
+                <div class="ContainerIndent">                    
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
@@ -16,8 +16,8 @@
                                 <h:panelGrid columns="1">
                                     <p:commandButton  value="Nuevo" ajax="false" action="#{baseLegalMB.toSave}" styleClass="Fleft" icon="fa fa-plus white" 
                                                       rendered="#{loginMB.perfil.nperfilid eq msgs.especialista or loginMB.perfil.nperfilid eq msgs.administrador}"/>
-                                    <p:dataTable id="tbl" value="#{baseLegalMB.listaBaseLegal}" filteredValue="#{baseLegalMB.filteredListaBaseLegal}" 
-                                                 var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
+                                    <p:dataTable id="tbl" value="#{baseLegalMB.listaBaseLegal}" filteredValue="#{baseLegalMB.filteredListaBaseLegal}" var="row"
+                                                 paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
                                         <p:column style="text-align: center; width: 120px;" sortBy="#{row.vnumero}" filterBy="#{row.vnumero}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna01}"/></f:facet>
@@ -28,7 +28,7 @@
                                         </p:column>
                                         <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 400px;text-transform: uppercase;" priority="2">
                                             <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna02}"/></f:facet>
-                                            <h:outputText value="#{row.vnombre}" styleClass="Fleft"/>
+                                            <h:outputText value="#{row.vnombre}"/>
                                         </p:column>
                                         <p:column style="text-align: center; width: 100px;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
                                             <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna03}"/></f:facet>
@@ -36,11 +36,9 @@
                                                 <f:converter converterId="converterEstadoBaseLegal"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 170px;" sortBy="#{row.dfechapublicacion}" filterBy="#{row.dfechapublicacion}" filterMatchMode="contains" priority="4">
+                                        <p:column style="text-align: center; width: 170px;" sortBy="#{row.vfechapublicacion}" filterBy="#{row.vfechapublicacion}" filterMatchMode="contains" priority="4">
                                             <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna04}"/></f:facet>
-                                            <h:outputText value="#{row.dfechapublicacion}" >
-                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                            </h:outputText>
+                                            <h:outputText value="#{row.vfechapublicacion}" />
                                         </p:column>
                                         <p:column style="text-align: center; width: 50px;" priority="5">
                                             <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna05}"/></f:facet>
@@ -58,32 +56,32 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 90px;">
                                             <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna06}"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{baseLegalMB.toView}" styleClass="ui-link" title="Ver Base Legal">
+                                            <p:commandLink ajax="false" action="#{baseLegalMB.toView}" styleClass="ui-link" title="ver base legal">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{baseLegalMB.toEdit}" styleClass="ui-link" title="Actualizar Base Legal" 
+                                            <p:commandLink ajax="false" action="#{baseLegalMB.toEdit}" styleClass="ui-link" title="actualizar base legal" 
                                                            rendered="#{loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;" rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}"/>
-                                            <p:commandLink ajax="false" action="#{baseLegalMB.toPost}" styleClass="ui-link" title="Publicar Base Legal" 
+                                            <p:commandLink ajax="false" action="#{baseLegalMB.toPost}" styleClass="ui-link" title="publicar base legal" 
                                                            rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Base Legal" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{baseLegalMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar base legal" styleClass="ui-link"
                                                            rendered="#{(row.nactivo eq 0) and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
                                                 <h:outputText class="fa fa-check Fs16" />
-                                                <f:setPropertyActionListener value="#{row}" target="#{baseLegalMB.selectedBaseLegal}" />
+                                                <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Base Legal" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{baseLegalMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar base legal" styleClass="ui-link"
                                                            rendered="#{(row.nactivo eq 1) and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
                                                 <h:outputText class="fa fa-close Fs16" />
-                                                <f:setPropertyActionListener value="#{row}" target="#{baseLegalMB.selectedBaseLegal}" />
+                                                <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                         </p:column>
                                     </p:dataTable>

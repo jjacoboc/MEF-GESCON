@@ -1,7 +1,6 @@
 package pe.gob.mef.gescon.hibernate.domain;
 // Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
@@ -20,6 +19,7 @@ public class Mtpolitica implements java.io.Serializable {
     private Date dfechacreacion;
     private Date dfechamodificacion;
     private String vnombre;
+    private BigDecimal nmoduloid;
     private Set tpoliticaPerfils = new HashSet(0);
 
     public Mtpolitica() {
@@ -29,7 +29,7 @@ public class Mtpolitica implements java.io.Serializable {
         this.npoliticaid = npoliticaid;
     }
 
-    public Mtpolitica(BigDecimal npoliticaid, String vdescripcion, BigDecimal nactivo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, String vnombre, Set tpoliticaPerfils) {
+    public Mtpolitica(BigDecimal npoliticaid, String vdescripcion, BigDecimal nactivo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, String vnombre, BigDecimal nmoduloid, Set tpoliticaPerfils) {
         this.npoliticaid = npoliticaid;
         this.vdescripcion = vdescripcion;
         this.nactivo = nactivo;
@@ -38,6 +38,7 @@ public class Mtpolitica implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
         this.dfechamodificacion = dfechamodificacion;
         this.vnombre = vnombre;
+        this.nmoduloid = nmoduloid;
         this.tpoliticaPerfils = tpoliticaPerfils;
     }
 
@@ -103,6 +104,14 @@ public class Mtpolitica implements java.io.Serializable {
 
     public void setVnombre(String vnombre) {
         this.vnombre = vnombre;
+    }
+
+    public BigDecimal getNmoduloid() {
+        return nmoduloid;
+    }
+
+    public void setNmoduloid(BigDecimal nmoduloid) {
+        this.nmoduloid = nmoduloid;
     }
 
     public Set getTpoliticaPerfils() {

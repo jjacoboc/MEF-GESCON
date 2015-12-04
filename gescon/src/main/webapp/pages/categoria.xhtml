@@ -8,25 +8,25 @@
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
-                <div class="ContainerIndent TexAlCenter">
+                <div class="ContainerIndent">
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-                            <p:panel header="Administración de Categorías" styleClass="TexAlLeft">
+                            <p:panel header="Administración de Categorías">
                                 <h:panelGrid columns="1">
                                     <h:outputText value="Categorias:" styleClass="Underline FontBold"/>
-                                    <p:tree id="cats" value="#{categoriaMB.tree}" var="node" animate="true" cache="true" highlight="true" dynamic="true"
-                                            selectionMode="single" selection="#{categoriaMB.selectedNode}" style="width: 100%;border: 0;" styleClass="">
-                                        <p:ajax event="select" listener="#{categoriaMB.onNodeSelect}" />
+                                    <p:tree id="cats" value="#{categoriaMB.tree}" var="node" animate="true" cache="true" highlight="true"
+                                            selectionMode="single" selection="#{categoriaMB.selectedNode}" style="width: 100%;border: 0;">
+                                        <p:ajax event="select" listener="#{categoriaMB.onNodeSelect}" update=":f:ctx" />
                                         <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>
                                     </p:tree>
-                                    <p:contextMenu for="cats" style="font-size: 10px; width: 200px;">
-                                        <p:menuitem value="Agregar Categoría" actionListener="#{categoriaMB.toSave}"  oncomplete="PF('newDialog').show();" update=":newDialogForm:pgNew" disabled="#{categoriaMB.selectedCategoria.nestado eq 0}" icon="ui-icon-plus" />
-                                        <p:menuitem value="Editar Categoría" actionListener="#{categoriaMB.toUpdate}" oncomplete="PF('editDialog').show();" update=":editDialogForm:pgEdit" icon="ui-icon-plus" />
-                                        <p:menuitem value="Activar Categoría" oncomplete="PF('confirmActDlg').show();" icon="ui-icon-plus"/>
-                                        <p:menuitem value="Desactivar Categoría" oncomplete="PF('confirmDesDlg').show();" icon="ui-icon-plus"/>
+                                    <p:contextMenu id="ctx" for="cats" style="font-size: 10px; width: 200px;">
+                                        <p:menuitem value="Agregar Categoría" actionListener="#{categoriaMB.toSave}"  oncomplete="PF('newDialog').show();" update=":newDialogForm:pgNew" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" styleClass="ui-link" icon="fa fa-plus" />
+                                        <p:menuitem value="Editar Categoría" actionListener="#{categoriaMB.toUpdate}" oncomplete="PF('editDialog').show();" update=":editDialogForm:pgEdit" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" styleClass="ui-link" icon="fa fa-edit" />
+                                        <p:menuitem value="Activar Categoría" oncomplete="PF('confirmActDlg').show();" rendered="#{categoriaMB.selectedCategoria.nestado eq 0}" styleClass="ui-link" icon="fa fa-check"/>
+                                        <p:menuitem value="Desactivar Categoría" oncomplete="PF('confirmDesDlg').show();" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" styleClass="ui-link" icon="fa fa-close"/>
                                     </p:contextMenu>
                                 </h:panelGrid>
                             </p:panel>

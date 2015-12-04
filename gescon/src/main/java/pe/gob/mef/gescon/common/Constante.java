@@ -14,7 +14,12 @@ import java.math.BigDecimal;
  */
 public class Constante implements Serializable {
     
-    public static String FORMAT_SIMPLE_DATE = "dd/MM/yyyy";
+    public static String FORMAT_DATE_SHORT = "dd/MM/yyyy";
+    public static String FORMAT_DATE_MEDIUM = "dd/MMM/yyyy";
+    public static String FORMAT_DATE_LONG = "EEE, dd/MMM/yyyy";
+    public static String FORMAT_DATETIME_SHORT = "dd/MM/yyyy hh:mm:ss";
+    public static String FORMAT_DATETIME_MEDIUM = "dd/MMM/yyyy hh:mm:ss";
+    public static String FORMAT_DATETIME_LONG = "EEE, dd/MM/yyyy hh:mm:ss a";
     public static String SUCCESS = "1";
     public static String DEFAULT_THEME = "redmond";
     public static String DEFAULT_FLAG_MENU = "1,1,1,1,1,1";
@@ -52,16 +57,21 @@ public class Constante implements Serializable {
     public static int MODERADOR =1;
     public static int USUARIOEXTERNO =3;
     public static int USUARIOINTERNO =4;
-    
+    // Tipo de Conocimiento
     public static BigDecimal BASELEGAL = new BigDecimal(1);
     public static BigDecimal PREGUNTAS = new BigDecimal(2);
     public static BigDecimal WIKI = new BigDecimal(3);
     public static BigDecimal CONTENIDO = new BigDecimal(4);
     public static BigDecimal BUENAPRACTICA = new BigDecimal(5);
     public static BigDecimal OPORTUNIDADMEJORA = new BigDecimal(6);
-    
-    /**
-     * CNISHIMURA
-     */
-    public static int ID_OPORTUNIDAD_MEJORAS = 6;
+    // Maestros del Sistema
+    public static BigDecimal MAESTRO_MODULOS = new BigDecimal(51);    
+    // Modulos del Sistema (Maestro Detalle)
+    public static BigDecimal MODULO_ADMINISTRACION = new BigDecimal(66);
+    public static BigDecimal MODULO_BASELEGAL = new BigDecimal(67);
+    public static BigDecimal MODULO_PREGUNTAS = new BigDecimal(68);
+    public static BigDecimal MODULO_WIKI = new BigDecimal(69);
+    public static BigDecimal MODULO_CONTENIDO = new BigDecimal(70);
+    public static BigDecimal MODULO_BUENAPRACTICA = new BigDecimal(71);
+    public static BigDecimal MODULO_OPORTUNIDADMEJORA = new BigDecimal(72);
 }

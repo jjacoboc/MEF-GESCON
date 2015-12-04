@@ -7,18 +7,14 @@ package pe.gob.mef.gescon.web.ui;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.util.JSFUtils;
-import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Categoria;
 
 /**
@@ -53,8 +49,6 @@ public class CategoriaImages implements Serializable{
                     categoria = c;
                 }
             }
-//            CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-//            Categoria categoria = service.getCategoriaById(BigDecimal.valueOf(Long.valueOf(id)));
             return new DefaultStreamedContent(categoria.getBimagen().getBinaryStream());
         }
     }

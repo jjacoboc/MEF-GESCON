@@ -9,58 +9,51 @@
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
-                <div class="ContainerIndent TexAlCenter">
+                <div class="ContainerIndent">
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Administración de Parámetros" >
                                 <h:panelGrid columns="1">
                                     <p:commandButton  value="Nuevo" actionListener="#{parametroMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
-                                    <p:dataTable id="tbl" value="#{parametroMB.listaParametro}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true"
-                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                                        <p:column style="width: 220px;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                    <p:dataTable id="tbl" value="#{parametroMB.listaParametro}" filteredValue="#{parametroMB.filteredListaParametro}" var="row" 
+                                                 paginator="true" paginatorPosition="top" rows="15" rowIndexVar="rowIndex" draggableColumns="true" rowHover="true" 
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
+                                        <p:column style="width: 20%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
-                                            <h:outputText value="#{row.vnombre}" styleClass="Fleft"/>
+                                            <h:outputText value="#{row.vnombre}"/>
                                         </p:column>
-                                        <p:column sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                        <p:column style="width: 30%" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
                                             <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
-                                            <h:outputText value="#{row.vdescripcion}" styleClass="Fleft"/>
+                                            <h:outputText value="#{row.vdescripcion}"/>
                                         </p:column>
-                                        <p:column style="width: 100px; text-align: center;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                        <p:column style="text-align: center; width: 10%; " sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
                                             <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
                                             <h:outputText value="#{row.nactivo}" >
                                                 <f:converter converterId="converterSiNo"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains" priority="4">
+                                        <p:column style="text-align: center; width: 16%;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="4">
                                             <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
                                             <h:outputText value="#{row.vusuariocreacion}" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 150px;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains" priority="5">
+                                        <p:column style="text-align: center; width: 15%;" sortBy="#{row.vfechacreacion}" filterBy="#{row.vfechacreacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="5">
                                             <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
-                                            <h:outputText value="#{row.dfechacreacion}" >
-                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
-                                            </h:outputText>
+                                            <h:outputText value="#{row.vfechacreacion}" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 160px;" sortBy="#{row.dfechamodificacion}" filterBy="#{row.dfechamodificacion}" filterMatchMode="contains">
-                                            <f:facet name="header"><h:outputText value="FECHA MODIFICACION"/></f:facet>
-                                            <h:outputText value="#{row.dfechamodificacion}" >
-                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column style="text-align: center; width: 70px;">
+                                        <p:column style="text-align: center; width: 9%;">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink actionListener="#{parametroMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="Editar Parámetro">
+                                            <p:commandLink actionListener="#{parametroMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar parametro">
                                                 <h:outputText class="fa fa-edit Fs16" />
-                                                <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
+                                                <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink oncomplete="PF('confirmActDlg').show();" title="Activar Parametro" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
+                                            <p:commandLink actionListener="#{parametroMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar parametro" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
-                                                <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
+                                                <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink oncomplete="PF('confirmDesDlg').show();" title="Desactivar Parametro" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
+                                            <p:commandLink actionListener="#{parametroMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar parametro" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
-                                                <f:setPropertyActionListener value="#{row}" target="#{parametroMB.selectedParametro}" />
+                                                <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                         </p:column>
                                     </p:dataTable>
@@ -113,7 +106,7 @@
 
                                     <h:outputText value="*"/>
                                     <h:outputText value="Activo:"/>
-                                    <p:selectOneMenu value="#{parametroMB.selectedParametro.nactivo}">
+                                    <p:selectOneMenu value="#{parametroMB.selectedParametro.nactivo}" styleClass="Wid10">
                                         <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
                                     </p:selectOneMenu>
                                 </h:panelGrid>

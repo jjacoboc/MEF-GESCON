@@ -36,7 +36,6 @@ import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 import pe.gob.mef.gescon.web.bean.User;
 
-//import pe.gob.mef.gescon.web.bean.Politica;
 /**
  *
  * @author JJacobo
