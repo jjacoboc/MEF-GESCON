@@ -42,21 +42,14 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
-import pe.gob.mef.gescon.hibernate.domain.MttipoConocimiento;
 import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 import pe.gob.mef.gescon.hibernate.domain.ThistorialId;
-import pe.gob.mef.gescon.hibernate.domain.TvinculoHistId;
 import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ContenidoService;
 import pe.gob.mef.gescon.service.HistorialService;
-import pe.gob.mef.gescon.service.SeccionService;
-import pe.gob.mef.gescon.service.VinculoHistService;
-import pe.gob.mef.gescon.service.VinculoService;
 import pe.gob.mef.gescon.service.WikiService;
-import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.ArchivoConocimiento;
@@ -64,10 +57,7 @@ import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
-import pe.gob.mef.gescon.web.bean.Seccion;
 import pe.gob.mef.gescon.web.bean.User;
-import pe.gob.mef.gescon.web.bean.Vinculo;
-import pe.gob.mef.gescon.web.bean.VinculoHist;
 
 /**
  *
