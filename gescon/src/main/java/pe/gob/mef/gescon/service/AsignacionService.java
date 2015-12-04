@@ -30,5 +30,6 @@ public interface AsignacionService {
     public BigDecimal getEspecialistaByCategoria(BigDecimal ncategoriaid) throws Exception;
     public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception;
     public BigDecimal getUserCreacionByBaseLegal(BigDecimal nbaselegalid) throws Exception;
+    public BigDecimal getUserCreacionByContenido(BigDecimal idtipo ,BigDecimal nconocimientoid) throws Exception;
     public void saveOrUpdate(Asignacion asignacion) throws Exception;
 }

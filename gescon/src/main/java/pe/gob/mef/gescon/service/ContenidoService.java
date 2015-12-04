@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
-import pe.gob.mef.gescon.web.bean.Pregunta;
+
 
 /**
  *
@@ -19,5 +19,7 @@ public interface ContenidoService {
     
     BigDecimal getNextPK() throws Exception;
     public List<Conocimiento> getContenidos() throws Exception;
+    public Conocimiento getContenidoById(BigDecimal tipo,BigDecimal id) throws Exception;
+    List<Asignacion> obtenerContenidoxAsig(BigDecimal contenidoid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     void saveOrUpdate(Conocimiento conocimiento) throws Exception;
 }

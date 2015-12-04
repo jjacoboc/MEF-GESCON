@@ -44,11 +44,7 @@
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Respuesta"/>
-                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{loginMB.selectedPregunta.vrespuesta}" rows="4" cols="66" style="font-weight: normal;"
-                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." readonly="#{loginMB.getfButtonModPub() eq false}"/>
-                                        <h:outputText id="display"/>
-                                    </h:panelGrid>
+                                    <p:editor value="#{loginMB.selectedPregunta.vrespuesta}"/>
                                     
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>

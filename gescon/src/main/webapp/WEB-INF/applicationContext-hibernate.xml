@@ -39,6 +39,7 @@
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/MttipoConocimiento.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtuser.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tarchivo.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TarchivoConocimiento.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tasignacion.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tbaselegal.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tcalificacion.hbm.xml</value>
@@ -57,6 +58,7 @@
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tpass.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TpoliticaPerfil.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tpregunta.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TrespuestaHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tseccion.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TseccionHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TuserPerfil.hbm.xml</value>

@@ -76,6 +76,12 @@
     <property name="dfechapublicacion" type="timestamp">
       <column name="DFECHAPUBLICACION"/>
     </property>
+        <property name="vmsjsolicita" type="string">
+      <column length="400" name="VMSJSOLICITA"/>
+    </property>
+        <property name="vmsjrespuesta" type="string">
+      <column length="400" name="VMSJRESPUESTA"/>
+    </property>
     <set fetch="select" inverse="true" lazy="true" name="thistorials" table="THISTORIAL">
       <key>
         <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>
