@@ -8,35 +8,60 @@
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
-                <div class="ContainerIndent TexAlCenter">
+                <div class="ContainerIndent TexAlCenter">                    
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-                            <p:panel header="Registrar Contenido" styleClass="TexAlLeft">
-                                <h:panelGrid id="pgNew" columns="1" width="100%">
-                                    <h:outputText value="Categoria"/>
-                                    <h:panelGroup>
-                                        <p:commandButton value="Selecciona Categoria" actionListener="#{contenidoMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
-                                        <p:spacer width="15"/>
-                                        <h:outputText value="#{contenidoMB.selectedCategoria.vnombre}" styleClass="Fs14"/>
-                                    </h:panelGroup>
+                            <p:panel header="Moderar Contenido" styleClass="TexAlLeft">
+                                <h:panelGrid id="pgModContenido"  columns="2" width="500px">                           
+
+                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{loginMB.getfMsjUsu1()}"/>
+                                    <p:inputTextarea value="#{loginMB.selectedContenido.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="#{loginMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfMsjUsu1()}"/>
+
+                                    <p:spacer width="10" rendered="#{loginMB.getfMsjUsu1()}"/>
+                                    <p:spacer width="10" rendered="#{loginMB.getfMsjUsu1()}"/>
+
+                                    <h:outputLabel value="Mensaje del Moderador" rendered="#{loginMB.getfSInfMod()}"/>
+                                    <p:inputTextarea  value="#{loginMB.selectedContenido.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
+                                                      readonly="#{loginMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfSInfMod()}"/>
+
+                                    <p:spacer width="10" rendered="#{loginMB.getfSInfMod()}"/>
+                                    <p:spacer width="10" rendered="#{loginMB.getfSInfMod()}"/>
+
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGrid  columns="3">
+                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{loginMB.loadTree}" oncomplete="PF('catContenidoDialog').show();" update=":catContenidoDialogForm:pgCatContenido" />    
+                                        <p:spacer width="10"/>
+                                        <h:outputText id="catedit" value="#{loginMB.selectedContenido.ncategoriaid}" >
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+                                    </h:panelGrid>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
 
                                     <h:outputLabel value="Titulo"/>
-                                    <p:inputText size="50" value="#{contenidoMB.titulo}" style="text-transform: uppercase;" maxlength="25" /> 
+                                    <p:inputText size="50" value="#{loginMB.selectedContenido.vtitulo}" style="text-transform: uppercase;" maxlength="25" /> 
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
 
                                     <h:outputLabel value="Descripcion"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{contenidoMB.descripcion}" rows="4" cols="57" style="font-weight: normal;"
+                                        <p:inputTextarea value="#{loginMB.selectedContenido.vdescripcion}" rows="4" cols="57" style="font-weight: normal;"
                                                          counter="displaydet" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                         <h:outputText id="displaydet"/>
                                     </h:panelGrid>
 
-                                    <p:spacer/>
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
 
                                     <h:outputLabel value="Contenido"/>
-                                    <p:editor value="#{contenidoMB.contenido}"/>
+                                    <p:editor value="#{loginMB.selectedContenido.vcontenido}"/>
+                                    
                                 </h:panelGrid>
-
+                                
                                 <p:spacer/>
 
                                 <p:fieldset>
@@ -44,26 +69,15 @@
                                         <p:commandButton style=" float:left;"  value="Agregar Archivos" styleClass="ui-link Fs14" oncomplete="PF('tpoconDialog').show();"/>
                                         <p:tabView>
                                             <p:tab title="Arhivos Relacionados">
-                                                <p:dataTable id="tbl" value="#{contenidoMB.listaArchivos}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
-                                                             paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
+                                                <p:dataTable id="tbl" value="#{wikiMB.listaWiki}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
                                                     <p:column style="text-align: center; width: 70px;" priority="2">
                                                         <f:facet name="header"><h:outputText value="Nombre del Archivo"/></f:facet>
-                                                        <h:outputText value="#{row.vnombre}"/>
+                                                        <h:outputText value="#{row.vtitulo}"/>
                                                     </p:column>
                                                     <p:column style="text-align: center; width: 70px;" priority="4">
-
                                                         <f:facet name="header"><h:outputText value="Tipo de Archivo"/></f:facet>
-                                                        <p:lightBox>
-                                                            <h:outputLink value="#">
-                                                                <h:panelGrid columns="2">
-                                                                    <p:graphicImage library="images" name="pdf.png"/>
-                                                                    <h:outputText id="fileName" value="#{row.vnombre}"/>
-                                                                </h:panelGrid>
-                                                            </h:outputLink>
-                                                            <f:facet name="inline">
-                                                                <p:media player="pdf" cache="false" value="#{contenidoMB.content}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}"/>
-                                                            </f:facet>
-                                                        </p:lightBox>
+                                                        <h:outputText value="#{row.nactivo}"/>
                                                     </p:column>
                                                 </p:dataTable>
                                             </p:tab>
@@ -184,18 +198,72 @@
                                 </p:fieldset>
                                 <p:spacer/>
 
-
-                                <h:panelGrid columns="2" width="100%">
-                                    <h:panelGroup>
-                                        <p:commandButton value="Registrar" ajax="false" action="/pages/Contenido/contenido.xhtml" actionListener="#{contenidoMB.Save}"/>
-                                        <p:spacer width="10"/>
-                                        <p:commandButton value="Cancelar" ajax="false" action="/pages/Contenido/contenido.xhtml"/>
-                                    </h:panelGroup>
-                                    <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
+                                
+                                <br></br>
+                                <h:panelGrid columns="5" style="padding-left: 55px">
+                                    <p:commandButton value="Actualizar" rendered="#{loginMB.getfButtonMod()}" actionListener="#{loginMB.saveContenidoEdit}" update=":f:pgModContenido" />
+                                    <p:commandButton value="Publicar" rendered="#{loginMB.getfButtonMod()}" ajax="false" action="#{loginMB.PublicarContenido}"/>
+                                    <p:commandButton value="Solicitar Informacion Adicional" rendered="#{loginMB.getfButtonMod()}" actionListener="#{loginMB.toSi}" update=":siModContenidoDialogForm:pgSiModContenido" oncomplete="PF('siModContenidoDialog').show();"  />
+                                    <p:commandButton value="Rechazar" rendered="#{loginMB.getfButtonMod()}" ajax="false"  action="#{loginMB.RechazarContenido}" />
+                                    <p:commandButton value="Regresar" rendered="#{loginMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
+                                    <p:commandButton value="Responder" rendered="#{loginMB.getfButtonMod() eq false}" actionListener="#{loginMB.toSi}" update=":respModContenidoDialogForm:pgRespModContenido" oncomplete="PF('respModContenidoDialog').show();"  />
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
 
+                        <p:dialog id="siModContenidoDlg" header="Solicitar Informacion Adicional - Moderador" widgetVar="siModContenidoDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="siModContenidoDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgSiModContenido"  columns="2">
+                                    <h:outputLabel value="Mensaje:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{loginMB.selectedContenido.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="#{loginMB.getfSInfMod()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+                                    <h:panelGrid style="float: right" columns="2" width="25%">
+                                        <p:commandButton value="Enviar" ajax="false" action="#{loginMB.sendContenidoSolicita}"/>
+                                        <p:commandButton value="Cancelar" actionListener="#{loginMB.toCancelRespContenidoMod}" />
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="respModContenidoDlg" header="Responder al Moderador" widgetVar="respModContenidoDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="respModContenidoDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgRespModContenido"  columns="2">
+                                    <h:outputLabel value="Mensaje:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{loginMB.selectedContenido.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="#{loginMB.getfMsjUsu1()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+                                    <h:panelGrid style="float: right" columns="2" width="25%">
+                                        <p:commandButton value="Enviar" ajax="false"  action="#{loginMB.sendContenidoRespuesta}"/>
+                                        <p:commandButton value="Cancelar" actionListener="#{loginMB.toCancelRespContenidoMod}" />
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="catContenidoDlg" header="Seleccionar Categoría" widgetVar="catContenidoDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="catContenidoDialogForm">
+                                <h:panelGrid id="pgCatContenido" columns="1">
+                                    <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
+                                    <p:tree id="cats" value="#{loginMB.tree}" var="node" animate="true" cache="true"  
+                                            selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
+                                        <p:ajax event="select" listener="#{loginMB.onNodeSelect}" oncomplete="PF('catContenidoDialog').hide();" update=":f:catedit" />
+                                        <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
+                                            <h:outputText value="#{node.vnombre}"/>
+                                        </p:treeNode>
+                                    </p:tree>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                        
                         <p:dialog id="tpoconDlg" header="Agregar Contenidos" widgetVar="tpoconDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="tpoconDialogForm">
                                 <p:messages id="msgs" showSummary="true" showDetail="true" />
@@ -212,29 +280,24 @@
                                         <f:selectItem itemLabel="Otros" itemValue="6" />
                                     </p:selectOneRadio>
                                     <p:spacer/>
-                                    <p:fileUpload value="#{contenidoMB.uploadFile}" skinSimple="true" update=":f:pgNewVinc1" fileUploadListener="#{contenidoMB.handleUploadFile}" 
-                                                  multiple="true" cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
-                                    
+                                    <p:fileUpload value="#{contenidoMB.uploadFile}" skinSimple="true" update=":tpoconDialogForm:pgTpoCon" fileUploadListener="#{contenidoMB.handleUploadFile}" 
+                                                      cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
+                                    <p:lightBox rendered="#{contenidoMB.uploadFile ne null}">
+                                        <h:outputLink value="#">
+                                            <h:panelGrid columns="2">
+                                                <p:graphicImage library="images" name="pdf.png"/>
+                                                <h:outputText id="fileName" value="#{contenidoMB.uploadFile.fileName}"/>
+                                            </h:panelGrid>
+                                        </h:outputLink>
+                                        <f:facet name="inline">
+                                            <p:media player="pdf" cache="false" value="#{contenidoMB.content}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}"/>
+                                        </f:facet>
+                                    </p:lightBox>
                                     <p:commandButton  value="Cancelar" actionListener="#{contenidoMB.toCancel}" update=":f:growl"/>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-
-                        <p:dialog id="catDlg" header="Seleccionar Categorias" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
-                            <h:form id="catDialogForm">
-                                <h:panelGrid id="pgCat" columns="1">
-                                    <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
-                                    <p:tree id="cats" value="#{contenidoMB.tree}" var="node" animate="true" cache="true"  
-                                            selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                        <p:ajax event="select" listener="#{contenidoMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pgNew" />
-                                        <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
-                                            <h:outputText value="#{node.vnombre}"/>
-                                        </p:treeNode>
-                                    </p:tree>
-                                </h:panelGrid>
-                            </h:form>
-                        </p:dialog>
-
+                        
                         <p:dialog id="pickDlg" header="#{msgs.wk_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="pickDialogForm">
                                 <h:panelGrid id="pgPick" columns="1">
@@ -266,10 +329,11 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-
                     </f:view>
                 </div>
             </div>
         </div>
+
     </ui:define>
+
 </ui:composition>

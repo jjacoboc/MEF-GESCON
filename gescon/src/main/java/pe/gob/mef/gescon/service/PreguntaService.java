@@ -24,5 +24,6 @@ public interface PreguntaService {
     List<Pregunta> obtenerPreguntas(BigDecimal preguntaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     List<Asignacion> obtenerPreguntaxAsig(BigDecimal preguntaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     BigDecimal obtenerPerfilxUsuario(BigDecimal usuarioid) throws Exception;
+    String getNomEntidadbyIdEntidad(BigDecimal entidadid) throws Exception;
     
 }

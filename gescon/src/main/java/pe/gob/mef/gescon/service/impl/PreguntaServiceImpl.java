@@ -149,4 +149,21 @@ public class PreguntaServiceImpl implements PreguntaService {
         }
         return perfil;
     }
+    
+    @Override
+    public String getNomEntidadbyIdEntidad(final BigDecimal entidadid) throws Exception {
+        String nombre = "";
+        try {
+            PreguntaDao preguntaDao = (PreguntaDao) ServiceFinder.findBean("PreguntaDao");
+            List<HashMap> lista = preguntaDao.getNomEntidadbyIdEntidad(entidadid);
+            for (HashMap bean : lista) {
+                nombre = ((String) bean.get("NOMBRE"));
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return nombre;
+
+    }
 }

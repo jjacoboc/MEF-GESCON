@@ -188,6 +188,12 @@ public class AsignacionServiceImpl implements AsignacionService {
         AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
         return asignacionDao.getUserCreacionByBaseLegal(nbaselegalid);
     }
+    
+    @Override
+    public BigDecimal getUserCreacionByContenido(BigDecimal idtipo, BigDecimal nconocimientoid) throws Exception {
+        AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
+        return asignacionDao.getUserCreacionByContenido(idtipo,nconocimientoid);
+    }
 
     @Override
     public void saveOrUpdate(Asignacion asignacion) throws Exception {

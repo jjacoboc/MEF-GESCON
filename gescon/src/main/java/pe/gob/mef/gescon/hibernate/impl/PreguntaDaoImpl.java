@@ -189,6 +189,31 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
         return (List<HashMap>) object;
     }
     
+    @Override
+    public List<HashMap> getNomEntidadbyIdEntidad(final BigDecimal nentidadid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        Object object = null;
+        try {
+            sql.append("select vnombre AS NOMBRE ");
+            sql.append(" from MTENTIDAD ");
+            sql.append(" WHERE NCODIGOENTIDAD = :ENTIDAD ");
+
+            object = getHibernateTemplate().execute(
+                    new HibernateCallback() {
+                        @Override
+                        public Object doInHibernate(Session session) throws HibernateException {
+                            Query query = session.createSQLQuery(sql.toString())
+                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                            .setParameter("ENTIDAD", nentidadid);
+                            return query.list();
+                        }
+                    });
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return (List<HashMap>) object;
+    }
     
     
 }

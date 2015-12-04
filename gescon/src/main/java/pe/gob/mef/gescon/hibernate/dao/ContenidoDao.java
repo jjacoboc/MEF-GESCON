@@ -18,6 +18,8 @@ public interface ContenidoDao {
     
     BigDecimal getNextPK() throws Exception;
     public List<Tconocimiento> getContenidos() throws Exception;
+    Tconocimiento getTcontenidoById(BigDecimal tipo,BigDecimal id) throws Exception;
+    List<HashMap> obtenerContenidoxAsig(BigDecimal contenidoid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     void saveOrUpdate(Tconocimiento tconocimiento) throws Exception;
 
 }

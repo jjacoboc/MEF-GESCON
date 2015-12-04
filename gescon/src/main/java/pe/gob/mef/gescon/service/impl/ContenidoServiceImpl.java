@@ -49,6 +49,39 @@ public class ContenidoServiceImpl implements ContenidoService {
         }
         return conocimientos;
     }
+    
+    @Override
+    public Conocimiento getContenidoById(BigDecimal tipo,BigDecimal id) throws Exception {
+        ContenidoDao contenidoDao = (ContenidoDao) ServiceFinder.findBean("ContenidoDao");
+        Tconocimiento tconocimiento = contenidoDao.getTcontenidoById(tipo,id);
+        Conocimiento conocimiento = new Conocimiento();
+        BeanUtils.copyProperties(conocimiento, tconocimiento);
+        return conocimiento;
+    }
+    
+    @Override
+    public List<Asignacion> obtenerContenidoxAsig(final BigDecimal contenidoid, final BigDecimal usuarioid,BigDecimal tpoconocimientoid) throws Exception {
+        List<Asignacion> asignacions = new ArrayList<Asignacion>();
+        ContenidoDao contenidoDao = (ContenidoDao) ServiceFinder.findBean("ContenidoDao");
+        List<HashMap> lista = contenidoDao.obtenerContenidoxAsig(contenidoid,usuarioid,tpoconocimientoid);
+        for (HashMap bean : lista) {
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid((BigDecimal) bean.get("IDASIGNACION"));
+            asignacion.setNtipoconocimientoid((BigDecimal) bean.get("TPOCONOCIMIENTO"));
+            asignacion.setNconocimientoid((BigDecimal) bean.get("IDPREGUNTA"));
+            asignacion.setNusuarioid((BigDecimal) bean.get("IDUSUARIO"));
+            asignacion.setNestadoid((BigDecimal) bean.get("ESTADO"));
+            asignacion.setVusuariocreacion((String) bean.get("USUCREA"));
+            asignacion.setVusuariomodificacion((String) bean.get("USUMOD"));
+            asignacion.setDfechacreacion((Date) bean.get("FECHACREA"));
+            asignacion.setDfechamodificacion((Date) bean.get("FECHAMOD"));     
+            asignacion.setDfechaasignacion((Date) bean.get("FECHAASIG"));  
+            asignacion.setDfechaatencion((Date) bean.get("FECHAATEN"));  
+            asignacion.setDfecharecepcion((Date) bean.get("FECHARECEP"));  
+            asignacions.add(asignacion);
+        }
+        return asignacions;
+    }
 
     @Override
     public void saveOrUpdate(Conocimiento conocimiento) throws Exception {

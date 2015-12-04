@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -29,11 +30,13 @@ import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.PreguntaService;
+import pe.gob.mef.gescon.service.RespuestaHistService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Pregunta;
+import pe.gob.mef.gescon.web.bean.RespuestaHist;
 import pe.gob.mef.gescon.web.bean.User;
 
 //import pe.gob.mef.gescon.web.bean.Politica;
@@ -42,13 +45,14 @@ import pe.gob.mef.gescon.web.bean.User;
  * @author JJacobo
  */
 @ManagedBean
-@ViewScoped
+@ApplicationScoped
 public class PreguntaMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(PreguntaMB.class);
     private List<Pregunta> listaPregunta;
     private List<Pregunta> flistaPregunta;
+    private List<RespuestaHist> listaRespuesta;
     private List<Asignacion> listaAsignacion;
     private Pregunta selectedPregunta;
     private Asignacion selectedAsignacion;
@@ -109,6 +113,20 @@ public class PreguntaMB implements Serializable {
      */
     public void setFlistaPregunta(List<Pregunta> flistaPregunta) {
         this.flistaPregunta = flistaPregunta;
+    }
+
+    /**
+     * @return the listaRespuesta
+     */
+    public List<RespuestaHist> getListaRespuesta() {
+        return listaRespuesta;
+    }
+
+    /**
+     * @param listaRespuesta the listaRespuesta to set
+     */
+    public void setListaRespuesta(List<RespuestaHist> listaRespuesta) {
+        this.listaRespuesta = listaRespuesta;
     }
 
     /**
@@ -580,12 +598,14 @@ public class PreguntaMB implements Serializable {
 
     public void toEnt(ActionEvent event) {
         try {
-            this.entidad = "MEF";
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            this.setEntidad(service.getNomEntidadbyIdEntidad(this.getEntidadId()));
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
     }
+
 
     public void save(ActionEvent event) throws Exception {
         try {
@@ -596,7 +616,7 @@ public class PreguntaMB implements Serializable {
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
-            
+
             Pregunta pregunta = new Pregunta();
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             idpregunta = service.getNextPK();
@@ -1314,6 +1334,21 @@ public class PreguntaMB implements Serializable {
             e.printStackTrace();
         }
 
+    }
+
+    public String toHistorial() {
+        String pagina = null;
+        try {
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedPregunta(this.getListaPregunta().get(index));
+            RespuestaHistService serviceresp = (RespuestaHistService) ServiceFinder.findBean("RespuestaHistService");
+            this.setListaRespuesta(serviceresp.getHistorialByPregunta(this.getSelectedPregunta().getNpreguntaid()));
+            pagina="/pages/respuestaHistorial?faces-redirect=true";
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return pagina;
     }
 
 }

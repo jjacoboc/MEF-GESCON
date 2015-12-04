@@ -36,6 +36,8 @@ public class Tconocimiento implements java.io.Serializable {
     private Date dfechamodificacion;
     private BigDecimal ndestacado;
     private Date dfechapublicacion;
+    private String vmsjsolicita;
+    private String vmsjrespuesta;
     private Set thistorials = new HashSet(0);
     private Set timplementacions = new HashSet(0);
 
@@ -46,7 +48,7 @@ public class Tconocimiento implements java.io.Serializable {
         this.nconocimientoid = nconocimientoid;
     }
 
-    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vejecutora, String vruta, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Date dfechapublicacion, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
+    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vejecutora, String vruta, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Date dfechapublicacion, String vmsjsolicita, String vmsjrespuesta, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
         this.nconocimientoid = nconocimientoid;
         this.ncategoriaid = ncategoriaid;
         this.nsituacionid = nsituacionid;
@@ -70,6 +72,8 @@ public class Tconocimiento implements java.io.Serializable {
         this.dfechamodificacion = dfechamodificacion;
         this.ndestacado = ndestacado;
         this.dfechapublicacion = dfechapublicacion;
+        this.vmsjsolicita = vmsjsolicita;
+        this.vmsjrespuesta = vmsjrespuesta;
         this.thistorials = thistorials;
         this.timplementacions = timplementacions;
     }
@@ -264,6 +268,34 @@ public class Tconocimiento implements java.io.Serializable {
 
     public void setDfechapublicacion(Date dfechapublicacion) {
         this.dfechapublicacion = dfechapublicacion;
+    }
+
+    /**
+     * @return the vmsjsolicita
+     */
+    public String getVmsjsolicita() {
+        return vmsjsolicita;
+    }
+
+    /**
+     * @param vmsjsolicita the vmsjsolicita to set
+     */
+    public void setVmsjsolicita(String vmsjsolicita) {
+        this.vmsjsolicita = vmsjsolicita;
+    }
+
+    /**
+     * @return the vmsjrespuesta
+     */
+    public String getVmsjrespuesta() {
+        return vmsjrespuesta;
+    }
+
+    /**
+     * @param vmsjrespuesta the vmsjrespuesta to set
+     */
+    public void setVmsjrespuesta(String vmsjrespuesta) {
+        this.vmsjrespuesta = vmsjrespuesta;
     }
 
     public Set getThistorials() {

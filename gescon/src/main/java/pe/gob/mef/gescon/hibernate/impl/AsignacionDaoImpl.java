@@ -150,10 +150,10 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         sql.append("SELECT a.nconocimientoid AS ID, '' AS NUMERO, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
         sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
         sql.append("       a.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, d.vnombre AS TIPOCONOCIMIENTO, ");
-        sql.append("       a.nactivo AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
         sql.append("FROM TCONOCIMIENTO a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
-        sql.append("INNER JOIN MTSITUACION c ON a.nactivo = c.nsituacionid ");
+        sql.append("INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
         sql.append("INNER JOIN MTTIPO_CONOCIMIENTO d ON a.ntpoconocimientoid = d.ntpoconocimientoid ");
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.nconocimientoid AND t.ntipoconocimientoid = a.ntpoconocimientoid ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
@@ -319,6 +319,23 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         final StringBuilder sql = new StringBuilder();
         sql.append("SELECT NUSUARIOID FROM MTUSER WHERE VLOGIN= (SELECT VUSUARIOCREACION FROM TBASELEGAL  ");
         sql.append("WHERE nbaselegalid = ").append(nbaselegalid).append(" )");
+
+        return (BigDecimal) getHibernateTemplate().execute(
+                new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws HibernateException {
+                        Query query = session.createSQLQuery(sql.toString());
+                        return query.uniqueResult();
+                    }
+                });
+    }
+    
+    @Override
+    public BigDecimal getUserCreacionByContenido(BigDecimal idtipo,BigDecimal nconocimientoid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        sql.append("SELECT NUSUARIOID FROM MTUSER WHERE VLOGIN= (SELECT VUSUARIOCREACION FROM TCONOCIMIENTO  ");
+        sql.append("WHERE NCONOCIMIENTOID = ").append(nconocimientoid).append("  AND ");
+        sql.append("NTPOCONOCIMIENTOID = ").append(idtipo).append(" )");
 
         return (BigDecimal) getHibernateTemplate().execute(
                 new HibernateCallback() {
