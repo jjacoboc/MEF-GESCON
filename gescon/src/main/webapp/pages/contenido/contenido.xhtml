@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
+                            <p:panel header="Administración de Contenidos" >
+                                <h:panelGrid columns="1">
+                                    <p:commandButton  value="Nuevo" ajax="false" action="#{contenidoMB.toSave}"  styleClass="Fleft" icon="fa fa-plus white"/>
+                                    <p:dataTable id="tbl" value="#{contenidoMB.listaContenido}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <p:column sortBy="#{row.vtitulo}" filterBy="#{row.vtitulo}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
+                                            <f:facet name="header"><h:outputText value="TITULO" style="font-size: 11px;"/></f:facet>
+                                            <h:outputText value="#{row.vtitulo}" />
+                                        </p:column>
+                                        <p:column style="text-align: center;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
+                                            <h:outputText value="#{row.vusuariocreacion}" />
+                                        </p:column>
+                                        <p:column style="text-align: center;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains">
+                                            <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                            <h:outputText value="#{row.dfechacreacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 50px;">
+
+                                            <p:commandLink ajax="false" action="#{contenidoMB.toView}" styleClass="ui-link" title="Ver Wiki">
+                                                <h:outputText class="fa fa-search Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                            <p:commandLink ajax="false" action="#{contenidoMB.toEdit}" styleClass="ui-link" title="Actualizar Contenido"
+                                                           rendered="#{loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
+                                                <h:outputText class="fa fa-edit Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+                    </f:view>    
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
+
+
