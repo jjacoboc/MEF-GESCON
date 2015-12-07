@@ -82,6 +82,45 @@
                                     <h:outputLabel value="Dato adicional:"/>
                                     <p:inputText id="tema" size="99" value="#{loginMB.selectedPregunta.vdatoadicional}" maxlength="80" readonly="#{loginMB.getfButtonEspe() eq false}"/>
                                 </h:panelGrid>
+                                
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                
+                                <p:fieldset>
+                                    <h:panelGrid id="pgNewVinc" columns="1" cellpadding="0" cellspacing="0" width="100%">
+                                        <p:commandButton value="#{msgs.wk_btn_vinculo}" actionListener="#{loginMB.toAddLink}" rendered="#{loginMB.getfButtonEspe()}" update=":pickDialogForm:pgPick" oncomplete="PF('pickDialog').show();" styleClass="ui-link Fs14" />
+                                        <p:tabView id="tabview">
+                                            <p:tab title="Respuestas">
+                                                <p:dataTable value="#{loginMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna respuesta vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Otros Conocimientos">
+                                                <p:dataTable value="#{loginMB.listaTargetVinculosConocimiento}" var="p" scrollRows="5" scrollable="true" 
+                                                             emptyMessage="Ningun Conocimiento vinculado." >
+                                                    <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                                        <h:outputText value="#{p.sumilla}" />
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.tipoConocimiento}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                        </p:tabView>
+                                    </h:panelGrid>
+                                </p:fieldset>
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
                                     <p:commandButton value="Actualizar" rendered="#{loginMB.getfButtonEspe()}" actionListener="#{loginMB.savePregEdit}" update=":f:pgModPreg" />
@@ -143,6 +182,38 @@
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>
                                     </p:tree>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                        
+                        <p:dialog id="pickDlg" header="#{msgs.wk_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="pickDialogForm">
+                                <h:panelGrid id="pgPick" columns="1">
+                                    <h:outputText value="Tipo de Conocimiento:"/>
+                                    <p:selectOneMenu value="#{loginMB.idTipoConocimiento}" styleClass="Wid20">
+                                        <p:ajax event="change" listener="#{loginMB.onListTipoConocimientoChange}" update=":pickDialogForm:pgPick"/>
+                                        <f:selectItem itemValue="" itemLabel="Seleccione" />
+                                        <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
+                                    </p:selectOneMenu>
+                                    <p:pickList value="#{loginMB.pickListPregunta}" var="p" itemValue="#{p}" converter="converterPickListConocimiento" 
+                                                itemLabel="#{p.codigo} #{p.nombre} #{p.categoria} #{p.estado}" showSourceFilter="true" 
+                                                showTargetFilter="true" filterMatchMode="contains" styleClass="wk-picklist-list">
+                                        <p:ajax event="transfer" listener="#{loginMB.onTransferPreguntas}" update=":f:tabview"/>
+                                        <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
+                                        <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
+
+                                        <p:column style="width: 60%;">
+                                            <h:outputText value="#{p.codigo}" rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value=" - " rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value="#{p.nombre}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center;">
+                                            <h:outputText value="#{p.categoria}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center;">
+                                            <h:outputText value="#{p.estado}" />
+                                        </p:column>
+                                    </p:pickList>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>

@@ -21,6 +21,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
@@ -650,15 +652,14 @@ public class ContenidoMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public StreamedContent getPdf() throws IOException, Exception {
         FacesContext context = FacesContext.getCurrentInstance();
 
         if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
             // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
             return new DefaultStreamedContent();
-        }
-        else {
+        } else {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             String fileName = JSFUtils.getRequestParameter("fileName");
             FileInputStream fis = new FileInputStream(new File(fileName));
@@ -736,13 +737,48 @@ public class ContenidoMB implements Serializable {
             Tconocimiento tconocimiento = new Tconocimiento();
             BeanUtils.copyProperties(tconocimiento, conocimiento);
 
-            //this.getListaTargetVinculos().clear();
-            //this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
-            //this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
-            //this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
-            //this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
-            //this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
-            //this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            listaTargetVinculos = new ArrayList<Consulta>();
+
+            if (this.getListaTargetVinculosBL() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            }
+            if (this.getListaTargetVinculosBP() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            }
+            if (this.getListaTargetVinculosCT() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            }
+            if (this.getListaTargetVinculosOM() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            }
+            if (this.getListaTargetVinculosPR() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            }
+            if (this.getListaTargetVinculosWK() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            }
+
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+                service.delete(conocimiento.getNconocimientoid());
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    Vinculo vinculo = new Vinculo();
+                    vinculo.setNvinculoid(vinculoService.getNextPK());
+                    vinculo.setNconocimientoid(conocimiento.getNconocimientoid());
+                    vinculo.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculo.setDfechacreacion(new Date());
+                    vinculo.setVusuariocreacion(user.getVlogin());
+                    vinculoService.saveOrUpdate(vinculo);
+
+                }
+            }
             //if (CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
             //    VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
             //    VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
@@ -786,8 +822,6 @@ public class ContenidoMB implements Serializable {
                 saveFile(archivoconocimiento);
 
             }
-
-           
 
             Asignacion asignacion = new Asignacion();
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -841,7 +875,7 @@ public class ContenidoMB implements Serializable {
                 if (id != null) {
                     HashMap filters = new HashMap();
                     filters.put("ntipoconocimientoid", id);
-                    WikiService service = (WikiService) ServiceFinder.findBean("WikiService");
+                    ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
                     if (this.getSelectedContenido() != null) {
                         if (id.equals(Constante.BASELEGAL)) {
                             this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
@@ -867,9 +901,6 @@ public class ContenidoMB implements Serializable {
                             ids.add(c.getIdconocimiento().toString());
                         }
                         String filter = StringUtils.join(ids, ',');
-                        if (id.equals(Constante.WIKI)) {
-                            filter = filter.concat(",").concat(this.getSelectedContenido().getNconocimientoid().toString());
-                        }
                         filters.put("nconocimientovinc", filter);
                     } else {
                         this.setListaTargetVinculos(new ArrayList<Consulta>());

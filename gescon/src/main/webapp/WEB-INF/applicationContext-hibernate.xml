@@ -67,6 +67,7 @@
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoImplementacion.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoImplementacionHist.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoPregunta.hbm.xml</value>
             </list>
         </property>
         <property name="hibernateProperties">

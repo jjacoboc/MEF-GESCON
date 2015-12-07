@@ -21,5 +21,8 @@ public interface ContenidoDao {
     Tconocimiento getTcontenidoById(BigDecimal tipo,BigDecimal id) throws Exception;
     List<HashMap> obtenerContenidoxAsig(BigDecimal contenidoid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     void saveOrUpdate(Tconocimiento tconocimiento) throws Exception;
+    List<HashMap> getConcimientosVinculados(HashMap filters);
+    List<HashMap> getConcimientosDisponibles(HashMap filters);
+    void delete(BigDecimal conocimientoid) throws Exception;
 
 }

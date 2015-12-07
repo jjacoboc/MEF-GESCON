@@ -12,11 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.hibernate.dao.PreguntaDao;
 import pe.gob.mef.gescon.hibernate.domain.Tpregunta;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
+import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 
 /**
@@ -165,5 +167,72 @@ public class PreguntaServiceImpl implements PreguntaService {
         }
         return nombre;
 
+    }
+    
+    @Override
+    public List<Consulta> getConcimientosVinculados(HashMap filters) {
+        List<Consulta> lista = new ArrayList<Consulta>();
+        try {
+            PreguntaDao preguntaDao = (PreguntaDao) ServiceFinder.findBean("PreguntaDao");
+            List<HashMap> consulta = preguntaDao.getConcimientosVinculados(filters);
+            if(!CollectionUtils.isEmpty(consulta)) {
+                for(HashMap map : consulta) {
+                    Consulta c = new Consulta();
+                    c.setId((BigDecimal) map.get("ID"));
+                    c.setIdconocimiento((BigDecimal) map.get("IDCONOCIMIENTO"));
+                    c.setCodigo((String) map.get("NUMERO"));
+                    c.setNombre((String) map.get("NOMBRE"));
+                    c.setSumilla((String) map.get("SUMILLA"));
+                    c.setFechaPublicacion((Date) map.get("FECHA"));
+                    c.setIdCategoria((BigDecimal) map.get("IDCATEGORIA"));
+                    c.setCategoria((String) map.get("CATEGORIA"));
+                    c.setIdTipoConocimiento((BigDecimal) map.get("IDTIPOCONOCIMIENTO"));
+                    c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
+                    c.setIdEstado((BigDecimal) map.get("IDESTADO"));
+                    c.setEstado((String) map.get("ESTADO"));
+                    lista.add(c);
+                }
+            }
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return lista;
+    }
+    
+    @Override
+    public List<Consulta> getConcimientosDisponibles(HashMap filters) {
+        List<Consulta> lista = new ArrayList<Consulta>();
+        try {
+            PreguntaDao preguntaDao = (PreguntaDao) ServiceFinder.findBean("PreguntaDao");
+            List<HashMap> consulta = preguntaDao.getConcimientosDisponibles(filters);
+            if(!CollectionUtils.isEmpty(consulta)) {
+                for(HashMap map : consulta) {
+                    Consulta c = new Consulta();
+                    c.setIdconocimiento((BigDecimal) map.get("ID"));
+                    c.setCodigo((String) map.get("NUMERO"));
+                    c.setNombre((String) map.get("NOMBRE"));
+                    c.setSumilla((String) map.get("SUMILLA"));
+                    c.setFechaPublicacion((Date) map.get("FECHA"));
+                    c.setIdCategoria((BigDecimal) map.get("IDCATEGORIA"));
+                    c.setCategoria((String) map.get("CATEGORIA"));
+                    c.setIdTipoConocimiento((BigDecimal) map.get("IDTIPOCONOCIMIENTO"));
+                    c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
+                    c.setIdEstado((BigDecimal) map.get("IDESTADO"));
+                    c.setEstado((String) map.get("ESTADO"));
+                    lista.add(c);
+                }
+            }
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return lista;
+    }
+    
+    @Override
+    public void delete(BigDecimal preguntaid) throws Exception {
+        PreguntaDao preguntaDao = (PreguntaDao) ServiceFinder.findBean("PreguntaDao");
+        preguntaDao.delete(preguntaid);
     }
 }

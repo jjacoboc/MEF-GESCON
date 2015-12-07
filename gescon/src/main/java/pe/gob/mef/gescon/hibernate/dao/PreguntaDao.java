@@ -25,4 +25,7 @@ public interface PreguntaDao {
     List<HashMap> obtenerPreguntaxAsig(BigDecimal preguntaid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     List<HashMap> obtenerPerfilxUsuario(BigDecimal usuarioid) throws Exception;
     List<HashMap> getNomEntidadbyIdEntidad(BigDecimal entidadid) throws Exception;
+    List<HashMap> getConcimientosVinculados(HashMap filters);
+    List<HashMap> getConcimientosDisponibles(HashMap filters);
+    void delete(BigDecimal preguntaid) throws Exception;
 }

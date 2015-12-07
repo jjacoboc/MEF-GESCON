@@ -69,15 +69,28 @@
                                         <p:commandButton style=" float:left;"  value="Agregar Archivos" styleClass="ui-link Fs14" oncomplete="PF('tpoconDialog').show();"/>
                                         <p:tabView>
                                             <p:tab title="Arhivos Relacionados">
-                                                <p:dataTable id="tbl" value="#{wikiMB.listaWiki}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
-                                                             rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
+                                                <p:dataTable id="tbl" value="#{loginMB.listaArchivos}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                                             paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
                                                     <p:column style="text-align: center; width: 70px;" priority="2">
                                                         <f:facet name="header"><h:outputText value="Nombre del Archivo"/></f:facet>
-                                                        <h:outputText value="#{row.vtitulo}"/>
+                                                        <h:outputText value="#{row.vnombre}"/>
                                                     </p:column>
                                                     <p:column style="text-align: center; width: 70px;" priority="4">
+
                                                         <f:facet name="header"><h:outputText value="Tipo de Archivo"/></f:facet>
-                                                        <h:outputText value="#{row.nactivo}"/>
+                                                        <p:lightBox>
+                                                            <h:outputLink value="#">
+                                                                <h:panelGrid columns="2">
+                                                                    <p:graphicImage library="images" name="pdf.png"/>
+                                                                    <h:outputText id="fileName" value="#{row.vnombre}"/>
+                                                                </h:panelGrid>
+                                                            </h:outputLink>
+                                                            <f:facet name="inline">
+                                                                <p:media player="pdf" cache="false" value="#{loginMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                                                    <f:param name="fileName" value="#{row.vruta}"/>
+                                                                </p:media>
+                                                            </f:facet>
+                                                        </p:lightBox>
                                                     </p:column>
                                                 </p:dataTable>
                                             </p:tab>
@@ -92,7 +105,7 @@
                                         <p:commandButton value="#{msgs.wk_btn_vinculo}" actionListener="#{contenidoMB.toAddLink}" update=":pickDialogForm:pgPick" oncomplete="PF('pickDialog').show();" styleClass="ui-link Fs14"/>
                                         <p:tabView id="tabview">
                                             <p:tab title="Bases Legales">
-                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
+                                                <p:dataTable value="#{loginMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
                                                              emptyMessage="Ninguna base legal vinculada." >
                                                     <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
                                                         <h:outputText value="#{p.codigo}"/>
@@ -109,7 +122,7 @@
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Contenidos">
-                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
+                                                <p:dataTable value="#{loginMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ningún contenido vinculado." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
                                                         <h:outputText value="#{p.nombre}"/>
@@ -126,7 +139,7 @@
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Buenas Prácticas">
-                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
+                                                <p:dataTable value="#{loginMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna buena práctica vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
                                                         <h:outputText value="#{p.nombre}"/>
@@ -143,7 +156,7 @@
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Oportunidades de Mejora">
-                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
+                                                <p:dataTable value="#{loginMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna oportunidad de mejora vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
                                                         <h:outputText value="#{p.nombre}"/>
@@ -160,7 +173,7 @@
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Wikis">
-                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
+                                                <p:dataTable value="#{loginMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ningún wiki vinculado." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
                                                         <h:outputText value="#{p.nombre}"/>
@@ -177,7 +190,7 @@
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Respuestas">
-                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
+                                                <p:dataTable value="#{loginMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna respuesta vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
                                                         <h:outputText value="#{p.nombre}"/>
@@ -302,15 +315,15 @@
                             <h:form id="pickDialogForm">
                                 <h:panelGrid id="pgPick" columns="1">
                                     <h:outputText value="Tipo de Conocimiento:"/>
-                                    <p:selectOneMenu value="#{contenidoMB.idTipoConocimiento}" styleClass="Wid20">
-                                        <p:ajax event="change" listener="#{contenidoMB.onListTipoConocimientoChange}" update=":pickDialogForm:pgPick"/>
+                                    <p:selectOneMenu value="#{loginMB.idTipoConocimiento}" styleClass="Wid20">
+                                        <p:ajax event="change" listener="#{loginMB.onListTipoConocimientoChangeCT}" update=":pickDialogForm:pgPick"/>
                                         <f:selectItem itemValue="" itemLabel="Seleccione" />
                                         <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
                                     </p:selectOneMenu>
-                                    <p:pickList value="#{contenidoMB.pickList}" var="p" itemValue="#{p}" converter="converterPickListConocimiento" 
+                                    <p:pickList value="#{loginMB.pickListContenido}" var="p" itemValue="#{p}" converter="converterPickListConocimiento" 
                                                 itemLabel="#{p.codigo} #{p.nombre} #{p.categoria} #{p.estado}" showSourceFilter="true" 
                                                 showTargetFilter="true" filterMatchMode="contains" styleClass="wk-picklist-list">
-                                        <p:ajax event="transfer" listener="#{contenidoMB.onTransfer}" update=":f:tabview"/>
+                                        <p:ajax event="transfer" listener="#{loginMB.onTransfer}" update=":f:tabview"/>
                                         <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
                                         <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
 
