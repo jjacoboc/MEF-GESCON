@@ -6,7 +6,6 @@
 package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import pe.gob.mef.gescon.hibernate.domain.Mtperfil;
 import pe.gob.mef.gescon.hibernate.domain.Mtpolitica;
@@ -16,18 +15,18 @@ import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfilId;
  *
  * @author JJacobo
  */
-public class PoliticaPerfil implements Serializable{
-    
-     private TpoliticaPerfilId id;
-     private Mtperfil mtperfil;
-     private Mtpolitica mtpolitica;
-     private BigDecimal nusuariomod;
-     private BigDecimal nusuariocreacion;
-     private Date dfechacreacion;
+public class PoliticaPerfil implements Serializable {
 
-    
-    public PoliticaPerfil(){
-        
+    private TpoliticaPerfilId id;
+    private Mtperfil mtperfil;
+    private Mtpolitica mtpolitica;
+    private String vusuariomodificacion;
+    private String vusuariocreacion;
+    private Date dfechacreacion;
+    private Date dfechamodificacion;
+
+    public PoliticaPerfil() {
+
     }
 
     /**
@@ -73,31 +72,31 @@ public class PoliticaPerfil implements Serializable{
     }
 
     /**
-     * @return the nusuariomod
+     * @return the vusuariomodificacion
      */
-    public BigDecimal getNusuariomod() {
-        return nusuariomod;
+    public String getVusuariomodificacion() {
+        return vusuariomodificacion;
     }
 
     /**
-     * @param nusuariomod the nusuariomod to set
+     * @param vusuariomodificacion the vusuariomodificacion to set
      */
-    public void setNusuariomod(BigDecimal nusuariomod) {
-        this.nusuariomod = nusuariomod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
     /**
-     * @return the nusuariocreacion
+     * @return the vusuariocreacion
      */
-    public BigDecimal getNusuariocreacion() {
-        return nusuariocreacion;
+    public String getVusuariocreacion() {
+        return vusuariocreacion;
     }
 
     /**
-     * @param nusuariocreacion the nusuariocreacion to set
+     * @param vusuariocreacion the vusuariocreacion to set
      */
-    public void setNusuariocreacion(BigDecimal nusuariocreacion) {
-        this.nusuariocreacion = nusuariocreacion;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     /**
@@ -114,7 +113,12 @@ public class PoliticaPerfil implements Serializable{
         this.dfechacreacion = dfechacreacion;
     }
 
-    
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
+    }
 
-    
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
+    }
+
 }

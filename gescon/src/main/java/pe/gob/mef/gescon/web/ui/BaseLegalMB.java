@@ -24,14 +24,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.PhaseId;
-import javax.faces.model.DataModel;
-import javax.faces.model.ListDataModel;
+import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpSession;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.TransferEvent;
@@ -43,16 +42,19 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.hibernate.domain.TarchivoId;
+import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
 import pe.gob.mef.gescon.service.ArchivoService;
+import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.RangoService;
 import pe.gob.mef.gescon.service.VinculoBaseLegalService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
+import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.User;
@@ -68,18 +70,23 @@ public class BaseLegalMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(BaseLegalMB.class);
-    private final String temppath = "D:\\gescon\\temp\\";
-    private String path = "D:\\gescon\\files\\bl\\";
+    private final String temppath = "\\\\192.168.1.11\\gescon\\temp\\";
+    private final String path = "\\\\192.168.1.11\\gescon\\files\\bl\\";
     private List<BaseLegal> listaBaseLegal;
+    private List<BaseLegal> filteredListaBaseLegal;
     private BaseLegal selectedBaseLegal;
-    private String nombre;
+    private String sumilla;
+    private String tipoNorma;
     private String numeroNorma;
+    private BigDecimal tiporangoId;
     private BigDecimal rangoId;
+    private List<SelectItem> listaRangos;
     private Boolean chkGobNacional;
     private Boolean chkGobRegional;
     private Boolean chkGobLocal;
     private Boolean chkMancomunidades;
-    private String sumilla;
+    private Boolean chkDestacado;
+    private String comentario;
     private Date fechaPublicacion;
     private String tema;
     private UploadedFile uploadFile;
@@ -89,10 +96,7 @@ public class BaseLegalMB implements Serializable {
     private Categoria selectedCategoria;
     private List<BaseLegal> listaSource;
     private List<BaseLegal> listaTarget;
-    private DualListModel<BaseLegal> pickList;
-    private List<String> listaTipoVinculo;
-    private DataModel dataModel;
-    
+    private DualListModel<BaseLegal> pickList;    
 
     /**
      * Creates a new instance of BaseLegalMB
@@ -114,6 +118,14 @@ public class BaseLegalMB implements Serializable {
         this.listaBaseLegal = listaBaseLegal;
     }
 
+    public List<BaseLegal> getFilteredListaBaseLegal() {
+        return filteredListaBaseLegal;
+    }
+
+    public void setFilteredListaBaseLegal(List<BaseLegal> filteredListaBaseLegal) {
+        this.filteredListaBaseLegal = filteredListaBaseLegal;
+    }
+
     /**
      * @return the selectedBaseLegal
      */
@@ -129,17 +141,25 @@ public class BaseLegalMB implements Serializable {
     }
 
     /**
-     * @return the nombre
+     * @return the sumilla
      */
-    public String getNombre() {
-        return nombre;
+    public String getSumilla() {
+        return sumilla;
     }
 
     /**
-     * @param nombre the nombre to set
+     * @param sumilla the sumilla to set
      */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setSumilla(String sumilla) {
+        this.sumilla = sumilla;
+    }
+
+    public String getTipoNorma() {
+        return tipoNorma;
+    }
+
+    public void setTipoNorma(String tipoNorma) {
+        this.tipoNorma = tipoNorma;
     }
 
     /**
@@ -156,6 +176,14 @@ public class BaseLegalMB implements Serializable {
         this.numeroNorma = numeroNorma;
     }
 
+    public BigDecimal getTiporangoId() {
+        return tiporangoId;
+    }
+
+    public void setTiporangoId(BigDecimal tiporangoId) {
+        this.tiporangoId = tiporangoId;
+    }
+
     /**
      * @return the rangoId
      */
@@ -168,6 +196,14 @@ public class BaseLegalMB implements Serializable {
      */
     public void setRangoId(BigDecimal rangoId) {
         this.rangoId = rangoId;
+    }
+
+    public List<SelectItem> getListaRangos() {
+        return listaRangos;
+    }
+
+    public void setListaRangos(List<SelectItem> listaRangos) {
+        this.listaRangos = listaRangos;
     }
 
     /**
@@ -226,18 +262,26 @@ public class BaseLegalMB implements Serializable {
         this.chkMancomunidades = chkMancomunidades;
     }
 
-    /**
-     * @return the sumilla
-     */
-    public String getSumilla() {
-        return sumilla;
+    public Boolean getChkDestacado() {
+        return chkDestacado;
+    }
+
+    public void setChkDestacado(Boolean chkDestacado) {
+        this.chkDestacado = chkDestacado;
     }
 
     /**
-     * @param sumilla the sumilla to set
+     * @return the comentario
      */
-    public void setSumilla(String sumilla) {
-        this.sumilla = sumilla;
+    public String getComentario() {
+        return comentario;
+    }
+
+    /**
+     * @param comentario the comentario to set
+     */
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
     }
 
     /**
@@ -379,37 +423,6 @@ public class BaseLegalMB implements Serializable {
     public void setPickList(DualListModel<BaseLegal> pickList) {
         this.pickList = pickList;
     }
-
-    /**
-     * @return the listaTipoVinculo
-     */
-    public List<String> getListaTipoVinculo() {
-        return listaTipoVinculo;
-    }
-
-    /**
-     * @param listaTipoVinculo the listaTipoVinculo to set
-     */
-    public void setListaTipoVinculo(List<String> listaTipoVinculo) {
-        this.listaTipoVinculo = listaTipoVinculo;
-    }
-
-    /**
-     * @return the dataModel
-     */
-    public DataModel getDataModel() {
-        if (dataModel == null) {
-            dataModel = new ListDataModel(this.getListaTipoVinculo());
-        }
-        return dataModel;
-    }
-
-    /**
-     * @param dataModel the dataModel to set
-     */
-    public void setDataModel(DataModel dataModel) {
-        this.dataModel = dataModel;
-    }
     
     @PostConstruct
     public void init() {
@@ -435,19 +448,21 @@ public class BaseLegalMB implements Serializable {
         this.setUploadFile(null);
         this.setFile(null);
         this.setContent(null);
-        this.setNombre(StringUtils.EMPTY);
+        this.setSumilla(StringUtils.EMPTY);
         this.setNumeroNorma(StringUtils.EMPTY);
+        this.setTiporangoId(BigDecimal.ZERO);
         this.setRangoId(BigDecimal.ZERO);
         this.setChkGobNacional(false);
         this.setChkGobRegional(false);
         this.setChkGobLocal(false);
         this.setChkMancomunidades(false);
-        this.setSumilla(StringUtils.EMPTY);
+        this.setChkDestacado(true);
+        this.setComentario(StringUtils.EMPTY);
         this.setFechaPublicacion(null);
         this.setTema(StringUtils.EMPTY);
+        this.setListaRangos(new ArrayList());
         this.setListaSource(new ArrayList<BaseLegal>());
         this.setListaTarget(new ArrayList<BaseLegal>());
-        this.setListaTipoVinculo(new ArrayList<String>());
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {
             iter.remove();
@@ -455,13 +470,43 @@ public class BaseLegalMB implements Serializable {
         }
     }
     
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if(!CollectionUtils.isEmpty(this.getFilteredListaBaseLegal())) {
+                    this.setSelectedBaseLegal(this.getFilteredListaBaseLegal().get(index));
+                } else {
+                    this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+                }
+                this.setFilteredListaBaseLegal(new ArrayList());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
     public void handleChangeValue(AjaxBehaviorEvent event) {
         try {
             if(event != null) {
-                String id = (String)((SelectOneMenu) event.getSource()).getValue();
-                String index = JSFUtils.getRequestParameter("index");
-                this.getListaTipoVinculo().set(Integer.parseInt(index), id);
-                this.getListaTarget().get(Integer.parseInt(index)).setNestadoid(BigDecimal.valueOf(Long.parseLong(id)));
+                BigDecimal id = (BigDecimal) ((SelectOneMenu) event.getSource()).getValue();
+                if(id != null) {
+                    HttpSession session = JSFUtils.getSession();
+                    ListaSessionMB listasSession = session.getAttribute("listaSessionMB") != null ? (ListaSessionMB) session.getAttribute("listaSessionMB") : new ListaSessionMB();
+                    List<SelectItem> lista = listasSession.getListaTipoRango();
+                    for (SelectItem item : lista) {
+                        if (id.toString().equals(item.getValue().toString())) {
+                            this.setTipoNorma(item.getLabel());
+                        }
+                    }
+                    RangoService service = (RangoService) ServiceFinder.findBean("RangoService");
+                    this.setListaRangos(new Items(service.getRangosActivosByTipo(id), null, "nrangoid","vnombre").getItems());
+                } else {
+                    this.setTipoNorma(StringUtils.EMPTY);
+                    this.setListaRangos(new ArrayList());
+                }
+                
             }
         } catch(Exception e) {
             e.getMessage();
@@ -485,7 +530,7 @@ public class BaseLegalMB implements Serializable {
                     fileOutStream.write(f.getContents());
                     fileOutStream.flush();
                     fileOutStream.close();
-                    this.content = new DefaultStreamedContent(f.getInputstream(), "application/pdf", f.getFileName());
+                    this.setContent(new DefaultStreamedContent(f.getInputstream(), "application/pdf", f.getFileName()));
 //                    } else {
 //                        this.setFile(null);
 //                    }
@@ -516,7 +561,7 @@ public class BaseLegalMB implements Serializable {
         try {
             if (this.getTree() == null) {
                 CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-                createTree(service.getCategorias());
+                createTree(service.getCategoriasActived());
             }
         } catch (Exception e) {
             e.getMessage();
@@ -580,32 +625,34 @@ public class BaseLegalMB implements Serializable {
         }
     }
     
-    public void toSave(ActionEvent event) {
+    public String toSave() {
         try {
             this.cleanAttributes();
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+        return "/pages/baselegal/nuevo?faces-redirect=true";
     }
 
     public void save(ActionEvent event) {
         try {
             if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
-                this.setListaBaseLegal(Collections.EMPTY_LIST);
+                this.setListaBaseLegal(new ArrayList());
             }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             BaseLegal base = new BaseLegal();
             base.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-            base.setVnombre(this.getNombre().trim().toUpperCase());
-            base.setVnumero(this.getNumeroNorma().trim().toUpperCase());
+            base.setVnombre(this.getSumilla());
+            base.setVnumero(this.getTipoNorma().concat(" - ").concat(this.getNumeroNorma()));
             base.setNrangoid(this.getRangoId());
             base.setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
-            base.setVsumilla(this.getSumilla().trim());
+            base.setNdestacado(this.getChkDestacado()? BigDecimal.ONE : BigDecimal.ZERO);
+            base.setVsumilla(this.getComentario().trim());
             base.setDfechapublicacion(this.getFechaPublicacion());
             base.setVtema(this.getTema());
             base.setNactivo(BigDecimal.ONE);
@@ -619,15 +666,11 @@ public class BaseLegalMB implements Serializable {
             BeanUtils.copyProperties(tbaselegal, base);
             
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-            TarchivoId archivoId = new TarchivoId();
-            archivoId.setNbaselegalid(base.getNbaselegalid());
-            archivoId.setNarchivoid(aservice.getNextPK());
-            
             Archivo archivo = new Archivo();
-            archivo.setId(archivoId);
-            archivo.setNversion(BigDecimal.ONE);
+            archivo.setNarchivoid(aservice.getNextPK());
             archivo.setTbaselegal(tbaselegal);
             archivo.setVnombre(this.getUploadFile().getFileName());
+            archivo.setNversion(BigDecimal.ONE);
             archivo.setVruta(path + base.getNbaselegalid().toString() + "\\" + archivo.getNversion().toString() + "\\" + archivo.getVnombre());
             archivo.setVusuariocreacion(user.getVlogin());
             archivo.setDfechacreacion(new Date());
@@ -654,12 +697,23 @@ public class BaseLegalMB implements Serializable {
                 bl.setVusuariomodificacion(user.getVlogin());
                 service.saveOrUpdate(bl);
             }
-            
+
+            Asignacion asignacion = new Asignacion();
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.BASELEGAL);
+            asignacion.setNconocimientoid(base.getNbaselegalid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(this.getSelectedCategoria().getNcategoriaid()));
+            asignacion.setDfechaasignacion(new Date());
+            asignacion.setDfechacreacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+
             this.setListaBaseLegal(service.getBaselegales());
             for(BaseLegal bl : this.getListaBaseLegal()) {
                 bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
             }
-            RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/baselegal/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -669,7 +723,7 @@ public class BaseLegalMB implements Serializable {
     public void saveFile(Archivo archivo) {
         try {
             if (this.getUploadFile() != null) {
-                String id = archivo.getId().getNbaselegalid().toString();
+                String id = archivo.getTbaselegal().getNbaselegalid().toString();
                 String version = archivo.getNversion().toString();
                 String newPath = path + id + "\\" + version + "\\";
                 File direc = new File(newPath);
@@ -688,39 +742,55 @@ public class BaseLegalMB implements Serializable {
         }
     }
     
-    public void toEdit(ActionEvent event) {
+    public String toEdit() {
         try {
             this.cleanAttributes();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            if(!CollectionUtils.isEmpty(this.getFilteredListaBaseLegal())) {
+                this.setSelectedBaseLegal(this.getFilteredListaBaseLegal().get(index));
+            } else {
+                this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            }
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
+            index = this.getSelectedBaseLegal().getVnumero().indexOf("-");
+            this.setTipoNorma(this.getSelectedBaseLegal().getVnumero().substring(0, index).trim());
+            this.setNumeroNorma(this.getSelectedBaseLegal().getVnumero().substring(index + 1).trim());
             this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
             this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
             this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
             this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
-            loadPickList(event);
+            this.setChkDestacado(this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ONE));
+            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+            this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
+            this.setFilteredListaBaseLegal(new ArrayList());
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+        return "/pages/baselegal/editar?faces-redirect=true";
     }
     
     public void edit(ActionEvent event) {
         try {
             if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
-                this.setListaBaseLegal(Collections.EMPTY_LIST);
+                this.setListaBaseLegal(new ArrayList());
             }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             if(this.getSelectedCategoria() != null){
                 this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             }
-            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre().trim().toUpperCase());
-            this.getSelectedBaseLegal().setVnumero(this.getSelectedBaseLegal().getVnumero().trim().toUpperCase());
+            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre());
+            this.getSelectedBaseLegal().setVnumero(this.getTipoNorma().concat(" - ").concat(this.getNumeroNorma()));
             this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
             this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
             this.getSelectedBaseLegal().setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
             this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
@@ -732,13 +802,9 @@ public class BaseLegalMB implements Serializable {
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
             
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-            if(this.getUploadFile() != null) {                
-                TarchivoId archivoId = new TarchivoId();
-                archivoId.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
-                archivoId.setNarchivoid(aservice.getNextPK());
-
+            if(this.getUploadFile() != null) {
                 Archivo archivo = new Archivo();
-                archivo.setId(archivoId);
+                archivo.setNarchivoid(aservice.getNextPK());
                 int version = this.getSelectedBaseLegal().getArchivo().getNversion().intValue();
                 archivo.setNversion(BigDecimal.valueOf(version + 1));
                 archivo.setTbaselegal(tbaselegal);
@@ -776,31 +842,63 @@ public class BaseLegalMB implements Serializable {
             for(BaseLegal bl : this.getListaBaseLegal()) {
                 bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
             }
-            RequestContext.getCurrentInstance().execute("PF('editDialog').hide();");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/baselegal/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
     
+    public String toPost() {
+        try {
+            this.cleanAttributes();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            if(!CollectionUtils.isEmpty(this.getFilteredListaBaseLegal())) {
+                this.setSelectedBaseLegal(this.getFilteredListaBaseLegal().get(index));
+            } else {
+                this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            }
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
+            index = this.getSelectedBaseLegal().getVnumero().indexOf("-");
+            this.setTipoNorma(this.getSelectedBaseLegal().getVnumero().substring(0, index).trim());
+            this.setNumeroNorma(this.getSelectedBaseLegal().getVnumero().substring(index + 1).trim());
+            this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
+            this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
+            this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
+            this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
+            this.setChkDestacado(this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ONE));
+            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+            this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
+            this.setFilteredListaBaseLegal(new ArrayList());
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return "/pages/baselegal/publicar?faces-redirect=true";
+    }
+    
     public void post(ActionEvent event) {
         try {
             if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
-                this.setListaBaseLegal(Collections.EMPTY_LIST);
+                this.setListaBaseLegal(new ArrayList());
             }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             if(this.getSelectedCategoria() != null){
                 this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             }
-            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre().trim().toUpperCase());
-            this.getSelectedBaseLegal().setVnumero(this.getSelectedBaseLegal().getVnumero().trim().toUpperCase());
+            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre());
+            this.getSelectedBaseLegal().setVnumero(this.getTipoNorma().concat(" - ").concat(this.getNumeroNorma()));
             this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
             this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
-             this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
+            this.getSelectedBaseLegal().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
             this.getSelectedBaseLegal().setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
             this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
             this.getSelectedBaseLegal().setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_PUBLICADO)));
@@ -812,13 +910,9 @@ public class BaseLegalMB implements Serializable {
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
             
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-            if(this.getUploadFile() != null) {                
-                TarchivoId archivoId = new TarchivoId();
-                archivoId.setNbaselegalid(this.getSelectedBaseLegal().getNbaselegalid());
-                archivoId.setNarchivoid(aservice.getNextPK());
-
+            if(this.getUploadFile() != null) {
                 Archivo archivo = new Archivo();
-                archivo.setId(archivoId);
+                archivo.setNarchivoid(aservice.getNextPK());
                 int version = this.getSelectedBaseLegal().getArchivo().getNversion().intValue();
                 archivo.setNversion(BigDecimal.valueOf(version + 1));
                 archivo.setTbaselegal(tbaselegal);
@@ -828,7 +922,7 @@ public class BaseLegalMB implements Serializable {
                 archivo.setDfechacreacion(new Date());
                 aservice.saveOrUpdate(archivo);
                 saveFile(archivo);
-            }            
+            }
             
             VinculoBaseLegalService vservice = (VinculoBaseLegalService) ServiceFinder.findBean("VinculoBaseLegalService");
             vservice.deleteByBaseLegal(this.getSelectedBaseLegal());
@@ -856,22 +950,40 @@ public class BaseLegalMB implements Serializable {
             for(BaseLegal bl : this.getListaBaseLegal()) {
                 bl.setArchivo(aservice.getLastArchivoByBaseLegal(bl));
             }
-            RequestContext.getCurrentInstance().execute("PF('postDialog').hide();");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/baselegal/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
     
-    public void toView(ActionEvent event) {
+    public String toView() {
         try {
+            this.cleanAttributes();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
-            loadPickList(event);
+            if(!CollectionUtils.isEmpty(this.getFilteredListaBaseLegal())) {
+                this.setSelectedBaseLegal(this.getFilteredListaBaseLegal().get(index));
+            } else {
+                this.setSelectedBaseLegal(this.getListaBaseLegal().get(index));
+            }
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
+            index = this.getSelectedBaseLegal().getVnumero().indexOf("-");
+            this.setTipoNorma(this.getSelectedBaseLegal().getVnumero().substring(0, index).trim());
+            this.setNumeroNorma(this.getSelectedBaseLegal().getVnumero().substring(index + 1).trim());
+            this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
+            this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
+            this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
+            this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
+            this.setChkDestacado(this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ONE));            
+            BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
+            this.setFilteredListaBaseLegal(new ArrayList());
         } catch(Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+        return "/pages/baselegal/ver?faces-redirect=true";
     }
     
     public void loadPickList(ActionEvent event) {
@@ -909,7 +1021,6 @@ public class BaseLegalMB implements Serializable {
                         index = Collections.binarySearch(this.getListaSource(), ele, BaseLegal.Comparators.ID);
                         if(this.getListaTarget() == null) this.setListaTarget(new ArrayList<BaseLegal>());
                         this.getListaTarget().add(this.getListaSource().get(index));
-                        this.getListaTipoVinculo().add(BigDecimal.ZERO.toString());
                         this.getListaSource().remove(index);
                     }
                 }
@@ -920,7 +1031,6 @@ public class BaseLegalMB implements Serializable {
                         if(this.getListaSource() == null) this.setListaSource(new ArrayList<BaseLegal>());
                         this.getListaSource().add(this.getListaTarget().get(index));
                         this.getListaTarget().remove(index);
-                        this.getListaTipoVinculo().remove(index);
                     }
                 }
             }

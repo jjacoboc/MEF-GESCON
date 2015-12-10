@@ -79,7 +79,7 @@ public class PerfilDaoImpl extends HibernateDaoSupport implements PerfilDao {
                             return query.list();
                         }
                     });
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }

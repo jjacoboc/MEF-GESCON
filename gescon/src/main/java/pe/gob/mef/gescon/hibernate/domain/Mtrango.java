@@ -1,5 +1,5 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 22/09/2015 05:59:19 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,9 +11,11 @@ import java.util.Set;
  */
 public class Mtrango implements java.io.Serializable {
 
+    private BigDecimal ntiponormaid;
     private BigDecimal nrangoid;
     private String vnombre;
     private String vdescripcion;
+    private BigDecimal nactivo;
     private String vusuariocreacion;
     private String vusuariomodificacion;
     private Date dfechacreacion;
@@ -27,15 +29,25 @@ public class Mtrango implements java.io.Serializable {
         this.nrangoid = nrangoid;
     }
 
-    public Mtrango(BigDecimal nrangoid, String vnombre, String vdescripcion, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, Set tbaselegals) {
+    public Mtrango(BigDecimal ntiponormaid, BigDecimal nrangoid, String vnombre, String vdescripcion, BigDecimal nactivo, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, Set tbaselegals) {
+        this.ntiponormaid = ntiponormaid;
         this.nrangoid = nrangoid;
         this.vnombre = vnombre;
         this.vdescripcion = vdescripcion;
+        this.nactivo = nactivo;
         this.vusuariocreacion = vusuariocreacion;
         this.vusuariomodificacion = vusuariomodificacion;
         this.dfechacreacion = dfechacreacion;
         this.dfechamodificacion = dfechamodificacion;
         this.tbaselegals = tbaselegals;
+    }
+
+    public BigDecimal getNtiponormaid() {
+        return ntiponormaid;
+    }
+
+    public void setNtiponormaid(BigDecimal ntiponormaid) {
+        this.ntiponormaid = ntiponormaid;
     }
 
     public BigDecimal getNrangoid() {
@@ -60,6 +72,14 @@ public class Mtrango implements java.io.Serializable {
 
     public void setVdescripcion(String vdescripcion) {
         this.vdescripcion = vdescripcion;
+    }
+
+    public BigDecimal getNactivo() {
+        return nactivo;
+    }
+
+    public void setNactivo(BigDecimal nactivo) {
+        this.nactivo = nactivo;
     }
 
     public String getVusuariocreacion() {

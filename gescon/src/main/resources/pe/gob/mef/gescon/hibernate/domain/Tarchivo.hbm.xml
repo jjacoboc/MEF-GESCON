@@ -1,18 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 12/10/2015 03:16:22 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Tarchivo" table="TARCHIVO" schema="GESCON" optimistic-lock="version">
-        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TarchivoId">
-            <key-property name="nbaselegalid" type="big_decimal">
-                <column name="NBASELEGALID" precision="22" scale="0" />
-            </key-property>
-            <key-property name="narchivoid" type="big_decimal">
-                <column name="NARCHIVOID" precision="22" scale="0" />
-            </key-property>
-        </composite-id>
-        <many-to-one name="tbaselegal" class="pe.gob.mef.gescon.hibernate.domain.Tbaselegal" update="false" insert="false" fetch="select">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Tarchivo" table="TARCHIVO" schema="GESCON3" optimistic-lock="version">
+        <id name="narchivoid" type="big_decimal">
+            <column name="NARCHIVOID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="tbaselegal" class="pe.gob.mef.gescon.hibernate.domain.Tbaselegal" fetch="select">
             <column name="NBASELEGALID" precision="22" scale="0" not-null="true" />
         </many-to-one>
         <property name="vnombre" type="string">
@@ -27,14 +23,14 @@
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="25" />
         </property>
-        <property name="dfechacreacion" type="date">
-            <column name="DFECHACREACION" length="7" />
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" />
         </property>
         <property name="vusuariomodificacion" type="string">
             <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
-        <property name="dfechamodificacion" type="date">
-            <column name="DFECHAMODIFICACION" length="7" />
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" />
         </property>
     </class>
 </hibernate-mapping>

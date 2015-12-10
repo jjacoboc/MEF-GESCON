@@ -16,6 +16,7 @@ import pe.gob.mef.gescon.hibernate.dao.BaseLegalDao;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 
 /**
@@ -64,10 +65,8 @@ public class BaseLegalServiceImpl implements BaseLegalService{
             bl.setVnumero((String) m.get("NUMERO"));
             bl.setVnombre((String) m.get("NOMBRE"));
             bl.setVsumilla((String) m.get("SUMILLA"));
-            bl.setNcategoriaid((BigDecimal) m.get("IDCATEGORIA"));
-            bl.setVcategoria((String) m.get("CATEGORIA"));
+            bl.setNcategoriaid((BigDecimal) m.get("IDCATEGORIA"));  
             bl.setNestadoid((BigDecimal) m.get("IDESTADO"));
-            bl.setVestado((String) m.get("ESTADO"));
             bl.setDfechapublicacion((Date) m.get("FECHA"));
             baseLegales.add(bl);
         }
@@ -86,13 +85,35 @@ public class BaseLegalServiceImpl implements BaseLegalService{
             bl.setVnombre((String) m.get("NOMBRE"));
             bl.setVsumilla((String) m.get("SUMILLA"));
             bl.setNcategoriaid((BigDecimal) m.get("IDCATEGORIA"));
-            bl.setVcategoria((String) m.get("CATEGORIA"));
             bl.setNestadoid((BigDecimal) m.get("IDESTADO"));
-            bl.setVestado((String) m.get("ESTADO"));
             bl.setDfechapublicacion((Date) m.get("FECHA"));
             baseLegales.add(bl);
         }
         return baseLegales;
+    }
+    
+    @Override
+    public List<Asignacion> obtenerBaseLegalxAsig(final BigDecimal baselegalid, final BigDecimal usuarioid,BigDecimal tpoconocimientoid) throws Exception {
+        List<Asignacion> asignacions = new ArrayList<Asignacion>();
+        BaseLegalDao baselegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
+        List<HashMap> lista = baselegalDao.obtenerBaseLegalxAsig(baselegalid,usuarioid,tpoconocimientoid);
+        for (HashMap bean : lista) {
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid((BigDecimal) bean.get("IDASIGNACION"));
+            asignacion.setNtipoconocimientoid((BigDecimal) bean.get("TPOCONOCIMIENTO"));
+            asignacion.setNconocimientoid((BigDecimal) bean.get("IDPREGUNTA"));
+            asignacion.setNusuarioid((BigDecimal) bean.get("IDUSUARIO"));
+            asignacion.setNestadoid((BigDecimal) bean.get("ESTADO"));
+            asignacion.setVusuariocreacion((String) bean.get("USUCREA"));
+            asignacion.setVusuariomodificacion((String) bean.get("USUMOD"));
+            asignacion.setDfechacreacion((Date) bean.get("FECHACREA"));
+            asignacion.setDfechamodificacion((Date) bean.get("FECHAMOD"));     
+            asignacion.setDfechaasignacion((Date) bean.get("FECHAASIG"));  
+            asignacion.setDfechaatencion((Date) bean.get("FECHAATEN"));  
+            asignacion.setDfecharecepcion((Date) bean.get("FECHARECEP"));  
+            asignacions.add(asignacion);
+        }
+        return asignacions;
     }
 
     @Override

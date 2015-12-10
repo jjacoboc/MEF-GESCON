@@ -1,166 +1,131 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
-    <f:loadBundle basename="pe.gob.mef.gescon.parameters" var="param"/>
-    <h:head>
-        <title>Gescon - Consultas</title>
-        <link rel="shortcut icon" type="image/x-icon" href="#{resource['images/favicon.ico']}"/>
-        <h:outputStylesheet library="css" name="style.css" />
-        <h:outputScript library="js" name="calendar_es.js"/>
-        <h:outputScript library="js" name="prime.js"/>
-        <h:outputScript>
-            $(function() {
-                $(".ui-datascroller-content").css("height", $("#center").height());
-                $("#fcLink").click(recall);
-                $("#bcLink").click(recall);
-            });
-            function recall() {
-                $(".ui-datascroller-content").css("height", $("#center").height() - 47);
-            }
-        </h:outputScript>
-    </h:head>
-    <h:body>
-        <f:view>
-            <pe:layout id="full" fullPage="true">
-                <pe:layoutPane id="north" position="north" size="80" resizable="true" closable="true" styleContent="font-size: 10px;">
-                    <ui:include src="header.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane id="south" position="south" size="50" closable="true" >
-                    <ui:include src="footer.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane position="west" size="295" >
-                    <ui:include src="filtro.xhtml" />
-                </pe:layoutPane>
-
-                <pe:layoutPane id="center" position="center" styleContent="font-size: 12px;">
-                    <h:form id="f">
-                        <h:panelGrid id="pgConsulta" columns="1" width="100%">
-                            <p:panelGrid columns="1" >
-                                <h:panelGroup>
-                                    <h:commandLink value="Inicio" action="/index.xhtml"/>
-                                    <ui:repeat value="#{consultaMB.listaBreadCrumb}" var="b" rendered="#{not empty consultaMB.listaBreadCrumb}">
-                                        <h:outputText class="fa fa-fw fa-chevron-right"/>
-                                        <p:commandLink id="bcLink" value="#{b.vnombre}" actionListener="#{consultaMB.onClickBreadCrumb}" oncomplete="recall();" update=":fm:pgFiltro, :f:pgConsulta">
-                                            <f:param name="ncategoriaid" value="#{b.ncategoriaid}"/>
-                                        </p:commandLink>
-                                    </ui:repeat>
-                                </h:panelGroup>
-                            </p:panelGrid>
-                            <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" mode="inline">
-                                <h:panelGrid columns="1" width="100%">
-                                    <h:panelGrid columns="4" cellpadding="0" cellspacing="0">
-                                        <h:outputText class="fa fa-fw fa-circle" style="font-size: 11px;"/>
-                                        <p:commandLink actionListener="#{consultaMB.view}" oncomplete="PF('viewDialog').show();" update=":viewDialogForm:pgView" >
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/template.xhtml">
+    <style>
+        .ui-columnl {
+            width: 150px;
+        }
+        .ui-columnr {
+            width: 100%;
+        }
+    </style>
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <h:outputScript>
+                        $(function() {
+                            $(".ui-datascroller-content").css("height", $("#center").height());
+                            $("#fcLink").click(recall);
+                            $("#bcLink").click(recall);
+                        });
+                        function recall() {
+                            $(".ui-datascroller-content").css("height", $("#center").height() - 47);
+                        }
+                    </h:outputScript>
+                    <f:view>
+                        <h:panelGrid columns="2" width="100%" columnClasses="ui-columnl, ui-columnr" styleClass="TexAlLeft panelcolumns">
+                            <h:panelGroup>
+                                <ui:include src="filtro.xhtml" />
+                            </h:panelGroup>
+                            <h:panelGroup>
+                                <h:form id="f">
+                                    <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />                                    
+                                    <h:panelGrid id="pgConsulta" columns="1" width="100%">
+                                        <p:panelGrid columns="1" style="width: 100%">
                                             <h:panelGroup>
-                                                <h:outputText value="#{c.codigo}" style="font-family: Tahoma;font-weight: bold; font-size: 12px; color: #013C7C;"/>
-                                                <h:outputText value=" - " style="font-weight: bold"/>
-                                                <h:outputText value="#{c.nombre}" style="font-family: Tahoma;font-weight: bold; font-size: 12px; color: #013C7C;"/>
+                                                <p:commandLink value="Inicio" action="/index.xhtml" styleClass="ui-link Fs14"/>
+                                                <ui:repeat value="#{consultaMB.listaBreadCrumb}" var="b" rendered="#{not empty consultaMB.listaBreadCrumb}">
+                                                    <h:outputText class="fa fa-fw fa-chevron-right"/>
+                                                    <p:commandLink id="bcLink" actionListener="#{consultaMB.onClickBreadCrumb}" styleClass="ui-link"
+                                                                   update=":fm:pgFiltro, :f:pgConsulta" >
+                                                        <h:outputText value="#{b.vnombre}" styleClass="Fs14"/>
+                                                        <f:param name="ncategoriaid" value="#{b.ncategoriaid}"/>
+                                                    </p:commandLink>
+                                                </ui:repeat>
                                             </h:panelGroup>
-                                            <f:param name="id" value="#{c.id}"/>
-                                            <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
-                                        </p:commandLink>
-                                        <p:spacer width="15"/>
-                                        <p:rating value="3.5" readonly="true" immediate="true" />
+                                        </p:panelGrid>
+                                        <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="width: 100%">
+                                            <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" mode="inline">
+                                                <h:panelGrid columns="1" width="100%">
+                                                    <h:panelGrid columns="5" cellpadding="0" cellspacing="0">
+                                                        <h:outputText class="fa fa-file-text-o red Fs14" rendered="#{c.idTipoConocimiento eq 1}"/>
+                                                        <h:outputText class="fa fa-question red Fs14" rendered="#{c.idTipoConocimiento eq 2}"/>
+                                                        <h:outputText class="fa fa-puzzle-piece red Fs14" rendered="#{c.idTipoConocimiento eq 3}"/>
+                                                        <h:outputText class="fa fa-check-square-o red Fs14" rendered="#{c.idTipoConocimiento eq 5}"/>
+                                                        <p:spacer width="5"/>
+                                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link" update=":viewprDialogForm:pgViewpr" >
+                                                            <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
+                                                            <f:param name="id" value="#{c.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
+                                                        </p:commandLink>
+                                                        <p:spacer width="15"/>
+                                                        <p:rating value="3.5" readonly="true" immediate="true" />
+                                                    </h:panelGrid>
+                                                    <h:panelGrid columns="2">
+                                                        <p:spacer width="8"/>
+                                                        <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
+                                                    </h:panelGrid>
+                                                    <h:panelGrid columns="14">
+                                                        <p:spacer width="8"/>
+                                                        <h:outputText value="Categoría:" styleClass="Fs12"/>
+                                                        <h:outputText value="#{c.categoria}" styleClass="FontBold Fs12" style="font-style: italic;"/>
+                                                        <p:spacer width="15"/>
+                                                        <h:outputText value="Tipo:" styleClass="Fs12"/>
+                                                        <h:outputText value="#{c.tipoConocimiento}" styleClass="FontBold Fs12" style="font-style: italic;"/>
+                                                        <p:spacer width="15"/>
+                                                        <h:outputText value="Fecha:" styleClass="Fs12"/>
+                                                        <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs12" style="font-style: italic;">
+                                                            <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                                        </h:outputText>
+                                                        <p:spacer width="15"/>
+                                                        <h:outputText value="Estado:" styleClass="Fs12"/>
+                                                        <h:outputText value="#{c.estado}" styleClass="FontBold Fs12" style="font-style: italic;"/>
+                                                        <p:spacer width="15"/>
+                                                        <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic;"/>
+                                                    </h:panelGrid>
+                                                </h:panelGrid>
+                                            </p:dataScroller>
+                                        </h:panelGrid>
                                     </h:panelGrid>
-                                    <h:panelGrid columns="2">
-                                        <p:spacer width="8"/>
-                                        <h:outputText value="#{c.sumilla}" style="font-weight: normal;" />
-                                    </h:panelGrid>
-                                    <h:panelGrid columns="14" style="font-size: 10px;">
-                                        <p:spacer width="8"/>
-                                        <h:outputText value="Categoría:" style="font-weight: normal"/>
-                                        <h:outputText value="#{c.categoria}" style="font-weight: bold; font-style: italic;"/>
-                                        <p:spacer width="15"/>
-                                        <h:outputText value="Tipo:" style="font-weight: normal"/>
-                                        <h:outputText value="#{c.tipoConocimiento}" style="font-weight: bold; font-style: italic;"/>
-                                        <p:spacer width="15"/>
-                                        <h:outputText value="Fecha:" style="font-weight: normal"/>
-                                        <h:outputText value="#{c.fechaPublicacion}" style="font-weight: bold; font-style: italic;">
-                                            <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                        </h:outputText>
-                                        <p:spacer width="15"/>
-                                        <h:outputText value="Estado:" style="font-weight: normal"/>
-                                        <h:outputText value="#{c.estado}" style="font-weight: bold; font-style: italic;"/>
-                                        <p:spacer width="15"/>
-                                        <h:outputText value="#{c.elapsedTime}" style="font-weight: normal; font-style: italic;"/>
-                                    </h:panelGrid>
-                                    <p:separator/>
-                                </h:panelGrid>
-                            </p:dataScroller>
+                                </h:form>
+
+                                <p:dialog id="viewprDlg" header="Pregunta y Respuesta" widgetVar="viewprDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                                    <h:form id="viewprDialogForm">
+                                        <h:panelGrid id="pgViewpr" columns="2" width="600px">
+                                            <h:outputText value="Categoría:" styleClass="FontBold"/>
+                                            <h:outputText value="#{consultaMB.selectedPregunta.ncategoriaid}" >
+                                                <f:converter converterId="converterCategoria"/>
+                                            </h:outputText>
+
+                                            <h:outputText value="Asunto:" styleClass="FontBold"/>
+                                            <h:outputText value="#{consultaMB.selectedPregunta.vasunto}"/>
+
+                                            <h:outputText value="Detalle:" styleClass="FontBold"/>
+                                            <h:outputText value="#{consultaMB.selectedPregunta.vdetalle}"/>
+
+                                            <h:outputText value="Entidad:" styleClass="FontBold"/>
+                                            <h:outputText value="MEF"/>    
+
+                                            <h:outputText value="Dato adicional:" styleClass="FontBold" style="white-space: nowrap;"/>
+                                            <h:outputText value="#{consultaMB.selectedPregunta.vdatoadicional}" />
+
+                                            <h:outputText value="Respuesta:" styleClass="FontBold"/>
+                                            <h:outputText value="#{consultaMB.selectedPregunta.vrespuesta}" />
+                                        </h:panelGrid>
+                                    </h:form>
+                                </p:dialog>
+                            </h:panelGroup>
                         </h:panelGrid>
-                    </h:form>
+                    </f:view>
+                </div>
+            </div>
+        </div>
 
-                    <p:dialog id="viewDlg" header="Base Legal" widgetVar="viewDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 12px;">
-                        <h:form id="viewDialogForm">
-                            <h:panelGrid id="pgView" columns="3">
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Categoría:"/>
-                                <h:outputText value="#{consultaMB.selectedBaseLegal.ncategoriaid}" >
-                                    <f:converter converterId="converterCategoria"/>
-                                </h:outputText>
+    </ui:define>
 
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Archivo:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:lightBox>
-                                        <h:outputLink value="#">
-                                            <h:outputText id="fileName" value="#{consultaMB.selectedBaseLegal.archivo.vnombre}"/>
-                                        </h:outputLink>
-                                        <f:facet name="inline">
-                                            <p:media player="pdf" cache="false" value="#{consultaMB.content}" width="#{param.pdfwidth}" height="#{param.pdfheight}"/>
-                                        </f:facet>
-                                    </p:lightBox>
-                                </h:panelGrid>
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Nombre:"/>
-                                <h:outputText value="#{consultaMB.selectedBaseLegal.vnombre}" />
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Número de Norma:"/>
-                                <h:outputText value="#{consultaMB.selectedBaseLegal.vnumero}" />
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Rango de Norma:"/>
-                                <h:outputText value="#{consultaMB.selectedBaseLegal.mtrango.nrangoid}" >
-                                    <f:converter converterId="converterRango"/>
-                                </h:outputText>
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Ambito:"/>                                
-                                <h:panelGrid columns="4">
-                                    <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.ngobnacional eq 1}" itemLabel="Gobierno Nacional"  />
-                                    <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.ngobregional eq 1}" itemLabel="Gobierno Regional" />
-                                    <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.ngoblocal eq 1}" itemLabel="Gobierno Local" />
-                                    <p:selectBooleanCheckbox value="#{consultaMB.selectedBaseLegal.nmancomunidades eq 1}" itemLabel="Mancomunidades" />
-                                </h:panelGrid>
-
-                                <p:spacer/>
-                                <h:outputLabel value="Sumilla:"/>
-                                <h:outputText value="#{consultaMB.selectedBaseLegal.vsumilla}" />
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Fecha Publicación:"/>
-                                <h:outputText value="#{consultaMB.selectedBaseLegal.dfechapublicacion}" >
-                                    <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                </h:outputText>
-
-                                <h:outputLabel value="*"/>
-                                <h:outputLabel value="Tema:"/>
-                                <h:outputText value="#{consultaMB.selectedBaseLegal.vtema}" />
-                            </h:panelGrid>
-                        </h:form>
-                    </p:dialog>
-                </pe:layoutPane>
-            </pe:layout>
-        </f:view>
-    </h:body>
-</html>
-
+</ui:composition>

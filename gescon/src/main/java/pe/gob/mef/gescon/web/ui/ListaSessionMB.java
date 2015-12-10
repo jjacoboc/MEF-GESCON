@@ -9,31 +9,41 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ApplicationScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
+import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.EstadoBaseLegalService;
+import pe.gob.mef.gescon.service.MaestroDetalleService;
 import pe.gob.mef.gescon.service.RangoService;
 import pe.gob.mef.gescon.service.SituacionService;
+import pe.gob.mef.gescon.service.TipoConocimientoService;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Maestro;
 
 /**
  *
  * @author JJacobo
  */
 @ManagedBean
-@ApplicationScoped
+@SessionScoped
 public class ListaSessionMB implements Serializable{
 
     private List<SelectItem> listaSiNo;
+    private List<SelectItem> listaModulos;
+    private List<SelectItem> listaModulosActivos;
+    private List<SelectItem> listaTipoRango;
+    private List<SelectItem> listaTipoRangoActivo;
     private List<SelectItem> listaCategoria;
     private List<SelectItem> listaRangoBaseLegal;
     private List<SelectItem> listaEstadoBaseLegal;
     private List<SelectItem> listaEstadoBaseLegalVinculo;
     private List<SelectItem> listaSituacion;
+    private List<SelectItem> listaTipoConocimiento;
     private List<SelectItem> filterEstado;
+    private List<SelectItem> filterModulos;
     
     /**
      * Creates a new instance of ListaSessionMB
@@ -56,6 +66,62 @@ public class ListaSessionMB implements Serializable{
      */
     public void setListaSiNo(List<SelectItem> listaSiNo) {
         this.listaSiNo = listaSiNo;
+    }
+
+    public List<SelectItem> getListaModulos() throws Exception {
+        if(listaModulos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_MODULOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaModulos =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaModulos;
+    }
+
+    public void setListaModulos(List<SelectItem> listaModulos) {
+        this.listaModulos = listaModulos;
+    }
+
+    public List<SelectItem> getListaModulosActivos() throws Exception {
+        if(listaModulosActivos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_MODULOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaModulosActivos =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaModulosActivos;
+    }
+
+    public void setListaModulosActivos(List<SelectItem> listaModulosActivos) {
+        this.listaModulosActivos = listaModulosActivos;
+    }
+
+    public List<SelectItem> getListaTipoRango() throws Exception {
+        if(listaTipoRango == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_RANGOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoRango =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoRango;
+    }
+
+    public void setListaTipoRango(List<SelectItem> listaTipoRango) {
+        this.listaTipoRango = listaTipoRango;
+    }
+
+    public List<SelectItem> getListaTipoRangoActivo() throws Exception {
+        if(listaTipoRangoActivo == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_RANGOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoRangoActivo =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoRangoActivo;
+    }
+
+    public void setListaTipoRangoActivo(List<SelectItem> listaTipoRangoActivo) {
+        this.listaTipoRangoActivo = listaTipoRangoActivo;
     }
 
     /**
@@ -136,6 +202,7 @@ public class ListaSessionMB implements Serializable{
 
     /**
      * @return the listaSituacion
+     * @throws java.lang.Exception
      */
     public List<SelectItem> getListaSituacion() throws Exception {
         if(listaSituacion == null){
@@ -150,6 +217,18 @@ public class ListaSessionMB implements Serializable{
      */
     public void setListaSituacion(List<SelectItem> listaSituacion) {
         this.listaSituacion = listaSituacion;
+    }
+
+    public List<SelectItem> getListaTipoConocimiento() throws Exception {
+        if(listaTipoConocimiento == null){
+            TipoConocimientoService service = (TipoConocimientoService) ServiceFinder.findBean("TipoConocimientoService");
+            listaTipoConocimiento =  new Items(service.getTipoConocimientos(), null, "ntpoconocimientoid","vnombre").getItems();
+        }
+        return listaTipoConocimiento;
+    }
+
+    public void setListaTipoConocimiento(List<SelectItem> listaTipoConocimiento) {
+        this.listaTipoConocimiento = listaTipoConocimiento;
     }
 
     /**
@@ -169,6 +248,22 @@ public class ListaSessionMB implements Serializable{
      */
     public void setFilterEstado(List<SelectItem> filterEstado) {
         this.filterEstado = filterEstado;
+    }
+
+    public List<SelectItem> getFilterModulos() throws Exception {
+        if(filterModulos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_MODULOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            filterModulos =  new ArrayList<SelectItem>();
+            filterModulos.add(new SelectItem("", "Todos"));
+            filterModulos.addAll(new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems());
+        }
+        return filterModulos;
+    }
+
+    public void setFilterModulos(List<SelectItem> filterModulos) {
+        this.filterModulos = filterModulos;
     }
     
 }

@@ -5,7 +5,6 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
-import com.mchange.lang.ByteUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,18 +26,16 @@ import org.primefaces.model.DualListModel;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Items;
-import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfil;
 import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfilId;
 import pe.gob.mef.gescon.service.PerfilService;
 import pe.gob.mef.gescon.service.PoliticaPerfilService;
 import pe.gob.mef.gescon.service.PoliticaService;
 import pe.gob.mef.gescon.util.JSFUtils;
-
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Perfil;
 import pe.gob.mef.gescon.web.bean.PoliticaPerfil;
+import pe.gob.mef.gescon.web.bean.User;
 
-//import pe.gob.mef.gescon.web.bean.Politica;
 /**
  *
  * @author JJacobo
@@ -54,6 +51,7 @@ public class PerfilMB implements Serializable {
     private String descripcion;
     private BigDecimal activo;
     private List<Perfil> listaPerfils;
+    private List<Perfil> filteredListaPerfils;
     private Perfil selectedPerfil;
     private DualListModel<String> listaPoliticas;
 
@@ -133,6 +131,14 @@ public class PerfilMB implements Serializable {
         this.listaPerfils = listaPerfils;
     }
 
+    public List<Perfil> getFilteredListaPerfils() {
+        return filteredListaPerfils;
+    }
+
+    public void setFilteredListaPerfils(List<Perfil> filteredListaPerfils) {
+        this.filteredListaPerfils = filteredListaPerfils;
+    }
+
     /**
      * @return the listaPoliticas
      */
@@ -195,6 +201,23 @@ public class PerfilMB implements Serializable {
             FacesContext.getCurrentInstance().renderResponse();
         }
     }
+    
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if(!CollectionUtils.isEmpty(this.getFilteredListaPerfils())) {
+                    this.setSelectedPerfil(this.getFilteredListaPerfils().get(index));
+                } else {
+                    this.setSelectedPerfil(this.getListaPerfils().get(index));
+                }
+                this.setFilteredListaPerfils(new ArrayList());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     public void toSave(ActionEvent event) {
         try {
@@ -211,15 +234,18 @@ public class PerfilMB implements Serializable {
                 this.setListaPerfils(Collections.EMPTY_LIST);
             }
             Perfil perfil = new Perfil();
-            perfil.setVnombre(this.getNombre().trim().toUpperCase());
-            perfil.setVdescripcion(this.getDescripcion().trim());
+            perfil.setVnombre(this.getNombre());
+            perfil.setVdescripcion(this.getDescripcion());
             if (!errorValidation(perfil)) {
-//                UsuarioMB usuarioMB = (UsuarioMB) JSFUtils.getSession().getAttribute("usuarioMB");
-//                Usuario usuario = usuarioMB.getUsuario();
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 PerfilService service = (PerfilService) ServiceFinder.findBean("PerfilService");
                 perfil.setNperfilid(service.getNextPK());
+                perfil.setVnombre(StringUtils.upperCase(this.getNombre().trim()));
+                perfil.setVdescripcion(StringUtils.capitalize(this.getDescripcion().trim()));
                 perfil.setNactivo(BigDecimal.ONE);
                 perfil.setDfechacreacion(new Date());
+                perfil.setVusuariocreacion(user.getVlogin());
                 service.saveOrUpdate(perfil);
                 this.setListaPerfils(service.getPerfils());
                 this.cleanAttributes();
@@ -234,10 +260,7 @@ public class PerfilMB implements Serializable {
     public void toUpdate(ActionEvent event) {
         try {
             if (event != null) {
-//                if(this.getSelectedMaestro() == null) {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Seleccione el maestro que desea editar.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
+                this.setSelectedRow(event);
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -250,17 +273,11 @@ public class PerfilMB implements Serializable {
             if (event != null) {
                 List<String> politicasSource = new ArrayList<String>();
                 List<String> politicasTarget = new ArrayList<String>();
-                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-                this.setSelectedPerfil(this.getListaPerfils().get(index));
-
-                PoliticaService politicaservice = (PoliticaService) ServiceFinder.findBean("PoliticaService");
+                this.setSelectedRow(event);
                 PoliticaPerfilService ppservice = (PoliticaPerfilService) ServiceFinder.findBean("PoliticaPerfilService");
                 politicasSource = new Items(ppservice.obtenerListaPoliticasDisp(this.getSelectedPerfil().getNperfilid()), null, "npoliticaid", "vnombre").getItems();
                 politicasTarget = new Items(ppservice.obtenerListaPoliticas(this.getSelectedPerfil().getNperfilid()), null, "npoliticaid", "vnombre").getItems();
                 this.listaPoliticas = new DualListModel<String>(politicasSource, politicasTarget);
-                
-
-//                }
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -281,10 +298,12 @@ public class PerfilMB implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                this.getSelectedPerfil().setVnombre(this.getSelectedPerfil().getVnombre().toUpperCase());
-                this.getSelectedPerfil().setVdescripcion(this.getSelectedPerfil().getVdescripcion().toUpperCase());
-//                this.getSelectedMestro().setIdUsuaModi(user.getUsuario());
-                this.getSelectedPerfil().setDfechacreacion(new Date());
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
+                this.getSelectedPerfil().setVnombre(StringUtils.upperCase(this.getSelectedPerfil().getVnombre().trim()));
+                this.getSelectedPerfil().setVdescripcion(StringUtils.capitalize(this.getSelectedPerfil().getVdescripcion().trim()));
+                this.getSelectedPerfil().setVusuariomodificacion(user.getVlogin());
+                this.getSelectedPerfil().setDfechamodificacion(new Date());
                 PerfilService service = (PerfilService) ServiceFinder.findBean("PerfilService");
                 service.saveOrUpdate(this.getSelectedPerfil());
                 this.setListaPerfils(service.getPerfils());
@@ -301,10 +320,12 @@ public class PerfilMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedPerfil() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     PerfilService service = (PerfilService) ServiceFinder.findBean("PerfilService");
                     this.getSelectedPerfil().setNactivo(BigDecimal.ONE);
-                    this.getSelectedPerfil().setDfechacreacion(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedPerfil().setDfechamodificacion(new Date());
+                    this.getSelectedPerfil().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedPerfil());
                     this.setListaPerfils(service.getPerfils());
                 } else {
@@ -322,10 +343,12 @@ public class PerfilMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedPerfil() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     PerfilService service = (PerfilService) ServiceFinder.findBean("PerfilService");
                     this.getSelectedPerfil().setNactivo(BigDecimal.ZERO);
-                    this.getSelectedPerfil().setDfechacreacion(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedPerfil().setDfechamodificacion(new Date());
+                    this.getSelectedPerfil().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedPerfil());
                     this.setListaPerfils(service.getPerfils());
                 } else {
@@ -349,7 +372,7 @@ public class PerfilMB implements Serializable {
                 error = true;
                 return error;
             } else if (perfil.getVdescripcion() == null || perfil.getVdescripcion().isEmpty()) {
-                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "DescripciÃ³n requerida. Ingrese la descripciÃ³n del perfil.");
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción requerida. Ingrese la descripción del perfil.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;
                 return error;
@@ -361,11 +384,11 @@ public class PerfilMB implements Serializable {
     }
 
     public void asignar(ActionEvent event) {
-     
-
         try {
-              PoliticaPerfilService service = (PoliticaPerfilService) ServiceFinder.findBean("PoliticaPerfilService");
-              service.delete(this.getSelectedPerfil().getNperfilid());
+            PoliticaPerfilService service = (PoliticaPerfilService) ServiceFinder.findBean("PoliticaPerfilService");
+            service.delete(this.getSelectedPerfil().getNperfilid());
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
             for (int x = 0; x < this.listaPoliticas.getTarget().size(); x++) {
                 TpoliticaPerfilId tpoliticaperfilid = new TpoliticaPerfilId();
                 tpoliticaperfilid.setNperfilid(this.getSelectedPerfil().getNperfilid());
@@ -373,6 +396,7 @@ public class PerfilMB implements Serializable {
                 PoliticaPerfil politicaperfil = new PoliticaPerfil();
                 politicaperfil.setId(tpoliticaperfilid);
                 politicaperfil.setDfechacreacion(new Date());
+                politicaperfil.setVusuariocreacion(user.getVlogin());
                 service.saveOrUpdate(politicaperfil);
                 RequestContext.getCurrentInstance().execute("PF('asigDialog').hide();");
             }

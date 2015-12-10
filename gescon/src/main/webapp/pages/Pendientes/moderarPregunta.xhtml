@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">                    
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="Moderar Pregunta" styleClass="TexAlLeft">
+                                <h:panelGrid id="pgModPreg"  columns="2" width="500px">                           
+
+                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{loginMB.getfMsjUsu1()}"/>
+                                    <p:inputTextarea value="#{loginMB.selectedPregunta.vmsjusuario1}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="#{loginMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfMsjUsu1()}"/>
+
+                                    <p:spacer width="10" rendered="#{loginMB.getfMsjUsu1()}"/>
+                                    <p:spacer width="10" rendered="#{loginMB.getfMsjUsu1()}"/>
+
+                                    <h:outputLabel value="Mensaje del Moderador" rendered="#{loginMB.getfSInfMod()}"/>
+                                    <p:inputTextarea  value="#{loginMB.selectedPregunta.vmsjmoderador}" rows="4" cols="66" style="font-weight: normal;"
+                                                      readonly="#{loginMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfSInfMod()}"/>
+
+                                    <p:spacer width="10" rendered="#{loginMB.getfSInfMod()}"/>
+                                    <p:spacer width="10" rendered="#{loginMB.getfSInfMod()}"/>
+
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGrid  columns="3">
+                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{loginMB.loadTree}" oncomplete="PF('catPregDialog').show();" update=":catPregDialogForm:pgCatPreg" />    
+                                        <p:spacer width="10"/>
+                                        <h:outputText id="catedit" value="#{loginMB.selectedPregunta.ncategoriaid}" >
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+                                    </h:panelGrid>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputLabel value="Asunto:"/>
+                                    <p:inputText size="99" value="#{loginMB.selectedPregunta.vasunto}" readonly="#{loginMB.getfButtonMod() eq false}" maxlength="80"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{loginMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." readonly="#{loginMB.getfButtonMod() eq false}"/>
+                                        <h:outputText id="displayd"/>
+                                    </h:panelGrid>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputLabel value="Entidad" style="text-decoration: underline" />
+                                    <p:spacer/>
+
+                                    <h:panelGrid columns="3">
+                                        <h:outputLabel value="NM:"/>
+                                        <p:inputText size="5" value="#{loginMB.selectedPregunta.nentidadid}" maxlength="5" readonly="#{loginMB.getfButtonMod() eq false}"/>
+                                        <p:commandButton actionListener="#{loginMB.toEnt}" icon="ui-icon-search" update="ent"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel value="Nombre:"/>
+                                        <p:inputText id="ent" size="50" value="#{loginMB.entidad}" readonly="#{loginMB.getfButtonMod() eq false}"/>  
+                                    </h:panelGrid>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <p:inputText id="tema" size="99" value="#{loginMB.selectedPregunta.vdatoadicional}" maxlength="80" readonly="#{loginMB.getfButtonMod() eq false}"/>
+                                </h:panelGrid>
+                                <br></br>
+                                <h:panelGrid columns="5" style="padding-left: 55px">
+                                    <p:commandButton value="Actualizar" rendered="#{loginMB.getfButtonMod()}" actionListener="#{loginMB.savePregEdit}" update=":f:pgModPreg" />
+                                    <p:commandButton value="Derivar" rendered="#{loginMB.getfButtonMod()}" ajax="false" action="#{loginMB.DevEsp}"/>
+                                    <p:commandButton value="Solicitar Informacion Adicional" rendered="#{loginMB.getfButtonMod()}" actionListener="#{loginMB.toSi}" update=":siModPregDialogForm:pgSiModPreg" oncomplete="PF('siModPregDialog').show();"  />
+                                    <p:commandButton value="Rechazar" rendered="#{loginMB.getfButtonMod()}" ajax="false"  action="#{loginMB.Rechazar}" />
+                                    <p:commandButton value="Regresar" rendered="#{loginMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
+                                    <p:commandButton value="Responder" rendered="#{loginMB.getfButtonMod() eq false}" actionListener="#{loginMB.toSi}" update=":respModPregDialogForm:pgRespModPreg" oncomplete="PF('respModPregDialog').show();"  />
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+
+                        <p:dialog id="siModPregDlg" header="Solicitar Informacion Adicional - Moderador" widgetVar="siModPregDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="siModPregDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgSiModPreg"  columns="2">
+                                    <h:outputLabel value="Mensaje:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{loginMB.selectedPregunta.vmsjmoderador}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="#{loginMB.getfSInfMod()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+                                    <h:panelGrid style="float: right" columns="2" width="25%">
+                                        <p:commandButton value="Enviar" ajax="false" action="#{loginMB.sendSiMod}"/>
+                                        <p:commandButton value="Cancelar" actionListener="#{loginMB.toCancelSiMod}" />
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="respModPregDlg" header="Responder al Moderador" widgetVar="respModPregDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="respModPregDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgRespModPreg"  columns="2">
+                                    <h:outputLabel value="Mensaje:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{loginMB.selectedPregunta.vmsjusuario1}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="#{loginMB.getfMsjUsu1()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+                                    <h:panelGrid style="float: right" columns="2" width="25%">
+                                        <p:commandButton value="Enviar" ajax="false"  action="#{loginMB.sendUsuMod}"/>
+                                        <p:commandButton value="Cancelar" actionListener="#{loginMB.toCancelRespUsuMod}" />
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="catPregDlg" header="Seleccionar Categoría" widgetVar="catPregDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="catPregDialogForm">
+                                <h:panelGrid id="pgCatPreg" columns="1">
+                                    <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
+                                    <p:tree id="cats" value="#{loginMB.tree}" var="node" animate="true" cache="true"  
+                                            selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
+                                        <p:ajax event="select" listener="#{loginMB.onNodeSelect}" oncomplete="PF('catPregDialog').hide();" update=":f:catedit" />
+                                        <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
+                                            <h:outputText value="#{node.vnombre}"/>
+                                        </p:treeNode>
+                                    </p:tree>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

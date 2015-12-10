@@ -1,5 +1,5 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
 import java.util.Date;
 
@@ -83,16 +83,10 @@ public class TuserPerfil implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    /**
-     * @return the dfechamodificacion
-     */
     public Date getDfechamodificacion() {
-        return dfechamodificacion;
+        return this.dfechamodificacion;
     }
 
-    /**
-     * @param dfechamodificacion the dfechamodificacion to set
-     */
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
     }

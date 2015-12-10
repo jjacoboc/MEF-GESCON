@@ -5,6 +5,7 @@
  */
 package pe.gob.mef.gescon.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
@@ -27,6 +28,32 @@ public class RangoServiceImpl implements RangoService{
         List<Rango> rangos = new ArrayList<Rango>();
         RangoDao rangoDao = (RangoDao) ServiceFinder.findBean("RangoDao");
         List<Mtrango> lista = rangoDao.getMtrangos();
+        for(Mtrango mtrango : lista) {
+            Rango rango = new Rango();
+            BeanUtils.copyProperties(rango, mtrango);
+            rangos.add(rango);
+        }
+        return rangos;
+    }
+
+    @Override
+    public List<Rango> getRangosByTipo(BigDecimal id) throws Exception {
+        List<Rango> rangos = new ArrayList<Rango>();
+        RangoDao rangoDao = (RangoDao) ServiceFinder.findBean("RangoDao");
+        List<Mtrango> lista = rangoDao.getMtrangosByTipo(id);
+        for(Mtrango mtrango : lista) {
+            Rango rango = new Rango();
+            BeanUtils.copyProperties(rango, mtrango);
+            rangos.add(rango);
+        }
+        return rangos;
+    }
+
+    @Override
+    public List<Rango> getRangosActivosByTipo(BigDecimal id) throws Exception {
+        List<Rango> rangos = new ArrayList<Rango>();
+        RangoDao rangoDao = (RangoDao) ServiceFinder.findBean("RangoDao");
+        List<Mtrango> lista = rangoDao.getMtrangosActivosByTipo(id);
         for(Mtrango mtrango : lista) {
             Rango rango = new Rango();
             BeanUtils.copyProperties(rango, mtrango);

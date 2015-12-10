@@ -1,5 +1,5 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,74 +11,102 @@ import java.util.Set;
  */
 public class Tconocimiento implements java.io.Serializable {
 
-    private TconocimientoId id;
-    private MttipoConocimiento mttipoConocimiento;
+    private BigDecimal nconocimientoid;
+    private BigDecimal ncategoriaid;
+    private BigDecimal nsituacionid;
+    private BigDecimal ntipoconocimientoid;
     private String vdescripcion;
     private String vtitulo;
-    private BigDecimal nusuariomod;
-    private BigDecimal nusuariocreacion;
+    private String vusuariomodificacion;
+    private String vusuariocreacion;
     private Date dfechacreacion;
-    private BigDecimal nundejecutora;
-    private String varchivo;
-    private String vrango;
+    private String vejecutora;
+    private String vruta;
     private String vnumero;
     private String vtema;
     private String vdesextra;
     private String vautor;
     private String vfuente;
     private String vtipo;
-    private Set<Tvinculo> tvinculos = new HashSet<Tvinculo>(0);
-    private Set<Tcomentario> tcomentarios = new HashSet<Tcomentario>(0);
-    private Set<TcategoriaConocimiento> tcategoriaConocimientos = new HashSet<TcategoriaConocimiento>(0);
-    private Set<Tdiscusion> tdiscusions = new HashSet<Tdiscusion>(0);
-    private Set<Tcalificacion> tcalificacions = new HashSet<Tcalificacion>(0);
+    private String vcontenido;
+    private BigDecimal ndias;
+    private BigDecimal nactivo;
+    private String vobservacion;
+    private Date dfechamodificacion;
+    private BigDecimal ndestacado;
+    private Date dfechapublicacion;
+    private String vmsjsolicita;
+    private String vmsjrespuesta;
+    private Set thistorials = new HashSet(0);
+    private Set timplementacions = new HashSet(0);
 
     public Tconocimiento() {
     }
 
-    public Tconocimiento(TconocimientoId id, MttipoConocimiento mttipoConocimiento) {
-        this.id = id;
-        this.mttipoConocimiento = mttipoConocimiento;
+    public Tconocimiento(BigDecimal nconocimientoid) {
+        this.nconocimientoid = nconocimientoid;
     }
 
-    public Tconocimiento(TconocimientoId id, MttipoConocimiento mttipoConocimiento, String vdescripcion, String vtitulo, BigDecimal nusuariomod, BigDecimal nusuariocreacion, Date dfechacreacion, BigDecimal nundejecutora, String varchivo, String vrango, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, Set<Tvinculo> tvinculos, Set<Tcomentario> tcomentarios, Set<TcategoriaConocimiento> tcategoriaConocimientos, Set<Tdiscusion> tdiscusions, Set<Tcalificacion> tcalificacions) {
-        this.id = id;
-        this.mttipoConocimiento = mttipoConocimiento;
+    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vejecutora, String vruta, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Date dfechapublicacion, String vmsjsolicita, String vmsjrespuesta, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
+        this.nconocimientoid = nconocimientoid;
+        this.ncategoriaid = ncategoriaid;
+        this.nsituacionid = nsituacionid;
+        this.ntipoconocimientoid = ntipoconocimientoid;
         this.vdescripcion = vdescripcion;
         this.vtitulo = vtitulo;
-        this.nusuariomod = nusuariomod;
-        this.nusuariocreacion = nusuariocreacion;
+        this.vusuariomodificacion = vusuariomodificacion;
+        this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
-        this.nundejecutora = nundejecutora;
-        this.varchivo = varchivo;
-        this.vrango = vrango;
+        this.vejecutora = vejecutora;
+        this.vruta = vruta;
         this.vnumero = vnumero;
         this.vtema = vtema;
         this.vdesextra = vdesextra;
         this.vautor = vautor;
         this.vfuente = vfuente;
         this.vtipo = vtipo;
-        this.tvinculos = tvinculos;
-        this.tcomentarios = tcomentarios;
-        this.tcategoriaConocimientos = tcategoriaConocimientos;
-        this.tdiscusions = tdiscusions;
-        this.tcalificacions = tcalificacions;
+        this.vcontenido = vcontenido;
+        this.ndias = ndias;
+        this.vobservacion = vobservacion;
+        this.dfechamodificacion = dfechamodificacion;
+        this.ndestacado = ndestacado;
+        this.dfechapublicacion = dfechapublicacion;
+        this.vmsjsolicita = vmsjsolicita;
+        this.vmsjrespuesta = vmsjrespuesta;
+        this.thistorials = thistorials;
+        this.timplementacions = timplementacions;
     }
 
-    public TconocimientoId getId() {
-        return this.id;
+    public BigDecimal getNconocimientoid() {
+        return this.nconocimientoid;
     }
 
-    public void setId(TconocimientoId id) {
-        this.id = id;
+    public void setNconocimientoid(BigDecimal nconocimientoid) {
+        this.nconocimientoid = nconocimientoid;
     }
 
-    public MttipoConocimiento getMttipoConocimiento() {
-        return this.mttipoConocimiento;
+    public BigDecimal getNcategoriaid() {
+        return this.ncategoriaid;
     }
 
-    public void setMttipoConocimiento(MttipoConocimiento mttipoConocimiento) {
-        this.mttipoConocimiento = mttipoConocimiento;
+    public void setNcategoriaid(BigDecimal ncategoriaid) {
+        this.ncategoriaid = ncategoriaid;
+    }
+
+    public BigDecimal getNsituacionid() {
+        return this.nsituacionid;
+    }
+
+    public void setNsituacionid(BigDecimal nsituacionid) {
+        this.nsituacionid = nsituacionid;
+    }
+
+    public BigDecimal getNtipoconocimientoid() {
+        return this.ntipoconocimientoid;
+    }
+
+    public void setNtipoconocimientoid(BigDecimal ntipoconocimientoid) {
+        this.ntipoconocimientoid = ntipoconocimientoid;
     }
 
     public String getVdescripcion() {
@@ -97,20 +125,20 @@ public class Tconocimiento implements java.io.Serializable {
         this.vtitulo = vtitulo;
     }
 
-    public BigDecimal getNusuariomod() {
-        return this.nusuariomod;
+    public String getVusuariomodificacion() {
+        return this.vusuariomodificacion;
     }
 
-    public void setNusuariomod(BigDecimal nusuariomod) {
-        this.nusuariomod = nusuariomod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public BigDecimal getNusuariocreacion() {
-        return this.nusuariocreacion;
+    public String getVusuariocreacion() {
+        return this.vusuariocreacion;
     }
 
-    public void setNusuariocreacion(BigDecimal nusuariocreacion) {
-        this.nusuariocreacion = nusuariocreacion;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     public Date getDfechacreacion() {
@@ -121,28 +149,20 @@ public class Tconocimiento implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public BigDecimal getNundejecutora() {
-        return this.nundejecutora;
+    public String getVejecutora() {
+        return this.vejecutora;
     }
 
-    public void setNundejecutora(BigDecimal nundejecutora) {
-        this.nundejecutora = nundejecutora;
+    public void setVejecutora(String vejecutora) {
+        this.vejecutora = vejecutora;
     }
 
-    public String getVarchivo() {
-        return this.varchivo;
+    public String getVruta() {
+        return this.vruta;
     }
 
-    public void setVarchivo(String varchivo) {
-        this.varchivo = varchivo;
-    }
-
-    public String getVrango() {
-        return this.vrango;
-    }
-
-    public void setVrango(String vrango) {
-        this.vrango = vrango;
+    public void setVruta(String vruta) {
+        this.vruta = vruta;
     }
 
     public String getVnumero() {
@@ -193,44 +213,104 @@ public class Tconocimiento implements java.io.Serializable {
         this.vtipo = vtipo;
     }
 
-    public Set<Tvinculo> getTvinculos() {
-        return this.tvinculos;
+    public String getVcontenido() {
+        return this.vcontenido;
     }
 
-    public void setTvinculos(Set<Tvinculo> tvinculos) {
-        this.tvinculos = tvinculos;
+    public void setVcontenido(String vcontenido) {
+        this.vcontenido = vcontenido;
     }
 
-    public Set<Tcomentario> getTcomentarios() {
-        return this.tcomentarios;
+    public BigDecimal getNdias() {
+        return this.ndias;
     }
 
-    public void setTcomentarios(Set<Tcomentario> tcomentarios) {
-        this.tcomentarios = tcomentarios;
+    public void setNdias(BigDecimal ndias) {
+        this.ndias = ndias;
     }
 
-    public Set<TcategoriaConocimiento> getTcategoriaConocimientos() {
-        return this.tcategoriaConocimientos;
+    public BigDecimal getNactivo() {
+        return nactivo;
     }
 
-    public void setTcategoriaConocimientos(Set<TcategoriaConocimiento> tcategoriaConocimientos) {
-        this.tcategoriaConocimientos = tcategoriaConocimientos;
+    public void setNactivo(BigDecimal nactivo) {
+        this.nactivo = nactivo;
     }
 
-    public Set<Tdiscusion> getTdiscusions() {
-        return this.tdiscusions;
+    public String getVobservacion() {
+        return this.vobservacion;
     }
 
-    public void setTdiscusions(Set<Tdiscusion> tdiscusions) {
-        this.tdiscusions = tdiscusions;
+    public void setVobservacion(String vobservacion) {
+        this.vobservacion = vobservacion;
     }
 
-    public Set<Tcalificacion> getTcalificacions() {
-        return this.tcalificacions;
+    public Date getDfechamodificacion() {
+        return this.dfechamodificacion;
     }
 
-    public void setTcalificacions(Set<Tcalificacion> tcalificacions) {
-        this.tcalificacions = tcalificacions;
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
+    }
+
+    public BigDecimal getNdestacado() {
+        return this.ndestacado;
+    }
+
+    public void setNdestacado(BigDecimal ndestacado) {
+        this.ndestacado = ndestacado;
+    }
+
+    public Date getDfechapublicacion() {
+        return dfechapublicacion;
+    }
+
+    public void setDfechapublicacion(Date dfechapublicacion) {
+        this.dfechapublicacion = dfechapublicacion;
+    }
+
+    /**
+     * @return the vmsjsolicita
+     */
+    public String getVmsjsolicita() {
+        return vmsjsolicita;
+    }
+
+    /**
+     * @param vmsjsolicita the vmsjsolicita to set
+     */
+    public void setVmsjsolicita(String vmsjsolicita) {
+        this.vmsjsolicita = vmsjsolicita;
+    }
+
+    /**
+     * @return the vmsjrespuesta
+     */
+    public String getVmsjrespuesta() {
+        return vmsjrespuesta;
+    }
+
+    /**
+     * @param vmsjrespuesta the vmsjrespuesta to set
+     */
+    public void setVmsjrespuesta(String vmsjrespuesta) {
+        this.vmsjrespuesta = vmsjrespuesta;
+    }
+
+    public Set getThistorials() {
+        return this.thistorials;
+    }
+
+    public void setThistorials(Set thistorials) {
+        this.thistorials = thistorials;
+    }
+
+    public Set getTimplementacions() {
+        return this.timplementacions;
+    }
+
+    public void setTimplementacions(Set timplementacions) {
+        this.timplementacions = timplementacions;
     }
 
 }

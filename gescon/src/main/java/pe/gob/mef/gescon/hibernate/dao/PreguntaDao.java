@@ -6,7 +6,6 @@
 package pe.gob.mef.gescon.hibernate.dao;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.Tpregunta;
@@ -17,9 +16,16 @@ import pe.gob.mef.gescon.hibernate.domain.Tpregunta;
  */
 public interface PreguntaDao {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<Tpregunta> getTpreguntas() throws Exception;
-    public void saveOrUpdate(Tpregunta tpregunta) throws Exception;
-    public List<HashMap>  traerNomCategoria(BigDecimal categoriaid) throws Exception;
-    public List<ArrayList> obtenerPreguntas() throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<Tpregunta> getTpreguntas() throws Exception;
+    Tpregunta getTpreguntaById(BigDecimal id) throws Exception;
+    void saveOrUpdate(Tpregunta tpregunta) throws Exception;
+    List<HashMap>  traerNomCategoria(BigDecimal categoriaid) throws Exception;
+    List<HashMap> obtenerPreguntas(BigDecimal preguntaid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    List<HashMap> obtenerPreguntaxAsig(BigDecimal preguntaid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    List<HashMap> obtenerPerfilxUsuario(BigDecimal usuarioid) throws Exception;
+    List<HashMap> getNomEntidadbyIdEntidad(BigDecimal entidadid) throws Exception;
+    List<HashMap> getConcimientosVinculados(HashMap filters);
+    List<HashMap> getConcimientosDisponibles(HashMap filters);
+    void delete(BigDecimal preguntaid) throws Exception;
 }

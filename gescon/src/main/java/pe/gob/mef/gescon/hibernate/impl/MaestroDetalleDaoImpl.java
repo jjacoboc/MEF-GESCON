@@ -56,7 +56,16 @@ public class MaestroDetalleDaoImpl extends HibernateDaoSupport implements Maestr
     public List<Tmaestrodetalle> getDetalleByMaestro(Mtmaestro mtmaestro) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Tmaestrodetalle.class);
         criteria.add(Restrictions.eq("nmaestroid", mtmaestro.getNmaestroid()));
-        criteria.addOrder(Order.asc("vnombre"));
+        criteria.addOrder(Order.asc("ndetalleid"));
+        return (List<Tmaestrodetalle>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public List<Tmaestrodetalle> getDetallesActivosByMaestro(Mtmaestro mtmaestro) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tmaestrodetalle.class);
+        criteria.add(Restrictions.eq("nmaestroid", mtmaestro.getNmaestroid()));
+        criteria.add(Restrictions.eq("nactivo", BigDecimal.ONE));
+        criteria.addOrder(Order.asc("ndetalleid"));
         return (List<Tmaestrodetalle>) getHibernateTemplate().findByCriteria(criteria);
     }
 

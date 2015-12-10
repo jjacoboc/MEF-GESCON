@@ -81,7 +81,7 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
             sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
             sql.append("INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
             sql.append("WHERE a.nactivo = :ACTIVO ");
-            sql.append("AND a.nestadoid IN (:ESTADO_REGISTRADO,:ESTADO_PUBLICADO,:ESTADO_CONCORDADO) ");
+            //sql.append("AND a.nestadoid IN (:ESTADO_REGISTRADO,:ESTADO_PUBLICADO,:ESTADO_CONCORDADO) ");
             sql.append("AND a.nbaselegalid IN(SELECT d.nbaselegalvinculadaid FROM TVINCULO_BASELEGAL d WHERE d.nbaselegalid = :ID)");
             sql.append("ORDER BY a.vnumero ");
 
@@ -92,9 +92,9 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
                             Query query = session.createSQLQuery(sql.toString());
                             query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
                             query.setParameter("ACTIVO", BigDecimal.ONE);
-                            query.setParameter("ESTADO_REGISTRADO", Constante.ESTADO_BASELEGAL_REGISTRADO);
-                            query.setParameter("ESTADO_PUBLICADO", Constante.ESTADO_BASELEGAL_PUBLICADO);
-                            query.setParameter("ESTADO_CONCORDADO", Constante.ESTADO_BASELEGAL_CONCORDADO);
+//                            query.setParameter("ESTADO_REGISTRADO", Constante.ESTADO_BASELEGAL_REGISTRADO);
+//                            query.setParameter("ESTADO_PUBLICADO", Constante.ESTADO_BASELEGAL_PUBLICADO);
+//                            query.setParameter("ESTADO_CONCORDADO", Constante.ESTADO_BASELEGAL_CONCORDADO);
                             query.setParameter("ID", id);
                             return query.list();
                         }
@@ -118,9 +118,10 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
             sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
             sql.append("INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
             sql.append("WHERE a.nactivo = :ACTIVO ");
-            sql.append("AND a.nestadoid IN (:ESTADO_REGISTRADO,:ESTADO_PUBLICADO,:ESTADO_CONCORDADO) ");
+            sql.append("AND a.nestadoid IN (:ESTADO_PUBLICADO, :ESTADO_CONCORDADO, :ESTADO_MODIFICADA) ");
             if(id != null) {
-                sql.append("AND a.nbaselegalid NOT IN(SELECT d.nbaselegalvinculadaid FROM TVINCULO_BASELEGAL d WHERE d.nbaselegalid = :ID)");
+                sql.append("AND a.nbaselegalid <> :ID ");
+                sql.append("AND a.nbaselegalid NOT IN(SELECT d.nbaselegalvinculadaid FROM TVINCULO_BASELEGAL d WHERE d.nbaselegalid = :ID) ");
             }
             sql.append("ORDER BY a.vnumero ");
 
@@ -131,9 +132,9 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
                             Query query = session.createSQLQuery(sql.toString());
                             query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
                             query.setParameter("ACTIVO", BigDecimal.ONE);
-                            query.setParameter("ESTADO_REGISTRADO", Constante.ESTADO_BASELEGAL_REGISTRADO);
                             query.setParameter("ESTADO_PUBLICADO", Constante.ESTADO_BASELEGAL_PUBLICADO);
                             query.setParameter("ESTADO_CONCORDADO", Constante.ESTADO_BASELEGAL_CONCORDADO);
+                            query.setParameter("ESTADO_MODIFICADA", Constante.ESTADO_BASELEGAL_MODIFICADA);
                             if(id != null) {
                                 query.setParameter("ID", id);
                             }
@@ -145,6 +146,36 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
             e.printStackTrace();
         }
         return (List<HashMap>) object;
+    }
+    
+    @Override
+    public List<HashMap> obtenerBaseLegalxAsig(final BigDecimal baselegalid,final BigDecimal usuarioid, final BigDecimal tpoconocimientoid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        Object object = null;
+        try {
+            sql.append("select nasignacionid AS IDASIGNACION, ntipoconocimientoid AS TPOCONOCIMIENTO , nconocimientoid AS IDPREGUNTA, nusuarioid AS IDUSUARIO, nestadoid AS ESTADO, VUSUARIOCREACION AS USUCREA, VUSUARIOMODIFICACION AS USUMOD, ");
+            sql.append(" DFECHACREACION AS FECHACREA, DFECHAMODIFICACION AS FECHAMOD, DFECHAASIGNACION as FECHAASIG, DFECHAATENCION AS FECHAATEN, DFECHARECEPCION AS FECHARECEP ");
+            sql.append(" from TASIGNACION ");
+            sql.append(" WHERE NCONOCIMIENTOID =:BASE  AND NUSUARIOID=:USUARIO AND NTIPOCONOCIMIENTOID=:TIPOCONOCIMIENTO AND NESTADOID=1");
+            
+            object = getHibernateTemplate().execute(
+                    new HibernateCallback() {
+                        @Override
+                        public Object doInHibernate(Session session) throws HibernateException {
+                            Query query = session.createSQLQuery(sql.toString())
+                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                                    .setParameter("BASE", baselegalid)
+                                    .setParameter("USUARIO", usuarioid)
+                                    .setParameter("TIPOCONOCIMIENTO", tpoconocimientoid);
+                            return query.list();
+                        }
+                    });
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return (List<HashMap>) object;
+
     }
 
     @Override

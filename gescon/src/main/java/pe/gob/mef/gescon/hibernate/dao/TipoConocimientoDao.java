@@ -5,6 +5,7 @@
  */
 package pe.gob.mef.gescon.hibernate.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.MttipoConocimiento;
 
@@ -15,4 +16,14 @@ import pe.gob.mef.gescon.hibernate.domain.MttipoConocimiento;
 public interface TipoConocimientoDao {
     
     public List<MttipoConocimiento> getMttipoConocimientos() throws Exception;
+    
+    /**
+     * cnishimura
+     * @param ntpoconocimientoid
+     * @return
+     * @throws Exception 
+     */
+    public MttipoConocimiento getMttipoConocimientoById(BigDecimal ntpoconocimientoid) throws Exception;
+    
+    
 }

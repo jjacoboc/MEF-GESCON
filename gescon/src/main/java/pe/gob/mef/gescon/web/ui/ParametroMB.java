@@ -5,9 +5,9 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
-import com.mchange.lang.ByteUtils;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -25,8 +25,10 @@ import org.primefaces.context.RequestContext;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.ParametroService;
+import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Parametro;
+import pe.gob.mef.gescon.web.bean.User;
 
 /**
  *
@@ -40,10 +42,11 @@ public class ParametroMB implements Serializable{
     private static final Log log = LogFactory.getLog(ParametroMB.class);
     private BigDecimal id;
     private String nombre;
-    private String valor;
+    private BigDecimal valor;
     private String descripcion;
     private BigDecimal activo;
     private List<Parametro> listaParametro;
+    private List<Parametro> filteredListaParametro;
     private Parametro selectedParametro;
     
     /**
@@ -79,20 +82,22 @@ public class ParametroMB implements Serializable{
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
+
     /**
-     * @return the nombre
+     * @return the valor
      */
-    public String getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
     /**
-     * @param valor the nombre to set
+     * @param valor the valor to set
      */
-    public void setValor(String valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
+    
+
 
     /**
      * @return the descripcion
@@ -136,6 +141,14 @@ public class ParametroMB implements Serializable{
         this.listaParametro = listaParametro;
     }
 
+    public List<Parametro> getFilteredListaParametro() {
+        return filteredListaParametro;
+    }
+
+    public void setFilteredListaParametro(List<Parametro> filteredListaParametro) {
+        this.filteredListaParametro = filteredListaParametro;
+    }
+
     /**
      * @return the selectedParametro
      */
@@ -165,13 +178,30 @@ public class ParametroMB implements Serializable{
         this.setId(BigDecimal.ZERO);
         this.setDescripcion(StringUtils.EMPTY);
         this.setNombre(StringUtils.EMPTY);
-        this.setValor(StringUtils.EMPTY);
+        this.setValor(null);
         this.setActivo(BigDecimal.ONE);
         this.setSelectedParametro(null);
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {
             iter.remove();
             FacesContext.getCurrentInstance().renderResponse();
+        }
+    }
+    
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if(!CollectionUtils.isEmpty(this.getFilteredListaParametro())) {
+                    this.setSelectedParametro(this.getFilteredListaParametro().get(index));
+                } else {
+                    this.setSelectedParametro(this.getListaParametro().get(index));
+                }
+                this.setFilteredListaParametro(new ArrayList());
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
         }
     }
     
@@ -190,16 +220,20 @@ public class ParametroMB implements Serializable{
                 this.setListaParametro(Collections.EMPTY_LIST);
             }
             Parametro parametro = new Parametro();
-            parametro.setVnombre(this.getNombre().trim().toUpperCase());
-            parametro.setVvalor(this.getValor().trim().toUpperCase());
-            parametro.setVdescripcion(this.getDescripcion().trim());
+            parametro.setVnombre(this.getNombre());
+            parametro.setNvalor(this.getValor());
+            parametro.setVdescripcion(this.getDescripcion());
             if (!errorValidation(parametro)) {
-//                UsuarioMB usuarioMB = (UsuarioMB) JSFUtils.getSession().getAttribute("usuarioMB");
-//                Usuario usuario = usuarioMB.getUsuario();
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
                 ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
                 parametro.setNparametroid(service.getNextPK());
+                parametro.setVnombre(StringUtils.upperCase(this.getNombre().trim()));
+                parametro.setNvalor(this.getValor());
+                parametro.setVdescripcion(StringUtils.capitalize(this.getDescripcion().trim()));
                 parametro.setNactivo(BigDecimal.ONE);
-                parametro.setDfechcrea(new Date());
+                parametro.setDfechacreacion(new Date());
+                parametro.setVusuariocreacion(user.getVlogin());
                 service.saveOrUpdate(parametro);
                 this.setListaParametro(service.getParametros());
                 this.cleanAttributes();
@@ -214,10 +248,7 @@ public class ParametroMB implements Serializable{
     public void toUpdate(ActionEvent event) {
         try {
             if(event != null) {
-//                if(this.getSelectedMaestro() == null) {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Seleccione el maestro que desea editar.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
+                this.setSelectedRow(event);
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -233,8 +264,8 @@ public class ParametroMB implements Serializable{
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if(StringUtils.isBlank(this.getSelectedParametro().getVvalor())) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Nombre requerido. Ingrese el valor del parametro.");
+                if (this.getSelectedParametro().getNvalor()== null) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Valor requerido. Ingrese el valor del parametro.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
@@ -243,11 +274,13 @@ public class ParametroMB implements Serializable{
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                this.getSelectedParametro().setVnombre(this.getSelectedParametro().getVnombre().toUpperCase());
-                this.getSelectedParametro().setVvalor(this.getSelectedParametro().getVvalor().toUpperCase());
-                this.getSelectedParametro().setVdescripcion(this.getSelectedParametro().getVdescripcion().toUpperCase());
-//                this.getSelectedMestro().setIdUsuaModi(user.getUsuario());
-                this.getSelectedParametro().setDfechmod(new Date());
+                LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                User user = loginMB.getUser();
+                this.getSelectedParametro().setVnombre(StringUtils.upperCase(this.getSelectedParametro().getVnombre().trim()));
+                this.getSelectedParametro().setNvalor(this.getSelectedParametro().getNvalor());
+                this.getSelectedParametro().setVdescripcion(StringUtils.capitalize(this.getSelectedParametro().getVdescripcion().trim()));
+                this.getSelectedParametro().setVusuariomodificacion(user.getVlogin());
+                this.getSelectedParametro().setDfechamodificacion(new Date());
                 ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
                 service.saveOrUpdate(this.getSelectedParametro());
                 this.setListaParametro(service.getParametros());
@@ -264,10 +297,12 @@ public class ParametroMB implements Serializable{
         try {
             if(event != null) {
                 if(this.getSelectedParametro() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
                     this.getSelectedParametro().setNactivo(BigDecimal.ONE);
-                    this.getSelectedParametro().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedParametro().setDfechamodificacion(new Date());
+                    this.getSelectedParametro().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedParametro());
                     this.setListaParametro(service.getParametros());
                 } else {
@@ -285,10 +320,12 @@ public class ParametroMB implements Serializable{
         try {
             if(event != null) {
                 if(this.getSelectedParametro() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
                     this.getSelectedParametro().setNactivo(BigDecimal.ZERO);
-                    this.getSelectedParametro().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedParametro().setDfechamodificacion(new Date());
+                    this.getSelectedParametro().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedParametro());
                     this.setListaParametro(service.getParametros());
                 } else {
@@ -312,12 +349,12 @@ public class ParametroMB implements Serializable{
                 error = true;
                 return error;
             } 
-            else if (parametro.getVvalor()== null || parametro.getVvalor().isEmpty()) {
+            else if (parametro.getNvalor()== null) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Valor requerido. Ingrese el valor del parametro.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;
                 return error;
-            }            
+            }
             else if (parametro.getVdescripcion()== null || parametro.getVdescripcion().isEmpty()) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción requerida. Ingrese la descripción del parametro.");
                 FacesContext.getCurrentInstance().addMessage(null, message);

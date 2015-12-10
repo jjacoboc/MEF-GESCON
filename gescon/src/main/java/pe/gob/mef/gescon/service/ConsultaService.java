@@ -15,5 +15,6 @@ import pe.gob.mef.gescon.web.bean.Consulta;
  */
 public interface ConsultaService {
     
-    public List<Consulta> getQueryFilter(HashMap filters);
+    List<Consulta> getQueryFilter(HashMap filters);
+    List<Consulta> getDestacadosByTipoConocimiento(HashMap filters);
 }

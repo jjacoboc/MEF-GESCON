@@ -18,8 +18,10 @@ public class TipoConocimiento implements Serializable{
     private BigDecimal ntpoconocimientoid;
     private String vnombre;
     private BigDecimal nusuariomod;
-    private BigDecimal nusuariocreacion;
+    private String vusuariomodificacion;
+    private String vusuariocreacion;    
     private Date dfechacreacion;
+    private Date dfechamodificacion;
     
     public void TipoConocimiento(){
         
@@ -68,17 +70,31 @@ public class TipoConocimiento implements Serializable{
     }
 
     /**
-     * @return the nusuariocreacion
+     * @return the vusuariomodificacion
      */
-    public BigDecimal getNusuariocreacion() {
-        return nusuariocreacion;
+    public String getVusuariomodificacion() {
+        return vusuariomodificacion;
     }
 
     /**
-     * @param nusuariocreacion the nusuariocreacion to set
+     * @param vusuariomodificacion the vusuariomodificacion to set
      */
-    public void setNusuariocreacion(BigDecimal nusuariocreacion) {
-        this.nusuariocreacion = nusuariocreacion;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
+    }
+
+    /**
+     * @return the vusuariocreacion
+     */
+    public String getVusuariocreacion() {
+        return vusuariocreacion;
+    }
+
+    /**
+     * @param vusuariocreacion the vusuariocreacion to set
+     */
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     /**
@@ -93,5 +109,19 @@ public class TipoConocimiento implements Serializable{
      */
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
+    }
+
+    /**
+     * @return the dfechamodificacion
+     */
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
+    }
+
+    /**
+     * @param dfechamodificacion the dfechamodificacion to set
+     */
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
 }

@@ -43,6 +43,19 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
     
     @Override
+    public List<Categoria> getCategoriasActived() throws Exception {
+        List<Categoria> categorias = new ArrayList<Categoria>();
+        CategoriaDao categoriaDao = (CategoriaDao) ServiceFinder.findBean("CategoriaDao");
+        List<Mtcategoria> lista = categoriaDao.getMtcategoriasActived();
+        for(Mtcategoria mtcategoria : lista) {
+            Categoria categoria = new Categoria();
+            BeanUtils.copyProperties(categoria, mtcategoria);
+            categorias.add(categoria);
+        }
+        return categorias;
+    }
+    
+    @Override
     public List<Categoria> getCategoriasPrimerNivel() throws Exception {
         List<Categoria> categorias = new ArrayList<Categoria>();
         CategoriaDao categoriaDao = (CategoriaDao) ServiceFinder.findBean("CategoriaDao");
@@ -75,7 +88,11 @@ public class CategoriaServiceImpl implements CategoriaService {
         Categoria categoria = new Categoria();
         CategoriaDao categoriaDao = (CategoriaDao) ServiceFinder.findBean("CategoriaDao");
         Mtcategoria mtcategoria = categoriaDao.getMtcategoriaById(id);
-        BeanUtils.copyProperties(categoria, mtcategoria);
+        if(mtcategoria != null) {
+            BeanUtils.copyProperties(categoria, mtcategoria);
+        } else {
+            categoria = null;
+        }
         return categoria;
     }
 

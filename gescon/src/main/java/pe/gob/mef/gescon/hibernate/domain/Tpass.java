@@ -1,5 +1,5 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
 import java.util.Date;
 
@@ -30,6 +30,8 @@ public class Tpass implements java.io.Serializable {
         this.vclave = vclave;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
+        this.vusuariomodificacion = vusuariomodificacion;
+        this.dfechamodificacion = dfechamodificacion;
     }
 
     public TpassId getId() {
@@ -72,30 +74,19 @@ public class Tpass implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    /**
-     * @return the vusuariomodificacion
-     */
     public String getVusuariomodificacion() {
-        return vusuariomodificacion;
+        return this.vusuariomodificacion;
     }
 
-    /**
-     * @param vusuariomodificacion the vusuariomodificacion to set
-     */
+
     public void setVusuariomodificacion(String vusuariomodificacion) {
         this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    /**
-     * @return the dfechamodificacion
-     */
     public Date getDfechamodificacion() {
-        return dfechamodificacion;
+        return this.dfechamodificacion;
     }
 
-    /**
-     * @param dfechamodificacion the dfechamodificacion to set
-     */
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
     }

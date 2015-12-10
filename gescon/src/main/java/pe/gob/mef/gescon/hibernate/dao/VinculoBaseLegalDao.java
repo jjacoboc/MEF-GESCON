@@ -15,7 +15,7 @@ import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegal;
  */
 public interface VinculoBaseLegalDao {
     
-    public BigDecimal getNextPK() throws Exception;
-    public void saveOrUpdate(TvinculoBaselegal tvinculoBaselegal) throws Exception;
-    public void deleteByBaseLegal(final Tbaselegal tbaselegal) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    void saveOrUpdate(TvinculoBaselegal tvinculoBaselegal) throws Exception;
+    void deleteByBaseLegal(final Tbaselegal tbaselegal) throws Exception;
 }

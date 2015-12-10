@@ -1,0 +1,200 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">                    
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="#{msgs.bl_lbl_pnlEdit}" styleClass="TexAlLeft">
+                                <h:panelGrid id="pgEdit" columns="3">
+                                    <h:outputLabel value="#{msgs.icon_asterisk}" rendered="#{loginMB.getfMsjUsuCreaBase()}"/>
+                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{loginMB.getfMsjUsuCreaBase()}"/>
+                                    <p:inputTextarea value="#{loginMB.selectedBaseLegal.vmsjusuariocreacion}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="true"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfMsjUsuCreaBase()}"/>
+
+                                    <h:outputLabel value="#{msgs.icon_asterisk}" rendered="#{loginMB.getfMsjModBase()}"/>
+                                    <h:outputLabel value="Mensaje del Moderador" rendered="#{loginMB.getfMsjModBase()}"/>
+                                    <p:inputTextarea  value="#{loginMB.selectedBaseLegal.vmsjusuariocreacion}" rows="4" cols="66" style="font-weight: normal;"
+                                                      readonly="true"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfMsjModBase()}"/>
+
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_categoria}"/>
+                                    <h:panelGroup>
+                                        <p:commandButton value="#{msgs.bl_btn_categoria}" actionListener="#{loginMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="#{loginMB.selectedCategoria.vnombre}" />
+                                    </h:panelGroup>
+
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_archivo}"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:lightBox>
+                                            <h:outputLink value="#">
+                                                <h:panelGrid columns="2">
+                                                    <p:graphicImage library="images" name="pdf.png"/>
+                                                    <h:outputText id="fileName" value="#{loginMB.selectedBaseLegal.archivo.vnombre}"/>
+                                                </h:panelGrid>
+                                            </h:outputLink>
+                                            <f:facet name="inline">
+                                                <p:media player="pdf" cache="false" value="#{loginMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                                    <f:param name="fileName" value="#{loginMB.selectedBaseLegal.archivo.vruta}"/>
+                                                </p:media>
+                                            </f:facet>
+                                        </p:lightBox>
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_nombre}"/>
+                                    <p:inputText size="50" value="#{loginMB.selectedBaseLegal.vnombre}" style="text-transform: uppercase;" maxlength="25"/>
+
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_numero}"/>
+                                    <p:inputText size="25" value="#{loginMB.selectedBaseLegal.vnumero}" style="text-transform: uppercase;" maxlength="25"/>
+
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_rango}"/>
+                                    <p:selectOneMenu id="codcese" value="#{loginMB.selectedBaseLegal.nrangoid}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;">
+                                        <f:selectItem itemValue="" itemLabel="Seleccione" />
+                                        <f:selectItems value="#{listaSessionMB.listaRangoBaseLegal}"/>
+                                    </p:selectOneMenu>
+
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_ambito}"/>                                
+                                    <h:panelGrid columns="4">
+                                        <p:selectBooleanCheckbox value="#{loginMB.chkGobNacional}" itemLabel="Gobierno Nacional" />
+                                        <p:selectBooleanCheckbox value="#{loginMB.chkGobRegional}" itemLabel="Gobierno Regional" />
+                                        <p:selectBooleanCheckbox value="#{loginMB.chkGobLocal}" itemLabel="Gobierno Local" />
+                                        <p:selectBooleanCheckbox value="#{loginMB.chkMancomunidades}" itemLabel="Mancomunidades" />
+                                    </h:panelGrid>
+
+                                    <p:spacer/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_sumilla}"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{loginMB.selectedBaseLegal.vsumilla}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_fecha}"/>
+                                    <p:calendar id="fcese" locale="es" value="#{loginMB.selectedBaseLegal.dfechapublicacion}" size="8" pattern="dd/MM/yyyy" showOn="button" readonlyInput="true" showButtonPanel="true"/>
+
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_tema}"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputText id="tema" size="50" value="#{loginMB.selectedBaseLegal.vtema}" maxlength="50"/>
+                                        <h:outputText value="#{msgs.bl_lbl_notatema}" style="font-size: 9px;"/>
+                                        <p:watermark for="tema" value="#{msgs.bl_lbl_watermark}"/>
+                                    </h:panelGrid>
+
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_vinculo}"/>
+                                    <p:spacer/>
+                                </h:panelGrid>
+                                <p:fieldset>
+                                    <h:panelGrid id="pgEditVinc" columns="1" cellpadding="0" cellspacing="0">
+                                        <p:commandLink value="#{msgs.bl_btn_vinculo}" actionListener="#{loginMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pgPick"/>
+                                        <p:spacer height="5"/>
+                                        <p:dataTable value="#{loginMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada." style="width: 600px;">
+                                            <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                                <h:outputText value="#{t.vnumero}"/>
+                                            </p:column>
+                                            <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                                <h:outputText value="#{t.vnombre}"/>
+                                            </p:column>
+                                            <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                <h:outputText value="#{t.ncategoriaid}">
+                                                    <f:converter converterId="converterCategoria"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                <h:outputText value="#{t.nestadoid}">
+                                                    <f:converter converterId="converterEstadoBaseLegal"/>
+                                                </h:outputText>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:panelGrid>
+                                </p:fieldset>
+                                <h:panelGrid columns="2" width="100%">
+                                    <h:panelGroup>
+                                        <p:commandButton value="Responder" actionListener="#{loginMB.toRespSolInfoBase}" update=":siRespBaseDialogForm:pgSiRespBase" oncomplete="PF('siRespBaseDialog').show();"  />
+                                        <p:spacer width="10"/>
+                                    </h:panelGroup>
+                                    <h:outputText value="#{msgs.bl_lbl_notapie}" style="font-size: 9px;float: right;"/>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+
+                        <p:dialog id="pickDlg" header="#{msgs.bl_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="pickDialogForm">
+                                <h:panelGrid id="pgPick" columns="1">
+                                    <h:panelGroup rendered="#{loginMB.selectedBaseLegal ne null}">
+                                        <h:outputText value="#{msgs.bl_lbl_baselegal}" style="font-weight: bold;"/>
+                                        <p:spacer width="10"/>
+                                        <h:outputText value="#{loginMB.selectedBaseLegal.vnumero}" style="font-weight: bold;"/>
+                                        <h:outputText value=" - " style="font-weight: bold;"/>
+                                        <h:outputText value="#{loginMB.selectedBaseLegal.vnombre}" style="font-weight: bold;"/>
+                                    </h:panelGroup>
+                                    <h:panelGrid columns="2" styleClass="pickListPanelColumns">
+                                        <p:pickList value="#{loginMB.pickList}" var="p" itemValue="#{p}" itemLabel="#{p.vnumero} - #{p.vnombre}"
+                                                    converter="converterPickListBaseLegal" showSourceFilter="true" showTargetFilter="true" 
+                                                    filterMatchMode="contains">
+                                            <p:ajax event="transfer" listener="#{loginMB.onTransfer}" 
+                                                    update=":f:pgEditVinc, :pickDialogForm:pgPick"/>
+                                            <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
+                                            <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
+                                        </p:pickList>
+
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="siRespBaseDlg" header="Solicitar Informacion Adicional - Usuario Creacion" widgetVar="siRespBaseDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="siRespBaseDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgSiRespBase"  columns="2">
+                                    <h:outputLabel value="Mensaje:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{loginMB.selectedBaseLegal.vmsjusuariocreacion}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="false" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+                                    <p:spacer/>
+                                    <h:panelGrid style="float: right" columns="2" width="25%">
+                                        <p:commandButton value="Enviar" ajax="false" action="#{loginMB.sendSiRespBase}"  />
+                                        <p:commandButton value="Cancelar" actionListener="#{loginMB.toCancelSiRespBase}" />
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="catDlg" header="#{msgs.bl_lbl_pnlCategoria}" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="catDialogForm">
+                                <h:panelGrid id="pgCat" columns="1">
+                                    <h:outputText value="#{msgs.bl_lbl_categorias}" style="font-weight: bold; text-decoration: underline;"/>
+                                    <p:tree id="cats" value="#{loginMB.tree}" var="node" animate="true" cache="true"  
+                                            selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
+                                        <p:ajax event="select" listener="#{loginMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pgEdit" />
+                                        <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
+                                            <h:outputText value="#{node.vnombre}"/>
+                                        </p:treeNode>
+                                    </p:tree>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

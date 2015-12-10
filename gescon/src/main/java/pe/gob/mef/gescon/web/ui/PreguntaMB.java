@@ -13,8 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -26,39 +26,53 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.PreguntaService;
+import pe.gob.mef.gescon.service.RespuestaHistService;
 import pe.gob.mef.gescon.util.JSFUtils;
-
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Pregunta;
+import pe.gob.mef.gescon.web.bean.RespuestaHist;
+import pe.gob.mef.gescon.web.bean.User;
 
-//import pe.gob.mef.gescon.web.bean.Politica;
 /**
  *
  * @author JJacobo
  */
 @ManagedBean
-@ViewScoped
+@ApplicationScoped
 public class PreguntaMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(PreguntaMB.class);
     private List<Pregunta> listaPregunta;
+    private List<Pregunta> flistaPregunta;
+    private List<RespuestaHist> listaRespuesta;
+    private List<Asignacion> listaAsignacion;
     private Pregunta selectedPregunta;
+    private Asignacion selectedAsignacion;
     private String asunto;
     private String detalle;
     private BigDecimal entidadId;
     private String datoAdicional;
     private String respuesta;
-    private String msjusuario;
+    private String msjusuario2;
     private String msjespecialista;
     private BigDecimal nsituacion;
-    private String fSinf;
-    private String fvSinf;
-    private String fMusu;
-    private String fvMusu;
+    private String msjmoderador;
+    private String msjusuario1;
+    private String fSInfEspe; //SI Especialista
+    private String fButtonEspe; //Botones Especialista
+    private String fButtonMod;// Botones Moderador
+    private String fButtonModPub;//Botones Moderador Publicar
+    private String fMsjUsu1; //Mensaje 1 Usuario
+    private String fMsjUsu2; //Mensaje 2 Usuario
+    private String fSInfMod; //SI Moderador
+    private String fButton; //Botones UE - ESPE
+    private String fButtonUM; //Botones UE - MOD
     private String entidad;
     private String tema;
     private TreeNode tree;
@@ -70,6 +84,7 @@ public class PreguntaMB implements Serializable {
     public PreguntaMB() {
     }
     public BigDecimal cat1;
+
     /**
      * @return the listaPregunta
      */
@@ -85,6 +100,48 @@ public class PreguntaMB implements Serializable {
     }
 
     /**
+     * @return the flistaPregunta
+     */
+    public List<Pregunta> getFlistaPregunta() {
+        return flistaPregunta;
+    }
+
+    /**
+     * @param flistaPregunta the flistaPregunta to set
+     */
+    public void setFlistaPregunta(List<Pregunta> flistaPregunta) {
+        this.flistaPregunta = flistaPregunta;
+    }
+
+    /**
+     * @return the listaRespuesta
+     */
+    public List<RespuestaHist> getListaRespuesta() {
+        return listaRespuesta;
+    }
+
+    /**
+     * @param listaRespuesta the listaRespuesta to set
+     */
+    public void setListaRespuesta(List<RespuestaHist> listaRespuesta) {
+        this.listaRespuesta = listaRespuesta;
+    }
+
+    /**
+     * @return the listaAsignacion
+     */
+    public List<Asignacion> getListaAsignacion() {
+        return listaAsignacion;
+    }
+
+    /**
+     * @param listaAsignacion the listaAsignacion to set
+     */
+    public void setListaAsignacion(List<Asignacion> listaAsignacion) {
+        this.listaAsignacion = listaAsignacion;
+    }
+
+    /**
      * @return the selectedPregunta
      */
     public Pregunta getSelectedPregunta() {
@@ -96,6 +153,20 @@ public class PreguntaMB implements Serializable {
      */
     public void setSelectedPregunta(Pregunta selectedPregunta) {
         this.selectedPregunta = selectedPregunta;
+    }
+
+    /**
+     * @return the selectedAsignacion
+     */
+    public Asignacion getSelectedAsignacion() {
+        return selectedAsignacion;
+    }
+
+    /**
+     * @param selectedAsignacion the selectedAsignacion to set
+     */
+    public void setSelectedAsignacion(Asignacion selectedAsignacion) {
+        this.selectedAsignacion = selectedAsignacion;
     }
 
     /**
@@ -169,17 +240,17 @@ public class PreguntaMB implements Serializable {
     }
 
     /**
-     * @return the msjusuario
+     * @return the msjusuario2
      */
-    public String getMsjusuario() {
-        return msjusuario;
+    public String getMsjusuario2() {
+        return msjusuario2;
     }
 
     /**
-     * @param msjusuario the msjusuario to set
+     * @param msjusuario2 the msjusuario2 to set
      */
-    public void setMsjusuario(String msjusuario) {
-        this.msjusuario = msjusuario;
+    public void setMsjusuario2(String msjusuario2) {
+        this.msjusuario2 = msjusuario2;
     }
 
     /**
@@ -210,62 +281,158 @@ public class PreguntaMB implements Serializable {
         this.nsituacion = nsituacion;
     }
 
-
-
     /**
-     * @return the fSinf
+     * @return the msjmoderador
      */
-    public String getfSinf() {
-        return fSinf;
+    public String getMsjmoderador() {
+        return msjmoderador;
     }
 
     /**
-     * @param fSinf the fSinf to set
+     * @param msjmoderador the msjmoderador to set
      */
-    public void setfSinf(String fSinf) {
-        this.fSinf = fSinf;
+    public void setMsjmoderador(String msjmoderador) {
+        this.msjmoderador = msjmoderador;
     }
 
     /**
-     * @return the fvSinf
+     * @return the msjusuario1
      */
-    public String getFvSinf() {
-        return fvSinf;
+    public String getMsjusuario1() {
+        return msjusuario1;
     }
 
     /**
-     * @param fvSinf the fvSinf to set
+     * @param msjusuario1 the msjusuario1 to set
      */
-    public void setFvSinf(String fvSinf) {
-        this.fvSinf = fvSinf;
+    public void setMsjusuario1(String msjusuario1) {
+        this.msjusuario1 = msjusuario1;
     }
 
     /**
-     * @return the fMusu
+     * @return the fSInfEspe
      */
-    public String getfMusu() {
-        return fMusu;
+    public String getfSInfEspe() {
+        return fSInfEspe;
     }
 
     /**
-     * @param fMusu the fMusu to set
+     * @param fSInfEspe the fSInfEspe to set
      */
-    public void setfMusu(String fMusu) {
-        this.fMusu = fMusu;
+    public void setfSInfEspe(String fSInfEspe) {
+        this.fSInfEspe = fSInfEspe;
     }
 
     /**
-     * @return the fvMusu
+     * @return the fButtonEspe
      */
-    public String getFvMusu() {
-        return fvMusu;
+    public String getfButtonEspe() {
+        return fButtonEspe;
     }
 
     /**
-     * @param fvMusu the fvMusu to set
+     * @param fButtonEspe the fButtonEspe to set
      */
-    public void setFvMusu(String fvMusu) {
-        this.fvMusu = fvMusu;
+    public void setfButtonEspe(String fButtonEspe) {
+        this.fButtonEspe = fButtonEspe;
+    }
+
+    /**
+     * @return the fButtonMod
+     */
+    public String getfButtonMod() {
+        return fButtonMod;
+    }
+
+    /**
+     * @param fButtonMod the fButtonMod to set
+     */
+    public void setfButtonMod(String fButtonMod) {
+        this.fButtonMod = fButtonMod;
+    }
+
+    /**
+     * @return the fButtonModPub
+     */
+    public String getfButtonModPub() {
+        return fButtonModPub;
+    }
+
+    /**
+     * @param fButtonModPub the fButtonModPub to set
+     */
+    public void setfButtonModPub(String fButtonModPub) {
+        this.fButtonModPub = fButtonModPub;
+    }
+
+    /**
+     * @return the fMsjUsu1
+     */
+    public String getfMsjUsu1() {
+        return fMsjUsu1;
+    }
+
+    /**
+     * @param fMsjUsu1 the fMsjUsu1 to set
+     */
+    public void setfMsjUsu1(String fMsjUsu1) {
+        this.fMsjUsu1 = fMsjUsu1;
+    }
+
+    /**
+     * @return the fMsjUsu2
+     */
+    public String getfMsjUsu2() {
+        return fMsjUsu2;
+    }
+
+    /**
+     * @param fMsjUsu2 the fMsjUsu2 to set
+     */
+    public void setfMsjUsu2(String fMsjUsu2) {
+        this.fMsjUsu2 = fMsjUsu2;
+    }
+
+    /**
+     * @return the fSInfMod
+     */
+    public String getfSInfMod() {
+        return fSInfMod;
+    }
+
+    /**
+     * @param fSInfMod the fSInfMod to set
+     */
+    public void setfSInfMod(String fSInfMod) {
+        this.fSInfMod = fSInfMod;
+    }
+
+    /**
+     * @return the fButton
+     */
+    public String getfButton() {
+        return fButton;
+    }
+
+    /**
+     * @param fButton the fButton to set
+     */
+    public void setfButton(String fButton) {
+        this.fButton = fButton;
+    }
+
+    /**
+     * @return the fButtonUM
+     */
+    public String getfButtonUM() {
+        return fButtonUM;
+    }
+
+    /**
+     * @param fButtonUM the fButtonUM to set
+     */
+    public void setfButtonUM(String fButtonUM) {
+        this.fButtonUM = fButtonUM;
     }
 
     /**
@@ -329,7 +496,6 @@ public class PreguntaMB implements Serializable {
         try {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             listaPregunta = service.getPreguntas();
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -397,7 +563,6 @@ public class PreguntaMB implements Serializable {
                                 return tn;
                             }
                         }
-
                     }
                 }
             }
@@ -411,8 +576,8 @@ public class PreguntaMB implements Serializable {
     public void onNodeSelect(NodeSelectEvent event) {
         try {
             if (event != null) {
-                this.setSelectedCategoria((Categoria) event.getTreeNode().getData());                this.selectedPregunta.setNcategoriaid(this.selectedCategoria.getNcategoriaid());
-                
+                this.setSelectedCategoria((Categoria) event.getTreeNode().getData());
+                this.selectedPregunta.setNcategoriaid(this.selectedCategoria.getNcategoriaid());
             }
         } catch (Exception e) {
             e.getMessage();
@@ -431,21 +596,29 @@ public class PreguntaMB implements Serializable {
 
     public void toEnt(ActionEvent event) {
         try {
-            this.entidad="MEF";
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            this.setEntidad(service.getNomEntidadbyIdEntidad(this.getEntidadId()));
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
     }
 
+
     public void save(ActionEvent event) throws Exception {
         try {
             if (CollectionUtils.isEmpty(this.getListaPregunta())) {
                 this.setListaPregunta(Collections.EMPTY_LIST);
             }
+            BigDecimal idpregunta;
+
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+
             Pregunta pregunta = new Pregunta();
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            pregunta.setNpreguntaid(service.getNextPK());
+            idpregunta = service.getNextPK();
+            pregunta.setNpreguntaid(idpregunta);
             pregunta.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             pregunta.setVasunto(this.getAsunto().trim());
             pregunta.setVdetalle(this.getDetalle().trim());
@@ -453,9 +626,22 @@ public class PreguntaMB implements Serializable {
             pregunta.setVdatoadicional(this.getDatoAdicional().trim());
             pregunta.setNactivo(BigDecimal.ONE);
             pregunta.setDfechacreacion(new Date());
-            pregunta.setNsituacion(BigDecimal.valueOf(Long.parseLong("2")));
+            pregunta.setVusuariocreacion(user.getVlogin());
+            pregunta.setNsituacionid(BigDecimal.valueOf(Long.parseLong("1")));
             service.saveOrUpdate(pregunta);
-            this.setListaPregunta(service.getPreguntas());
+
+            Asignacion asignacion = new Asignacion();
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
+            asignacion.setNconocimientoid(idpregunta);
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(pregunta.getNcategoriaid()));
+            asignacion.setDfechaasignacion(new Date());
+            asignacion.setDfechacreacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+
+            listaPregunta = service.getPreguntas();
             RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
 
         } catch (Exception e) {
@@ -509,41 +695,108 @@ public class PreguntaMB implements Serializable {
     public void toSee(ActionEvent event) {
         try {
             if (event != null) {
-//                if(this.getSelectedMaestro() == null) {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Seleccione el maestro que desea editar.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
+                int perfil, situacion;
                 int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
                 this.setSelectedPregunta(this.getListaPregunta().get(index));
 
+                PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+                LoginMB mb = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                listaAsignacion = service.obtenerPreguntaxAsig(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS);
+                flistaPregunta = service.obtenerPreguntas(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS);
+
+                situacion = Integer.parseInt(this.getSelectedPregunta().getNsituacionid().toString());
+
+                if (listaAsignacion.isEmpty() || flistaPregunta.isEmpty()) {
+                    this.setfButton("false");
+                    this.setfButtonUM("false");
+                    this.setfButtonEspe("false");
+                    this.setfButtonMod("false");
+                    this.setfButtonModPub("false");
+                } else {
+
+                    setSelectedAsignacion(getListaAsignacion().get(0));
+
+                    AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                    getSelectedAsignacion().setDfecharecepcion(new Date());
+                    serviceasig.saveOrUpdate(getSelectedAsignacion());
+
+                    perfil = Integer.parseInt(service.obtenerPerfilxUsuario(mb.getUser().getNusuarioid()).toString());
+
+                    if (perfil == Constante.ESPECIALISTA) {
+                        this.setfButtonEspe("true");
+                        this.setfButton("false");
+                        this.setfButtonUM("false");
+                        this.setfButtonMod("false");
+                        this.setfButtonModPub("false");
+                    } else {
+                        if (perfil == Constante.MODERADOR) {
+                            this.setfButtonEspe("false");
+                            this.setfButton("false");
+                            this.setfButtonUM("false");
+                            if (StringUtils.isBlank(this.getSelectedPregunta().getVrespuesta())) {
+                                this.setfButtonMod("true");
+                                this.setfButtonModPub("false");
+                            } else {
+                                this.setfButtonMod("false");
+                                this.setfButtonModPub("true");
+                            }
+                        } else {
+
+                            if (situacion == 1) {
+                                if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjmoderador())) {
+                                    this.setfButtonUM("false");
+                                } else {
+                                    this.setfButtonUM("true");
+                                }
+                            } else {
+                                if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjespecialista())) {
+                                    this.setfButton("false");
+                                } else {
+                                    this.setfButton("true");
+                                }
+                            }
+                            this.setfButtonEspe("false");
+                            this.setfButtonMod("false");
+                            this.setfButtonModPub("false");
+                        }
+                    }
+                }
+
                 this.cat1 = this.getSelectedPregunta().getNcategoriaid();
-                
-                if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjespecialista())) {
-                    this.setfSinf("false");
-                } else {
-                    this.setfSinf("true");
+
+                situacion = Integer.parseInt(this.getSelectedPregunta().getNsituacionid().toString());
+
+                if (situacion == 1) {
+                    if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjmoderador())) {
+                        this.fSInfMod = "false";
+                    } else {
+                        this.fSInfMod = "true";
+                    }
+
+                    if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjusuario1())) {
+                        this.fMsjUsu1 = "false";
+                    } else {
+                        this.fMsjUsu1 = "true";
+                    }
+                    this.fSInfEspe = "false";
+                    this.fMsjUsu2 = "false";
                 }
 
-                if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjespecialista())) {
-                    this.fvSinf = "false";
+                if (situacion == 2 || situacion == 3 || situacion == 4) {
+                    if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjespecialista())) {
+                        this.fSInfEspe = "false";
+                    } else {
+                        this.fSInfEspe = "true";
+                    }
 
-                } else {
-                    this.fvSinf = "true";
+                    if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjusuario2())) {
+                        this.fMsjUsu2 = "false";
+                    } else {
+                        this.fMsjUsu2 = "true";
+                    }
+                    this.fSInfMod = "false";
+                    this.fMsjUsu1 = "false";
                 }
-
-                if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjusuario())) {
-                    this.setfMusu("false");
-                } else {
-                    this.setfMusu("true");
-                }
-
-                if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjusuario())) {
-                    this.fvMusu = "false";
-
-                } else {
-                    this.fvMusu = "true";
-                }
-
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -556,6 +809,26 @@ public class PreguntaMB implements Serializable {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             listaPregunta = service.getPreguntas();
             RequestContext.getCurrentInstance().execute("PF('respDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('modDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('modpubDialog').hide();");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void Rechazar(ActionEvent event) {
+        try {
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("7")));
+            service.saveOrUpdate(this.getSelectedPregunta());
+
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+            this.setListaPregunta(service.getPreguntas());
+            RequestContext.getCurrentInstance().execute("PF('modDialog').hide();");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -571,6 +844,15 @@ public class PreguntaMB implements Serializable {
         }
     }
 
+    public void toCancelSiMod(ActionEvent event) {
+        try {
+            RequestContext.getCurrentInstance().execute("PF('simodDialog').hide();");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void toCancelRespUsu(ActionEvent event) {
         try {
             RequestContext.getCurrentInstance().execute("PF('respusuDialog').hide();");
@@ -580,13 +862,48 @@ public class PreguntaMB implements Serializable {
         }
     }
 
+    public void toCancelRespUsuMod(ActionEvent event) {
+        try {
+            RequestContext.getCurrentInstance().execute("PF('respmodDialog').hide();");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void toSi(ActionEvent event) {
         try {
-            if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjespecialista())) {
-                this.setfSinf("false");
-            } else {
-                this.setfSinf("true");
-            }
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void toMod(ActionEvent event) {
+        try {
+            RequestContext.getCurrentInstance().execute("PF('seeDialog').hide();");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void toModPub(ActionEvent event) {
+        try {
+            RequestContext.getCurrentInstance().execute("PF('seeDialog').hide();");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void toEdit(ActionEvent event) {
+        try {
+            RequestContext.getCurrentInstance().execute("PF('respDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('modDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('modpubDialog').hide();");
+
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -596,7 +913,17 @@ public class PreguntaMB implements Serializable {
     public void toResp(ActionEvent event) {
         try {
             RequestContext.getCurrentInstance().execute("PF('seeDialog').hide();");
-            this.cleanAttributes();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void toCancelRespEdit(ActionEvent event) {
+        try {
+            RequestContext.getCurrentInstance().execute("PF('editrespDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('editpregDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('editpubDialog').hide();");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -613,24 +940,35 @@ public class PreguntaMB implements Serializable {
         }
     }
 
+    public void toRespUsuMod(ActionEvent event) {
+        try {
+
+            this.cleanAttributes();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     public void saveResp(ActionEvent event) throws Exception {
         try {
             if (CollectionUtils.isEmpty(this.getListaPregunta())) {
                 this.setListaPregunta(Collections.EMPTY_LIST);
             }
             BigDecimal cat2;
-            
-            
+
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta().toUpperCase());
             this.getSelectedPregunta().setNcategoriaid(this.getSelectedPregunta().getNcategoriaid());
-            
+
             cat2 = this.getSelectedPregunta().getNcategoriaid();
-            
-            if(Integer.parseInt(cat1.toString()) != Integer.parseInt(cat2.toString())){
-            this.getSelectedPregunta().setNsituacion(BigDecimal.valueOf(Long.parseLong("3")));
+
+            if (Integer.parseInt(cat1.toString()) != Integer.parseInt(cat2.toString())) {
+                this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("3")));
+            } else {
+                this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("6")));
             }
-            
+
             service.saveOrUpdate(this.getSelectedPregunta());
             this.setListaPregunta(service.getPreguntas());
             RequestContext.getCurrentInstance().execute("PF('respDialog').hide();");
@@ -646,16 +984,78 @@ public class PreguntaMB implements Serializable {
             if (CollectionUtils.isEmpty(this.getListaPregunta())) {
                 this.setListaPregunta(Collections.EMPTY_LIST);
             }
-            if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjusuario())) {
+            if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjusuario2())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Nombre requerido. Ingrese el nombre de perfil.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setVmsjusuario(this.getSelectedPregunta().getVmsjusuario().toUpperCase());
+            this.getSelectedPregunta().setVmsjusuario2(this.getSelectedPregunta().getVmsjusuario2().toUpperCase());
             service.saveOrUpdate(this.getSelectedPregunta());
+
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
+            asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("3")));
+            asignacion.setDfechacreacion(new Date());
+            asignacion.setDfechaasignacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+
+            this.fMsjUsu2 = "true";
+
             this.setListaPregunta(service.getPreguntas());
+
             RequestContext.getCurrentInstance().execute("PF('respusuDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('seeDialog').hide();");
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void sendUsuMod(ActionEvent event) throws Exception {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaPregunta())) {
+                this.setListaPregunta(Collections.EMPTY_LIST);
+            }
+            if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjusuario1())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Nombre requerido. Ingrese el nombre de perfil.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            this.getSelectedPregunta().setVmsjusuario1(this.getSelectedPregunta().getVmsjusuario1().toUpperCase());
+            service.saveOrUpdate(this.getSelectedPregunta());
+
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
+            asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("2")));
+            asignacion.setDfechacreacion(new Date());
+            asignacion.setDfechaasignacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+
+            this.fMsjUsu1 = "true";
+
+            this.setListaPregunta(service.getPreguntas());
+
+            RequestContext.getCurrentInstance().execute("PF('respmodDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('seeDialog').hide();");
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -676,8 +1076,28 @@ public class PreguntaMB implements Serializable {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             this.getSelectedPregunta().setVmsjespecialista(this.getSelectedPregunta().getVmsjespecialista().toUpperCase());
             service.saveOrUpdate(this.getSelectedPregunta());
+
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
+            asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("4")));
+            asignacion.setDfechacreacion(new Date());
+            asignacion.setDfechaasignacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+
+            this.fSInfEspe = "true";
+
             this.setListaPregunta(service.getPreguntas());
+
             RequestContext.getCurrentInstance().execute("PF('siDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('respDialog').hide();");
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -685,7 +1105,81 @@ public class PreguntaMB implements Serializable {
         }
     }
 
-    public void publish(ActionEvent event) throws Exception {
+    public void sendSiMod(ActionEvent event) throws Exception {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaPregunta())) {
+                this.setListaPregunta(Collections.EMPTY_LIST);
+            }
+            if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjmoderador())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Nombre requerido. Ingrese el nombre de perfil.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            this.getSelectedPregunta().setVmsjmoderador(this.getSelectedPregunta().getVmsjmoderador().toUpperCase());
+            service.saveOrUpdate(this.getSelectedPregunta());
+
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
+            asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("4")));
+            asignacion.setDfechaasignacion(new Date());
+            asignacion.setDfechacreacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+
+            this.fSInfMod = "true";
+
+            this.setListaPregunta(service.getPreguntas());
+
+            RequestContext.getCurrentInstance().execute("PF('simodDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('modDialog').hide();");
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void Publicar(ActionEvent event) throws Exception {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaPregunta())) {
+                this.setListaPregunta(Collections.EMPTY_LIST);
+            }
+
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("6")));
+            service.saveOrUpdate(this.getSelectedPregunta());
+
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+            //Asignacion asignacion = new Asignacion();
+            //asignacion.setNasignacionid(serviceasig.getNextPK());
+            //asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
+            //asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
+            //asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            //asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("4")));
+            //asignacion.setDfechacreacion(new Date());
+            //serviceasig.saveOrUpdate(asignacion);
+            this.setListaPregunta(service.getPreguntas());
+            RequestContext.getCurrentInstance().execute("PF('modpubDialog').hide();");
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void Responder(ActionEvent event) throws Exception {
         try {
             if (CollectionUtils.isEmpty(this.getListaPregunta())) {
                 this.setListaPregunta(Collections.EMPTY_LIST);
@@ -696,9 +1190,25 @@ public class PreguntaMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setNsituacion(BigDecimal.valueOf(Long.parseLong("4")));
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("5")));
             service.saveOrUpdate(this.getSelectedPregunta());
+
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
+            asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("2")));
+            asignacion.setDfechacreacion(new Date());
+            asignacion.setDfechaasignacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
             this.setListaPregunta(service.getPreguntas());
             RequestContext.getCurrentInstance().execute("PF('respDialog').hide();");
 
@@ -706,6 +1216,137 @@ public class PreguntaMB implements Serializable {
             log.error(e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void DevEsp(ActionEvent event) throws Exception {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaPregunta())) {
+                this.setListaPregunta(Collections.EMPTY_LIST);
+            }
+
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("2")));
+            service.saveOrUpdate(this.getSelectedPregunta());
+
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
+            asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("3")));
+            asignacion.setDfechacreacion(new Date());
+            asignacion.setDfechaasignacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+            this.setListaPregunta(service.getPreguntas());
+            RequestContext.getCurrentInstance().execute("PF('modDialog').hide();");
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void saveRespEdit(ActionEvent event) throws Exception {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaPregunta())) {
+                this.setListaPregunta(Collections.EMPTY_LIST);
+            }
+
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+
+            this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta().toUpperCase());
+            this.getSelectedPregunta().setNcategoriaid(this.getSelectedPregunta().getNcategoriaid());
+            this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
+            this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
+            this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
+            this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
+            this.getSelectedPregunta().setDfechamodificacion(new Date());
+            service.saveOrUpdate(this.getSelectedPregunta());
+
+            this.setListaPregunta(service.getPreguntas());
+            RequestContext.getCurrentInstance().execute("PF('editrespDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('editpregDialog').hide();");
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    public void savePregEdit(ActionEvent event) throws Exception {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaPregunta())) {
+                this.setListaPregunta(Collections.EMPTY_LIST);
+            }
+
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+
+            this.getSelectedPregunta().setNcategoriaid(this.getSelectedPregunta().getNcategoriaid());
+            this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
+            this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
+            this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
+            this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
+            this.getSelectedPregunta().setDfechamodificacion(new Date());
+            service.saveOrUpdate(this.getSelectedPregunta());
+
+            this.setListaPregunta(service.getPreguntas());
+            RequestContext.getCurrentInstance().execute("PF('editrespDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('editpregDialog').hide();");
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    public void savePubEdit(ActionEvent event) throws Exception {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaPregunta())) {
+                this.setListaPregunta(Collections.EMPTY_LIST);
+            }
+
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+
+            this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta());
+            this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
+            this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
+            this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
+            this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
+            this.getSelectedPregunta().setDfechamodificacion(new Date());
+            service.saveOrUpdate(this.getSelectedPregunta());
+
+            this.setListaPregunta(service.getPreguntas());
+            RequestContext.getCurrentInstance().execute("PF('editrespDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('editpregDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('editpubDialog').hide();");
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    public String toHistorial() {
+        String pagina = null;
+        try {
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedPregunta(this.getListaPregunta().get(index));
+            RespuestaHistService serviceresp = (RespuestaHistService) ServiceFinder.findBean("RespuestaHistService");
+            this.setListaRespuesta(serviceresp.getHistorialByPregunta(this.getSelectedPregunta().getNpreguntaid()));
+            pagina="/pages/respuestaHistorial?faces-redirect=true";
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return pagina;
     }
 
 }

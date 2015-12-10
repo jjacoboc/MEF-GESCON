@@ -16,7 +16,8 @@ import pe.gob.mef.gescon.hibernate.domain.Tmaestrodetalle;
  */
 public interface MaestroDetalleDao {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<Tmaestrodetalle> getDetalleByMaestro(Mtmaestro mtmaestro) throws Exception;
-    public void saveOrUpdate(Tmaestrodetalle tmaestrodetalle) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<Tmaestrodetalle> getDetalleByMaestro(Mtmaestro mtmaestro) throws Exception;
+    List<Tmaestrodetalle> getDetallesActivosByMaestro(Mtmaestro mtmaestro) throws Exception;
+    void saveOrUpdate(Tmaestrodetalle tmaestrodetalle) throws Exception;
 }

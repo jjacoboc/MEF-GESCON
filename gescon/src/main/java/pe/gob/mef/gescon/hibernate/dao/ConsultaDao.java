@@ -14,5 +14,6 @@ import java.util.List;
  */
 public interface ConsultaDao {
     
-    public List<HashMap> getQueryFilter(HashMap filters);
+    List<HashMap> getQueryFilter(HashMap filters);
+    List<HashMap> getDestacadosByTipoConocimiento(HashMap filters);
 }

@@ -15,9 +15,11 @@ import java.util.Date;
  */
 public class Rango implements Serializable{
     
+    private BigDecimal ntiponormaid;
     private BigDecimal nrangoid;
     private String vnombre;
     private String vdescripcion;
+    private BigDecimal nactivo;
     private String vusuariocreacion;
     private String vusuariomodificacion;
     private Date dfechacreacion;
@@ -25,6 +27,14 @@ public class Rango implements Serializable{
     
     public void Rango(){
         
+    }
+
+    public BigDecimal getNtiponormaid() {
+        return ntiponormaid;
+    }
+
+    public void setNtiponormaid(BigDecimal ntiponormaid) {
+        this.ntiponormaid = ntiponormaid;
     }
 
     /**
@@ -67,6 +77,14 @@ public class Rango implements Serializable{
      */
     public void setVdescripcion(String vdescripcion) {
         this.vdescripcion = vdescripcion;
+    }
+
+    public BigDecimal getNactivo() {
+        return nactivo;
+    }
+
+    public void setNactivo(BigDecimal nactivo) {
+        this.nactivo = nactivo;
     }
 
     /**

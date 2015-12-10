@@ -7,7 +7,9 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import pe.gob.mef.gescon.common.Constante;
 
 /**
  *
@@ -17,13 +19,15 @@ public class Parametro implements Serializable{
     
     private BigDecimal nparametroid;
     private String vnombre;
-    private String vvalor;
+    private BigDecimal nvalor;
     private String vdescripcion;
     private BigDecimal nactivo;
-    private String vusucrea;
-    private Date dfechcrea;
-    private String vusumod;
-    private Date dfechmod;
+    private String vusuariocreacion;
+    private Date dfechacreacion;
+    private String vusuariomodificacion;
+    private Date dfechamodificacion;
+    private String vfechacreacion;
+    private String vfechamodificacion;
     
     public void Parametro(){
         
@@ -56,20 +60,25 @@ public class Parametro implements Serializable{
     public void setVnombre(String vnombre) {
         this.vnombre = vnombre;
     }
-    
+
     /**
-     * @return the vvalor
+     * @return the nvalor
      */
-    public String getVvalor() {
-        return vvalor;
+    public BigDecimal getNvalor() {
+        return nvalor;
     }
 
     /**
-     * @param vvalor the vnombre to set
+     * @param nvalor the nvalor to set
      */
-    public void setVvalor(String vvalor) {
-        this.vvalor = vvalor;
+    public void setNvalor(BigDecimal nvalor) {
+        this.nvalor = nvalor;
     }
+
+
+    
+
+
 
     /**
      * @return the vdescripcion
@@ -100,58 +109,82 @@ public class Parametro implements Serializable{
     }
 
     /**
-     * @return the vusucrea
+     * @return the vusuariocreacion
      */
-    public String getVusucrea() {
-        return vusucrea;
+    public String getVusuariocreacion() {
+        return vusuariocreacion;
     }
 
     /**
-     * @param vusucrea the vusucrea to set
+     * @param vusuariocreacion the vusuariocreacion to set
      */
-    public void setVusucrea(String vusucrea) {
-        this.vusucrea = vusucrea;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     /**
-     * @return the dfechcrea
+     * @return the dfechacreacion
      */
-    public Date getDfechcrea() {
-        return dfechcrea;
+    public Date getDfechacreacion() {
+        return dfechacreacion;
     }
 
     /**
-     * @param dfechcrea the dfechcrea to set
+     * @param dfechacreacion the dfechacreacion to set
      */
-    public void setDfechcrea(Date dfechcrea) {
-        this.dfechcrea = dfechcrea;
+    public void setDfechacreacion(Date dfechacreacion) {
+        this.dfechacreacion = dfechacreacion;
     }
 
     /**
-     * @return the vusumod
+     * @return the vusuariomodificacion
      */
-    public String getVusumod() {
-        return vusumod;
+    public String getVusuariomodificacion() {
+        return vusuariomodificacion;
     }
 
     /**
-     * @param vusumod the vusumod to set
+     * @param vusuariomodificacion the vusuariomodificacion to set
      */
-    public void setVusumod(String vusumod) {
-        this.vusumod = vusumod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
     /**
-     * @return the dfechmod
+     * @return the dfechamodificacion
      */
-    public Date getDfechmod() {
-        return dfechmod;
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
     }
 
     /**
-     * @param dfechmod the dfechmod to set
+     * @param dfechamodificacion the dfechamodificacion to set
      */
-    public void setDfechmod(Date dfechmod) {
-        this.dfechmod = dfechmod;
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
+    }
+
+    public String getVfechacreacion() {
+        if(dfechacreacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechacreacion = sdf.format(dfechacreacion);
+        }
+        return vfechacreacion;
+    }
+
+    public void setVfechacreacion(String vfechacreacion) {
+        this.vfechacreacion = vfechacreacion;
+    }
+
+    public String getVfechamodificacion() {
+        if(dfechamodificacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechamodificacion = sdf.format(dfechamodificacion);
+        }
+        return vfechamodificacion;
+    }
+
+    public void setVfechamodificacion(String vfechamodificacion) {
+        this.vfechamodificacion = vfechamodificacion;
     }
 }

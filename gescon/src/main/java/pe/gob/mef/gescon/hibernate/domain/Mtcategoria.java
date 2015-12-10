@@ -1,5 +1,5 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
 import java.math.BigDecimal;
 import java.sql.Blob;
@@ -18,10 +18,10 @@ public class Mtcategoria implements java.io.Serializable {
     private BigDecimal ncategoriasup;
     private BigDecimal nnivel;
     private String vnombre;
-    private String vusuariomod;
+    private String vusuariomodificacion;
     private String vusuariocreacion;
     private Date dfechacreacion;
-    private Date dfechamod;
+    private Date dfechamodificacion;
     private BigDecimal nflagwiki;
     private BigDecimal nflagbl;
     private BigDecimal nflagpr;
@@ -30,7 +30,10 @@ public class Mtcategoria implements java.io.Serializable {
     private BigDecimal nflagom;
     private Blob bimagen;
     private String vimagennombre;
-    private Set<TcategoriaConocimiento> tcategoriaConocimientos = new HashSet<TcategoriaConocimiento>(0);
+    private Set tconocimientos = new HashSet(0);
+    private Set tcategoriaUsers = new HashSet(0);
+    private Set tpreguntas = new HashSet(0);
+    private Set tbaselegals = new HashSet(0);
 
     public Mtcategoria() {
     }
@@ -39,17 +42,17 @@ public class Mtcategoria implements java.io.Serializable {
         this.ncategoriaid = ncategoriaid;
     }
 
-    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomod, String vusuariocreacion, Date dfechacreacion, Date dfechamod, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Blob bimagen, String vimagennombre, Set<TcategoriaConocimiento> tcategoriaConocimientos) {
+    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Blob bimagen, String vimagennombre, Set tconocimientos, Set tcategoriaUsers, Set tpreguntas, Set tbaselegals) {
         this.ncategoriaid = ncategoriaid;
         this.vdescripcion = vdescripcion;
         this.nestado = nestado;
         this.ncategoriasup = ncategoriasup;
         this.nnivel = nnivel;
         this.vnombre = vnombre;
-        this.vusuariomod = vusuariomod;
+        this.vusuariomodificacion = vusuariomodificacion;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
-        this.dfechamod = dfechamod;
+        this.dfechamodificacion = dfechamodificacion;
         this.nflagwiki = nflagwiki;
         this.nflagbl = nflagbl;
         this.nflagpr = nflagpr;
@@ -58,7 +61,10 @@ public class Mtcategoria implements java.io.Serializable {
         this.nflagom = nflagom;
         this.bimagen = bimagen;
         this.vimagennombre = vimagennombre;
-        this.tcategoriaConocimientos = tcategoriaConocimientos;
+        this.tconocimientos = tconocimientos;
+        this.tcategoriaUsers = tcategoriaUsers;
+        this.tpreguntas = tpreguntas;
+        this.tbaselegals = tbaselegals;
     }
 
     public BigDecimal getNcategoriaid() {
@@ -109,12 +115,12 @@ public class Mtcategoria implements java.io.Serializable {
         this.vnombre = vnombre;
     }
 
-    public String getVusuariomod() {
-        return this.vusuariomod;
+    public String getVusuariomodificacion() {
+        return this.vusuariomodificacion;
     }
 
-    public void setVusuariomod(String vusuariomod) {
-        this.vusuariomod = vusuariomod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
     public String getVusuariocreacion() {
@@ -124,7 +130,6 @@ public class Mtcategoria implements java.io.Serializable {
     public void setVusuariocreacion(String vusuariocreacion) {
         this.vusuariocreacion = vusuariocreacion;
     }
-
     public Date getDfechacreacion() {
         return this.dfechacreacion;
     }
@@ -132,13 +137,12 @@ public class Mtcategoria implements java.io.Serializable {
     public void setDfechacreacion(Date dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
     }
-
-    public Date getDfechamod() {
-        return this.dfechamod;
+    public Date getDfechamodificacion() {
+        return this.dfechamodificacion;
     }
 
-    public void setDfechamod(Date dfechamod) {
-        this.dfechamod = dfechamod;
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
 
     public BigDecimal getNflagwiki() {
@@ -189,40 +193,52 @@ public class Mtcategoria implements java.io.Serializable {
         this.nflagom = nflagom;
     }
 
-    /**
-     * @return the bimagen
-     */
     public Blob getBimagen() {
-        return bimagen;
+        return this.bimagen;
     }
 
-    /**
-     * @param bimagen the bimagen to set
-     */
     public void setBimagen(Blob bimagen) {
         this.bimagen = bimagen;
     }
 
-    /**
-     * @return the vimagennombre
-     */
     public String getVimagennombre() {
-        return vimagennombre;
+        return this.vimagennombre;
     }
 
-    /**
-     * @param vimagennombre the vimagennombre to set
-     */
     public void setVimagennombre(String vimagennombre) {
         this.vimagennombre = vimagennombre;
     }
 
-    public Set<TcategoriaConocimiento> getTcategoriaConocimientos() {
-        return this.tcategoriaConocimientos;
+    public Set getTconocimientos() {
+        return this.tconocimientos;
     }
 
-    public void setTcategoriaConocimientos(Set<TcategoriaConocimiento> tcategoriaConocimientos) {
-        this.tcategoriaConocimientos = tcategoriaConocimientos;
+    public void setTconocimientos(Set tconocimientos) {
+        this.tconocimientos = tconocimientos;
+    }
+
+    public Set getTcategoriaUsers() {
+        return this.tcategoriaUsers;
+    }
+
+    public void setTcategoriaUsers(Set tcategoriaUsers) {
+        this.tcategoriaUsers = tcategoriaUsers;
+    }
+
+    public Set getTpreguntas() {
+        return this.tpreguntas;
+    }
+
+    public void setTpreguntas(Set tpreguntas) {
+        this.tpreguntas = tpreguntas;
+    }
+
+    public Set getTbaselegals() {
+        return this.tbaselegals;
+    }
+
+    public void setTbaselegals(Set tbaselegals) {
+        this.tbaselegals = tbaselegals;
     }
 
 }

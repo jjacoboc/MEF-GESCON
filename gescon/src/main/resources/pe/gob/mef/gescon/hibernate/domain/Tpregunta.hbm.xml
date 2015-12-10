@@ -1,18 +1,21 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 22/09/2015 05:59:22 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Tpregunta" table="TPREGUNTA" schema="GESCON" optimistic-lock="version">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Tpregunta" table="TPREGUNTA" schema="GESCON3" optimistic-lock="version">
         <id name="npreguntaid" type="big_decimal">
             <column name="NPREGUNTAID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <property name="vasunto" type="string">
-            <column name="VASUNTO" length="100" />
-        </property>
         <property name="ncategoriaid" type="big_decimal">
             <column name="NCATEGORIAID" precision="22" scale="0" />
+        </property>
+        <property name="nsituacionid" type="big_decimal">
+            <column name="NSITUACIONID" precision="22" scale="0" />
+        </property>
+        <property name="vasunto" type="string">
+            <column name="VASUNTO" length="100" />
         </property>
         <property name="vdetalle" type="string">
             <column name="VDETALLE" length="400" />
@@ -23,32 +26,38 @@
         <property name="vdatoadicional" type="string">
             <column name="VDATOADICIONAL" length="100" />
         </property>
+        <property name="vrespuesta" type="string">
+            <column name="VRESPUESTA" length="400" />
+        </property>
+        <property name="vmsjusuario2" type="string">
+            <column name="VMSJUSUARIO2" length="400" />
+        </property>
+        <property name="vmsjespecialista" type="string">
+            <column name="VMSJESPECIALISTA" length="400" />
+        </property>
+        <property name="nactivo" type="big_decimal">
+            <column name="NACTIVO" precision="22" scale="0" />
+        </property>
+        <property name="vmsjmoderador" type="string">
+            <column name="VMSJMODERADOR" length="400" />
+        </property>
+        <property name="vmsjusuario1" type="string">
+            <column name="VMSJUSUARIO1" length="400" />
+        </property>
+        <property name="ndestacado" type="big_decimal">
+            <column name="NDESTACADO" precision="22" scale="0" />
+        </property>
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="25" />
         </property>
         <property name="vusuariomodificacion" type="string">
             <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
-        <property name="dfechacreacion" type="date">
-            <column name="DFECHACREACION" length="7" />
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" />
         </property>
-        <property name="dfechamodificacion" type="date">
-            <column name="DFECHAMODIFICACION" length="7" />
-        </property>
-        <property name="nactivo" type="big_decimal">
-            <column name="NACTIVO" precision="22" scale="0" />
-        </property>
-        <property name="vrespuesta" type="string">
-            <column name="VRESPUESTA" length="400" />
-        </property>
-        <property name="vmsjusuario" type="string">
-            <column name="VMSJUSUARIO" length="400" />
-        </property>
-        <property name="vmsjespecialista" type="string">
-            <column name="VMSJESPECIALISTA" length="400" />
-        </property>
-        <property name="nsituacion" type="big_decimal">
-            <column name="NSITUACION" precision="22" scale="0" />
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" />
         </property>
     </class>
 </hibernate-mapping>

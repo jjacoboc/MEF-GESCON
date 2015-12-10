@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+    <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+    <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
+    <property name="hibernate.connection.username">gescon3</property>
+    <property name="hibernate.connection.password">gescon3</property>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TvinculoImplementacion.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Thistorial.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtuser.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TobservacionHist.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtpolitica.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tseccion.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtperfil.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tmensaje.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TcategoriaUser.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtrango.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tpass.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tpregunta.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TvinculoHist.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TuserPerfil.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tconocimiento.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TimplementacionHist.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tdiscusion.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TpoliticaPerfil.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtparametro.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TvinculoBaselegal.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tcalificacion.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TvinculoImplementacionHist.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tobservacion.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tvinculo.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/MtestadoBaselegal.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TseccionHist.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtsituacion.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tasignacion.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TcalificacionHist.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TdiscusionHist.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/MttipoConocimiento.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Timplementacion.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtcategoria.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tarchivo.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tmaestrodetalle.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tbaselegal.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtmaestro.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtalerta.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

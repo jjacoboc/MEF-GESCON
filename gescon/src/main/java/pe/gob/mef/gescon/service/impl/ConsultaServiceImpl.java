@@ -33,8 +33,36 @@ public class ConsultaServiceImpl implements ConsultaService{
             if(!CollectionUtils.isEmpty(consulta)) {
                 for(HashMap map : consulta) {
                     Consulta c = new Consulta();
-                    c.setId((BigDecimal) map.get("ID"));
-                    c.setCodigo((String) map.get("NUMERO"));
+                    c.setIdconocimiento((BigDecimal) map.get("ID"));
+                    c.setNombre((String) map.get("NOMBRE"));
+                    c.setSumilla((String) map.get("SUMILLA"));
+                    c.setFechaPublicacion((Date) map.get("FECHA"));
+                    c.setIdCategoria((BigDecimal) map.get("IDCATEGORIA"));
+                    c.setCategoria((String) map.get("CATEGORIA"));
+                    c.setIdTipoConocimiento((BigDecimal) map.get("IDTIPOCONOCIMIENTO"));
+                    c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
+                    c.setIdEstado((BigDecimal) map.get("IDESTADO"));
+                    c.setEstado((String) map.get("ESTADO"));
+                    lista.add(c);
+                }
+            }
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return lista;
+    }
+    
+    @Override
+    public List<Consulta> getDestacadosByTipoConocimiento(HashMap filters) {
+        List<Consulta> lista = new ArrayList<Consulta>();
+        try {
+            ConsultaDao consultaDao = (ConsultaDao) ServiceFinder.findBean("ConsultaDao");
+            List<HashMap> consulta = consultaDao.getDestacadosByTipoConocimiento(filters);
+            if(!CollectionUtils.isEmpty(consulta)) {
+                for(HashMap map : consulta) {
+                    Consulta c = new Consulta();
+                    c.setIdconocimiento((BigDecimal) map.get("ID"));
                     c.setNombre((String) map.get("NOMBRE"));
                     c.setSumilla((String) map.get("SUMILLA"));
                     c.setFechaPublicacion((Date) map.get("FECHA"));

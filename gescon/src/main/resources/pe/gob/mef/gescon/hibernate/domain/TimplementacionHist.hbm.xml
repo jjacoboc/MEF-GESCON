@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pe.gob.mef.gescon.hibernate.domain.TimplementacionHist" table="TIMPLEMENTACION_HIST" schema="GESCON3" optimistic-lock="version">
+        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TimplementacionHistId">
+            <key-property name="nimplementacionhid" type="big_decimal">
+                <column name="NIMPLEMENTACIONHID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="nconocimientoid" type="big_decimal">
+                <column name="NCONOCIMIENTOID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="nhistorialid" type="big_decimal">
+                <column name="NHISTORIALID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="thistorial" class="pe.gob.mef.gescon.hibernate.domain.Thistorial" update="false" insert="false" fetch="select">
+            <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
+            <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="vdescripcion" type="string">
+            <column name="VDESCRIPCION" length="400" />
+        </property>
+        <property name="vtitulo" type="string">
+            <column name="VTITULO" length="20" />
+        </property>
+        <property name="vcontenido" type="string">
+            <column name="VCONTENIDO" length="1000" />
+        </property>
+        <property name="vmsjespecialista" type="string">
+            <column name="VMSJESPECIALISTA" length="250" />
+        </property>
+        <property name="vmsjmoderador" type="string">
+            <column name="VMSJMODERADOR" length="250" />
+        </property>
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
+        </property>
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
+        </property>
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" />
+        </property>
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" />
+        </property>
+        <set name="tvinculoImplementacionHists" table="TVINCULO_IMPLEMENTACION_HIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NIMPLEMENTACIONHID" precision="22" scale="0" />
+                <column name="NCONOCIMIENTOID" precision="22" scale="0" />
+                <column name="NHISTORIALID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TvinculoImplementacionHist" />
+        </set>
+    </class>
+</hibernate-mapping>

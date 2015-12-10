@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pe.gob.mef.gescon.hibernate.domain.TvinculoHist" optimistic-lock="version" schema="GESCON3" table="TVINCULO_HIST">
+        <composite-id class="pe.gob.mef.gescon.hibernate.domain.TvinculoHistId" name="id">
+            <key-property name="nvinculohid" type="big_decimal">
+                <column name="NVINCULOHID" precision="22" scale="0"/>
+            </key-property>
+            <key-property name="nconocimientoid" type="big_decimal">
+                <column name="NCONOCIMIENTOID" precision="22" scale="0"/>
+            </key-property>
+            <key-property name="nhistorialid" type="big_decimal">
+                <column name="NHISTORIALID" precision="22" scale="0"/>
+            </key-property>
+        </composite-id>
+        <many-to-one class="pe.gob.mef.gescon.hibernate.domain.Thistorial" fetch="select" insert="false" name="thistorial" update="false">
+            <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>
+            <column name="NHISTORIALID" not-null="true" precision="22" scale="0"/>
+        </many-to-one>
+        <property name="nconocimientovinc" type="big_decimal">
+            <column name="NCONOCIMIENTOVINC" precision="22" scale="0"/>
+        </property>
+        <property name="ntipoconocimientovinc" type="big_decimal">
+            <column name="NTIPOCONOCIMIENTOVINC" precision="22" scale="0" />
+        </property>
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
+        </property>
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
+        </property>
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" />
+        </property>
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" />
+        </property>
+        
+    </class>
+</hibernate-mapping>

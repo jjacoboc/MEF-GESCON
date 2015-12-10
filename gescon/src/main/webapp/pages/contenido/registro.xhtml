@@ -1,0 +1,275 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="Registrar Contenido" styleClass="TexAlLeft">
+                                <h:panelGrid id="pgNew" columns="1" width="100%">
+                                    <h:outputText value="Categoria"/>
+                                    <h:panelGroup>
+                                        <p:commandButton value="Selecciona Categoria" actionListener="#{contenidoMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="#{contenidoMB.selectedCategoria.vnombre}" styleClass="Fs14"/>
+                                    </h:panelGroup>
+
+                                    <h:outputLabel value="Titulo"/>
+                                    <p:inputText size="50" value="#{contenidoMB.titulo}" style="text-transform: uppercase;" maxlength="25" /> 
+
+                                    <h:outputLabel value="Descripcion"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{contenidoMB.descripcion}" rows="4" cols="57" style="font-weight: normal;"
+                                                         counter="displaydet" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="displaydet"/>
+                                    </h:panelGrid>
+
+                                    <p:spacer/>
+
+                                    <h:outputLabel value="Contenido"/>
+                                    <p:editor value="#{contenidoMB.contenido}"/>
+                                </h:panelGrid>
+
+                                <p:spacer/>
+
+                                <p:fieldset>
+                                    <h:panelGrid id="pgNewVinc1" columns="1" cellpadding="0" cellspacing="0" width="100%">
+                                        <p:commandButton style=" float:left;"  value="Agregar Archivos" styleClass="ui-link Fs14" oncomplete="PF('tpoconDialog').show();"/>
+                                        <p:tabView>
+                                            <p:tab title="Arhivos Relacionados">
+                                                <p:dataTable id="tbl" value="#{contenidoMB.listaArchivos}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                                             paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
+                                                    <p:column style="text-align: center; width: 70px;" priority="2">
+                                                        <f:facet name="header"><h:outputText value="Nombre del Archivo"/></f:facet>
+                                                        <h:outputText value="#{row.vnombre}"/>
+                                                    </p:column>
+                                                    <p:column style="text-align: center; width: 70px;" priority="4">
+
+                                                        <f:facet name="header"><h:outputText value="Tipo de Archivo"/></f:facet>
+                                                        <p:lightBox>
+                                                            <h:outputLink value="#">
+                                                                <h:panelGrid columns="2">
+                                                                    <p:graphicImage library="images" name="pdf.png"/>
+                                                                    <h:outputText id="fileName" value="#{row.vnombre}"/>
+                                                                </h:panelGrid>
+                                                            </h:outputLink>
+                                                            <f:facet name="inline">
+                                                                <p:media player="pdf" cache="false" value="#{contenidoMB.content}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}"/>
+                                                            </f:facet>
+                                                        </p:lightBox>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                        </p:tabView>
+                                    </h:panelGrid>
+                                </p:fieldset>
+
+                                <p:spacer/>
+
+                                <p:fieldset>
+                                    <h:panelGrid id="pgNewVinc" columns="1" cellpadding="0" cellspacing="0" width="100%">
+                                        <p:commandButton value="#{msgs.wk_btn_vinculo}" actionListener="#{contenidoMB.toAddLink}" update=":pickDialogForm:pgPick" oncomplete="PF('pickDialog').show();" styleClass="ui-link Fs14"/>
+                                        <p:tabView id="tabview">
+                                            <p:tab title="Bases Legales">
+                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
+                                                             emptyMessage="Ninguna base legal vinculada." >
+                                                    <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                                        <h:outputText value="#{p.codigo}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                                        <h:outputText value="#{p.nombre}" />
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Contenidos">
+                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ningún contenido vinculado." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Buenas Prácticas">
+                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna buena práctica vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Oportunidades de Mejora">
+                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna oportunidad de mejora vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Wikis">
+                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ningún wiki vinculado." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Respuestas">
+                                                <p:dataTable value="#{contenidoMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna respuesta vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                        </p:tabView>
+                                    </h:panelGrid>
+                                </p:fieldset>
+                                <p:spacer/>
+
+
+                                <h:panelGrid columns="2" width="100%">
+                                    <h:panelGroup>
+                                        <p:commandButton value="Registrar" ajax="false" action="/pages/Contenido/contenido.xhtml" actionListener="#{contenidoMB.Save}"/>
+                                        <p:spacer width="10"/>
+                                        <p:commandButton value="Cancelar" ajax="false" action="/pages/Contenido/contenido.xhtml"/>
+                                    </h:panelGroup>
+                                    <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+
+                        <p:dialog id="tpoconDlg" header="Agregar Contenidos" widgetVar="tpoconDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="tpoconDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgTpoCon" columns="2" cellpadding="5" style="text-align: left;width: 100%">
+                                    <h:outputLabel value="Tipos de contenido"/>
+                                    <p:spacer/>
+                                    <p:selectOneRadio id="console" layout="grid" columns="1">
+                                        <f:selectItem itemLabel="Boletin" itemValue="0" />
+                                        <f:selectItem itemLabel="Blog" itemValue="1" />
+                                        <f:selectItem itemLabel="Manual" itemValue="2" />
+                                        <f:selectItem itemLabel="Video Tutorial" itemValue="3" />
+                                        <f:selectItem itemLabel="Articulo" itemValue="4" />
+                                        <f:selectItem itemLabel="Libro" itemValue="5" />
+                                        <f:selectItem itemLabel="Otros" itemValue="6" />
+                                    </p:selectOneRadio>
+                                    <p:spacer/>
+                                    <p:fileUpload value="#{contenidoMB.uploadFile}" skinSimple="true" update=":f:pgNewVinc1" fileUploadListener="#{contenidoMB.handleUploadFile}" 
+                                                  multiple="true" cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
+                                    
+                                    <p:commandButton  value="Cancelar" actionListener="#{contenidoMB.toCancel}" update=":f:growl"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="catDlg" header="Seleccionar Categorias" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="catDialogForm">
+                                <h:panelGrid id="pgCat" columns="1">
+                                    <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
+                                    <p:tree id="cats" value="#{contenidoMB.tree}" var="node" animate="true" cache="true"  
+                                            selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
+                                        <p:ajax event="select" listener="#{contenidoMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pgNew" />
+                                        <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
+                                            <h:outputText value="#{node.vnombre}"/>
+                                        </p:treeNode>
+                                    </p:tree>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="pickDlg" header="#{msgs.wk_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="pickDialogForm">
+                                <h:panelGrid id="pgPick" columns="1">
+                                    <h:outputText value="Tipo de Conocimiento:"/>
+                                    <p:selectOneMenu value="#{contenidoMB.idTipoConocimiento}" styleClass="Wid20">
+                                        <p:ajax event="change" listener="#{contenidoMB.onListTipoConocimientoChange}" update=":pickDialogForm:pgPick"/>
+                                        <f:selectItem itemValue="" itemLabel="Seleccione" />
+                                        <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
+                                    </p:selectOneMenu>
+                                    <p:pickList value="#{contenidoMB.pickList}" var="p" itemValue="#{p}" converter="converterPickListConocimiento" 
+                                                itemLabel="#{p.codigo} #{p.nombre} #{p.categoria} #{p.estado}" showSourceFilter="true" 
+                                                showTargetFilter="true" filterMatchMode="contains" styleClass="wk-picklist-list">
+                                        <p:ajax event="transfer" listener="#{contenidoMB.onTransfer}" update=":f:tabview"/>
+                                        <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
+                                        <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
+
+                                        <p:column style="width: 60%;">
+                                            <h:outputText value="#{p.codigo}" rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value=" - " rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value="#{p.nombre}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center;">
+                                            <h:outputText value="#{p.categoria}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center;">
+                                            <h:outputText value="#{p.estado}" />
+                                        </p:column>
+                                    </p:pickList>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                    </f:view>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="pe.gob.mef.gescon.hibernate.domain.Thistorial" optimistic-lock="version" schema="GESCON3" table="THISTORIAL">
+    <composite-id class="pe.gob.mef.gescon.hibernate.domain.ThistorialId" name="id">
+      <key-property name="nconocimientoid" type="big_decimal">
+        <column name="NCONOCIMIENTOID" precision="22" scale="0"/>
+      </key-property>
+      <key-property name="nhistorialid" type="big_decimal">
+        <column name="NHISTORIALID" precision="22" scale="0"/>
+      </key-property>
+    </composite-id>
+    <many-to-one class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" fetch="select" insert="false" name="tconocimiento" update="false">
+      <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>
+    </many-to-one>
+    <property name="ntipoconocimientoid" type="big_decimal">
+      <column name="NTIPOCONOCIMIENTOID" precision="22" scale="0"/>
+    </property>
+    <property name="vdescripcion" type="string">
+      <column length="25" name="VDESCRIPCION"/>
+    </property>
+    <property name="vtitulo" type="string">
+      <column length="100" name="VTITULO"/>
+    </property>
+    <property name="vusuariomodificacion" type="string">
+      <column length="25" name="VUSUARIOMODIFICACION"/>
+    </property>
+    <property name="vusuariocreacion" type="string">
+      <column length="25" name="VUSUARIOCREACION"/>
+    </property>
+    <property name="dfechacreacion" type="timestamp">
+      <column name="DFECHACREACION"/>
+    </property>
+    <property name="nundejecutora" type="big_decimal">
+      <column name="NUNDEJECUTORA" precision="22" scale="0"/>
+    </property>
+    <property name="vruta" type="string">
+      <column length="400" name="vruta"/>
+    </property>
+    <property name="vrango" type="string">
+      <column length="20" name="VRANGO"/>
+    </property>
+    <property name="vnumero" type="string">
+      <column length="20" name="VNUMERO"/>
+    </property>
+    <property name="vtema" type="string">
+      <column length="250" name="VTEMA"/>
+    </property>
+    <property name="vdesextra" type="string">
+      <column length="20" name="VDESEXTRA"/>
+    </property>
+    <property name="vautor" type="string">
+      <column length="50" name="VAUTOR"/>
+    </property>
+    <property name="vfuente" type="string">
+      <column length="20" name="VFUENTE"/>
+    </property>
+    <property name="vtipo" type="string">
+      <column length="20" name="VTIPO"/>
+    </property>
+    <property name="nnumversion" type="big_decimal">
+      <column name="NNUMVERSION" precision="22" scale="0"/>
+    </property>
+    <property name="vcontenido" type="string">
+      <column length="1000" name="VCONTENIDO"/>
+    </property>
+    <property name="nactivo" type="big_decimal">
+      <column name="NACTIVO" precision="22" scale="0"/>
+    </property>
+    <property name="nsituacionid" type="big_decimal">
+      <column name="NSITUACIONID" precision="22" scale="0"/>
+    </property>
+    <property name="ndias" type="big_decimal">
+      <column name="NDIAS" precision="22" scale="0"/>
+    </property>
+    <property name="vobservacion" type="string">
+      <column length="500" name="VOBSERVACION"/>
+    </property>
+    <property name="dfechamodificacion" type="date">
+      <column length="7" name="DFECHAMODIFICACION"/>
+    </property>
+    <property name="ncategoriaid" type="big_decimal">
+      <column name="NCATEGORIAID" precision="22" scale="0"/>
+    </property>
+    <set fetch="select" inverse="true" lazy="true" name="timplementacionHists" table="TIMPLEMENTACION_HIST">
+      <key>
+        <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>
+        <column name="NHISTORIALID" not-null="true" precision="22" scale="0"/>
+      </key>
+      <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TimplementacionHist"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="tdiscusionHists" table="TDISCUSION_HIST">
+      <key>
+        <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>
+        <column name="NHISTORIALID" not-null="true" precision="22" scale="0"/>
+      </key>
+      <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TdiscusionHist"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="tvinculoHists" table="TVINCULO_HIST">
+      <key>
+        <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>
+        <column name="NHISTORIALID" not-null="true" precision="22" scale="0"/>
+      </key>
+      <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TvinculoHist"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="tcalificacionHists" table="TCALIFICACION_HIST">
+      <key>
+        <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>
+        <column name="NHISTORIALID" not-null="true" precision="22" scale="0"/>
+      </key>
+      <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TcalificacionHist"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="tseccionHists" table="TSECCION_HIST">
+      <key>
+        <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>
+        <column name="NHISTORIALID" not-null="true" precision="22" scale="0"/>
+      </key>
+      <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TseccionHist"/>
+    </set>
+    <set fetch="select" inverse="true" lazy="true" name="tobservacionHists" table="TOBSERVACION_HIST">
+      <key>
+        <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>
+        <column name="NHISTORIALID" not-null="true" precision="22" scale="0"/>
+      </key>
+      <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TobservacionHist"/>
+    </set>
+  </class>
+</hibernate-mapping>

@@ -5,6 +5,7 @@
  */
 package pe.gob.mef.gescon.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import pe.gob.mef.gescon.web.bean.Rango;
 
@@ -15,4 +16,6 @@ import pe.gob.mef.gescon.web.bean.Rango;
 public interface RangoService {
     
     public List<Rango> getRangos() throws Exception;
+    List<Rango> getRangosByTipo(BigDecimal id) throws Exception;
+    List<Rango> getRangosActivosByTipo(BigDecimal id) throws Exception;
 }

@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 11/09/2015 05:20:11 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" table="MTCATEGORIA" schema="GESCON">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" table="MTCATEGORIA" schema="GESCON3" optimistic-lock="version">
         <id name="ncategoriaid" type="big_decimal">
             <column name="NCATEGORIAID" precision="22" scale="0" />
-            <generator class="assigned"></generator>
+            <generator class="assigned" />
         </id>
         <property name="vdescripcion" type="string">
-            <column name="VDESCRIPCION" length="400" />
+            <column name="VDESCRIPCION" length="25" />
         </property>
         <property name="nestado" type="big_decimal">
             <column name="NESTADO" precision="22" scale="0" />
@@ -23,17 +23,17 @@
         <property name="vnombre" type="string">
             <column name="VNOMBRE" length="25" />
         </property>
-        <property name="vusuariomod" type="string">
-            <column name="VUSUARIOMOD" length="20" />
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
         <property name="vusuariocreacion" type="string">
-            <column name="VUSUARIOCREACION" length="20" />
+            <column name="VUSUARIOCREACION" length="25" />
         </property>
         <property name="dfechacreacion" type="timestamp">
-            <column name="DFECHACREACION" length="6" />
+            <column name="DFECHACREACION" />
         </property>
-        <property name="dfechamod" type="timestamp">
-            <column name="DFECHAMOD" length="6" />
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" />
         </property>
         <property name="nflagwiki" type="big_decimal">
             <column name="NFLAGWIKI" precision="22" scale="0" />
@@ -57,13 +57,31 @@
             <column name="BIMAGEN" />
         </property>
         <property name="vimagennombre" type="string">
-            <column name="VIMAGENNOMBRE" length="100" />
+            <column name="VIMAGENNOMBRE" length="200" />
         </property>
-        <set name="tcategoriaConocimientos" table="TCATEGORIA_CONOCIMIENTO" inverse="true" lazy="true" fetch="select">
+        <set name="tconocimientos" table="TCONOCIMIENTO" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NCATEGORIAID" precision="22" scale="0" not-null="true" />
             </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TcategoriaConocimiento" />
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" />
+        </set>
+        <set name="tcategoriaUsers" table="TCATEGORIA_USER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NCATEGORIAID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TcategoriaUser" />
+        </set>
+        <set name="tpreguntas" table="TPREGUNTA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NCATEGORIAID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tpregunta" />
+        </set>
+        <set name="tbaselegals" table="TBASELEGAL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NCATEGORIAID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tbaselegal" />
         </set>
     </class>
 </hibernate-mapping>

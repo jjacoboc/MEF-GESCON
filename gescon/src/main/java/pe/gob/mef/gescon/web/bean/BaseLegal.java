@@ -7,9 +7,11 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import pe.gob.mef.gescon.common.Constante;
 
 /**
  *
@@ -18,11 +20,10 @@ import java.util.List;
 public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     
     private BigDecimal nbaselegalid;
+    private BigDecimal ntiporangoid;
     private BigDecimal nrangoid;
-    private String vrango;
     private String vnombre;
     private BigDecimal ncategoriaid;
-    private String vcategoria;
     private String vnumero;
     private String vsumilla;
     private Date dfechapublicacion;
@@ -37,9 +38,14 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     private BigDecimal nmancomunidades;
     private BigDecimal nactivo;
     private BigDecimal nestadoid;
-    private String vestado;
+    private String vmsjusuariocreacion;
+    private String vmsjmoderador;
+    private BigDecimal ndestacado;
     private Archivo archivo;
     private List<Archivo> listaArchivo;
+    private String vfechapublicacion;
+    private String vfechacreacion;
+    private String vfechamodificacion;
     
     public void BaseLegal(){
         
@@ -59,6 +65,14 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
         this.nbaselegalid = nbaselegalid;
     }
 
+    public BigDecimal getNtiporangoid() {
+        return ntiporangoid;
+    }
+
+    public void setNtiporangoid(BigDecimal ntiporangoid) {
+        this.ntiporangoid = ntiporangoid;
+    }
+
     /**
      * @return the nrangoid
      */
@@ -71,20 +85,6 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
      */
     public void setNrangoid(BigDecimal nrangoid) {
         this.nrangoid = nrangoid;
-    }
-
-    /**
-     * @return the vrango
-     */
-    public String getVrango() {
-        return vrango;
-    }
-
-    /**
-     * @param vrango the vrango to set
-     */
-    public void setVrango(String vrango) {
-        this.vrango = vrango;
     }
 
     /**
@@ -113,20 +113,6 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
      */
     public void setNcategoriaid(BigDecimal ncategoriaid) {
         this.ncategoriaid = ncategoriaid;
-    }
-
-    /**
-     * @return the vcategoria
-     */
-    public String getVcategoria() {
-        return vcategoria;
-    }
-
-    /**
-     * @param vcategoria the vcategoria to set
-     */
-    public void setVcategoria(String vcategoria) {
-        this.vcategoria = vcategoria;
     }
 
     /**
@@ -326,17 +312,39 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     }
 
     /**
-     * @return the vestado
+     * @return the vmsjusuariocreacion
      */
-    public String getVestado() {
-        return vestado;
+    public String getVmsjusuariocreacion() {
+        return vmsjusuariocreacion;
     }
 
     /**
-     * @param vestado the vestado to set
+     * @param vmsjusuariocreacion the vmsjusuariocreacion to set
      */
-    public void setVestado(String vestado) {
-        this.vestado = vestado;
+    public void setVmsjusuariocreacion(String vmsjusuariocreacion) {
+        this.vmsjusuariocreacion = vmsjusuariocreacion;
+    }
+
+    /**
+     * @return the vmsjmoderador
+     */
+    public String getVmsjmoderador() {
+        return vmsjmoderador;
+    }
+
+    /**
+     * @param vmsjmoderador the vmsjmoderador to set
+     */
+    public void setVmsjmoderador(String vmsjmoderador) {
+        this.vmsjmoderador = vmsjmoderador;
+    }
+
+    public BigDecimal getNdestacado() {
+        return ndestacado;
+    }
+
+    public void setNdestacado(BigDecimal ndestacado) {
+        this.ndestacado = ndestacado;
     }
 
     /**
@@ -366,7 +374,43 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     public void setListaArchivo(List<Archivo> listaArchivo) {
         this.listaArchivo = listaArchivo;
     }
-    
+
+    public String getVfechapublicacion() {
+        if(dfechapublicacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_MEDIUM);
+            vfechapublicacion = sdf.format(dfechapublicacion);
+        }
+        return vfechapublicacion;
+    }
+
+    public void setVfechapublicacion(String vfechapublicacion) {
+        this.vfechapublicacion = vfechapublicacion;
+    }
+
+    public String getVfechacreacion() {
+        if(dfechacreacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechacreacion = sdf.format(dfechacreacion);
+        }
+        return vfechacreacion;
+    }
+
+    public void setVfechacreacion(String vfechacreacion) {
+        this.vfechacreacion = vfechacreacion;
+    }
+
+    public String getVfechamodificacion() {
+        if(dfechamodificacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechamodificacion = sdf.format(dfechamodificacion);
+        }
+        return vfechamodificacion;
+    }
+
+    public void setVfechamodificacion(String vfechamodificacion) {
+        this.vfechamodificacion = vfechamodificacion;
+    }
+ 
     @Override
     public int compareTo(BaseLegal o) {
         return Comparators.ID.compare(this, o);

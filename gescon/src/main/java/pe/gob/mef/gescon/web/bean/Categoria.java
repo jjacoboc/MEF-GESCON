@@ -25,10 +25,10 @@ public class Categoria implements Serializable, Comparable<Categoria>{
     private BigDecimal ncategoriasup;
     private BigDecimal nnivel;
     private String vnombre;
-    private String vusuariomod;
+    private String vusuariomodificacion;
     private String vusuariocreacion;
     private Date dfechacreacion;
-    private Date dfechamod;
+    private Date dfechamodificacion;
     private BigDecimal nflagwiki;
     private BigDecimal nflagbl;
     private BigDecimal nflagpr;
@@ -37,6 +37,8 @@ public class Categoria implements Serializable, Comparable<Categoria>{
     private BigDecimal nflagom;
     private Blob bimagen;
     private String vimagennombre;
+    private String vespecialista;
+    private String vmoderador;
     private String imagen;
     private StreamedContent content;
     private List<Categoria> children;
@@ -130,17 +132,17 @@ public class Categoria implements Serializable, Comparable<Categoria>{
     }
 
     /**
-     * @return the vusuariomod
+     * @return the vusuariomodificacion
      */
-    public String getVusuariomod() {
-        return vusuariomod;
+    public String getVusuariomodificacion() {
+        return vusuariomodificacion;
     }
 
     /**
-     * @param vusuariomod the vusuariomod to set
+     * @param vusuariomodificacion the vusuariomodificacion to set
      */
-    public void setVusuariomod(String vusuariomod) {
-        this.vusuariomod = vusuariomod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
     /**
@@ -172,17 +174,17 @@ public class Categoria implements Serializable, Comparable<Categoria>{
     }
 
     /**
-     * @return the dfechamod
+     * @return the dfechamodificacion
      */
-    public Date getDfechamod() {
-        return dfechamod;
+    public Date getDfechamodificacion() {
+        return dfechamodificacion;
     }
 
     /**
-     * @param dfechamod the dfechamod to set
+     * @param dfechamodificacion the dfechamodificacion to set
      */
-    public void setDfechamod(Date dfechamod) {
-        this.dfechamod = dfechamod;
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
     }
 
     /**
@@ -295,6 +297,22 @@ public class Categoria implements Serializable, Comparable<Categoria>{
      */
     public void setVimagennombre(String vimagennombre) {
         this.vimagennombre = vimagennombre;
+    }
+
+    public String getVespecialista() {
+        return vespecialista;
+    }
+
+    public void setVespecialista(String vespecialista) {
+        this.vespecialista = vespecialista;
+    }
+
+    public String getVmoderador() {
+        return vmoderador;
+    }
+
+    public void setVmoderador(String vmoderador) {
+        this.vmoderador = vmoderador;
     }
 
     /**

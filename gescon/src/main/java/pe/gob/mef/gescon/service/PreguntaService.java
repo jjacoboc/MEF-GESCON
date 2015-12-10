@@ -6,10 +6,10 @@
 package pe.gob.mef.gescon.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import pe.gob.mef.gescon.web.bean.Politica;
+import pe.gob.mef.gescon.web.bean.Asignacion;
+import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 
 /**
@@ -18,10 +18,16 @@ import pe.gob.mef.gescon.web.bean.Pregunta;
  */
 public interface PreguntaService {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<Pregunta> getPreguntas() throws Exception;
-    public void saveOrUpdate(Pregunta pregunta) throws Exception;
-    public String traerNomCategoria(BigDecimal categoriaid) throws Exception;
-    public List<ArrayList> obtenerPreguntas() throws Exception;
-    
+    BigDecimal getNextPK() throws Exception;
+    List<Pregunta> getPreguntas() throws Exception;
+    Pregunta getPreguntaById(BigDecimal id) throws Exception;
+    void saveOrUpdate(Pregunta pregunta) throws Exception;
+    String traerNomCategoria(BigDecimal categoriaid) throws Exception;
+    List<Pregunta> obtenerPreguntas(BigDecimal preguntaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    List<Asignacion> obtenerPreguntaxAsig(BigDecimal preguntaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    BigDecimal obtenerPerfilxUsuario(BigDecimal usuarioid) throws Exception;
+    String getNomEntidadbyIdEntidad(BigDecimal entidadid) throws Exception;
+    List<Consulta> getConcimientosVinculados(HashMap filters);
+    List<Consulta> getConcimientosDisponibles(HashMap filters);
+    void delete(BigDecimal preguntaid) throws Exception;    
 }

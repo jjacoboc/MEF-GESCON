@@ -5,6 +5,7 @@
  */
 package pe.gob.mef.gescon.hibernate.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.Mtrango;
 
@@ -14,5 +15,7 @@ import pe.gob.mef.gescon.hibernate.domain.Mtrango;
  */
 public interface RangoDao {
     
-    public List<Mtrango> getMtrangos() throws Exception;
+    List<Mtrango> getMtrangos() throws Exception;
+    List<Mtrango> getMtrangosByTipo(BigDecimal id) throws Exception;
+    List<Mtrango> getMtrangosActivosByTipo(BigDecimal id) throws Exception;
 }

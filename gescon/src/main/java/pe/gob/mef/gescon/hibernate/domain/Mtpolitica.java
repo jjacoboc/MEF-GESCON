@@ -1,5 +1,5 @@
 package pe.gob.mef.gescon.hibernate.domain;
-// Generated 11/09/2015 05:20:07 PM by Hibernate Tools 4.3.1
+// Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,13 +12,15 @@ import java.util.Set;
 public class Mtpolitica implements java.io.Serializable {
 
     private BigDecimal npoliticaid;
-    private String vnombre;
     private String vdescripcion;
     private BigDecimal nactivo;
-    private BigDecimal nusuariomod;
-    private BigDecimal nusuariocreacion;
+    private String vusuariomodificacion;
+    private String vusuariocreacion;
     private Date dfechacreacion;
-    private Set<TpoliticaPerfil> tpoliticaPerfils = new HashSet<TpoliticaPerfil>(0);
+    private Date dfechamodificacion;
+    private String vnombre;
+    private BigDecimal nmoduloid;
+    private Set tpoliticaPerfils = new HashSet(0);
 
     public Mtpolitica() {
     }
@@ -27,14 +29,16 @@ public class Mtpolitica implements java.io.Serializable {
         this.npoliticaid = npoliticaid;
     }
 
-    public Mtpolitica(BigDecimal npoliticaid, String vnombre, String vdescripcion, BigDecimal nactivo, BigDecimal nusuariomod, BigDecimal nusuariocreacion, Date dfechacreacion, Set<TpoliticaPerfil> tpoliticaPerfils) {
+    public Mtpolitica(BigDecimal npoliticaid, String vdescripcion, BigDecimal nactivo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, String vnombre, BigDecimal nmoduloid, Set tpoliticaPerfils) {
         this.npoliticaid = npoliticaid;
-        this.vnombre = vnombre;
         this.vdescripcion = vdescripcion;
         this.nactivo = nactivo;
-        this.nusuariomod = nusuariomod;
-        this.nusuariocreacion = nusuariocreacion;
+        this.vusuariomodificacion = vusuariomodificacion;
+        this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
+        this.dfechamodificacion = dfechamodificacion;
+        this.vnombre = vnombre;
+        this.nmoduloid = nmoduloid;
         this.tpoliticaPerfils = tpoliticaPerfils;
     }
 
@@ -44,14 +48,6 @@ public class Mtpolitica implements java.io.Serializable {
 
     public void setNpoliticaid(BigDecimal npoliticaid) {
         this.npoliticaid = npoliticaid;
-    }
-
-    public String getVnombre() {
-        return this.vnombre;
-    }
-
-    public void setVnombre(String vnombre) {
-        this.vnombre = vnombre;
     }
 
     public String getVdescripcion() {
@@ -70,20 +66,20 @@ public class Mtpolitica implements java.io.Serializable {
         this.nactivo = nactivo;
     }
 
-    public BigDecimal getNusuariomod() {
-        return this.nusuariomod;
+    public String getVusuariomodificacion() {
+        return this.vusuariomodificacion;
     }
 
-    public void setNusuariomod(BigDecimal nusuariomod) {
-        this.nusuariomod = nusuariomod;
+    public void setVusuariomodificacion(String vusuariomodificacion) {
+        this.vusuariomodificacion = vusuariomodificacion;
     }
 
-    public BigDecimal getNusuariocreacion() {
-        return this.nusuariocreacion;
+    public String getVusuariocreacion() {
+        return this.vusuariocreacion;
     }
 
-    public void setNusuariocreacion(BigDecimal nusuariocreacion) {
-        this.nusuariocreacion = nusuariocreacion;
+    public void setVusuariocreacion(String vusuariocreacion) {
+        this.vusuariocreacion = vusuariocreacion;
     }
 
     public Date getDfechacreacion() {
@@ -94,11 +90,35 @@ public class Mtpolitica implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public Set<TpoliticaPerfil> getTpoliticaPerfils() {
+    public Date getDfechamodificacion() {
+        return this.dfechamodificacion;
+    }
+
+    public void setDfechamodificacion(Date dfechamodificacion) {
+        this.dfechamodificacion = dfechamodificacion;
+    }
+
+    public String getVnombre() {
+        return this.vnombre;
+    }
+
+    public void setVnombre(String vnombre) {
+        this.vnombre = vnombre;
+    }
+
+    public BigDecimal getNmoduloid() {
+        return nmoduloid;
+    }
+
+    public void setNmoduloid(BigDecimal nmoduloid) {
+        this.nmoduloid = nmoduloid;
+    }
+
+    public Set getTpoliticaPerfils() {
         return this.tpoliticaPerfils;
     }
 
-    public void setTpoliticaPerfils(Set<TpoliticaPerfil> tpoliticaPerfils) {
+    public void setTpoliticaPerfils(Set tpoliticaPerfils) {
         this.tpoliticaPerfils = tpoliticaPerfils;
     }
 

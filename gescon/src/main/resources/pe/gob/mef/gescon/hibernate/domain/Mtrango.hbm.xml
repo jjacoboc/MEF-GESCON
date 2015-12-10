@@ -1,18 +1,24 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 22/09/2015 05:59:22 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Mtrango" table="MTRANGO" schema="GESCON" optimistic-lock="version">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Mtrango" table="MTRANGO" schema="GESCON3" optimistic-lock="version">
         <id name="nrangoid" type="big_decimal">
             <column name="NRANGOID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
+        <property name="ntiponormaid" type="big_decimal">
+            <column name="NTIPONORMAID" precision="22" scale="0" />
+        </property>
         <property name="vnombre" type="string">
             <column name="VNOMBRE" length="25" />
         </property>
         <property name="vdescripcion" type="string">
             <column name="VDESCRIPCION" length="400" />
+        </property>
+        <property name="nactivo" type="big_decimal">
+            <column name="NACTIVO" precision="22" scale="0" />
         </property>
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="25" />
@@ -20,11 +26,11 @@
         <property name="vusuariomodificacion" type="string">
             <column name="VUSUARIOMODIFICACION" length="25" />
         </property>
-        <property name="dfechacreacion" type="date">
-            <column name="DFECHACREACION" length="7" />
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" />
         </property>
-        <property name="dfechamodificacion" type="date">
-            <column name="DFECHAMODIFICACION" length="7" />
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" />
         </property>
         <set name="tbaselegals" table="TBASELEGAL" inverse="true" lazy="true" fetch="select">
             <key>

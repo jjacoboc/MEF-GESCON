@@ -1,72 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:c="http://java.sun.com/jsp/jstl/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
-    <h:head>
-        <title></title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </h:head>
-    <h:body>
-        <f:view>
-            <h:form id="fm">
-                <h:panelGrid id="pgFiltro" columns="1" cellpadding="0" cellspacing="0" style="font-size: 12px; width: 100%;">
-                    <h:outputText value="#{consultaMB.listaBaseLegal.size()} Resultados" rendered="#{not empty consultaMB.listaBaseLegal}" style="font-weight: bold; font-family: Arial;" />
-                    <h:outputText value="0 Resultados" rendered="#{empty consultaMB.listaBaseLegal}" style="font-weight: bold; font-family: Arial;" />
-                    <p:spacer height="10"/>
-                    <h:outputText value="FILTROS DE BÚSQUEDA" style="font-weight: bold; font-family: Arial;" />
-                    <p:spacer height="10"/>
-                    <p:fieldset legend="Sub Categorías" >
-                        <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none" 
-                                    itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro eq null}" emptyMessage="No hay más sub categorías">
-                            <h:panelGrid columns="1" style="width: 100%" rendered="#{cat.nnivel eq 1}">
-                                <p:commandLink actionListener="#{consultaMB.onClickSubCategoriesFilter}" update=":fm:pgFiltro, :f:pgConsulta" >
-                                    <f:param name="rowIndex" value="#{rowIndex}"/>
-                                    <h:outputText value="#{cat.vnombre}" style="font-size: 12px;"/>
-                                </p:commandLink>
-                            </h:panelGrid>
-                        </p:dataList>
-                        <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none"
-                                    itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro ne null}" emptyMessage="No hay más sub categorías">
-                            <h:panelGrid columns="1" style="width: 100%"
-                                         rendered="#{(cat.nnivel eq (consultaMB.selectedCategoriaFiltro.nnivel + 1) and cat.ncategoriasup eq consultaMB.selectedCategoriaFiltro.ncategoriaid)}">
-                                <p:commandLink id="fcLink" actionListener="#{consultaMB.onClickSubCategoriesFilter}" update=":fm:pgFiltro, :f:pgConsulta" >
-                                    <f:param name="rowIndex" value="#{rowIndex}"/>
-                                    <h:outputText value="#{cat.vnombre}" style="font-size: 12px;"/>
-                                </p:commandLink>
-                            </h:panelGrid>
-                        </p:dataList>
-                    </p:fieldset>
-                    <p:spacer height="10"/>
-                    <p:fieldset legend="Rango">
-                        <h:panelGrid columns="4">
-                            <p:calendar id="fromDate" locale="es" value="#{consultaMB.fechaInicio}" maxdate="#{consultaMB.fechaFin}" size="8" pattern="dd/MM/yyyy" readonlyInput="true" showButtonPanel="true" navigator="true" >
-                                <p:ajax event="dateSelect" update=":fm:toDate"/>
-                            </p:calendar>
-                            <h:outputText value="al" />
-                            <p:calendar id="toDate" locale="es" value="#{consultaMB.fechaFin}" mindate="#{consultaMB.fechaInicio}" size="8" pattern="dd/MM/yyyy" readonlyInput="true" showButtonPanel="true" navigator="true" >
-                                <p:ajax event="dateSelect" update=":fm:fromDate"/>
-                            </p:calendar>
-                            <p:commandButton icon="fa fa-fw fa-chevron-right" actionListener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
-                        </h:panelGrid>
-                    </p:fieldset>
-                    <p:spacer height="10"/>
-                    <p:fieldset legend="Tipo de Contenido">
-                        <p:selectManyCheckbox id="grid" value="#{consultaMB.selectedTipoConocimiento}" layout="grid" columns="1" style="font-size: 12px;">
-                            <f:selectItems value="#{consultaMB.listaTipoConocimientoFiltro}" var="tc" itemLabel="#{tc.vnombre}" itemValue="#{tc.ntpoconocimientoid}" />
-                            <p:ajax event="change" listener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
-                        </p:selectManyCheckbox>
-                    </p:fieldset>
+      xmlns:p="http://primefaces.org/ui">
+    <style>
+        .ui-fieldset .ui-fieldset-legend {
+            padding-top: 4px;
+            padding-bottom:  4px;
+            padding-left:  5px;
+            padding-right:  5px;
+            font-size: 14px;
+        }
+        .ui-selectmanycheckbox tbody tr td label{
+            font-size: 12px;
+        }
+        .ui-selectmanycheckbox tbody tr td{
+            vertical-align: middle;
+        }
+        .ui-inputfield {
+            padding-top: 2px !important;
+            padding-bottom:  4px !important;
+            padding-left:  4px !important;
+            padding-right:  2px !important;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+        .ui-button .ui-button-text {
+            padding-top: 2px !important;
+            padding-bottom:  2px !important;
+            padding-left:  2px !important;
+            padding-right:  2px !important;
+            vertical-align: middle;
+        }
+        .ui-button span {
+            font-size: 14px;
+            vertical-align: middle;
+        }
+    </style>
+    <h:form id="fm">
+        <h:panelGrid id="pgFiltro" columns="1">
+            <h:outputText value="#{consultaMB.listaConsulta.size()} Resultados" rendered="#{not empty consultaMB.listaConsulta}" styleClass="FontBold" />
+            <h:outputText value="0 Resultados" rendered="#{empty consultaMB.listaConsulta}" styleClass="FontBold" />
+            <h:outputText value="FILTROS DE BÚSQUEDA" styleClass="FontBold" />
+            <p:fieldset legend="Sub Categorías">
+                <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none" 
+                            itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro eq null}" emptyMessage="No hay más sub categorías">
+                    <h:panelGrid columns="1" style="width: 100%" rendered="#{cat.nnivel eq 1}">
+                        <p:commandLink actionListener="#{consultaMB.onClickSubCategoriesFilter}" styleClass="ui-link" update=":fm:pgFiltro, :f:pgConsulta" >
+                            <f:param name="rowIndex" value="#{rowIndex}"/>
+                            <h:outputText value="#{cat.vnombre}" styleClass="Fs12"/>
+                        </p:commandLink>
+                    </h:panelGrid>
+                </p:dataList>
+                <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none" 
+                            itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro ne null}" emptyMessage="No hay más sub categorías">
+                    <h:panelGrid columns="1" style="width: 100%" 
+                                 rendered="#{(cat.nnivel eq (consultaMB.selectedCategoriaFiltro.nnivel + 1) and cat.ncategoriasup eq consultaMB.selectedCategoriaFiltro.ncategoriaid)}">
+                        <p:commandLink id="fcLink" actionListener="#{consultaMB.onClickSubCategoriesFilter}" styleClass="ui-link" update=":fm:pgFiltro, :f:pgConsulta" >
+                            <f:param name="rowIndex" value="#{rowIndex}"/>
+                            <h:outputText value="#{cat.vnombre}" styleClass="Fs12"/>
+                        </p:commandLink>
+                    </h:panelGrid>
+                </p:dataList>
+            </p:fieldset>
+            <p:fieldset legend="Rango" styleClass="fieldset-consulta">
+                <h:panelGrid columns="4" styleClass="panelcolumns2">
+                    <p:calendar id="fromDate" locale="es" value="#{consultaMB.fechaInicio}" maxdate="#{consultaMB.fechaFin}" size="10" 
+                                pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
+                        <p:ajax event="dateSelect" update=":fm:toDate"/>
+                    </p:calendar>
+                    <h:outputText value="al" />
+                    <p:calendar id="toDate" locale="es" value="#{consultaMB.fechaFin}" mindate="#{consultaMB.fechaInicio}" size="10" 
+                                pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
+                        <p:ajax event="dateSelect" update=":fm:fromDate"/>
+                    </p:calendar>
+                    <p:commandButton icon="fa fa-fw fa-chevron-right" actionListener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
                 </h:panelGrid>
-            </h:form>
-        </f:view>
-    </h:body>
+            </p:fieldset>
+            <p:fieldset legend="Tipo de Contenido">
+                <p:selectManyCheckbox id="grid" value="#{consultaMB.selectedTipoConocimiento}" layout="grid" columns="1" style="font-size: 12px;" >
+                    <f:selectItems value="#{consultaMB.listaTipoConocimientoFiltro}" var="tc" itemLabel="#{tc.vnombre}" itemValue="#{tc.ntpoconocimientoid}" />
+                    <p:ajax event="change" listener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
+                </p:selectManyCheckbox>
+            </p:fieldset>
+        </h:panelGrid>
+    </h:form>
 </html>

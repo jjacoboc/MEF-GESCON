@@ -1,0 +1,112 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+    
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent">                    
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="#{msgs.bl_lbl_pnlTitulo}" styleClass="TexAlLeft">
+                                <h:panelGrid columns="1">
+                                    <p:commandButton  value="Nuevo" ajax="false" action="#{baseLegalMB.toSave}" styleClass="Fleft" icon="fa fa-plus white" 
+                                                      rendered="#{loginMB.perfil.nperfilid eq msgs.especialista or loginMB.perfil.nperfilid eq msgs.administrador}"/>
+                                    <p:dataTable id="tbl" value="#{baseLegalMB.listaBaseLegal}" filteredValue="#{baseLegalMB.filteredListaBaseLegal}" var="row"
+                                                 paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <p:column style="text-align: center; width: 120px;" sortBy="#{row.vnumero}" filterBy="#{row.vnumero}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna01}"/></f:facet>
+                                            <p:commandLink id="num" styleClass="ui-link Fs14 Unselectable" global="false">
+                                                <h:outputText value="#{row.vnumero}"/>
+                                            </p:commandLink>
+                                            <p:tooltip id="toolTipGrow" for="num" value="#{row.vsumilla}" showEffect="clip" hideEffect="explode" style="font-size: 12px;" />
+                                        </p:column>
+                                        <p:column sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 400px;text-transform: uppercase;" priority="2">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna02}"/></f:facet>
+                                            <h:outputText value="#{row.vnombre}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 100px;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna03}"/></f:facet>
+                                            <h:outputText value="#{row.nestadoid}">
+                                                <f:converter converterId="converterEstadoBaseLegal"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 170px;" sortBy="#{row.vfechapublicacion}" filterBy="#{row.vfechapublicacion}" filterMatchMode="contains" priority="4">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna04}"/></f:facet>
+                                            <h:outputText value="#{row.vfechapublicacion}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 50px;" priority="5">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna05}"/></f:facet>
+                                            <p:lightBox rendered="#{row.archivo ne null}">
+                                                <h:outputLink value="#">
+                                                    <p:graphicImage library="images" name="pdf.png"/>
+                                                </h:outputLink>
+                                                <f:facet name="inline">
+                                                    <p:media player="pdf" cache="false" value="#{baseLegalMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                                        <f:param name="fileName" value="#{row.archivo.vruta}"/>
+                                                    </p:media>
+                                                </f:facet>
+                                            </p:lightBox>
+                                            <p:graphicImage library="images" name="pdf.png" rendered="#{row.archivo eq null}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 90px;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna06}"/></f:facet>
+                                            <p:commandLink ajax="false" action="#{baseLegalMB.toView}" styleClass="ui-link" title="ver base legal">
+                                                <h:outputText class="fa fa-search Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                            <p:spacer width="5px;"/>
+                                            <p:commandLink ajax="false" action="#{baseLegalMB.toEdit}" styleClass="ui-link" title="actualizar base legal" 
+                                                           rendered="#{loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
+                                                <h:outputText class="fa fa-edit Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                            <p:spacer width="5px;" rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}"/>
+                                            <p:commandLink ajax="false" action="#{baseLegalMB.toPost}" styleClass="ui-link" title="publicar base legal" 
+                                                           rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
+                                                <h:outputText class="fa fa-play-circle-o Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                            <p:spacer width="5px;"/>
+                                            <p:commandLink actionListener="#{baseLegalMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar base legal" styleClass="ui-link"
+                                                           rendered="#{(row.nactivo eq 0) and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
+                                                <h:outputText class="fa fa-check Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                            <p:commandLink actionListener="#{baseLegalMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar base legal" styleClass="ui-link"
+                                                           rendered="#{(row.nactivo eq 1) and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.bl_msg_activar}" header="#{msgs.bl_lbl_pnlActivar}" widgetVar="confirmActDlg" style="font-size: 10px;">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{baseLegalMB.activar}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmActDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
+
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.bl_msg_desactivar}" header="#{msgs.bl_lbl_pnlDesactivar}" widgetVar="confirmDesDlg" style="font-size: 10px;">
+                            <h:form id="confirmDesDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{baseLegalMB.desactivar}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDesDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

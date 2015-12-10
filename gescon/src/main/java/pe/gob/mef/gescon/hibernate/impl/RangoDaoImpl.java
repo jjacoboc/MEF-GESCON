@@ -5,10 +5,12 @@
  */
 package pe.gob.mef.gescon.hibernate.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -35,6 +37,23 @@ public class RangoDaoImpl extends HibernateDaoSupport implements RangoDao{
     @Override
     public List<Mtrango> getMtrangos() throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtrango.class);
+        criteria.addOrder(Order.asc("vnombre"));
+        return (List<Mtrango>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public List<Mtrango> getMtrangosByTipo(BigDecimal id) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Mtrango.class);
+        criteria.add(Restrictions.eq("ntiponormaid", id));
+        criteria.addOrder(Order.asc("vnombre"));
+        return (List<Mtrango>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public List<Mtrango> getMtrangosActivosByTipo(BigDecimal id) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Mtrango.class);
+        criteria.add(Restrictions.eq("ntiponormaid", id));
+        criteria.add(Restrictions.eq("nactivo", BigDecimal.ONE));
         criteria.addOrder(Order.asc("vnombre"));
         return (List<Mtrango>) getHibernateTemplate().findByCriteria(criteria);
     }
