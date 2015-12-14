@@ -21,7 +21,7 @@
                                                     <td>
                                                         <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
                                                             <p:spacer/>
-                                                            <i class="#{admin.imagen}"></i>
+                                                            <i class="#{admin.imagen}" style="height: 32px; width: 32px;"></i>
                                                             <h:outputText value="#{admin.nombre}" styleClass="Fs14 FontBold black"/>
                                                             <p:spacer/>
                                                         </p:panelGrid>
@@ -39,7 +39,7 @@
                                                             <f:param name="idparent" value="#{cat.ncategoriaid}"/>
                                                             <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
                                                                 <p:spacer/>
-                                                                <p:graphicImage cache="false" value="#{categoriaImages.image}" styleClass="black">
+                                                                <p:graphicImage cache="false" value="#{categoriaImages.image}" styleClass="black" style="height: 32px; width: 32px;">
                                                                     <f:param name="id" value="#{cat.ncategoriaid}"/>
                                                                 </p:graphicImage>
                                                                 <h:outputText value="#{cat.vnombre}" styleClass="Fs14 FontBold black"/>
@@ -58,7 +58,7 @@
                                                     <td>
                                                         <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
                                                             <p:spacer/>
-                                                            <p:graphicImage library="images" name="#{per.imagen}" style="border: 0px;"/>
+                                                            <i class="#{per.imagen}" style="height: 32px; width: 32px;"></i>
                                                             <h:outputText value="#{per.vdescripcion}" styleClass="Fs14 FontBold black"/>
                                                             <p:spacer/>
                                                         </p:panelGrid>

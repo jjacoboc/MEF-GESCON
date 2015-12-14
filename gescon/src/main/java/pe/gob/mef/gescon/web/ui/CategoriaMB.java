@@ -6,12 +6,18 @@
 package pe.gob.mef.gescon.web.ui;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
 import java.sql.Blob;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,6 +26,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.imageio.ImageIO;
 import javax.sql.rowset.serial.SerialBlob;
+import jcifs.smb.NtlmPasswordAuthentication;
+import jcifs.smb.SmbFile;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +40,7 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
@@ -420,11 +429,7 @@ public class CategoriaMB implements Serializable {
     public void toSave(ActionEvent event) {
         try {
             this.cleanAttributes();
-            Blob blob = this.getSelectedCategoria().getBimagen();
-            String type = this.getSelectedCategoria().getVimagentype();
-            if (blob != null) {
-                this.setContent(new DefaultStreamedContent(blob.getBinaryStream(), type, this.getSelectedCategoria().getVimagennombre()));
-            }
+            this.readImage(this.getSelectedCategoria());
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -480,6 +485,7 @@ public class CategoriaMB implements Serializable {
                 CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                 categoria.setNcategoriaid(service.getNextPK());
                 service.saveOrUpdate(categoria);
+                this.writeImage(categoria);
                 this.setTree(null);
                 createTree(service.getCategorias());
                 RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
@@ -501,11 +507,7 @@ public class CategoriaMB implements Serializable {
             this.setFlagom(this.getSelectedCategoria().getNflagom().equals(BigDecimal.ONE));
             this.setFlagpr(this.getSelectedCategoria().getNflagpr().equals(BigDecimal.ONE));
             this.setFlagwiki(this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE));
-            Blob blob = this.getSelectedCategoria().getBimagen();
-            String type = this.getSelectedCategoria().getVimagentype();
-            if (blob != null) {
-                this.setContent(new DefaultStreamedContent(blob.getBinaryStream(), type, this.getSelectedCategoria().getVimagennombre()));
-            }
+            this.readImage(this.getSelectedCategoria());
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -550,6 +552,7 @@ public class CategoriaMB implements Serializable {
                 }
                 CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                 service.saveOrUpdate(this.getSelectedCategoria());
+                this.writeImage(this.getSelectedCategoria());
                 this.setTree(null);
                 createTree(service.getCategorias());
                 RequestContext.getCurrentInstance().execute("PF('editDialog').hide();");
@@ -602,6 +605,66 @@ public class CategoriaMB implements Serializable {
             }
         } catch (Exception e) {
             e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void writeImage(Categoria categoria) {
+        String filepath;
+        String user;
+        String password;
+        String url;
+        try {
+            if (this.getUploadFile() != null) {
+                ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+                filepath = bundle.getString("filepath");
+                user = bundle.getString("user");
+                password = bundle.getString("password");
+                url = filepath + "category/" + categoria.getNcategoriaid().toString() + "/";
+
+                NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, user, password);
+                SmbFile dir = new SmbFile(url, auth);
+                if(!dir.exists()) {
+                    dir.mkdirs();
+                }
+                
+                File file = new File(dir.getUncPath(), this.getUploadFile().getFileName());
+                FileOutputStream fileOutStream = new FileOutputStream(file);
+                fileOutStream.write(this.getUploadFile().getContents());
+                fileOutStream.flush();
+                fileOutStream.close();
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void readImage(Categoria categoria) {
+        String filepath;
+        String user;
+        String password;
+        String url;
+        try {
+            if (categoria != null) {
+                ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+                filepath = bundle.getString("filepath");
+                user = bundle.getString("user");
+                password = bundle.getString("password");
+                url = filepath + "category/" + categoria.getNcategoriaid().toString() + "/";
+
+                NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, user, password);
+                SmbFile dir = new SmbFile(url, auth);
+                
+                File file = new File(dir.getUncPath(), categoria.getVimagennombre());
+                FileInputStream fis = new FileInputStream(file);
+                this.content = new DefaultStreamedContent(fis, categoria.getVimagentype(), categoria.getVimagennombre());
+            }
+        } catch (MalformedURLException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         }
     }

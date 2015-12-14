@@ -546,7 +546,7 @@ public class WikiMB implements Serializable {
                 this.setIdTipoConocimiento(id);
                 if (id != null) {
                     HashMap filters = new HashMap();
-                    filters.put("ntipoconocimientoid", id.toString());
+                    filters.put("ntipoconocimientoid", id);
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     if (this.getSelectedWiki() != null) {
                         filters.put("nconocimientoid", this.getSelectedWiki().getNconocimientoid().toString());

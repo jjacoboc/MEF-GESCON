@@ -579,7 +579,7 @@ public class OportunidadMB implements Serializable {
                 this.setIdTipoConocimiento(id);
                 if (id != null) {
                     HashMap filters = new HashMap();
-                    filters.put("ntipoconocimientoid", id.toString());
+                    filters.put("ntipoconocimientoid", id);
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     if (this.getSelectedOportunidad()!= null) {
                         filters.put("nconocimientoid", this.getSelectedOportunidad().getNconocimientoid().toString());

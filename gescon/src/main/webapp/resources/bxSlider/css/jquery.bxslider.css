@@ -213,6 +213,16 @@
     border-style: none !important;
 }
 
-.bx-row tbody tr td{
+.bx-row-col1 {
+    width: 64px !important;
+    text-align: center;
+}
+
+.bx-row-col2 {
+    
+}
+
+.bx-row tbody tr td {
     border-style: none !important;
+    vertical-align: top !important;
 }
