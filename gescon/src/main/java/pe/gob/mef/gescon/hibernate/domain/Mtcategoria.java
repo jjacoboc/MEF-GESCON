@@ -30,6 +30,7 @@ public class Mtcategoria implements java.io.Serializable {
     private BigDecimal nflagom;
     private Blob bimagen;
     private String vimagennombre;
+    private String vimagentype;
     private Set tconocimientos = new HashSet(0);
     private Set tcategoriaUsers = new HashSet(0);
     private Set tpreguntas = new HashSet(0);
@@ -42,7 +43,7 @@ public class Mtcategoria implements java.io.Serializable {
         this.ncategoriaid = ncategoriaid;
     }
 
-    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Blob bimagen, String vimagennombre, Set tconocimientos, Set tcategoriaUsers, Set tpreguntas, Set tbaselegals) {
+    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Blob bimagen, String vimagennombre, String vimagentype, Set tconocimientos, Set tcategoriaUsers, Set tpreguntas, Set tbaselegals) {
         this.ncategoriaid = ncategoriaid;
         this.vdescripcion = vdescripcion;
         this.nestado = nestado;
@@ -61,6 +62,7 @@ public class Mtcategoria implements java.io.Serializable {
         this.nflagom = nflagom;
         this.bimagen = bimagen;
         this.vimagennombre = vimagennombre;
+        this.vimagentype = vimagentype;
         this.tconocimientos = tconocimientos;
         this.tcategoriaUsers = tcategoriaUsers;
         this.tpreguntas = tpreguntas;
@@ -207,6 +209,14 @@ public class Mtcategoria implements java.io.Serializable {
 
     public void setVimagennombre(String vimagennombre) {
         this.vimagennombre = vimagennombre;
+    }
+
+    public String getVimagentype() {
+        return vimagentype;
+    }
+
+    public void setVimagentype(String vimagentype) {
+        this.vimagentype = vimagentype;
     }
 
     public Set getTconocimientos() {

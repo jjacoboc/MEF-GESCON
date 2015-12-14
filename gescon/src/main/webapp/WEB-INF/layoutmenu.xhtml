@@ -15,9 +15,9 @@
                 <p:inputText placeholder="Buscar" styleClass="Fs14 Fright" style="width: 300px;"/>
             </f:facet>
             
-            <p:menuitem icon="fa fa-home" url="/index.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}"/>
+            <p:menuitem icon="fa fa-home" url="/" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}"/>
             <p:menuitem icon="fa fa-home" url="/pages/indexAdmin.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid eq msgs.administrador}"/>
-            <p:menuitem icon="fa fa-home" url="/index.xhtml" rendered="#{loginMB.user eq null}"/>
+            <p:menuitem icon="fa fa-home" url="/" rendered="#{loginMB.user eq null}"/>
             
             <p:separator rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}"/>
             

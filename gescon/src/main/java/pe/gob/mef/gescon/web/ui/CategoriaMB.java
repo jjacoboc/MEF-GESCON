@@ -375,26 +375,29 @@ public class CategoriaMB implements Serializable {
             if (event != null) {
                 UploadedFile f = event.getFile();
                 if (f != null) {
-                    if (!f.getContentType().equals("image/png")) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La imagen debe ser de tipo PNG.");
+                    if (!f.getContentType().equalsIgnoreCase("image/png")
+                            && !f.getContentType().equalsIgnoreCase("image/jpg")
+                            && !f.getContentType().equalsIgnoreCase("image/jpeg")
+                            && !f.getContentType().equalsIgnoreCase("image/gif")) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La imagen debe ser de tipo png, jpg o gif.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
-                    if (f.getSize() > 20480) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "El tamaño de la imagen no debe ser mayor a 20KB.");
+                    if (f.getSize() > 102400) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "El tamaño de la imagen no debe ser mayor a 100KB.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
                     BufferedImage bimg = ImageIO.read(f.getInputstream());
                     int width = bimg.getWidth();
                     int height = bimg.getHeight();
-                    if (width > 32 || height > 32) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La dimensión de la imagen no debe ser mayor a 32x32.");
+                    if (width > 128 || height > 128) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La dimensión de la imagen no debe ser mayor a 128x128.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
                     this.setUploadFile(f);
-                    this.content = new DefaultStreamedContent(f.getInputstream(), "image/png", f.getFileName());
+                    this.content = new DefaultStreamedContent(f.getInputstream(), f.getContentType(), f.getFileName());
                 }
             }
         } catch (Exception e) {
@@ -417,6 +420,11 @@ public class CategoriaMB implements Serializable {
     public void toSave(ActionEvent event) {
         try {
             this.cleanAttributes();
+            Blob blob = this.getSelectedCategoria().getBimagen();
+            String type = this.getSelectedCategoria().getVimagentype();
+            if (blob != null) {
+                this.setContent(new DefaultStreamedContent(blob.getBinaryStream(), type, this.getSelectedCategoria().getVimagennombre()));
+            }
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -426,6 +434,21 @@ public class CategoriaMB implements Serializable {
     public void save(ActionEvent event) {
         try {
             if (event != null) {
+                if(StringUtils.isBlank(this.getNombre())) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el nombre de la categoría a registrar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+                if(StringUtils.isBlank(this.getDescripcion())) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción de la categoría a registrar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+                if(this.getContent() == null) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la imagen de la categoría a registrar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user = loginMB.getUser();
                 Categoria categoria = new Categoria();
@@ -446,10 +469,11 @@ public class CategoriaMB implements Serializable {
                     categoria.setNcategoriasup(null);
                     categoria.setNnivel(BigDecimal.ONE);
                 }
-                if (this.getUploadFile() != null) {
+                if (this.getContent()!= null) {
                     Blob blob = new SerialBlob(this.getUploadFile().getContents());
                     categoria.setBimagen(blob);
-                    categoria.setVimagennombre(this.getUploadFile().getFileName());
+                    categoria.setVimagennombre(this.getContent().getName());
+                    categoria.setVimagentype(this.getContent().getContentType());
                 }
                 categoria.setDfechacreacion(new Date());
                 categoria.setVusuariocreacion(user.getVlogin());
@@ -478,8 +502,9 @@ public class CategoriaMB implements Serializable {
             this.setFlagpr(this.getSelectedCategoria().getNflagpr().equals(BigDecimal.ONE));
             this.setFlagwiki(this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE));
             Blob blob = this.getSelectedCategoria().getBimagen();
+            String type = this.getSelectedCategoria().getVimagentype();
             if (blob != null) {
-                this.setContent(new DefaultStreamedContent(blob.getBinaryStream(), "image/png", this.getSelectedCategoria().getVimagennombre()));
+                this.setContent(new DefaultStreamedContent(blob.getBinaryStream(), type, this.getSelectedCategoria().getVimagennombre()));
             }
         } catch (Exception e) {
             e.getMessage();
@@ -490,6 +515,21 @@ public class CategoriaMB implements Serializable {
     public void update(ActionEvent event) {
         try {
             if (event != null) {
+                if(StringUtils.isBlank(this.getSelectedCategoria().getVnombre())) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el nombre de la categoría a registrar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+                if(StringUtils.isBlank(this.getSelectedCategoria().getVdescripcion())) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción de la categoría a registrar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+                if(this.getContent() == null) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la imagen de la categoría a registrar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user = loginMB.getUser();
                 this.getSelectedCategoria().setVnombre(StringUtils.capitalize(this.getSelectedCategoria().getVnombre().trim()));
@@ -502,10 +542,11 @@ public class CategoriaMB implements Serializable {
                 this.getSelectedCategoria().setNflagwiki(this.isFlagwiki() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedCategoria().setDfechamodificacion(new Date());
                 this.getSelectedCategoria().setVusuariomodificacion(user.getVlogin());
-                if (this.getUploadFile() != null) {
+                if (this.getContent() != null) {
                     Blob blob = new SerialBlob(this.getUploadFile().getContents());
                     this.getSelectedCategoria().setBimagen(blob);
-                    this.getSelectedCategoria().setVimagennombre(this.getUploadFile().getFileName());
+                    this.getSelectedCategoria().setVimagennombre(this.getContent().getName());
+                    this.getSelectedCategoria().setVimagentype(this.getContent().getContentType());
                 }
                 CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                 service.saveOrUpdate(this.getSelectedCategoria());

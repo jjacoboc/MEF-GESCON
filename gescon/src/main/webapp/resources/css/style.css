@@ -39,7 +39,7 @@ and open the template in the editor.
 
 .headerStyle {
     font-size: 10px;
-    background: #D0525D;
+    background: #034DA2;
     box-shadow: 3px 3px 5px #888888;
 }
 
@@ -66,7 +66,7 @@ and open the template in the editor.
 }
 
 .ui-link:hover{
-    color: #D0525D !important;
+    color: #034DA2 !important;
 }
 
 .ui-growl-item {width: 128px !important;}

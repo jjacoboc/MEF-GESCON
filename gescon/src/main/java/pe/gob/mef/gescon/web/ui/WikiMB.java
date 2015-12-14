@@ -697,11 +697,11 @@ public class WikiMB implements Serializable {
             wiki.setNtipoconocimientoid(Constante.WIKI);
             wiki.setNconocimientoid(conocimientoService.getNextPK());
             wiki.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-            wiki.setVtitulo(this.getNombre());
+            wiki.setVtitulo(StringUtils.upperCase(this.getNombre()));
             if(this.getDescripcionPlain().length() < 400) {
-                wiki.setVdescripcion(this.getDescripcionPlain());
+                wiki.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                wiki.setVdescripcion(this.getDescripcionPlain().substring(0, 400));
+                wiki.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
             wiki.setNactivo(BigDecimal.ONE);
             if (this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE)) {
@@ -809,7 +809,7 @@ public class WikiMB implements Serializable {
                 }
             }
             this.setListaWiki(conocimientoService.getConocimientosByType(Constante.WIKI));
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/wiki/lista.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -924,10 +924,11 @@ public class WikiMB implements Serializable {
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             this.getSelectedWiki().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            this.getSelectedWiki().setVtitulo(StringUtils.upperCase(this.getSelectedWiki().getVtitulo()));
             if(this.getDescripcionPlain().length() < 400) {
-                this.getSelectedWiki().setVdescripcion(this.getDescripcionPlain());
+                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                this.getSelectedWiki().setVdescripcion(this.getDescripcionPlain().substring(0, 400));
+                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
             this.getSelectedWiki().setDfechamodificacion(new Date());
             this.getSelectedWiki().setVusuariomodificacion(user.getVlogin());
@@ -1042,7 +1043,7 @@ public class WikiMB implements Serializable {
                 }
             }
             this.setListaWiki(conocimientoService.getConocimientosByType(Constante.WIKI));
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/wiki/lista.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -1114,12 +1115,13 @@ public class WikiMB implements Serializable {
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             this.getSelectedWiki().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-            this.getSelectedWiki().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
+            this.getSelectedWiki().setVtitulo(StringUtils.upperCase(this.getSelectedWiki().getVtitulo()));
             if(this.getDescripcionPlain().length() < 400) {
-                this.getSelectedWiki().setVdescripcion(this.getDescripcionPlain());
+                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                this.getSelectedWiki().setVdescripcion(this.getDescripcionPlain().substring(0, 400));
+                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
+            this.getSelectedWiki().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
             this.getSelectedWiki().setDfechapublicacion(new Date());
             this.getSelectedWiki().setDfechamodificacion(new Date());
             this.getSelectedWiki().setVusuariomodificacion(user.getVlogin());
@@ -1234,7 +1236,7 @@ public class WikiMB implements Serializable {
                 }
             }
             this.setListaWiki(conocimientoService.getConocimientosByType(Constante.WIKI));
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/wiki/lista.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

@@ -126,7 +126,7 @@
                                     <h:panelGroup>
                                         <p:commandButton value="#{msgs.bl_btn_actualizar}" actionListener="#{loginMB.edit}" update=":f:growl,:f:pgEdit"/>
                                         <p:spacer width="10"/>
-                                        <p:commandButton value="Publicar" actionListener="#{loginMB.PubBaseLegal}" update=":f:growl"/>
+                                        <p:commandButton value="Publicar" ajax="false" action="#{loginMB.PubBaseLegal}"/>
                                         <p:spacer width="10"/>
                                         <p:commandButton value="Solicitar Informacion" actionListener="#{loginMB.toSolInfoBase}" update=":siModBaseDialogForm:pgSiModBase" oncomplete="PF('siModBaseDialog').show();"  />
                                         <p:spacer width="10"/>

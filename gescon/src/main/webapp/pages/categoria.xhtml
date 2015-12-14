@@ -47,7 +47,7 @@
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
 
-                                    <h:outputText value="*"/>
+                                    <p:spacer/>
                                     <h:outputText value="Verificación:"/>
                                     <h:panelGrid columns="4" border="0" >
                                         <p:selectBooleanCheckbox value="#{categoriaMB.flagbl}"/>
@@ -64,7 +64,7 @@
                                         <h:outputText value="Oportunidad de Mejoras"/>
                                     </h:panelGrid>
 
-                                    <p:spacer/>
+                                    <h:outputText value="*"/>
                                     <h:outputText value="Imagen:"/>
                                     <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
                                         <h:panelGrid columns="2">
@@ -94,7 +94,7 @@
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
 
-                                    <h:outputText value="*"/>
+                                    <p:spacer/>
                                     <h:outputText value="Verificación:"/>
                                     <h:panelGrid columns="4" border="0" >
                                         <p:selectBooleanCheckbox value="#{categoriaMB.flagbl}"/>
@@ -111,15 +111,15 @@
                                         <h:outputText value="Oportunidad de Mejoras"/>
                                     </h:panelGrid>
 
-                                    <p:spacer/>
+                                    <h:outputText value="*"/>
                                     <h:outputText value="Imagen:"/>
                                     <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
                                         <h:panelGrid columns="2">
                                             <p:fileUpload value="#{categoriaMB.uploadFile}" skinSimple="true" update=":editDialogForm:pgEdit, :f:growl" fileUploadListener="#{categoriaMB.handleUploadFile}" 
                                                           cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
-                                            <p:graphicImage cache="false" value="#{categoriaMB.content}"/>
+                                            <p:graphicImage cache="false" value="#{categoriaMB.content}" />
                                         </h:panelGrid>
-                                        <h:outputText value="Nota: La imagen debe tener un tamaño no mayor a 20KB y una dimensión de 32x32." styleClass="Fs10"/>
+                                        <h:outputText value="Nota: La imagen debe tener un tamaño no mayor a 100KB y una dimensión de 128x128." styleClass="Fs10"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
                                 <p:commandButton value="Actualizar" actionListener="#{categoriaMB.update}" update=":f:growl, :f:cats"/>

@@ -699,11 +699,11 @@ public class BuenaPracticaMB implements Serializable{
             conocimiento.setNtipoconocimientoid(Constante.BUENAPRACTICA);
             conocimiento.setNconocimientoid(conocimientoService.getNextPK());
             conocimiento.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-            conocimiento.setVtitulo(this.getNombre());
+            conocimiento.setVtitulo(StringUtils.upperCase(this.getNombre()));
             if(this.getDescripcionPlain().length() < 400) {
-                conocimiento.setVdescripcion(this.getDescripcionPlain());
+                conocimiento.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                conocimiento.setVdescripcion(this.getDescripcionPlain().substring(0, 400));
+                conocimiento.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
             conocimiento.setNactivo(BigDecimal.ONE);
             if (this.getSelectedCategoria().getNflagbp().equals(BigDecimal.ONE)) {
@@ -812,7 +812,7 @@ public class BuenaPracticaMB implements Serializable{
                 }
             }
             this.setListaBuenaPractica(conocimientoService.getConocimientosByType(Constante.BUENAPRACTICA));
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/buenapractica/lista.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -932,10 +932,11 @@ public class BuenaPracticaMB implements Serializable{
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             this.getSelectedBuenaPractica().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            this.getSelectedBuenaPractica().setVtitulo(StringUtils.upperCase(this.getSelectedBuenaPractica().getVtitulo().trim()));
             if(this.getDescripcionPlain().length() < 400) {
-                this.getSelectedBuenaPractica().setVdescripcion(this.getDescripcionPlain());
+                this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                this.getSelectedBuenaPractica().setVdescripcion(this.getDescripcionPlain().substring(0, 400));
+                this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
             this.getSelectedBuenaPractica().setDfechamodificacion(new Date());
             this.getSelectedBuenaPractica().setVusuariomodificacion(user.getVlogin());
@@ -1051,7 +1052,7 @@ public class BuenaPracticaMB implements Serializable{
                 }
             }
             this.setListaBuenaPractica(conocimientoService.getConocimientosByType(Constante.BUENAPRACTICA));
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/buenapractica/lista.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -1129,10 +1130,11 @@ public class BuenaPracticaMB implements Serializable{
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             this.getSelectedBuenaPractica().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedBuenaPractica().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
+            this.getSelectedBuenaPractica().setVtitulo(StringUtils.upperCase(this.getSelectedBuenaPractica().getVtitulo().trim()));
             if(this.getDescripcionPlain().length() < 400) {
-                this.getSelectedBuenaPractica().setVdescripcion(this.getDescripcionPlain());
+                this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                this.getSelectedBuenaPractica().setVdescripcion(this.getDescripcionPlain().substring(0, 400));
+                this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
             this.getSelectedBuenaPractica().setDfechapublicacion(new Date());
             this.getSelectedBuenaPractica().setDfechamodificacion(new Date());
@@ -1249,7 +1251,7 @@ public class BuenaPracticaMB implements Serializable{
                 }
             }
             this.setListaBuenaPractica(conocimientoService.getConocimientosByType(Constante.BUENAPRACTICA));
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/buenapractica/lista.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

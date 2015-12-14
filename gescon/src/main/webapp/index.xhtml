@@ -8,14 +8,13 @@
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
-                <div class="ContainerIndent TexAlCenter">
+                <div class="ContainerIndent">
                     <f:view>
                         <h:form id="f">
                             <center>
                                 <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
                                 <h:outputScript library="bxSlider" name="js/plugins/jquery.easing.1.3.js" />
                                 <h:outputScript library="bxSlider" name="js/jquery.bxslider.min.js" />
-                                <h:outputStylesheet library="bxSlider" name="css/jquery.bxslider.css"  />
                                 <script type="text/javascript">
                                     $(document).ready(function () {
                                         $('#sliderBL').bxSlider({
@@ -25,7 +24,8 @@
                                             mode: 'fade',
                                             responsive: true,
                                             nextText: 'Siguiente',
-                                            prevText: 'Anterior'
+                                            prevText: 'Anterior',
+                                            pager: true
                                         });
                                         $('#sliderPR').bxSlider({
                                             auto: true,
@@ -56,198 +56,160 @@
                                         });
                                     });
                                 </script>
-                                <h:panelGroup rendered="#{not empty administracionMB.listaDestacadosBL}">
-                                    <table style="width: 55%;">
-                                        <tr>
-                                            <td>
-                                                <ul id="sliderBL">
-                                                    <ui:repeat value="#{administracionMB.listaDestacadosBL}" var="c">                                        
-                                                        <li>
-                                                            <h:panelGrid columns="1">
-                                                                <h:panelGrid columns="3" cellpadding="0" cellspacing="0">
-                                                                    <h:outputText class="fa fa-file-text-o red Fs14"/>
-                                                                    <p:spacer width="5"/>
-                                                                    <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link">
-                                                                        <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
-                                                                        <f:param name="id" value="#{c.idconocimiento}"/>
-                                                                        <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
-                                                                    </p:commandLink>
-                                                                </h:panelGrid>
-                                                                <h:panelGrid columns="2">
-                                                                    <p:spacer width="8"/>
-                                                                    <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
-                                                                </h:panelGrid>
-                                                                <h:panelGrid columns="14">
-                                                                    <p:spacer width="8"/>
-                                                                    <h:outputText value="Categoría:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.categoria}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Tipo:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.tipoConocimiento}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Fecha:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs12" style="font-style: italic;">
-                                                                        <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                                                    </h:outputText>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Estado:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.estado}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic;"/>
-                                                                </h:panelGrid>
-                                                                <p:spacer height="25"/>
+                                <p:panelGrid columns="2" layout="grid">
+                                    <p:panel header="Bases Legales Destacadas" rendered="#{not empty administracionMB.listaDestacadosBL}" styleClass="TexAlLeft">
+                                        <ul id="sliderBL">
+                                            <ui:repeat value="#{administracionMB.listaDestacadosBL}" var="c">                                        
+                                                <li>
+                                                    <h:panelGrid columns="2" cellpadding="0" cellspacing="0" styleClass="bx-row">
+                                                        <p:graphicImage cache="false" value="#{categoriaImages.image}">
+                                                            <f:param name="id" value="#{c.idCategoria}"/>
+                                                        </p:graphicImage>
+                                                        <h:panelGrid columns="1" cellpadding="0" cellspacing="0" styleClass="bx-row">
+                                                            <h:panelGrid columns="3" cellpadding="0" cellspacing="0">
+                                                                <h:outputText class="fa fa-file-text-o red Fs14"/>
+                                                                <p:spacer width="5"/>
+                                                                <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link">
+                                                                    <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
+                                                                    <f:param name="id" value="#{c.idconocimiento}"/>
+                                                                    <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
+                                                                </p:commandLink>
                                                             </h:panelGrid>
-                                                        </li>
-                                                    </ui:repeat>                                        
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </h:panelGroup>
-                                <h:panelGroup rendered="#{not empty administracionMB.listaDestacadosPR}">
-                                    <table style="width: 55%;">
-                                        <tr>
-                                            <td>
-                                                <ul id="sliderPR">
-                                                    <ui:repeat value="#{administracionMB.listaDestacadosPR}" var="c">
-                                                        <li>
-                                                            <h:panelGrid columns="1">
-                                                                <h:panelGrid columns="3" cellpadding="0" cellspacing="0">
-                                                                    <h:outputText class="fa fa-question red Fs14"/>
-                                                                    <p:spacer width="5"/>
-                                                                    <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link">
-                                                                        <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
-                                                                        <f:param name="id" value="#{c.idconocimiento}"/>
-                                                                        <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
-                                                                    </p:commandLink>
-                                                                </h:panelGrid>
-                                                                <h:panelGrid columns="2">
-                                                                    <p:spacer width="8"/>
-                                                                    <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
-                                                                </h:panelGrid>
-                                                                <h:panelGrid columns="14">
-                                                                    <p:spacer width="8"/>
-                                                                    <h:outputText value="Categoría:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.categoria}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Tipo:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.tipoConocimiento}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Fecha:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs12" style="font-style: italic;">
-                                                                        <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                                                    </h:outputText>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Estado:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.estado}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic;"/>
-                                                                </h:panelGrid>
-                                                                <p:spacer height="25"/>
+                                                            <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                                                <p:spacer width="17"/>
+                                                                <h:outputText value="#{c.categoria}" styleClass="FontBold Fs10" style="font-style: italic;"/>
                                                             </h:panelGrid>
-                                                        </li>
-                                                    </ui:repeat>                                        
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </h:panelGroup>
-                                <h:panelGroup rendered="#{not empty administracionMB.listaDestacadosWK}">
-                                    <table style="width: 55%;">
-                                        <tr>
-                                            <td>
-                                                <ul id="sliderWK">
-                                                    <ui:repeat value="#{administracionMB.listaDestacadosWK}" var="c">
-                                                        <li>
-                                                            <h:panelGrid columns="1">
-                                                                <h:panelGrid columns="3" cellpadding="0" cellspacing="0">
-                                                                    <h:outputText class="fa fa-puzzle-piece red Fs14"/>
-                                                                    <p:spacer width="5"/>
-                                                                    <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link">
-                                                                        <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
-                                                                        <f:param name="id" value="#{c.idconocimiento}"/>
-                                                                        <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
-                                                                    </p:commandLink>
-                                                                </h:panelGrid>
-                                                                <h:panelGrid columns="2">
-                                                                    <p:spacer width="8"/>
-                                                                    <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
-                                                                </h:panelGrid>
-                                                                <h:panelGrid columns="14">
-                                                                    <p:spacer width="8"/>
-                                                                    <h:outputText value="Categoría:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.categoria}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Tipo:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.tipoConocimiento}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Fecha:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs12" style="font-style: italic;">
-                                                                        <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                                                    </h:outputText>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Estado:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.estado}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic;"/>
-                                                                </h:panelGrid>
-                                                                <p:spacer height="25"/>
+                                                            <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                                                <p:spacer width="17"/>
+                                                                <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
                                                             </h:panelGrid>
-                                                        </li>
-                                                    </ui:repeat>                                        
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </h:panelGroup>
-                                <h:panelGroup rendered="#{not empty administracionMB.listaDestacadosBP}">
-                                    <table style="width: 55%;">
-                                        <tr>
-                                            <td>
-                                                <ul id="sliderBP">
-                                                    <ui:repeat value="#{administracionMB.listaDestacadosBP}" var="c">                                        
-                                                        <li>
-                                                            <h:panelGrid columns="1">
-                                                                <h:panelGrid columns="3" cellpadding="0" cellspacing="0">
-                                                                    <h:outputText class="fa fa-check-square-o red Fs14"/>
-                                                                    <p:spacer width="5"/>
-                                                                    <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link">
-                                                                        <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
-                                                                        <f:param name="id" value="#{c.idconocimiento}"/>
-                                                                        <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
-                                                                    </p:commandLink>
-                                                                </h:panelGrid>
-                                                                <h:panelGrid columns="2">
-                                                                    <p:spacer width="8"/>
-                                                                    <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
-                                                                </h:panelGrid>
-                                                                <h:panelGrid columns="14">
-                                                                    <p:spacer width="8"/>
-                                                                    <h:outputText value="Categoría:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.categoria}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Tipo:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.tipoConocimiento}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Fecha:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs12" style="font-style: italic;">
-                                                                        <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                                                    </h:outputText>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="Estado:" styleClass="Fs12"/>
-                                                                    <h:outputText value="#{c.estado}" styleClass="FontBold Fs12" style="font-style: italic;"/>
-                                                                    <p:spacer width="15"/>
-                                                                    <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic;"/>
-                                                                </h:panelGrid>
-                                                                <p:spacer height="25"/>
+                                                            <h:panelGrid columns="4" cellpadding="0" cellspacing="0">
+                                                                <p:spacer width="17"/>
+                                                                <h:outputText value="#{c.estado}" styleClass="FontBold Fs10" style="font-style: italic;"/>
+                                                                <p:spacer width="17"/>
+                                                                <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs10" style="font-style: italic;">
+                                                                    <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                                                </h:outputText>
                                                             </h:panelGrid>
-                                                        </li>
-                                                    </ui:repeat>                                        
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </h:panelGroup>
+                                                            <p:spacer height="25"/>
+                                                        </h:panelGrid>
+                                                    </h:panelGrid>
+                                                </li>
+                                            </ui:repeat>                                        
+                                        </ul>
+                                    </p:panel>
+                                    <p:panel header="Preguntas Destacadas" rendered="#{not empty administracionMB.listaDestacadosPR}" styleClass="TexAlLeft">
+                                        <ul id="sliderPR">
+                                            <ui:repeat value="#{administracionMB.listaDestacadosPR}" var="c">
+                                                <li>
+                                                    <h:panelGrid columns="2" cellpadding="0" cellspacing="0" styleClass="bx-row">
+                                                        
+                                                        <h:panelGrid columns="1" cellpadding="0" cellspacing="0" styleClass="bx-row">                                                        
+                                                            <h:panelGrid columns="3" cellpadding="0" cellspacing="0">
+                                                                <h:outputText class="fa fa-question red Fs14"/>
+                                                                <p:spacer width="5"/>
+                                                                <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link">
+                                                                    <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
+                                                                    <f:param name="id" value="#{c.idconocimiento}"/>
+                                                                    <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
+                                                                </p:commandLink>
+                                                            </h:panelGrid>
+                                                            <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                                                <p:spacer width="17"/>
+                                                                <h:outputText value="#{c.categoria}" styleClass="FontBold Fs10" style="font-style: italic;"/>
+                                                            </h:panelGrid>
+                                                            <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                                                <p:spacer width="17"/>
+                                                                <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
+                                                            </h:panelGrid>
+                                                            <h:panelGrid columns="4" cellpadding="0" cellspacing="0">
+                                                                <p:spacer width="17"/>
+                                                                <h:outputText value="#{c.estado}" styleClass="FontBold Fs10" style="font-style: italic;"/>
+                                                                <p:spacer width="17"/>
+                                                                <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs10" style="font-style: italic;">
+                                                                    <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                                                </h:outputText>
+                                                            </h:panelGrid>
+                                                            <p:spacer height="25"/>
+                                                        </h:panelGrid>
+                                                    </h:panelGrid>
+                                                </li>
+                                            </ui:repeat>                                        
+                                        </ul>
+                                    </p:panel>
+                                    <p:panel header="Wikis Destacados" rendered="#{not empty administracionMB.listaDestacadosWK}" styleClass="TexAlLeft">
+                                        <ul id="sliderWK">
+                                            <ui:repeat value="#{administracionMB.listaDestacadosWK}" var="c">
+                                                <li>
+                                                    <h:panelGrid columns="1" cellpadding="0" cellspacing="0" styleClass="bx-row">
+                                                        <h:panelGrid columns="3" cellpadding="0" cellspacing="0">
+                                                            <h:outputText class="fa fa-puzzle-piece red Fs14"/>
+                                                            <p:spacer width="5"/>
+                                                            <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link">
+                                                                <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
+                                                                <f:param name="id" value="#{c.idconocimiento}"/>
+                                                                <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
+                                                            </p:commandLink>
+                                                        </h:panelGrid>
+                                                        <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                                            <p:spacer width="17"/>
+                                                            <h:outputText value="#{c.categoria}" styleClass="FontBold Fs10" style="font-style: italic;"/>
+                                                        </h:panelGrid>
+                                                        <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                                            <p:spacer width="17"/>
+                                                            <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
+                                                        </h:panelGrid>
+                                                        <h:panelGrid columns="4" cellpadding="0" cellspacing="0">
+                                                            <p:spacer width="17"/>
+                                                            <h:outputText value="#{c.estado}" styleClass="FontBold Fs10" style="font-style: italic;"/>
+                                                            <p:spacer width="17"/>
+                                                            <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs10" style="font-style: italic;">
+                                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                                            </h:outputText>
+                                                        </h:panelGrid>
+                                                        <p:spacer height="25"/>
+                                                    </h:panelGrid>
+                                                </li>
+                                            </ui:repeat>                                        
+                                        </ul>
+                                    </p:panel>
+                                    <p:panel header="Buenas Practicas Destacadas" rendered="#{not empty administracionMB.listaDestacadosBP}" styleClass="TexAlLeft">
+                                        <ul id="sliderBP">
+                                            <ui:repeat value="#{administracionMB.listaDestacadosBP}" var="c">                                        
+                                                <li>
+                                                    <h:panelGrid columns="1" cellpadding="0" cellspacing="0" styleClass="bx-row">
+                                                        <h:panelGrid columns="3" cellpadding="0" cellspacing="0">
+                                                            <h:outputText class="fa fa-check-square-o red Fs14"/>
+                                                            <p:spacer width="5"/>
+                                                            <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link">
+                                                                <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
+                                                                <f:param name="id" value="#{c.idconocimiento}"/>
+                                                                <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
+                                                            </p:commandLink>
+                                                        </h:panelGrid>
+                                                        <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                                            <p:spacer width="17"/>
+                                                            <h:outputText value="#{c.categoria}" styleClass="FontBold Fs10" style="font-style: italic;"/>
+                                                        </h:panelGrid>
+                                                        <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                                            <p:spacer width="17"/>
+                                                            <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
+                                                        </h:panelGrid>
+                                                        <h:panelGrid columns="4" cellpadding="0" cellspacing="0">
+                                                            <p:spacer width="17"/>
+                                                            <h:outputText value="#{c.estado}" styleClass="FontBold Fs10" style="font-style: italic;"/>
+                                                            <p:spacer width="17"/>
+                                                            <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs10" style="font-style: italic;">
+                                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                                            </h:outputText>
+                                                        </h:panelGrid>
+                                                        <p:spacer height="25"/>
+                                                    </h:panelGrid>
+                                                </li>
+                                            </ui:repeat>                                        
+                                        </ul>
+                                    </p:panel>
+                                </p:panelGrid>
                             </center>
                         </h:form>
                     </f:view>

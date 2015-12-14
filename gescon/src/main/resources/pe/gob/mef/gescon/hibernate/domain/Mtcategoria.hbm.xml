@@ -59,6 +59,9 @@
         <property name="vimagennombre" type="string">
             <column name="VIMAGENNOMBRE" length="200" />
         </property>
+        <property name="vimagentype" type="string">
+            <column name="VIMAGENTYPE" length="200" />
+        </property>
         <set name="tconocimientos" table="TCONOCIMIENTO" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="NCATEGORIAID" precision="22" scale="0" not-null="true" />

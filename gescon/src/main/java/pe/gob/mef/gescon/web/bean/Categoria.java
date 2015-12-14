@@ -37,6 +37,7 @@ public class Categoria implements Serializable, Comparable<Categoria>{
     private BigDecimal nflagom;
     private Blob bimagen;
     private String vimagennombre;
+    private String vimagentype;
     private String vespecialista;
     private String vmoderador;
     private String imagen;
@@ -297,6 +298,14 @@ public class Categoria implements Serializable, Comparable<Categoria>{
      */
     public void setVimagennombre(String vimagennombre) {
         this.vimagennombre = vimagennombre;
+    }
+
+    public String getVimagentype() {
+        return vimagentype;
+    }
+
+    public void setVimagentype(String vimagentype) {
+        this.vimagentype = vimagentype;
     }
 
     public String getVespecialista() {

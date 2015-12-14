@@ -25,14 +25,14 @@
     <div id="layout-topbar">
         <div id="layout-topbar-indent">
             <h:form id="headerForm">
-                <p:link outcome="/index.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}">
-                    <h:graphicImage name="logo_gescon_2.jpg" styleClass="Fleft" library="images" class="Fleft" width="200px;" height="50px;"/>
+                <p:link href="/" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}">
+                    <h:graphicImage name="logogescon.png" styleClass="Fleft" library="images" class="Fleft"  />
                 </p:link>
                 <p:link outcome="/pages/indexAdmin.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid eq msgs.administrador}">
-                    <h:graphicImage name="logo_gescon_2.jpg" styleClass="Fleft" library="images" class="Fleft" width="200px;" height="50px;"/>
+                    <h:graphicImage name="logogescon.png" styleClass="Fleft" library="images" class="Fleft" />
                 </p:link>
-                <p:link outcome="/index.xhtml" rendered="#{loginMB.user eq null}">
-                    <h:graphicImage name="logo_gescon_2.jpg" styleClass="Fleft" library="images" class="Fleft" width="230px;" height="60px;"/>
+                <p:link href="/" rendered="#{loginMB.user eq null}">
+                    <h:graphicImage name="logogescon.png" styleClass="Fleft" library="images" class="Fleft" width="180px" height="45px"/>
                 </p:link>
                 <a href="#" id="mobile-menu-button" class="BordRad3 white ShowOnMobile"><i class="fa fa-bars"></i> Menu</a>
                 <a href="#" id="mobile-menu-button-gray" class="BordRad3 white ShowOnMobile"><i class="fa fa-caret-down"></i> Top Menu</a>

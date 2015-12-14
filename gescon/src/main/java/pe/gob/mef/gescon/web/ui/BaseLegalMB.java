@@ -644,8 +644,8 @@ public class BaseLegalMB implements Serializable {
             User user = loginMB.getUser();
             BaseLegal base = new BaseLegal();
             base.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-            base.setVnombre(this.getSumilla());
-            base.setVnumero(this.getTipoNorma().concat(" - ").concat(this.getNumeroNorma()));
+            base.setVnombre(StringUtils.capitalize(this.getSumilla()));
+            base.setVnumero(this.getTipoNorma().concat(" - ").concat(StringUtils.upperCase(this.getNumeroNorma())));
             base.setNrangoid(this.getRangoId());
             base.setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
@@ -783,8 +783,8 @@ public class BaseLegalMB implements Serializable {
             if(this.getSelectedCategoria() != null){
                 this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             }
-            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre());
-            this.getSelectedBaseLegal().setVnumero(this.getTipoNorma().concat(" - ").concat(this.getNumeroNorma()));
+            this.getSelectedBaseLegal().setVnombre(StringUtils.capitalize(this.getSelectedBaseLegal().getVnombre()));
+            this.getSelectedBaseLegal().setVnumero(this.getTipoNorma().concat(" - ").concat(StringUtils.upperCase(this.getNumeroNorma())));
             this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
             this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
@@ -890,8 +890,8 @@ public class BaseLegalMB implements Serializable {
             if(this.getSelectedCategoria() != null){
                 this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             }
-            this.getSelectedBaseLegal().setVnombre(this.getSelectedBaseLegal().getVnombre());
-            this.getSelectedBaseLegal().setVnumero(this.getTipoNorma().concat(" - ").concat(this.getNumeroNorma()));
+            this.getSelectedBaseLegal().setVnombre(StringUtils.capitalize(this.getSelectedBaseLegal().getVnombre()));
+            this.getSelectedBaseLegal().setVnumero(this.getTipoNorma().concat(" - ").concat(StringUtils.upperCase(this.getNumeroNorma())));
             this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
             this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);

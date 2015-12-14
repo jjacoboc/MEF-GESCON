@@ -2168,7 +2168,8 @@ public class LoginMB implements Serializable {
         }
     }
 
-    public void PubBaseLegal(ActionEvent event) throws Exception {
+    public String PubBaseLegal() throws Exception {
+        String pagina="/index.xhtml";
         try {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
@@ -2234,11 +2235,14 @@ public class LoginMB implements Serializable {
             this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
             this.getSelectedAsignacion().setDfechaatencion(new Date());
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+            pagina="/index.xhtml";
+            return pagina;
 
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
+        return pagina;
     }
 
     public void toSolInfoBase(ActionEvent event) {

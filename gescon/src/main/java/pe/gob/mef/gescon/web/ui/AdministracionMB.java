@@ -37,6 +37,7 @@ import pe.gob.mef.gescon.web.bean.Perfil;
 public class AdministracionMB implements Serializable{
 
     private List<Admin> listaAdministracion;
+    private List<Categoria> listaAllCategorias;
     private List<Categoria> listaCategoria;
     private List<Perfil> listaPerfil;
     private List<Consulta> listaDestacadosBL;
@@ -66,6 +67,18 @@ public class AdministracionMB implements Serializable{
      */
     public void setListaAdministracion(List<Admin> listaAdministracion) {
         this.listaAdministracion = listaAdministracion;
+    }
+
+    public List<Categoria> getListaAllCategorias() throws Exception {
+        if(listaAllCategorias == null) {
+            CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            listaAllCategorias = catservice.getCategorias();
+        }
+        return listaAllCategorias;
+    }
+
+    public void setListaAllCategorias(List<Categoria> listaAllCategorias) {
+        this.listaAllCategorias = listaAllCategorias;
     }
 
     /**

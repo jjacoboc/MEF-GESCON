@@ -734,8 +734,8 @@ public class OportunidadMB implements Serializable {
             conocimiento.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
             conocimiento.setNconocimientoid(conocimientoService.getNextPK());
             conocimiento.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-            conocimiento.setVtitulo(this.getNombre());
-            conocimiento.setVdescripcion(this.getDescripcion());
+            conocimiento.setVtitulo(StringUtils.upperCase(this.getNombre()));
+            conocimiento.setVdescripcion(StringUtils.capitalize(this.getDescripcion()));
             conocimiento.setNactivo(BigDecimal.ONE);
             if (this.getSelectedCategoria().getNflagom().equals(BigDecimal.ONE)) {
                 conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
@@ -806,7 +806,7 @@ public class OportunidadMB implements Serializable {
                 }
             }
             this.setListaOportunidad(conocimientoService.getConocimientosByType(Constante.OPORTUNIDADMEJORA));
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/oportunidad/lista.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/oportunidad/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -923,6 +923,8 @@ public class OportunidadMB implements Serializable {
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             this.getSelectedOportunidad().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            this.getSelectedOportunidad().setVtitulo(StringUtils.upperCase(this.getSelectedOportunidad().getVtitulo()));
+            this.getSelectedOportunidad().setVdescripcion(StringUtils.capitalize(this.getSelectedOportunidad().getVdescripcion()));
             this.getSelectedOportunidad().setDfechamodificacion(new Date());
             this.getSelectedOportunidad().setVusuariomodificacion(user.getVlogin());
             conocimientoService.saveOrUpdate(this.getSelectedOportunidad());
@@ -1038,7 +1040,7 @@ public class OportunidadMB implements Serializable {
                 }
             }
             this.setListaOportunidad(conocimientoService.getConocimientosByType(Constante.OPORTUNIDADMEJORA));
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/oportunidad/lista.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/oportunidad/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
