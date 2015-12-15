@@ -102,7 +102,7 @@ public class ConocimientoDaoImpl extends HibernateDaoSupport implements Conocimi
                 ntipoconocimientoid.equals("5") || ntipoconocimientoid.equals("6"))) {
             sql.append("SELECT ");
             sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, '' AS NUMERO, b.vtitulo AS NOMBRE, b.vdescripcion AS SUMILLA, ");
-            sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
+            sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechapublicacion AS FECHA, ");
             sql.append("    b.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, e.vnombre AS TIPOCONOCIMIENTO, ");
             sql.append("    b.nsituacionid AS IDESTADO, d.vnombre AS ESTADO ");
             sql.append("FROM TVINCULO a ");
@@ -122,7 +122,7 @@ public class ConocimientoDaoImpl extends HibernateDaoSupport implements Conocimi
         if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
             sql.append("SELECT ");
             sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, '' AS NUMERO, b.vasunto AS NOMBRE , b.vdetalle AS SUMILLA, ");
-            sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
+            sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechapublicacion AS FECHA, ");
             sql.append("    2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
             sql.append("    b.nsituacionid AS IDESTADO, d.vnombre AS ESTADO ");
             sql.append("FROM TVINCULO a ");
@@ -138,7 +138,7 @@ public class ConocimientoDaoImpl extends HibernateDaoSupport implements Conocimi
         if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("1")) {
             sql.append("SELECT ");
             sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, b.vnumero AS NUMERO, b.vnombre AS NOMBRE , b.vsumilla AS SUMILLA, ");
-            sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
+            sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechapublicacion AS FECHA, ");
             sql.append("    1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, ");
             sql.append("    b.nestadoid AS IDESTADO, d.vnombre AS ESTADO ");
             sql.append("FROM TVINCULO a ");
@@ -195,7 +195,7 @@ public class ConocimientoDaoImpl extends HibernateDaoSupport implements Conocimi
             if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
                 sql.append("SELECT ");
                 sql.append("    a.npreguntaid AS ID, '' AS NUMERO, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, ");
-                sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
+                sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
                 sql.append("    2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
                 sql.append("    a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
                 sql.append("FROM TPREGUNTA a ");
@@ -212,7 +212,7 @@ public class ConocimientoDaoImpl extends HibernateDaoSupport implements Conocimi
                 ntipoconocimientoid.equals("5") || ntipoconocimientoid.equals("6"))) {
                 sql.append("SELECT ");
                 sql.append("    a.nconocimientoid AS ID, '' AS NUMERO, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
-                sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
+                sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
                 sql.append("    a.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, d.vnombre AS TIPOCONOCIMIENTO, ");
                 sql.append("    a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
                 sql.append("FROM TCONOCIMIENTO a ");
@@ -221,6 +221,7 @@ public class ConocimientoDaoImpl extends HibernateDaoSupport implements Conocimi
                 sql.append("    INNER JOIN MTTIPO_CONOCIMIENTO d ON a.ntpoconocimientoid = d.ntpoconocimientoid ");
                 sql.append("WHERE a.nactivo = :ACTIVO ");
                 sql.append("AND a.nsituacionid = 6 "); // Publicado
+                sql.append("AND a.ntpoconocimientoid = ").append(ntipoconocimientoid).append(" ");
                 if (StringUtils.isNotBlank(nconocimientovinc)) {
                     sql.append("AND a.nconocimientoid NOT IN (").append(nconocimientovinc).append(") ");
                 }

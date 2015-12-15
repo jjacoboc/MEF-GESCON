@@ -47,6 +47,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
         final Date fFromDate = (Date) filters.get("fFromDate");
         final Date fToDate = (Date) filters.get("fToDate");
         final String fType = (String) filters.get("fType");
+        final String fText = (String) filters.get("fText");
         SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_SHORT);
         final StringBuilder sql = new StringBuilder();
         Object object = null;
@@ -71,15 +72,18 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fToDate != null) {
                 sql.append("    AND a.dfechapublicacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
+            if(fText != null) {
+                sql.append("    AND a.vnombre LIKE '%").append(fText).append("%' ");
+            }
             sql.append("        ) x ");
             sql.append("WHERE 1 IN (").append(fType).append(") "); //BASE LEGAL
             sql.append("UNION ");
             sql.append("SELECT y.ID, y.NOMBRE, y.SUMILLA, y.IDCATEGORIA, y.CATEGORIA, ");
             sql.append("       y.FECHA, y.IDTIPOCONOCIMIENTO, y.TIPOCONOCIMIENTO, y.IDESTADO, y.ESTADO ");
             sql.append("FROM (SELECT ");
-            sql.append("            a.npreguntaid AS ID, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, ");
-            sql.append("            a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
-            sql.append("            2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
+            sql.append("            a.npreguntaid AS ID, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, a.ncategoriaid AS IDCATEGORIA, ");
+            sql.append("            b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, 2 AS IDTIPOCONOCIMIENTO, ");
+            sql.append("            'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
             sql.append("        FROM TPREGUNTA a ");
             sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
             sql.append("        INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
@@ -93,6 +97,9 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             }
             if(fToDate != null) {
                 sql.append("    AND a.dfechacreacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
+            }
+            if(fText != null) {
+                sql.append("    AND a.vdetalle LIKE '%").append(fText).append("%' ");
             }
             sql.append("        ) y ");
             sql.append("WHERE 2 IN (").append(fType).append(") "); //PREGUNTAS Y RESPUESTAS
@@ -119,6 +126,9 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fToDate != null) {
                 sql.append("    AND a.dfechacreacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
+            if(fText != null) {
+                sql.append("    AND a.vdescripcion LIKE '%").append(fText).append("%' ");
+            }
             sql.append("        ) z ");
             sql.append("WHERE 3 IN (").append(fType).append(") "); //WIKI
             sql.append("ORDER BY 7 DESC ");
@@ -142,6 +152,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
         return (List<HashMap>) object;
     }
     
+    @Override
     public List<HashMap> getDestacadosByTipoConocimiento(HashMap filters) {
         String ntipoconocimientoid = ((BigDecimal) filters.get("ntipoconocimientoid")).toString();
         final StringBuilder sql = new StringBuilder();
@@ -162,7 +173,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
                 sql.append("SELECT ");
                 sql.append("    a.npreguntaid AS ID, a.vasunto AS NOMBRE, a.vrespuesta AS SUMILLA, ");
-                sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
+                sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
                 sql.append("    2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
                 sql.append("    a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
                 sql.append("FROM TPREGUNTA a ");
@@ -177,7 +188,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
                 ntipoconocimientoid.equals("5") || ntipoconocimientoid.equals("6"))) {
                 sql.append("SELECT ");
                 sql.append("    a.nconocimientoid AS ID, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
-                sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
+                sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
                 sql.append("    a.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, d.vnombre AS TIPOCONOCIMIENTO, ");
                 sql.append("    a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
                 sql.append("FROM TCONOCIMIENTO a ");

@@ -317,4 +317,19 @@ public class AdministracionMB implements Serializable{
         }
         return "/pages/consulta?faces-redirect=true";
     }
+    
+    public String search() {
+        try {
+            ConsultaMB consultaMB = new ConsultaMB();
+            consultaMB.init();
+            
+            consultaMB.filtrar(new ActionEvent(new CommandButton()));
+            JSFUtils.getSession().setAttribute("consultaMB", consultaMB);
+            
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return "/pages/consulta?faces-redirect=true";
+    }
 }

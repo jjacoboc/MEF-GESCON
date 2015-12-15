@@ -61,6 +61,7 @@ public class ConsultaMB implements Serializable {
     private BaseLegal selectedBaseLegal;
     private StreamedContent content;
     private Pregunta selectedPregunta;
+    private String searchText;
 
     /**
      * Creates a new instance of ConsultaMB
@@ -124,114 +125,66 @@ public class ConsultaMB implements Serializable {
         this.listaBreadCrumb = listaBreadCrumb;
     }
 
-    /**
-     * @return the fechaInicio
-     */
     public Date getFechaInicio() {
         return fechaInicio;
     }
 
-    /**
-     * @param fechaInicio the fechaInicio to set
-     */
     public void setFechaInicio(Date fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    /**
-     * @return the fechaFin
-     */
     public Date getFechaFin() {
         return fechaFin;
     }
 
-    /**
-     * @param fechaFin the fechaFin to set
-     */
     public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
     }
 
-    /**
-     * @return the listaTipoConocimientoFiltro
-     */
     public List<TipoConocimiento> getListaTipoConocimientoFiltro() {
         return listaTipoConocimientoFiltro;
     }
 
-    /**
-     * @param listaTipoConocimientoFiltro the listaTipoConocimientoFiltro to set
-     */
     public void setListaTipoConocimientoFiltro(List<TipoConocimiento> listaTipoConocimientoFiltro) {
         this.listaTipoConocimientoFiltro = listaTipoConocimientoFiltro;
     }
 
-    /**
-     * @return the selectedTipoConocimiento
-     */
     public List<String> getSelectedTipoConocimiento() {
         return selectedTipoConocimiento;
     }
 
-    /**
-     * @param selectedTipoConocimiento the selectedTipoConocimiento to set
-     */
     public void setSelectedTipoConocimiento(List<String> selectedTipoConocimiento) {
         this.selectedTipoConocimiento = selectedTipoConocimiento;
     }
 
-    /**
-     * @return the listaBaseLegal
-     */
     public List<BaseLegal> getListaBaseLegal() {
         return listaBaseLegal;
     }
 
-    /**
-     * @param listaBaseLegal the listaBaseLegal to set
-     */
     public void setListaBaseLegal(List<BaseLegal> listaBaseLegal) {
         this.listaBaseLegal = listaBaseLegal;
     }
 
-    /**
-     * @return the listaConsulta
-     */
     public List<Consulta> getListaConsulta() {
         return listaConsulta;
     }
 
-    /**
-     * @param listaConsulta the listaConsulta to set
-     */
     public void setListaConsulta(List<Consulta> listaConsulta) {
         this.listaConsulta = listaConsulta;
     }
 
-    /**
-     * @return the selectedBaseLegal
-     */
     public BaseLegal getSelectedBaseLegal() {
         return selectedBaseLegal;
     }
 
-    /**
-     * @param selectedBaseLegal the selectedBaseLegal to set
-     */
     public void setSelectedBaseLegal(BaseLegal selectedBaseLegal) {
         this.selectedBaseLegal = selectedBaseLegal;
     }
 
-    /**
-     * @return the content
-     */
     public StreamedContent getContent() {
         return content;
     }
 
-    /**
-     * @param content the content to set
-     */
     public void setContent(StreamedContent content) {
         this.content = content;
     }
@@ -242,6 +195,14 @@ public class ConsultaMB implements Serializable {
 
     public void setSelectedPregunta(Pregunta selectedPregunta) {
         this.selectedPregunta = selectedPregunta;
+    }
+
+    public String getSearchText() {
+        return searchText;
+    }
+
+    public void setSearchText(String searchText) {
+        this.searchText = searchText;
     }
 
     public void init() {
@@ -389,6 +350,7 @@ public class ConsultaMB implements Serializable {
             filter.put("fFromDate", this.getFechaInicio());
             filter.put("fToDate", this.getFechaFin());
             filter.put("fType", this.getTypesFilter());
+            filter.put("fText", this.getSearchText());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
             this.setListaConsulta(service.getQueryFilter(filter));
         } catch (Exception e) {
@@ -404,12 +366,30 @@ public class ConsultaMB implements Serializable {
             filter.put("fFromDate", this.getFechaInicio());
             filter.put("fToDate", this.getFechaFin());
             filter.put("fType", this.getTypesFilter());
+            filter.put("fText", this.getSearchText());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
             this.setListaConsulta(service.getQueryFilter(filter));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+    }
+    
+    public String search() {
+        HashMap filter = new HashMap();
+        try {
+            filter.put("fCategoria", this.getCategoriesFilter());
+            filter.put("fFromDate", this.getFechaInicio());
+            filter.put("fToDate", this.getFechaFin());
+            filter.put("fType", this.getTypesFilter());
+            filter.put("fText", this.getSearchText());
+            ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+            this.setListaConsulta(service.getQueryFilter(filter));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return "/pages/consulta?faces-redirect=true";
     }
     
     public void view(ActionEvent event) {

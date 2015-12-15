@@ -11,8 +11,8 @@
         <ps:menu style="box-shadow: 3px 3px 5px #888888;">
             <f:facet name="options">
                 <p:commandButton type="button" icon="fa fa-binoculars Fs18 white" title="búsqueda avanzada" styleClass="Fright" />
-                <p:commandButton type="button" icon="fa fa-search Fs18 white" title="búsqueda" styleClass="Fright" />
-                <p:inputText placeholder="Buscar" styleClass="Fs14 Fright" style="width: 300px;"/>
+                <p:commandButton action="#{consultaMB.search}" icon="fa fa-search Fs18 white" title="búsqueda" styleClass="Fright" />
+                <p:inputText value="#{consultaMB.searchText}" placeholder="Buscar" styleClass="Fs14 Fright" style="width: 300px;"/>
             </f:facet>
             
             <p:menuitem icon="fa fa-home" url="/" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}"/>
