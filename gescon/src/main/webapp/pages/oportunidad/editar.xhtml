@@ -39,7 +39,7 @@
                                         <p:spacer width="10" rendered="#{oportunidadMB.selectedOportunidad.nsituacionid ge msgs.situacionPublicado}"/>
                                         <h:outputText value="#{oportunidadMB.selectedOportunidad.vtitulo}" styleClass="Fs14 FontBold black" rendered="#{oportunidadMB.selectedOportunidad.nsituacionid ge msgs.situacionPublicado}"/>
                                     </h:panelGroup>
-                                    <p:inputText value="#{oportunidadMB.selectedOportunidad.vtitulo}" size="110" styleClass="Fs14" maxlength="100" rendered="#{oportunidadMB.selectedOportunidad.nsituacionid lt msgs.situacionPublicado}"/>
+                                    <p:inputText value="#{oportunidadMB.selectedOportunidad.vtitulo}" size="110" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;" rendered="#{oportunidadMB.selectedOportunidad.nsituacionid lt msgs.situacionPublicado}"/>
 
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -58,6 +58,31 @@
                                         <h:outputText value="#{msgs.om_lbl_contenido}"/>
                                     </h:panelGroup>
                                     <p:editor id="descHtml" value="#{oportunidadMB.contenidoHtml}" />
+                                    
+                                    <h:panelGroup rendered="#{not empty oportunidadMB.listaSeccion}">
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_detalle}"/>
+                                    </h:panelGroup>
+                                    <p:fieldset rendered="#{not empty oportunidadMB.listaSeccion}">
+                                        <p:commandButton value="#{msgs.om_btn_seccion}" actionListener="#{oportunidadMB.toAddSection}" update=":secDialogForm:pgSec" oncomplete="PF('secDialog').show();" styleClass="ui-link Fs14"/>
+                                        <table>
+                                            <ui:repeat value="#{oportunidadMB.listaSeccion}" var="s" varStatus="vs">
+                                                <tr>
+                                                    <td style="border-bottom: gray solid 1px;">
+                                                        <h:outputText value="Paso #{vs.index + 1}: #{s.vtitulo}" styleClass="Fs14 FontBold black"/>
+                                                        <h:outputText value=" [ " styleClass="FontBold black"/>
+                                                        <p:commandLink value="editar" actionListener="#{oportunidadMB.toEditSection}" update=":esecDialogForm:pgEsec" oncomplete="PF('esecDialog').show();" styleClass="ui-link Fs12">
+                                                            <f:param name="index" value="#{vs.index}"/>
+                                                        </p:commandLink>
+                                                        <h:outputText value=" ]" styleClass="FontBold black"/>
+                                                    </td>
+                                                </tr>
+                                                <tr><td><h:outputText value="#{s.detalleHtml}" escape="false" styleClass="Fs14"/></td></tr>
+                                                <tr><td><p:spacer/></td></tr>
+                                            </ui:repeat>
+                                        </table>
+                                    </p:fieldset>
 
                                     <h:outputText value="#{msgs.om_lbl_vinculo}"/>
                                 </h:panelGrid>

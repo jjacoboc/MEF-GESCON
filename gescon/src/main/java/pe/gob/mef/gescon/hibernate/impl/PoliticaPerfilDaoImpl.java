@@ -104,13 +104,13 @@ public class PoliticaPerfilDaoImpl extends HibernateDaoSupport implements Politi
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void delete(final BigDecimal perfilid) throws Exception {
         final StringBuilder sql = new StringBuilder();
-        Object object = null;
         try {
-            sql.append("delete from Tpolitica_perfil where NPERFILID=:PERFIL ");
+            sql.append("delete from Tpolitica_perfil where nperfilid = :PERFIL ");
 
-            object = getHibernateTemplate().execute(
+            getHibernateTemplate().execute(
                     new HibernateCallback() {
                         @Override
                         public Object doInHibernate(Session session) throws HibernateException {

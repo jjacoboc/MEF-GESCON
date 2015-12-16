@@ -43,28 +43,28 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" priority="5">
                                             <f:facet name="header"><h:outputText value="#{msgs.om_lbl_columna05}"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{oportunidadMB.toView}" styleClass="ui-link" title="Ver Wiki">
+                                            <p:commandLink ajax="false" action="#{oportunidadMB.toView}" styleClass="ui-link" title="ver oportunidad de mejora">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{oportunidadMB.toEdit}" styleClass="ui-link" title="Actualizar Wiki"
+                                            <p:commandLink ajax="false" action="#{oportunidadMB.toEdit}" styleClass="ui-link" title="actualizar oportunidad de mejora"
                                                            rendered="#{loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;" rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}"/>
-                                            <p:commandLink ajax="false" action="#{oportunidadMB.toPost}" styleClass="ui-link" title="Publicar Wiki"
+                                            <p:commandLink ajax="false" action="#{oportunidadMB.toPost}" styleClass="ui-link" title="implementar oportunidad de mejora"
                                                            rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink title="Activar Wiki" styleClass="ui-link"
+                                            <p:commandLink title="activar oportunidad de mejora" styleClass="ui-link"
                                                            rendered="#{(row.nactivo eq 0) and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                             </p:commandLink>
-                                            <p:commandLink title="Desactivar Wiki" styleClass="ui-link"
+                                            <p:commandLink title="desactivar oportunidad de mejora" styleClass="ui-link"
                                                            rendered="#{(row.nactivo eq 1) and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                             </p:commandLink>

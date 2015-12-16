@@ -28,7 +28,6 @@ public class Mtcategoria implements java.io.Serializable {
     private BigDecimal nflagct;
     private BigDecimal nflagbp;
     private BigDecimal nflagom;
-    private Blob bimagen;
     private String vimagennombre;
     private String vimagentype;
     private Set tconocimientos = new HashSet(0);
@@ -43,7 +42,7 @@ public class Mtcategoria implements java.io.Serializable {
         this.ncategoriaid = ncategoriaid;
     }
 
-    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, Blob bimagen, String vimagennombre, String vimagentype, Set tconocimientos, Set tcategoriaUsers, Set tpreguntas, Set tbaselegals) {
+    public Mtcategoria(BigDecimal ncategoriaid, String vdescripcion, BigDecimal nestado, BigDecimal ncategoriasup, BigDecimal nnivel, String vnombre, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nflagwiki, BigDecimal nflagbl, BigDecimal nflagpr, BigDecimal nflagct, BigDecimal nflagbp, BigDecimal nflagom, String vimagennombre, String vimagentype, Set tconocimientos, Set tcategoriaUsers, Set tpreguntas, Set tbaselegals) {
         this.ncategoriaid = ncategoriaid;
         this.vdescripcion = vdescripcion;
         this.nestado = nestado;
@@ -60,7 +59,6 @@ public class Mtcategoria implements java.io.Serializable {
         this.nflagct = nflagct;
         this.nflagbp = nflagbp;
         this.nflagom = nflagom;
-        this.bimagen = bimagen;
         this.vimagennombre = vimagennombre;
         this.vimagentype = vimagentype;
         this.tconocimientos = tconocimientos;
@@ -193,14 +191,6 @@ public class Mtcategoria implements java.io.Serializable {
 
     public void setNflagom(BigDecimal nflagom) {
         this.nflagom = nflagom;
-    }
-
-    public Blob getBimagen() {
-        return this.bimagen;
-    }
-
-    public void setBimagen(Blob bimagen) {
-        this.bimagen = bimagen;
     }
 
     public String getVimagennombre() {

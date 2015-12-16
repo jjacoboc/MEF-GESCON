@@ -475,8 +475,6 @@ public class CategoriaMB implements Serializable {
                     categoria.setNnivel(BigDecimal.ONE);
                 }
                 if (this.getContent()!= null) {
-                    Blob blob = new SerialBlob(this.getUploadFile().getContents());
-                    categoria.setBimagen(blob);
                     categoria.setVimagennombre(this.getContent().getName());
                     categoria.setVimagentype(this.getContent().getContentType());
                 }
@@ -545,8 +543,6 @@ public class CategoriaMB implements Serializable {
                 this.getSelectedCategoria().setDfechamodificacion(new Date());
                 this.getSelectedCategoria().setVusuariomodificacion(user.getVlogin());
                 if (this.getContent() != null) {
-                    Blob blob = new SerialBlob(this.getUploadFile().getContents());
-                    this.getSelectedCategoria().setBimagen(blob);
                     this.getSelectedCategoria().setVimagennombre(this.getContent().getName());
                     this.getSelectedCategoria().setVimagentype(this.getContent().getContentType());
                 }

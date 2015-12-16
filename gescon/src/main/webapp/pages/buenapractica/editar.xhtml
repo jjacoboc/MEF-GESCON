@@ -39,7 +39,7 @@
                                         <p:spacer width="10" rendered="#{buenaPracticaMB.selectedBuenaPractica.nsituacionid ge msgs.situacionPublicado}"/>
                                         <h:outputText value="#{buenaPracticaMB.selectedBuenaPractica.vtitulo}" styleClass="Fs14 FontBold black" rendered="#{buenaPracticaMB.selectedBuenaPractica.nsituacionid ge msgs.situacionPublicado}"/>
                                     </h:panelGroup>
-                                    <p:inputText value="#{buenaPracticaMB.selectedBuenaPractica.vtitulo}" size="110" styleClass="Fs14" maxlength="100" rendered="#{buenaPracticaMB.selectedBuenaPractica.nsituacionid lt msgs.situacionPublicado}"/>
+                                    <p:inputText value="#{buenaPracticaMB.selectedBuenaPractica.vtitulo}" size="110" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;" rendered="#{buenaPracticaMB.selectedBuenaPractica.nsituacionid lt msgs.situacionPublicado}"/>
 
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>

@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.VinculoHistDao;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoHist;
 import pe.gob.mef.gescon.service.VinculoHistService;
@@ -19,6 +20,7 @@ import pe.gob.mef.gescon.web.bean.VinculoHist;
  *
  * @author JJacobo
  */
+@Repository(value = "VinculoHistService")
 public class VinculoHistServiceImpl implements VinculoHistService{
 
     @Override

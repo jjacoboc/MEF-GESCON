@@ -775,7 +775,7 @@ public class WikiMB implements Serializable {
                 }
             }
 
-            this.getListaTargetVinculos().clear();
+            this.setListaTargetVinculos(new ArrayList());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
@@ -1008,7 +1008,7 @@ public class WikiMB implements Serializable {
                 }
             }
 
-            this.getListaTargetVinculos().clear();
+            this.setListaTargetVinculos(new ArrayList());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
@@ -1201,7 +1201,7 @@ public class WikiMB implements Serializable {
                 }
             }
 
-            this.getListaTargetVinculos().clear();
+            this.setListaTargetVinculos(new ArrayList());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());

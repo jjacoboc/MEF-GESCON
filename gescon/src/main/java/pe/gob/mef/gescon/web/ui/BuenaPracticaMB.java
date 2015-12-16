@@ -692,6 +692,7 @@ public class BuenaPracticaMB implements Serializable{
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
@@ -778,7 +779,7 @@ public class BuenaPracticaMB implements Serializable{
                 }
             }
 
-            this.getListaTargetVinculos().clear();
+            this.setListaTargetVinculos(new ArrayList());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
@@ -927,10 +928,10 @@ public class BuenaPracticaMB implements Serializable{
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
-            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             this.getSelectedBuenaPractica().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedBuenaPractica().setVtitulo(StringUtils.upperCase(this.getSelectedBuenaPractica().getVtitulo().trim()));
             if(this.getDescripcionPlain().length() < 400) {
@@ -1017,7 +1018,7 @@ public class BuenaPracticaMB implements Serializable{
                 }
             }
 
-            this.getListaTargetVinculos().clear();
+            this.setListaTargetVinculos(new ArrayList());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
@@ -1099,7 +1100,7 @@ public class BuenaPracticaMB implements Serializable{
             e.getMessage();
             e.printStackTrace();
         }
-        return "/pages/wiki/publicar?faces-redirect=true";
+        return "/pages/buenapractica/publicar?faces-redirect=true";
     }
     
     public void post(ActionEvent event) {
@@ -1216,7 +1217,7 @@ public class BuenaPracticaMB implements Serializable{
                 }
             }
 
-            this.getListaTargetVinculos().clear();
+            this.setListaTargetVinculos(new ArrayList());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
