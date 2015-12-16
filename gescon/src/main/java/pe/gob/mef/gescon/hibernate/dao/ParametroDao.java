@@ -17,5 +17,6 @@ public interface ParametroDao {
     
     public BigDecimal getNextPK() throws Exception;
     public List<Mtparametro> getMtparametros() throws Exception;
+    public List<Mtparametro> getMtparametrosActived() throws Exception;
     public void saveOrUpdate(Mtparametro mtparametro) throws Exception;
 }

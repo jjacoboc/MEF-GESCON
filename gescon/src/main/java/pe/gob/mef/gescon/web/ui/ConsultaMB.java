@@ -23,10 +23,12 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.ConsultaService;
+import pe.gob.mef.gescon.service.ContenidoService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.SeccionService;
 import pe.gob.mef.gescon.service.TipoConocimientoService;
@@ -413,10 +415,71 @@ public class ConsultaMB implements Serializable {
                     break;
                 }
                 case 2: { //Preguntas y respuestas
+                    PreguntaMB pr = new PreguntaMB();
                     PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-                    this.setSelectedPregunta(service.getPreguntaById(BigDecimal.valueOf(id)));
-                    RequestContext.getCurrentInstance().execute("PF('viewprDialog').show();");
+                    pr.setSelectedPregunta(service.getPreguntaById(BigDecimal.valueOf(id)));           
+                    pr.setEntidad(service.getNomEntidadbyIdEntidad(pr.getSelectedPregunta().getNentidadid()));
+
+                    pr.setListaSourceVinculos(new ArrayList<Consulta>());
+                    pr.setListaTargetVinculos(new ArrayList<Consulta>());
+
+                    pr.setListaTargetVinculosConocimiento(new ArrayList<Consulta>());
+                    pr.setListaTargetVinculosBL(new ArrayList<Consulta>());
+                    pr.setListaTargetVinculosPR(new ArrayList<Consulta>());
+                    pr.setListaTargetVinculosWK(new ArrayList<Consulta>());
+                    pr.setListaTargetVinculosCT(new ArrayList<Consulta>());
+                    pr.setListaTargetVinculosBP(new ArrayList<Consulta>());
+                    pr.setListaTargetVinculosOM(new ArrayList<Consulta>());
+
+                    HashMap filters = new HashMap();
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("1")));
+                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    pr.getListaTargetVinculosBL().addAll(service.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("2")));
+                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    pr.getListaTargetVinculosPR().addAll(service.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("3")));
+                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    pr.getListaTargetVinculosWK().addAll(service.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("4")));
+                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    pr.getListaTargetVinculosCT().addAll(service.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("5")));
+                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    pr.getListaTargetVinculosBP().addAll(service.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("6")));
+                    filters.put("npreguntaid", pr.getSelectedPregunta().getNpreguntaid());
+                    pr.getListaTargetVinculosOM().addAll(service.getConcimientosVinculados(filters));
+
+                    if (pr.getListaTargetVinculosBL() == null) {
+                    } else {
+                        pr.getListaTargetVinculosConocimiento().addAll(pr.getListaTargetVinculosBL());
+                    }
+                    if (pr.getListaTargetVinculosBP() == null) {
+                    } else {
+                        pr.getListaTargetVinculosConocimiento().addAll(pr.getListaTargetVinculosBP());
+                    }
+                    if (pr.getListaTargetVinculosCT() == null) {
+                    } else {
+                        pr.getListaTargetVinculosConocimiento().addAll(pr.getListaTargetVinculosCT());
+                    }
+                    if (pr.getListaTargetVinculosOM() == null) {
+                    } else {
+                        pr.getListaTargetVinculosConocimiento().addAll(pr.getListaTargetVinculosOM());
+                    }
+                    if (pr.getListaTargetVinculosWK() == null) {
+                    } else {
+                        pr.getListaTargetVinculosConocimiento().addAll(pr.getListaTargetVinculosWK());
+                    }
+                    JSFUtils.getSession().setAttribute("preguntaMB", pr);
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/pregunta/ver.xhtml");
                     break;
+
                 }
                 case 3: { //Wiki
                     WikiMB mb = new WikiMB();
@@ -450,6 +513,59 @@ public class ConsultaMB implements Serializable {
                     mb.setListaTargetVinculosWK(conocimientoService.getConcimientosVinculados(map));
                     JSFUtils.getSession().setAttribute("wikiMB", mb);
                     FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/ver.xhtml");
+                    break;
+                }
+                case 4: { //Contenido
+                    ContenidoMB ct = new ContenidoMB();
+                    int situacion;
+                    ContenidoService servicect = (ContenidoService) ServiceFinder.findBean("ContenidoService");
+                    ct.setSelectedContenido(servicect.getContenidoById(Constante.CONTENIDO, BigDecimal.valueOf(id)));
+                    CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                    ct.setSelectedCategoria(categoriaService.getCategoriaById(ct.getSelectedContenido().getNcategoriaid()));
+                    ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
+                    ct.setListaArchivos(archivoservice.getArchivosByConocimiento(ct.getSelectedContenido().getNconocimientoid()));
+                    
+                    
+
+                    ct.setListaSourceVinculos(new ArrayList<Consulta>());
+                    ct.setListaTargetVinculos(new ArrayList<Consulta>());
+                    
+
+                    ct.setListaTargetVinculosBL(new ArrayList<Consulta>());
+                    ct.setListaTargetVinculosPR(new ArrayList<Consulta>());
+                    ct.setListaTargetVinculosWK(new ArrayList<Consulta>());
+                    ct.setListaTargetVinculosCT(new ArrayList<Consulta>());
+                    ct.setListaTargetVinculosBP(new ArrayList<Consulta>());
+                    ct.setListaTargetVinculosOM(new ArrayList<Consulta>());
+
+                    HashMap filters = new HashMap();
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("1")));
+                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
+                    ct.getListaTargetVinculosBL().addAll(servicect.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("2")));
+                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
+                    ct.getListaTargetVinculosPR().addAll(servicect.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("3")));
+                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
+                    ct.getListaTargetVinculosWK().addAll(servicect.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("4")));
+                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
+                    ct.getListaTargetVinculosCT().addAll(servicect.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("5")));
+                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
+                    ct.getListaTargetVinculosBP().addAll(servicect.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("6")));
+                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
+                    ct.getListaTargetVinculosOM().addAll(servicect.getConcimientosVinculados(filters));
+
+                    JSFUtils.getSession().setAttribute("contenidoMB", ct);
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/ver.xhtml");
+                    
                     break;
                 }
                 case 5: { //Buen Practica

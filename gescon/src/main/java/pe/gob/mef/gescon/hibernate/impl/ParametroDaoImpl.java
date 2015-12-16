@@ -55,6 +55,13 @@ public class ParametroDaoImpl extends HibernateDaoSupport implements ParametroDa
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtparametro.class);
         return (List<Mtparametro>) getHibernateTemplate().findByCriteria(criteria);
     }
+    
+    @Override
+    public List<Mtparametro> getMtparametrosActived() throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Mtparametro.class);
+        criteria.add(Restrictions.eq("nactivo", BigDecimal.ONE));
+        return (List<Mtparametro>) getHibernateTemplate().findByCriteria(criteria);
+    }
 
     @Override
     @Transactional(readOnly = false)

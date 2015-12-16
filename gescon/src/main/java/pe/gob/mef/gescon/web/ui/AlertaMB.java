@@ -309,7 +309,7 @@ public class AlertaMB implements Serializable {
     public List<SelectItem> getListaParametro() throws Exception {
         if (listaParametro == null) {
             ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
-            listaParametro = new Items(service.getParametros(), null, "nparametroid", "vnombre").getItems();
+            listaParametro = new Items(service.getParametrosActived(), null, "nparametroid", "vnombre").getItems();
         }
         return listaParametro;
     }

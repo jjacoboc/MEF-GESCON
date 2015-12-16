@@ -59,5 +59,8 @@
         <property name="dfechamodificacion" type="timestamp">
             <column name="DFECHAMODIFICACION" />
         </property>
+        <property name="dfechapublicacion" type="timestamp">
+            <column name="DFECHAPUBLICACION" />
+        </property>
     </class>
 </hibernate-mapping>

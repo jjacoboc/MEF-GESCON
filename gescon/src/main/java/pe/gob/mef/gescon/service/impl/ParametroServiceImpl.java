@@ -41,6 +41,19 @@ public class ParametroServiceImpl implements ParametroService{
         }
         return parametros;
     }
+    
+    @Override
+    public List<Parametro> getParametrosActived() throws Exception {
+        List<Parametro> parametros = new ArrayList<Parametro>();
+        ParametroDao parametroDao = (ParametroDao) ServiceFinder.findBean("ParametroDao");
+        List<Mtparametro> lista = parametroDao.getMtparametrosActived();
+        for(Mtparametro mtparametro : lista) {
+            Parametro parametro = new Parametro();
+            BeanUtils.copyProperties(parametro, mtparametro);
+            parametros.add(parametro);
+        }
+        return parametros;
+    }
 
     @Override
     public void saveOrUpdate(Parametro parametro) throws Exception {

@@ -34,6 +34,7 @@ public class Pregunta implements Serializable {
     private String vmsjmoderador;
     private String vmsjusuario1;
     private BigDecimal ndestacado;
+    private Date dfechapublicacion;
 
     public void Pregunta() {
 
@@ -283,5 +284,19 @@ public class Pregunta implements Serializable {
 
     public void setNdestacado(BigDecimal ndestacado) {
         this.ndestacado = ndestacado;
+    }
+
+    /**
+     * @return the dfechapublicacion
+     */
+    public Date getDfechapublicacion() {
+        return dfechapublicacion;
+    }
+
+    /**
+     * @param dfechapublicacion the dfechapublicacion to set
+     */
+    public void setDfechapublicacion(Date dfechapublicacion) {
+        this.dfechapublicacion = dfechapublicacion;
     }
 }
