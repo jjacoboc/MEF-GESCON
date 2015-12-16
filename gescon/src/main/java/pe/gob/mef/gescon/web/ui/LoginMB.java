@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -31,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
@@ -41,11 +39,8 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
-import pe.gob.mef.gescon.hibernate.domain.Mtsituacion;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
-import pe.gob.mef.gescon.hibernate.domain.TvinculoHistId;
 import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.AsignacionService;
@@ -54,14 +49,13 @@ import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ContenidoService;
 import pe.gob.mef.gescon.service.PassService;
 import pe.gob.mef.gescon.service.PerfilService;
+import pe.gob.mef.gescon.service.PoliticaPerfilService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.RespuestaHistService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.service.VinculoBaseLegalService;
-import pe.gob.mef.gescon.service.VinculoHistService;
 import pe.gob.mef.gescon.service.VinculoPreguntaService;
 import pe.gob.mef.gescon.service.VinculoService;
-import pe.gob.mef.gescon.service.WikiService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
@@ -78,7 +72,6 @@ import pe.gob.mef.gescon.web.bean.RespuestaHist;
 import pe.gob.mef.gescon.web.bean.User;
 import pe.gob.mef.gescon.web.bean.Vinculo;
 import pe.gob.mef.gescon.web.bean.VinculoBaselegal;
-import pe.gob.mef.gescon.web.bean.VinculoHist;
 import pe.gob.mef.gescon.web.bean.VinculoPregunta;
 
 /**
@@ -91,12 +84,13 @@ public class LoginMB implements Serializable {
 
     private static final Log log = LogFactory.getLog(LoginMB.class);
     private final String temppath = "\\\\OSC2018\\gescon\\temp\\";
-    private String path = "\\\\OSC2018\\gescon\\files\\bl\\";
+    private final String path = "\\\\OSC2018\\gescon\\files\\bl\\";
     private User user;
     private Perfil perfil;
     private List<Perfil> perfiles;
     private String login;
     private String pass;
+    private HashMap politicas;
     private BigDecimal notificaciones;
     private BigDecimal notificacionesAsignadas;
     private BigDecimal notificacionesRecibidas;
@@ -232,6 +226,14 @@ public class LoginMB implements Serializable {
      */
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public HashMap getPoliticas() {
+        return politicas;
+    }
+
+    public void setPoliticas(HashMap politicas) {
+        this.politicas = politicas;
     }
 
     public BigDecimal getNotificaciones() {
@@ -1041,6 +1043,8 @@ public class LoginMB implements Serializable {
                         List<Perfil> listaperfiles = perfilService.getPerfilesByUser(this.getUser());
                         if (!CollectionUtils.isEmpty(listaperfiles)) {
                             this.setPerfil(listaperfiles.get(0));
+                            PoliticaPerfilService politicaPerfilService = (PoliticaPerfilService) ServiceFinder.findBean("PoliticaPerfilService");
+                            this.setPoliticas(politicaPerfilService.obtenerPoliticasByPerfil(this.getPerfil().getNperfilid()));
                             AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
                             this.setNotificaciones(asignacionService.getNumberNotificationsByUser(this.getUser()));
                             this.setNotificacionesAsignadas(asignacionService.getNumberNotificationsAssignedByUser(this.getUser()));

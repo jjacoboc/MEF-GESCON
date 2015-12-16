@@ -9,21 +9,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javax.faces.model.SelectItem;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.PoliticaPerfilDao;
-import pe.gob.mef.gescon.hibernate.domain.Mtperfil;
-
-//import pe.gob.mef.gescon.hibernate.dao.PoliticaDao;
 import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfil;
-
-//import pe.gob.mef.gescon.hibernate.domain.Mtpolitica;
 import pe.gob.mef.gescon.service.PoliticaPerfilService;
-
-//import pe.gob.mef.gescon.service.PoliticaService;
 import pe.gob.mef.gescon.util.ServiceFinder;
-import pe.gob.mef.gescon.web.bean.Perfil;
 import pe.gob.mef.gescon.web.bean.Politica;
 import pe.gob.mef.gescon.web.bean.PoliticaPerfil;
 
@@ -57,6 +48,23 @@ public class PoliticaPerfilServiceImpl implements PoliticaPerfilService {
     }
 
     @Override
+    public HashMap obtenerPoliticasByPerfil(final BigDecimal perfilid) throws Exception {
+        HashMap politicas = new HashMap();
+        try {
+            PoliticaPerfilDao politicaperfilDao = (PoliticaPerfilDao) ServiceFinder.findBean("PoliticaPerfilDao");
+            List<HashMap> lista = politicaperfilDao.obtenerListaPoliticas(perfilid);
+            for(HashMap map : lista) {
+                politicas.put(((BigDecimal) map.get("ID")).toString(), true);
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return politicas;
+
+    }
+    
+    @Override
     public List<Politica> obtenerListaPoliticas(final BigDecimal perfilid) throws Exception {
         List<Politica> list = new ArrayList<Politica>();
         try {
@@ -64,8 +72,8 @@ public class PoliticaPerfilServiceImpl implements PoliticaPerfilService {
             List<HashMap> lista = politicaperfilDao.obtenerListaPoliticas(perfilid);
             for (HashMap bean : lista) {
                 Politica politica = new Politica();
-                politica.setNpoliticaid((BigDecimal) bean.get("POLITICA"));
-                politica.setVnombre((String) bean.get("DES"));
+                politica.setNpoliticaid((BigDecimal) bean.get("ID"));
+                politica.setVnombre((String) bean.get("NOMBRE"));
                 list.add(politica);
             }
         } catch (Exception e) {
@@ -73,7 +81,6 @@ public class PoliticaPerfilServiceImpl implements PoliticaPerfilService {
             e.printStackTrace();
         }
         return list;
-
     }
 
     @Override

@@ -141,6 +141,7 @@ public class PerfilMB implements Serializable {
 
     /**
      * @return the listaPoliticas
+     * @throws java.lang.Exception
      */
     public DualListModel<String> getListaPoliticas() throws Exception {
         return listaPoliticas;
@@ -178,9 +179,7 @@ public class PerfilMB implements Serializable {
 
             if (this.listaPoliticas == null) {
                 PoliticaService politicaservice = (PoliticaService) ServiceFinder.findBean("PoliticaService");
-                //PoliticaPerfilService ppservice = (PoliticaPerfilService) ServiceFinder.findBean("PoliticaPerfilService");
                 politicasSource = new Items(politicaservice.getPoliticas(), null, "npoliticaid", "vnombre").getItems();
-                //politicasTarget = new Items(ppservice.obtenerListaPoliticas(this.getSelectedPerfil().getNperfilid()), null, "POLITICA", "DES").getItems();
                 this.listaPoliticas = new DualListModel<String>(politicasSource, politicasTarget);
             }
         } catch (Exception e) {

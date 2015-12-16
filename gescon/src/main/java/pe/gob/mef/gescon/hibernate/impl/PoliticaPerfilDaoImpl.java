@@ -20,11 +20,8 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.PoliticaPerfilDao;
-//import pe.gob.mef.gescon.hibernate.dao.PoliticaDao;
 import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfil;
-import pe.gob.mef.gescon.hibernate.domain.Mtperfil;
 
-//import pe.gob.mef.gescon.hibernate.domain.Mtpolitica;
 /**
  *
  * @author SOPORTE
@@ -55,9 +52,9 @@ public class PoliticaPerfilDaoImpl extends HibernateDaoSupport implements Politi
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            sql.append("select TP.NPOLITICAID as POLITICA, TP.NPERFILID AS PERFIL, P.vnombre AS DES ");
+            sql.append("select TP.NPOLITICAID as ID, P.vnombre AS NOMBRE ");
             sql.append(" from TPOLITICA_PERFIL TP ");
-            sql.append(" inner join MTPOLITICA P on P.NPoliticaID=TP.Npoliticaid ");
+            sql.append(" inner join MTPOLITICA P on P.NPoliticaID = TP.Npoliticaid ");
             sql.append("WHERE TP.NPERFILID = :PERFIL ");
 
             object = getHibernateTemplate().execute(
@@ -106,18 +103,15 @@ public class PoliticaPerfilDaoImpl extends HibernateDaoSupport implements Politi
     @Override
     @Transactional(readOnly = false)
     public void delete(final BigDecimal perfilid) throws Exception {
-        final StringBuilder sql = new StringBuilder();
         try {
-            sql.append("delete from Tpolitica_perfil where nperfilid = :PERFIL ");
-
             getHibernateTemplate().execute(
                     new HibernateCallback() {
                         @Override
                         public Object doInHibernate(Session session) throws HibernateException {
-                            Query query = session.createSQLQuery(sql.toString())
-                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
-                            .setParameter("PERFIL", perfilid);
-                            return query.list();
+                            StringBuilder sql = new StringBuilder();
+                            sql.append("DELETE FROM TPOLITICA_PERFIL WHERE nperfilid = ").append(perfilid.toString());
+                            Query query = session.createSQLQuery(sql.toString());
+                            return query.executeUpdate();
                         }
                     });
         } catch (Exception e) {

@@ -15,7 +15,7 @@
                             <p:panel header="#{msgs.wk_lbl_pnlTitulo}" styleClass="TexAlLeft">
                                 <h:panelGrid columns="1">
                                     <p:commandButton  value="Nuevo" ajax="false" action="#{wikiMB.toSave}" styleClass="Fleft" icon="fa fa-plus white" 
-                                                      rendered="#{loginMB.perfil.nperfilid eq msgs.especialista or loginMB.perfil.nperfilid eq msgs.administrador}"/>
+                                                      rendered="#{loginMB.politicas[msgs.REGISTRAR_WIKI]}"/>
                                     <p:dataTable id="tbl" value="#{wikiMB.listaWiki}" filteredValue="#{wikiMB.filteredListaWiki}" paginator="true" rowHover="true"
                                                  var="row" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" paginatorPosition="top" 
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="#{msgs.lbl_listavacia}">
@@ -49,23 +49,23 @@
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
                                             <p:commandLink ajax="false" action="#{wikiMB.toEdit}" styleClass="ui-link" title="Actualizar Wiki"
-                                                           rendered="#{loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
+                                                           rendered="#{loginMB.politicas[msgs.EDITAR_WIKI]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:spacer width="5px;" rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}"/>
+                                            <p:spacer width="5px;" rendered="#{loginMB.politicas[msgs.PUBLICAR_WIKI] and row.dfechapublicacion eq null}"/>
                                             <p:commandLink ajax="false" action="#{wikiMB.toPost}" styleClass="ui-link" title="Publicar Wiki"
-                                                           rendered="#{row.dfechapublicacion eq null and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
+                                                           rendered="#{loginMB.politicas[msgs.PUBLICAR_WIKI] and row.dfechapublicacion eq null}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
                                             <p:commandLink title="Activar Wiki" styleClass="ui-link"
-                                                           rendered="#{(row.nactivo eq 0) and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
+                                                           rendered="#{loginMB.politicas[msgs.ACTIVAR_WIKI] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                             </p:commandLink>
                                             <p:commandLink title="Desactivar Wiki" styleClass="ui-link"
-                                                           rendered="#{(row.nactivo eq 1) and (loginMB.perfil.nperfilid eq msgs.moderador or loginMB.perfil.nperfilid eq msgs.administrador)}">
+                                                           rendered="#{loginMB.politicas[msgs.DESACTIVAR_WIKI] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                             </p:commandLink>
                                         </p:column>

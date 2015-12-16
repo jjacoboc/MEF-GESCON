@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.TpoliticaPerfil;
-import pe.gob.mef.gescon.hibernate.domain.Mtperfil;
-//import pe.gob.mef.gescon.hibernate.domain.Mtpolitica;
 
 /**
  *

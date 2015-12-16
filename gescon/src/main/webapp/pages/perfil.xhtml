@@ -5,6 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
+    
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
@@ -116,9 +117,22 @@
                         </p:dialog>
 
                         <p:dialog id="asigDlg" header="Asignar Politicas" widgetVar="asigDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <style>
+                                .ui-picklist-list {
+                                    width: 350px !important;
+                                }
+                                .ui-picklist-item {
+                                    white-space: nowrap;
+                                }
+                                .ui-picklist-filter {
+                                    width: 350px !important;
+                                }
+                            </style>
                             <h:form id="asigDialogForm">
                                 <h:panelGrid id="pgAsig" columns="1">
-                                    <p:pickList id="pickList" value="#{perfilMB.listaPoliticas}" var="politica" itemLabel="#{politica.label}" itemValue="#{politica.value}" >
+                                    <p:pickList id="pickList" value="#{perfilMB.listaPoliticas}" var="politica" 
+                                                itemLabel="#{politica.label}" itemValue="#{politica.value}" 
+                                                showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains">
                                         <f:facet name="sourceCaption">Disponibles</f:facet>
                                         <f:facet name="targetCaption">Asignadas</f:facet>
                                     </p:pickList>

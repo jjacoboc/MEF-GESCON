@@ -6,10 +6,9 @@
 package pe.gob.mef.gescon.service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
-import javax.faces.model.SelectItem;
 import pe.gob.mef.gescon.web.bean.PoliticaPerfil;
-import pe.gob.mef.gescon.web.bean.Perfil;
 import pe.gob.mef.gescon.web.bean.Politica;
 //import pe.gob.mef.gescon.web.bean.Politica;
 /**
@@ -21,6 +20,7 @@ public interface PoliticaPerfilService {
     public void saveOrUpdate(PoliticaPerfil politica_perfil) throws Exception;
     public List<Politica> obtenerListaPoliticasDisp(BigDecimal perfilid) throws Exception;
     public List<Politica> obtenerListaPoliticas(BigDecimal perfilid) throws Exception;
+    public HashMap obtenerPoliticasByPerfil(BigDecimal perfilid) throws Exception;
     public void delete(BigDecimal perfilid) throws Exception;
     
 }
