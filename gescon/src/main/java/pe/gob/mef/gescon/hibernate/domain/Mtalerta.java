@@ -20,8 +20,8 @@ public class Mtalerta  implements java.io.Serializable {
      private BigDecimal nuseraplica;
      private Date dfechini;
      private Date dfechfin;
-     private String vcondicion1;
-     private String vcondicion2;
+     private BigDecimal ncondicion1;
+     private BigDecimal ncondicion2;
      private BigDecimal nvalor1;
      private BigDecimal nvalor2;
      private BigDecimal ntipo1;
@@ -39,7 +39,7 @@ public class Mtalerta  implements java.io.Serializable {
         this.nalertaid = nalertaid;
         this.nparametroid = nparametroid;
     }
-    public Mtalerta(BigDecimal nalertaid, BigDecimal nparametroid, String vnombre, String vdescripcion, BigDecimal nactivo, BigDecimal nuseraplica, Date dfechini, Date dfechfin, String vcondicion1, String vcondicion2, BigDecimal nvalor1, BigDecimal nvalor2, BigDecimal ntipo1, BigDecimal ntipo2, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion) {
+    public Mtalerta(BigDecimal nalertaid, BigDecimal nparametroid, String vnombre, String vdescripcion, BigDecimal nactivo, BigDecimal nuseraplica, Date dfechini, Date dfechfin, BigDecimal ncondicion1, BigDecimal ncondicion2, BigDecimal nvalor1, BigDecimal nvalor2, BigDecimal ntipo1, BigDecimal ntipo2, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion) {
        this.nalertaid = nalertaid;
        this.nparametroid = nparametroid;
        this.vnombre = vnombre;
@@ -48,8 +48,8 @@ public class Mtalerta  implements java.io.Serializable {
        this.nuseraplica = nuseraplica;
        this.dfechini = dfechini;
        this.dfechfin = dfechfin;
-       this.vcondicion1 = vcondicion1;
-       this.vcondicion2 = vcondicion2;
+       this.ncondicion1 = ncondicion1;
+       this.ncondicion2 = ncondicion2;
        this.nvalor1 = nvalor1;
        this.nvalor2 = nvalor2;
        this.ntipo1 = ntipo1;
@@ -124,20 +124,35 @@ public class Mtalerta  implements java.io.Serializable {
     public void setDfechfin(Date dfechfin) {
         this.dfechfin = dfechfin;
     }
-    public String getVcondicion1() {
-        return this.vcondicion1;
+
+    /**
+     * @return the ncondicion1
+     */
+    public BigDecimal getNcondicion1() {
+        return ncondicion1;
+    }
+
+    /**
+     * @param ncondicion1 the ncondicion1 to set
+     */
+    public void setNcondicion1(BigDecimal ncondicion1) {
+        this.ncondicion1 = ncondicion1;
+    }
+
+    /**
+     * @return the ncondicion2
+     */
+    public BigDecimal getNcondicion2() {
+        return ncondicion2;
+    }
+
+    /**
+     * @param ncondicion2 the ncondicion2 to set
+     */
+    public void setNcondicion2(BigDecimal ncondicion2) {
+        this.ncondicion2 = ncondicion2;
     }
     
-    public void setVcondicion1(String vcondicion1) {
-        this.vcondicion1 = vcondicion1;
-    }
-    public String getVcondicion2() {
-        return this.vcondicion2;
-    }
-    
-    public void setVcondicion2(String vcondicion2) {
-        this.vcondicion2 = vcondicion2;
-    }
     public BigDecimal getNvalor1() {
         return this.nvalor1;
     }

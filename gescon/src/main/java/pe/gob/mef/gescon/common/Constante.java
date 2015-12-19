@@ -66,7 +66,7 @@ public class Constante implements Serializable {
     public static BigDecimal OPORTUNIDADMEJORA = new BigDecimal(6);
     // Maestros del Sistema
     public static BigDecimal MAESTRO_MODULOS = new BigDecimal(1);
-    public static BigDecimal MAESTRO_RANGOS = new BigDecimal(2);
+    public static BigDecimal MAESTRO_RANGOS = new BigDecimal(2); 
     // Modulos del Sistema (Maestro Detalle)
     public static BigDecimal MODULO_ADMINISTRACION = new BigDecimal(1);
     public static BigDecimal MODULO_BASELEGAL = new BigDecimal(2);

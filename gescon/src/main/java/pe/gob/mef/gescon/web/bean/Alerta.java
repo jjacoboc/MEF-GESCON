@@ -29,8 +29,8 @@ public class Alerta implements Serializable{
     private BigDecimal nuseraplica;
     private Date dfechini;
     private Date dfechfin;
-    private String ncondicion1;
-    private String ncondicion2;
+    private BigDecimal ncondicion1;
+    private BigDecimal ncondicion2;
     private BigDecimal nvalor1;
     private BigDecimal ntipo1;
     private BigDecimal nvalor2;
@@ -215,30 +215,32 @@ public class Alerta implements Serializable{
     /**
      * @return the ncondicion1
      */
-    public String getNcondicion1() {
+    public BigDecimal getNcondicion1() {
         return ncondicion1;
     }
 
     /**
      * @param ncondicion1 the ncondicion1 to set
      */
-    public void setNcondicion1(String ncondicion1) {
+    public void setNcondicion1(BigDecimal ncondicion1) {
         this.ncondicion1 = ncondicion1;
     }
 
     /**
      * @return the ncondicion2
      */
-    public String getNcondicion2() {
+    public BigDecimal getNcondicion2() {
         return ncondicion2;
     }
 
     /**
      * @param ncondicion2 the ncondicion2 to set
      */
-    public void setNcondicion2(String ncondicion2) {
+    public void setNcondicion2(BigDecimal ncondicion2) {
         this.ncondicion2 = ncondicion2;
     }
+
+    
 
     /**
      * @return the nvalor1

@@ -1,0 +1,140 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent">
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="Administración de Entidades" >
+                                <h:panelGrid columns="1">
+                                    <p:commandButton  value="Nuevo" actionListener="#{entidadMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
+                                    <p:dataTable id="tbl" value="#{entidadMB.listaEntidad}" filteredValue="#{entidadMB.filteredListaEntidad}" var="row" 
+                                                 paginator="true" paginatorPosition="top" rows="15" rowIndexVar="rowIndex" draggableColumns="true" rowHover="true" 
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
+                                        <p:column style="width: 20%;" sortBy="#{row.ncodigoentidad}" filterBy="#{row.ncodigoentidad}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="CODIGO"/></f:facet>
+                                            <h:outputText value="#{row.ncodigoentidad}"/>
+                                        </p:column>
+                                        <p:column style="width: 20%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                            <h:outputText value="#{row.vnombre}"/>
+                                        </p:column>
+                                        <p:column style="width: 30%" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
+                                            <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
+                                            <h:outputText value="#{row.vdescripcion}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%; " sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                            <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
+                                            <h:outputText value="#{row.nactivo}" >
+                                                <f:converter converterId="converterSiNo"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 16%;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="4">
+                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
+                                            <h:outputText value="#{row.vusuariocreacion}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;" sortBy="#{row.vfechacreacion}" filterBy="#{row.vfechacreacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="5">
+                                            <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
+                                            <h:outputText value="#{row.vfechacreacion}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 9%;">
+                                            <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
+                                            <p:commandLink actionListener="#{entidadMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar entidad">
+                                                <h:outputText class="fa fa-edit Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                            <p:commandLink actionListener="#{entidadMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar entidad" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
+                                                <h:outputText class="fa fa-check Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                            <p:commandLink actionListener="#{entidadMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar entidad" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+
+                        <p:dialog id="newDlg" header="Nuevo Entidad" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="newDialogForm">
+                                <h:panelGrid id="pgNew" columns="3" >
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Nombre:"/>
+                                    <p:inputText size="50" value="#{entidadMB.nombre}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" /> 
+
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Valor:"/>
+                                    <pe:inputNumber value="#{entidadMB.codigo}" styleClass="Fs14" decimalPlaces="0" /> 
+
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Descripción:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{entidadMB.descripcion}" rows="4" cols="49" styleClass="Fs14"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+                                </h:panelGrid>
+                                <p:commandButton  value="Registrar" actionListener="#{entidadMB.save}" update=":f:growl, :f:tbl"/>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="editDlg" header="Actualizar Entidad" widgetVar="editDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="editDialogForm">
+                                <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <h:panelGrid id="pgEdit" columns="3">
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Nombre:"/>
+                                    <p:inputText size="50" value="#{entidadMB.selectedEntidad.vnombre}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" />
+
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Valor"/>
+                                    <p:inputText size="50" value="#{entidadMB.selectedEntidad.ncodigoentidad}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" />
+
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Descripción:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{entidadMB.selectedEntidad.vdescripcion}" rows="4" cols="49" styleClass="Fs14"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+
+                                    <h:outputText value="*"/>
+                                    <h:outputText value="Activo:"/>
+                                    <p:selectOneMenu value="#{entidadMB.selectedEntidad.nactivo}" styleClass="Wid10">
+                                        <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                                <p:commandButton  value="Actualizar" actionListener="#{entidadMB.update}" update=":f:growl, :f:tbl"/>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la entidad. Desea Continuar?" header="ACTIVAR ENTIDAD" widgetVar="confirmActDlg">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{entidadMB.activar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la entidad. Desea Continuar?" header="DESACTIVAR ENTIDAD" widgetVar="confirmDesDlg">
+                            <h:form id="confirmDesDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{entidadMB.desactivar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

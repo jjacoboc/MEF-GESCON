@@ -7,7 +7,9 @@ package pe.gob.mef.gescon.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import pe.gob.mef.gescon.web.bean.MaestroDetalle;
 import pe.gob.mef.gescon.web.bean.Rango;
+
 
 /**
  *
@@ -15,7 +17,10 @@ import pe.gob.mef.gescon.web.bean.Rango;
  */
 public interface RangoService {
     
+    public BigDecimal getNextPK() throws Exception;
     public List<Rango> getRangos() throws Exception;
+    public List<MaestroDetalle> getTipoRangoByMaestro(BigDecimal maestroid) throws Exception;
     List<Rango> getRangosByTipo(BigDecimal id) throws Exception;
     List<Rango> getRangosActivosByTipo(BigDecimal id) throws Exception;
+    public void saveOrUpdate(Rango rango) throws Exception;
 }

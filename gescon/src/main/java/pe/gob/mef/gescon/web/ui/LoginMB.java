@@ -14,19 +14,24 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.PhaseId;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
@@ -36,8 +41,12 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
+import pe.gob.mef.gescon.hibernate.domain.Mtsituacion;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
+import pe.gob.mef.gescon.hibernate.domain.TvinculoHistId;
+import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.BaseLegalService;
@@ -49,9 +58,14 @@ import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.RespuestaHistService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.service.VinculoBaseLegalService;
+import pe.gob.mef.gescon.service.VinculoHistService;
+import pe.gob.mef.gescon.service.VinculoPreguntaService;
+import pe.gob.mef.gescon.service.VinculoService;
+import pe.gob.mef.gescon.service.WikiService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
+import pe.gob.mef.gescon.web.bean.ArchivoConocimiento;
 import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
@@ -62,7 +76,10 @@ import pe.gob.mef.gescon.web.bean.Perfil;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 import pe.gob.mef.gescon.web.bean.RespuestaHist;
 import pe.gob.mef.gescon.web.bean.User;
+import pe.gob.mef.gescon.web.bean.Vinculo;
 import pe.gob.mef.gescon.web.bean.VinculoBaselegal;
+import pe.gob.mef.gescon.web.bean.VinculoHist;
+import pe.gob.mef.gescon.web.bean.VinculoPregunta;
 
 /**
  *
@@ -87,6 +104,8 @@ public class LoginMB implements Serializable {
     private List<Consulta> listaNotificacionesAsignadas;
     private List<Consulta> listaNotificacionesRecibidas;
     private List<Consulta> listaNotificacionesAtendidas;
+    private List<Consulta> listaNotificacionesAlerta;
+    private String alertaFlag = "false";
     private Consulta selectedNotification;
     private Asignacion selectedAsignacion;
     private BaseLegal selectedBaseLegal;
@@ -119,6 +138,25 @@ public class LoginMB implements Serializable {
     private BigDecimal entidadId;
     private String entidad;
     private Conocimiento selectedContenido;
+    private DualListModel<Consulta> pickListContenido;
+    private List<ArchivoConocimiento> listaArchivos;
+    private BigDecimal idTipoConocimiento;
+    private List<Consulta> listaSourceVinculos;
+    private List<Consulta> listaTargetVinculos;
+    private DualListModel<Consulta> pickListPregunta;
+    private List<Consulta> listaSourceVinculosBL;
+    private List<Consulta> listaTargetVinculosBL;
+    private List<Consulta> listaSourceVinculosPR;
+    private List<Consulta> listaTargetVinculosPR;
+    private List<Consulta> listaSourceVinculosWK;
+    private List<Consulta> listaTargetVinculosWK;
+    private List<Consulta> listaSourceVinculosOM;
+    private List<Consulta> listaTargetVinculosOM;
+    private List<Consulta> listaSourceVinculosBP;
+    private List<Consulta> listaTargetVinculosBP;
+    private List<Consulta> listaSourceVinculosCT;
+    private List<Consulta> listaTargetVinculosCT;
+    private List<Consulta> listaTargetVinculosConocimiento;
 
     /**
      * Creates a new instance of LoginMB
@@ -250,6 +288,34 @@ public class LoginMB implements Serializable {
 
     public void setListaNotificacionesAtendidas(List<Consulta> listaNotificacionesAtendidas) {
         this.listaNotificacionesAtendidas = listaNotificacionesAtendidas;
+    }
+
+    /**
+     * @return the listaNotificacionesAlerta
+     */
+    public List<Consulta> getListaNotificacionesAlerta() {
+        return listaNotificacionesAlerta;
+    }
+
+    /**
+     * @param listaNotificacionesAlerta the listaNotificacionesAlerta to set
+     */
+    public void setListaNotificacionesAlerta(List<Consulta> listaNotificacionesAlerta) {
+        this.listaNotificacionesAlerta = listaNotificacionesAlerta;
+    }
+
+    /**
+     * @return the alertaFlag
+     */
+    public String getAlertaFlag() {
+        return alertaFlag;
+    }
+
+    /**
+     * @param alertaFlag the alertaFlag to set
+     */
+    public void setAlertaFlag(String alertaFlag) {
+        this.alertaFlag = alertaFlag;
     }
 
     public Consulta getSelectedNotification() {
@@ -694,6 +760,273 @@ public class LoginMB implements Serializable {
         this.selectedContenido = selectedContenido;
     }
 
+    /**
+     * @return the pickListContenido
+     */
+    public DualListModel<Consulta> getPickListContenido() {
+        return pickListContenido;
+    }
+
+    /**
+     * @param pickListContenido the pickListContenido to set
+     */
+    public void setPickListContenido(DualListModel<Consulta> pickListContenido) {
+        this.pickListContenido = pickListContenido;
+    }
+
+    /**
+     * @return the listaArchivos
+     */
+    public List<ArchivoConocimiento> getListaArchivos() {
+        return listaArchivos;
+    }
+
+    /**
+     * @param listaArchivos the listaArchivos to set
+     */
+    public void setListaArchivos(List<ArchivoConocimiento> listaArchivos) {
+        this.listaArchivos = listaArchivos;
+    }
+
+    /**
+     * @return the idTipoConocimiento
+     */
+    public BigDecimal getIdTipoConocimiento() {
+        return idTipoConocimiento;
+    }
+
+    /**
+     * @param idTipoConocimiento the idTipoConocimiento to set
+     */
+    public void setIdTipoConocimiento(BigDecimal idTipoConocimiento) {
+        this.idTipoConocimiento = idTipoConocimiento;
+    }
+
+    /**
+     * @return the listaSourceVinculos
+     */
+    public List<Consulta> getListaSourceVinculos() {
+        return listaSourceVinculos;
+    }
+
+    /**
+     * @param listaSourceVinculos the listaSourceVinculos to set
+     */
+    public void setListaSourceVinculos(List<Consulta> listaSourceVinculos) {
+        this.listaSourceVinculos = listaSourceVinculos;
+    }
+
+    /**
+     * @return the listaTargetVinculos
+     */
+    public List<Consulta> getListaTargetVinculos() {
+        return listaTargetVinculos;
+    }
+
+    /**
+     * @param listaTargetVinculos the listaTargetVinculos to set
+     */
+    public void setListaTargetVinculos(List<Consulta> listaTargetVinculos) {
+        this.listaTargetVinculos = listaTargetVinculos;
+    }
+
+    /**
+     * @return the pickListPregunta
+     */
+    public DualListModel<Consulta> getPickListPregunta() {
+        return pickListPregunta;
+    }
+
+    /**
+     * @param pickListPregunta the pickListPregunta to set
+     */
+    public void setPickListPregunta(DualListModel<Consulta> pickListPregunta) {
+        this.pickListPregunta = pickListPregunta;
+    }
+
+    /**
+     * @return the listaSourceVinculosBL
+     */
+    public List<Consulta> getListaSourceVinculosBL() {
+        return listaSourceVinculosBL;
+    }
+
+    /**
+     * @param listaSourceVinculosBL the listaSourceVinculosBL to set
+     */
+    public void setListaSourceVinculosBL(List<Consulta> listaSourceVinculosBL) {
+        this.listaSourceVinculosBL = listaSourceVinculosBL;
+    }
+
+    /**
+     * @return the listaTargetVinculosBL
+     */
+    public List<Consulta> getListaTargetVinculosBL() {
+        return listaTargetVinculosBL;
+    }
+
+    /**
+     * @param listaTargetVinculosBL the listaTargetVinculosBL to set
+     */
+    public void setListaTargetVinculosBL(List<Consulta> listaTargetVinculosBL) {
+        this.listaTargetVinculosBL = listaTargetVinculosBL;
+    }
+
+    /**
+     * @return the listaSourceVinculosPR
+     */
+    public List<Consulta> getListaSourceVinculosPR() {
+        return listaSourceVinculosPR;
+    }
+
+    /**
+     * @param listaSourceVinculosPR the listaSourceVinculosPR to set
+     */
+    public void setListaSourceVinculosPR(List<Consulta> listaSourceVinculosPR) {
+        this.listaSourceVinculosPR = listaSourceVinculosPR;
+    }
+
+    /**
+     * @return the listaTargetVinculosPR
+     */
+    public List<Consulta> getListaTargetVinculosPR() {
+        return listaTargetVinculosPR;
+    }
+
+    /**
+     * @param listaTargetVinculosPR the listaTargetVinculosPR to set
+     */
+    public void setListaTargetVinculosPR(List<Consulta> listaTargetVinculosPR) {
+        this.listaTargetVinculosPR = listaTargetVinculosPR;
+    }
+
+    /**
+     * @return the listaSourceVinculosWK
+     */
+    public List<Consulta> getListaSourceVinculosWK() {
+        return listaSourceVinculosWK;
+    }
+
+    /**
+     * @param listaSourceVinculosWK the listaSourceVinculosWK to set
+     */
+    public void setListaSourceVinculosWK(List<Consulta> listaSourceVinculosWK) {
+        this.listaSourceVinculosWK = listaSourceVinculosWK;
+    }
+
+    /**
+     * @return the listaTargetVinculosWK
+     */
+    public List<Consulta> getListaTargetVinculosWK() {
+        return listaTargetVinculosWK;
+    }
+
+    /**
+     * @param listaTargetVinculosWK the listaTargetVinculosWK to set
+     */
+    public void setListaTargetVinculosWK(List<Consulta> listaTargetVinculosWK) {
+        this.listaTargetVinculosWK = listaTargetVinculosWK;
+    }
+
+    /**
+     * @return the listaSourceVinculosOM
+     */
+    public List<Consulta> getListaSourceVinculosOM() {
+        return listaSourceVinculosOM;
+    }
+
+    /**
+     * @param listaSourceVinculosOM the listaSourceVinculosOM to set
+     */
+    public void setListaSourceVinculosOM(List<Consulta> listaSourceVinculosOM) {
+        this.listaSourceVinculosOM = listaSourceVinculosOM;
+    }
+
+    /**
+     * @return the listaTargetVinculosOM
+     */
+    public List<Consulta> getListaTargetVinculosOM() {
+        return listaTargetVinculosOM;
+    }
+
+    /**
+     * @param listaTargetVinculosOM the listaTargetVinculosOM to set
+     */
+    public void setListaTargetVinculosOM(List<Consulta> listaTargetVinculosOM) {
+        this.listaTargetVinculosOM = listaTargetVinculosOM;
+    }
+
+    /**
+     * @return the listaSourceVinculosBP
+     */
+    public List<Consulta> getListaSourceVinculosBP() {
+        return listaSourceVinculosBP;
+    }
+
+    /**
+     * @param listaSourceVinculosBP the listaSourceVinculosBP to set
+     */
+    public void setListaSourceVinculosBP(List<Consulta> listaSourceVinculosBP) {
+        this.listaSourceVinculosBP = listaSourceVinculosBP;
+    }
+
+    /**
+     * @return the listaTargetVinculosBP
+     */
+    public List<Consulta> getListaTargetVinculosBP() {
+        return listaTargetVinculosBP;
+    }
+
+    /**
+     * @param listaTargetVinculosBP the listaTargetVinculosBP to set
+     */
+    public void setListaTargetVinculosBP(List<Consulta> listaTargetVinculosBP) {
+        this.listaTargetVinculosBP = listaTargetVinculosBP;
+    }
+
+    /**
+     * @return the listaSourceVinculosCT
+     */
+    public List<Consulta> getListaSourceVinculosCT() {
+        return listaSourceVinculosCT;
+    }
+
+    /**
+     * @param listaSourceVinculosCT the listaSourceVinculosCT to set
+     */
+    public void setListaSourceVinculosCT(List<Consulta> listaSourceVinculosCT) {
+        this.listaSourceVinculosCT = listaSourceVinculosCT;
+    }
+
+    /**
+     * @return the listaTargetVinculosCT
+     */
+    public List<Consulta> getListaTargetVinculosCT() {
+        return listaTargetVinculosCT;
+    }
+
+    /**
+     * @param listaTargetVinculosCT the listaTargetVinculosCT to set
+     */
+    public void setListaTargetVinculosCT(List<Consulta> listaTargetVinculosCT) {
+        this.listaTargetVinculosCT = listaTargetVinculosCT;
+    }
+
+    /**
+     * @return the listaTargetVinculosConocimiento
+     */
+    public List<Consulta> getListaTargetVinculosConocimiento() {
+        return listaTargetVinculosConocimiento;
+    }
+
+    /**
+     * @param listaTargetVinculosConocimiento the
+     * listaTargetVinculosConocimiento to set
+     */
+    public void setListaTargetVinculosConocimiento(List<Consulta> listaTargetVinculosConocimiento) {
+        this.listaTargetVinculosConocimiento = listaTargetVinculosConocimiento;
+    }
+
     public String ingresar() {
         String page = StringUtils.EMPTY;
         try {
@@ -713,6 +1046,15 @@ public class LoginMB implements Serializable {
                             this.setNotificacionesAsignadas(asignacionService.getNumberNotificationsAssignedByUser(this.getUser()));
                             this.setNotificacionesRecibidas(asignacionService.getNumberNotificationsReceivedByUser(this.getUser()));
                             this.setNotificacionesAtendidas(asignacionService.getNumberNotificationsServedByUser(this.getUser()));
+
+                            this.setListaNotificacionesAlerta(asignacionService.getNotificationsAlertPanelByMtuser(this.getUser()));
+
+                            if (this.getListaNotificacionesAlerta().isEmpty()) {
+                                this.setAlertaFlag("false");
+                            } else {
+                                this.setAlertaFlag("true");
+                            }
+
                             if (this.getPerfil().getNperfilid().toString().equals(Constante.ROL_ADMINISTRADOR)) {
                                 page = "/pages/indexAdmin?faces-redirect=true";
                             } else if (this.getPerfil().getNperfilid().toString().equals(Constante.ROL_MODERADOR)) {
@@ -856,16 +1198,26 @@ public class LoginMB implements Serializable {
         }
     }
 
-    public String toEditPendiente() {
+    public String toEditPendiente(int caso) {
         String pagina = null;
         try {
+            this.setAlertaFlag("false");
             LoginMB mb = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             int perfil_actual = Integer.parseInt(service.obtenerPerfilxUsuario(mb.getUser().getNusuarioid()).toString());
             int user_actual = Integer.parseInt(mb.getUser().getNusuarioid().toString());
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            this.setSelectedNotification(this.getListaNotificacionesAsignadas().get(index));
+            if (caso == 1) {
+                this.setSelectedNotification(this.getListaNotificacionesAsignadas().get(index));
+            } else {
+                if (caso == 2) {
+                    this.setSelectedNotification(this.getListaNotificacionesRecibidas().get(index));
+                } else {
+                    this.setSelectedNotification(this.getListaNotificacionesAlerta().get(index));
+                }
+            }
+
             Integer tipo = this.getSelectedNotification().getIdTipoConocimiento().intValue();
             Integer id = this.getSelectedNotification().getIdconocimiento().intValue();
             switch (tipo) {
@@ -915,6 +1267,64 @@ public class LoginMB implements Serializable {
                     this.setEntidad(service.getNomEntidadbyIdEntidad(this.getSelectedPregunta().getNentidadid()));
                     setListaAsignacion(service.obtenerPreguntaxAsig(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS));
                     setFlistaPregunta(service.obtenerPreguntas(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS));
+
+                    this.setListaSourceVinculos(new ArrayList<Consulta>());
+                    this.setListaTargetVinculos(new ArrayList<Consulta>());
+                    this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+
+                    this.listaTargetVinculosConocimiento = new ArrayList<Consulta>();
+                    this.listaTargetVinculosBL = new ArrayList<Consulta>();
+                    this.listaTargetVinculosPR = new ArrayList<Consulta>();
+                    this.listaTargetVinculosWK = new ArrayList<Consulta>();
+                    this.listaTargetVinculosCT = new ArrayList<Consulta>();
+                    this.listaTargetVinculosBP = new ArrayList<Consulta>();
+                    this.listaTargetVinculosOM = new ArrayList<Consulta>();
+
+                    HashMap filters = new HashMap();
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("1")));
+                    filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+                    this.getListaTargetVinculosBL().addAll(service.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("2")));
+                    filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+                    this.getListaTargetVinculosPR().addAll(service.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("3")));
+                    filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+                    this.getListaTargetVinculosWK().addAll(service.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("4")));
+                    filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+                    this.getListaTargetVinculosCT().addAll(service.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("5")));
+                    filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+                    this.getListaTargetVinculosBP().addAll(service.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("6")));
+                    filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+                    this.getListaTargetVinculosOM().addAll(service.getConcimientosVinculados(filters));
+
+                    if (this.getListaTargetVinculosBL() == null) {
+                    } else {
+                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBL());
+                    }
+                    if (this.getListaTargetVinculosBP() == null) {
+                    } else {
+                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBP());
+                    }
+                    if (this.getListaTargetVinculosCT() == null) {
+                    } else {
+                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosCT());
+                    }
+                    if (this.getListaTargetVinculosOM() == null) {
+                    } else {
+                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosOM());
+                    }
+                    if (this.getListaTargetVinculosWK() == null) {
+                    } else {
+                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosWK());
+                    }
 
                     situacion = Integer.parseInt(this.getSelectedPregunta().getNsituacionid().toString());
 
@@ -1017,9 +1427,67 @@ public class LoginMB implements Serializable {
                     this.setSelectedContenido(servicect.getContenidoById(BigDecimal.valueOf(tipo), BigDecimal.valueOf(id)));
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()));
+                    ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
+                    this.setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedContenido().getNconocimientoid()));
                     setListaAsignacion(servicect.obtenerContenidoxAsig(this.getSelectedContenido().getNconocimientoid(), mb.getUser().getNusuarioid(), Constante.CONTENIDO));
                     setSelectedAsignacion(getListaAsignacion().get(0));
 
+                    this.setListaSourceVinculos(new ArrayList<Consulta>());
+                    this.setListaTargetVinculos(new ArrayList<Consulta>());
+                    this.setPickListContenido(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+
+                    this.listaTargetVinculosBL = new ArrayList<Consulta>();
+                    this.listaTargetVinculosPR = new ArrayList<Consulta>();
+                    this.listaTargetVinculosWK = new ArrayList<Consulta>();
+                    this.listaTargetVinculosCT = new ArrayList<Consulta>();
+                    this.listaTargetVinculosBP = new ArrayList<Consulta>();
+                    this.listaTargetVinculosOM = new ArrayList<Consulta>();
+
+                    HashMap filters = new HashMap();
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("1")));
+                    filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid());
+                    this.getListaTargetVinculosBL().addAll(servicect.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("2")));
+                    filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid());
+                    this.getListaTargetVinculosPR().addAll(servicect.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("3")));
+                    filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid());
+                    this.getListaTargetVinculosWK().addAll(servicect.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("4")));
+                    filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid());
+                    this.getListaTargetVinculosCT().addAll(servicect.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("5")));
+                    filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid());
+                    this.getListaTargetVinculosBP().addAll(servicect.getConcimientosVinculados(filters));
+
+                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("6")));
+                    filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid());
+                    this.getListaTargetVinculosOM().addAll(servicect.getConcimientosVinculados(filters));
+
+//                    if (this.getListaTargetVinculosBL() == null) {
+//                    } else {
+//                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBL());
+//                    }
+//                    if (this.getListaTargetVinculosBP() == null) {
+//                    } else {
+//                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBP());
+//                    }
+//                    if (this.getListaTargetVinculosCT() == null) {
+//                    } else {
+//                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosCT());
+//                    }
+//                    if (this.getListaTargetVinculosOM() == null) {
+//                    } else {
+//                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosOM());
+//                    }
+//                    if (this.getListaTargetVinculosWK() == null) {
+//                    } else {
+//                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosWK());
+//                    }
                     situacion = Integer.parseInt(this.getSelectedContenido().getNsituacionid().toString());
 
                     //if (StringUtils.isBlank(this.getSelectedBaseLegal().getVmsjmoderador())) {
@@ -1213,6 +1681,49 @@ public class LoginMB implements Serializable {
             respuestahist.setVusuariocreacion(user_savepreg.getVlogin());
             respuestahist.setDfechacreacion(new Date());
             serviceresp.saveOrUpdate(respuestahist);
+
+            listaTargetVinculos = new ArrayList<Consulta>();
+
+            if (this.getListaTargetVinculosBL() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            }
+            if (this.getListaTargetVinculosBP() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            }
+            if (this.getListaTargetVinculosCT() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            }
+            if (this.getListaTargetVinculosOM() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            }
+            if (this.getListaTargetVinculosPR() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            }
+            if (this.getListaTargetVinculosWK() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            }
+
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                VinculoPreguntaService vinculopreguntaService = (VinculoPreguntaService) ServiceFinder.findBean("VinculoPreguntaService");
+                service.delete(this.getSelectedPregunta().getNpreguntaid());
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    VinculoPregunta vinculopregunta = new VinculoPregunta();
+                    vinculopregunta.setNvinculoid(vinculopreguntaService.getNextPK());
+                    vinculopregunta.setNpreguntaid(this.getSelectedPregunta().getNpreguntaid());
+                    vinculopregunta.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculopregunta.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculopregunta.setDfechacreacion(new Date());
+                    vinculopregunta.setVusuariocreacion(user.getVlogin());
+                    vinculopreguntaService.saveOrUpdate(vinculopregunta);
+
+                }
+            }
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -1565,20 +2076,6 @@ public class LoginMB implements Serializable {
         }
     }
 
-    public StreamedContent getPdf() throws IOException, Exception {
-        FacesContext context = FacesContext.getCurrentInstance();
-
-        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
-            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
-            return new DefaultStreamedContent();
-        } else {
-            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
-            String fileName = JSFUtils.getRequestParameter("fileName");
-            FileInputStream fis = new FileInputStream(new File(fileName));
-            return new DefaultStreamedContent(fis, "application/pdf");
-        }
-    }
-
     public void loadPickList(ActionEvent event) {
         try {
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
@@ -1878,55 +2375,53 @@ public class LoginMB implements Serializable {
         int index;
         try {
             if (event != null) {
+                BigDecimal id = this.getIdTipoConocimiento();
                 if (event.isAdd()) {
-                    Collections.sort(this.getListaSource(), BaseLegal.Comparators.ID);
-                    for (BaseLegal ele : (List<BaseLegal>) event.getItems()) {
-                        index = Collections.binarySearch(this.getListaSource(), ele, BaseLegal.Comparators.ID);
-                        if (this.getListaTarget() == null) {
-                            this.setListaTarget(new ArrayList<BaseLegal>());
+                    Collections.sort(this.getListaSourceVinculos(), Consulta.Comparators.ID);
+                    for (Consulta ele : (List<Consulta>) event.getItems()) {
+                        index = Collections.binarySearch(this.getListaSourceVinculos(), ele, Consulta.Comparators.ID);
+                        if (this.getListaTargetVinculos() == null) {
+                            this.setListaTargetVinculos(new ArrayList<Consulta>());
                         }
-                        this.getListaTarget().add(this.getListaSource().get(index));
-//                        this.getListaTipoVinculo().add(BigDecimal.ZERO.toString());
-                        this.getListaSource().remove(index);
+                        this.getListaTargetVinculos().add(this.getListaSourceVinculos().get(index));
+                        this.getListaSourceVinculos().remove(index);
                     }
                 }
                 if (event.isRemove()) {
-                    Collections.sort(this.getListaTarget(), BaseLegal.Comparators.ID);
-                    for (BaseLegal ele : (List<BaseLegal>) event.getItems()) {
-                        index = Collections.binarySearch(this.getListaTarget(), ele, BaseLegal.Comparators.ID);
-                        if (this.getListaSource() == null) {
-                            this.setListaSource(new ArrayList<BaseLegal>());
+                    Collections.sort(this.getListaTargetVinculos(), Consulta.Comparators.ID);
+                    for (Consulta ele : (List<Consulta>) event.getItems()) {
+                        index = Collections.binarySearch(this.getListaTargetVinculos(), ele, Consulta.Comparators.ID);
+                        if (this.getListaSourceVinculos() == null) {
+                            this.setListaSourceVinculos(new ArrayList<Consulta>());
                         }
-                        this.getListaSource().add(this.getListaTarget().get(index));
-                        this.getListaTarget().remove(index);
-//                        this.getListaTipoVinculo().remove(index);
+                        this.getListaSourceVinculos().add(this.getListaTargetVinculos().get(index));
+                        this.getListaTargetVinculos().remove(index);
                     }
+                }
+                if (id.equals(Constante.BASELEGAL)) {
+                    this.setListaSourceVinculosBL(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosBL(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.PREGUNTAS)) {
+                    this.setListaSourceVinculosPR(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosPR(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.WIKI)) {
+                    this.setListaSourceVinculosWK(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosWK(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.CONTENIDO)) {
+                    this.setListaSourceVinculosCT(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosCT(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.BUENAPRACTICA)) {
+                    this.setListaSourceVinculosBP(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosBP(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                    this.setListaSourceVinculosOM(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosOM(this.getListaTargetVinculos());
                 }
             }
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
-    }
-    
-    public String redirect() {
-        String page = null;
-        try {
-            page = (String) JSFUtils.getRequestParameter("page");
-            JSFUtils.getSession().removeAttribute("administracionMB");
-            JSFUtils.getSession().removeAttribute("baseLegalMB");
-            JSFUtils.getSession().removeAttribute("categoriaMB");
-            JSFUtils.getSession().removeAttribute("consultaMB");
-            JSFUtils.getSession().removeAttribute("consultaMB");
-            JSFUtils.getSession().removeAttribute("listaSessionMB");
-            JSFUtils.getSession().removeAttribute("wikiMB");
-            JSFUtils.getSession().removeAttribute("buenaPracticaMB");
-            JSFUtils.getSession().removeAttribute("oportunidadMB");
-        } catch (Exception e) {
-            e.getMessage();
-            e.printStackTrace();
-        }
-        return page.concat("?faces-redirect=true");
     }
 
     public void saveContenidoEdit(ActionEvent event) throws Exception {
@@ -1943,6 +2438,49 @@ public class LoginMB implements Serializable {
             this.getSelectedContenido().setDfechamodificacion(new Date());
             this.getSelectedContenido().setVusuariomodificacion(user_savecontenido.getVlogin());
             service.saveOrUpdate(this.getSelectedContenido());
+
+            listaTargetVinculos = new ArrayList<Consulta>();
+
+            if (this.getListaTargetVinculosBL() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            }
+            if (this.getListaTargetVinculosBP() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            }
+            if (this.getListaTargetVinculosCT() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            }
+            if (this.getListaTargetVinculosOM() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            }
+            if (this.getListaTargetVinculosPR() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            }
+            if (this.getListaTargetVinculosWK() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            }
+
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+                service.delete(this.getSelectedContenido().getNconocimientoid());
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    Vinculo vinculo = new Vinculo();
+                    vinculo.setNvinculoid(vinculoService.getNextPK());
+                    vinculo.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+                    vinculo.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculo.setDfechacreacion(new Date());
+                    vinculo.setVusuariocreacion(user.getVlogin());
+                    vinculoService.saveOrUpdate(vinculo);
+
+                }
+            }
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -2086,5 +2624,269 @@ public class LoginMB implements Serializable {
             e.getMessage();
             e.printStackTrace();
         }
+    }
+
+    public void toAddLink(ActionEvent event) {
+        try {
+            this.setIdTipoConocimiento(null);
+            this.setListaSourceVinculos(new ArrayList());
+            this.setListaTargetVinculos(new ArrayList());
+            this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void onListTipoConocimientoChange(AjaxBehaviorEvent event) {
+        try {
+            if (event != null) {
+                final BigDecimal id = (BigDecimal) ((SelectOneMenu) event.getSource()).getValue();
+                this.setIdTipoConocimiento(id);
+                if (id != null) {
+                    HashMap filters = new HashMap();
+                    filters.put("ntipoconocimientoid", id);
+                    filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+                    PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+                    if (this.getSelectedPregunta() != null) {
+                        if (id.equals(Constante.BASELEGAL)) {
+                            this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosBL());
+                        } else if (id.equals(Constante.PREGUNTAS)) {
+                            this.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosPR());
+                        } else if (id.equals(Constante.WIKI)) {
+                            this.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosWK());
+                        } else if (id.equals(Constante.CONTENIDO)) {
+                            this.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosCT());
+                        } else if (id.equals(Constante.BUENAPRACTICA)) {
+                            this.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosBP());
+                        } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                            this.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosOM());
+                        }
+                        List<String> ids = new ArrayList<String>();
+                        for (Consulta c : this.getListaTargetVinculos()) {
+                            ids.add(c.getIdconocimiento().toString());
+                        }
+                        String filter = StringUtils.join(ids, ',');
+//                        if (id.equals(Constante.PREGUNTAS)) {
+//                            filter = filter.concat(",").concat(this.getSelectedPregunta().getNpreguntaid().toString());
+//                        }
+                        filters.put("nconocimientovinc", filter);
+                    } else {
+                        this.setListaTargetVinculos(new ArrayList<Consulta>());
+                    }
+                    if (id.equals(Constante.BASELEGAL)) {
+                        this.setListaSourceVinculosBL(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosBL());
+                    } else if (id.equals(Constante.PREGUNTAS)) {
+                        this.setListaSourceVinculosPR(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosPR());
+                    } else if (id.equals(Constante.WIKI)) {
+                        this.setListaSourceVinculosWK(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosWK());
+                    } else if (id.equals(Constante.CONTENIDO)) {
+                        this.setListaSourceVinculosCT(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosCT());
+                    } else if (id.equals(Constante.BUENAPRACTICA)) {
+                        this.setListaSourceVinculosBP(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosBP());
+                    } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                        this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosOM());
+                    }
+                    this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void onTransferPreguntas(TransferEvent event) {
+        int index;
+        try {
+            if (event != null) {
+                BigDecimal id = this.getIdTipoConocimiento();
+                if (event.isAdd()) {
+                    Collections.sort(this.getListaSourceVinculos(), Consulta.Comparators.ID);
+                    for (Consulta ele : (List<Consulta>) event.getItems()) {
+                        index = Collections.binarySearch(this.getListaSourceVinculos(), ele, Consulta.Comparators.ID);
+                        if (this.getListaTargetVinculos() == null) {
+                            this.setListaTargetVinculos(new ArrayList<Consulta>());
+                        }
+                        this.getListaTargetVinculos().add(this.getListaSourceVinculos().get(index));
+                        this.getListaSourceVinculos().remove(index);
+                    }
+                }
+                if (event.isRemove()) {
+                    Collections.sort(this.getListaTargetVinculos(), Consulta.Comparators.ID);
+                    for (Consulta ele : (List<Consulta>) event.getItems()) {
+                        index = Collections.binarySearch(this.getListaTargetVinculos(), ele, Consulta.Comparators.ID);
+                        if (this.getListaSourceVinculos() == null) {
+                            this.setListaSourceVinculos(new ArrayList<Consulta>());
+                        }
+                        this.getListaSourceVinculos().add(this.getListaTargetVinculos().get(index));
+                        this.getListaTargetVinculos().remove(index);
+                    }
+                }
+                if (id.equals(Constante.BASELEGAL)) {
+                    this.setListaSourceVinculosBL(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosBL(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.PREGUNTAS)) {
+                    this.setListaSourceVinculosPR(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosPR(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.WIKI)) {
+                    this.setListaSourceVinculosWK(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosWK(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.CONTENIDO)) {
+                    this.setListaSourceVinculosCT(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosCT(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.BUENAPRACTICA)) {
+                    this.setListaSourceVinculosBP(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosBP(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                    this.setListaSourceVinculosOM(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosOM(this.getListaTargetVinculos());
+                }
+
+                this.listaTargetVinculosConocimiento = new ArrayList<Consulta>();
+
+                if (this.getListaTargetVinculosBL() == null) {
+                } else {
+                    this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBL());
+                }
+                if (this.getListaTargetVinculosBP() == null) {
+                } else {
+                    this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBP());
+                }
+                if (this.getListaTargetVinculosCT() == null) {
+                } else {
+                    this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosCT());
+                }
+                if (this.getListaTargetVinculosOM() == null) {
+                } else {
+                    this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosOM());
+                }
+//                if (this.getListaTargetVinculosPR() == null) {
+//                } else {
+//                    this.getListaTargetVinculosPR().addAll(this.getListaTargetVinculosPR());
+//                }
+                if (this.getListaTargetVinculosWK() == null) {
+                } else {
+                    this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosWK());
+                }
+
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void onListTipoConocimientoChangeCT(AjaxBehaviorEvent event) {
+        try {
+            if (event != null) {
+                final BigDecimal id = (BigDecimal) ((SelectOneMenu) event.getSource()).getValue();
+                this.setIdTipoConocimiento(id);
+                if (id != null) {
+                    HashMap filters = new HashMap();
+                    filters.put("ntipoconocimientoid", id);
+                    filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid());
+                    ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
+                    if (this.getSelectedContenido() != null) {
+                        if (id.equals(Constante.BASELEGAL)) {
+                            this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosBL());
+                        } else if (id.equals(Constante.PREGUNTAS)) {
+                            this.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosPR());
+                        } else if (id.equals(Constante.WIKI)) {
+                            this.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosWK());
+                        } else if (id.equals(Constante.CONTENIDO)) {
+                            this.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosCT());
+                        } else if (id.equals(Constante.BUENAPRACTICA)) {
+                            this.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosBP());
+                        } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                            this.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosOM());
+                        }
+                        List<String> ids = new ArrayList<String>();
+                        for (Consulta c : this.getListaTargetVinculos()) {
+                            ids.add(c.getIdconocimiento().toString());
+                        }
+                        String filter = StringUtils.join(ids, ',');
+                        filters.put("nconocimientovinc", filter);
+                    } else {
+                        this.setListaTargetVinculos(new ArrayList<Consulta>());
+                    }
+                    if (id.equals(Constante.BASELEGAL)) {
+                        this.setListaSourceVinculosBL(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosBL());
+                    } else if (id.equals(Constante.PREGUNTAS)) {
+                        this.setListaSourceVinculosPR(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosPR());
+                    } else if (id.equals(Constante.WIKI)) {
+                        this.setListaSourceVinculosWK(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosWK());
+                    } else if (id.equals(Constante.CONTENIDO)) {
+                        this.setListaSourceVinculosCT(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosCT());
+                    } else if (id.equals(Constante.BUENAPRACTICA)) {
+                        this.setListaSourceVinculosBP(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosBP());
+                    } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                        this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosOM());
+                    }
+                    this.setPickListContenido(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public StreamedContent getPdf() throws IOException, Exception {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        } else {
+            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+            String fileName = JSFUtils.getRequestParameter("fileName");
+            FileInputStream fis = new FileInputStream(new File(fileName));
+            return new DefaultStreamedContent(fis, "application/pdf");
+        }
+    }
+
+    public String redirect() {
+        String page = null;
+        try {
+            page = (String) JSFUtils.getRequestParameter("page");
+            JSFUtils.getSession().removeAttribute("administracionMB");
+            JSFUtils.getSession().removeAttribute("baseLegalMB");
+            JSFUtils.getSession().removeAttribute("categoriaMB");
+            JSFUtils.getSession().removeAttribute("consultaMB");
+            JSFUtils.getSession().removeAttribute("consultaMB");
+            JSFUtils.getSession().removeAttribute("listaSessionMB");
+            JSFUtils.getSession().removeAttribute("wikiMB");
+            JSFUtils.getSession().removeAttribute("buenaPracticaMB");
+            JSFUtils.getSession().removeAttribute("oportunidadMB");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return page.concat("?faces-redirect=true");
     }
 }

@@ -54,13 +54,12 @@ public class AlertaMB implements Serializable {
     private BigDecimal useraplica;
     private Date fechini;
     private Date fechfin;
-    private String condicion1;
-    private String condicion2;
+    private BigDecimal condicion1;
+    private BigDecimal condicion2;
     private BigDecimal tipo1;
     private BigDecimal valor1;
     private BigDecimal tipo2;
     private BigDecimal valor2;
-
     private List<SelectItem> listaParametro;
 
     /**
@@ -220,30 +219,32 @@ public class AlertaMB implements Serializable {
     /**
      * @return the condicion1
      */
-    public String getCondicion1() {
+    public BigDecimal getCondicion1() {
         return condicion1;
     }
 
     /**
      * @param condicion1 the condicion1 to set
      */
-    public void setCondicion1(String condicion1) {
+    public void setCondicion1(BigDecimal condicion1) {
         this.condicion1 = condicion1;
     }
 
     /**
      * @return the condicion2
      */
-    public String getCondicion2() {
+    public BigDecimal getCondicion2() {
         return condicion2;
     }
 
     /**
      * @param condicion2 the condicion2 to set
      */
-    public void setCondicion2(String condicion2) {
+    public void setCondicion2(BigDecimal condicion2) {
         this.condicion2 = condicion2;
     }
+
+    
 
     /**
      * @return the tipo1
@@ -337,7 +338,8 @@ public class AlertaMB implements Serializable {
         this.setNombre(StringUtils.EMPTY);
         this.setActivo(BigDecimal.ONE);
         this.setSelectedParametro(BigDecimal.ZERO);
-        this.setCondicion1(StringUtils.EMPTY);
+        this.setCondicion1(BigDecimal.ONE);
+        this.setCondicion2(BigDecimal.ONE);
 
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {

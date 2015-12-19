@@ -96,7 +96,7 @@
                 </ul>
             </h:form>
 
-            <p:dialog id="asgDlg" header="Bandeja de Asignados" widgetVar="asgDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
+            <p:dialog id="asgDlg" header="Bandeja de Asignados" widgetVar="asgDialog"   modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
                 <h:form id="asgDialogForm">
                     <h:panelGrid id="pgAsg" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAsignadas}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
@@ -127,7 +127,7 @@
                             </p:column>
                             <p:column style="text-align: center; width: 90px;">
                                 <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                <p:commandLink ajax="false" action="#{loginMB.toEditPendiente}" styleClass="ui-link" title="Ver Pendiente">
+                                <p:commandLink ajax="false" action="#{loginMB.toEditPendiente(1)}" styleClass="ui-link" title="Ver Pendiente">
                                     <h:outputText class="fa fa-search Fs16" />
                                     <f:param name="index" value="#{rowIndex}" />
                                 </p:commandLink>
@@ -168,7 +168,7 @@
                             </p:column>
                             <p:column style="text-align: center; width: 90px;">
                                 <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                <p:commandLink ajax="false" action="#{loginMB.toEditPendiente}" styleClass="ui-link" title="Ver Pendiente">
+                                <p:commandLink ajax="false" action="#{loginMB.toEditPendiente(2)}" styleClass="ui-link" title="Ver Pendiente">
                                     <h:outputText class="fa fa-search Fs16" />
                                     <f:param name="index" value="#{rowIndex}" />
                                 </p:commandLink>
@@ -210,6 +210,47 @@
                     </h:panelGrid>
                 </h:form>
             </p:dialog>
+            
+            <p:dialog id="alertDlg" header="Bandeja de alerta" widgetVar="alertDialog" visible="#{loginMB.alertaFlag}"  modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
+                <h:form id="alertDialogForm">
+                    <h:panelGrid id="pgAlert" columns="1" >
+                        <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAlerta}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex"
+                                     paginatorPosition="top" selectionMode="single" selection="#{loginMB.selectedNotification}" rowKey="#{row.idconocimiento}"
+                                     emptyMessage="Ningún registro encontrado." style="width: 1200px;">
+                            <p:column style="width: 180px;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
+                                <h:outputText value="#{row.categoria}" />
+                            </p:column>
+                            <p:column style="width: 180px;" sortBy="#{row.tipoConocimiento}" filterBy="#{row.tipoConocimiento}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="TIPO CONOCIMIENTO"/></f:facet>
+                                <h:outputText value="#{row.tipoConocimiento}" styleClass="Fleft"/>
+                            </p:column>
+                            <p:column sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                                <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                <h:outputText value="#{row.codigo} #{row.nombre}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
+                                <h:outputText value="#{row.nombre}" styleClass="Fleft" rendered="#{empty row.codigo}"/>
+                            </p:column>
+                            <p:column style="width: 100px; text-align: center;" sortBy="#{row.estado}" filterBy="#{row.estado}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                <f:facet name="header"><h:outputText value="ESTADO"/></f:facet>
+                                <h:outputText value="#{row.estado}" />
+                            </p:column>
+                            <p:column style="text-align: center; width: 170px;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
+                                <f:facet name="header"><h:outputText value="FECHA PUBLICACION"/></f:facet>
+                                <h:outputText value="#{row.fechaPublicacion}" >
+                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                </h:outputText>
+                            </p:column>
+                            <p:column style="text-align: center; width: 90px;">
+                                <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
+                                <p:commandLink ajax="false" action="#{loginMB.toEditPendiente(4)}" styleClass="ui-link" title="Ver Pendiente">
+                                    <h:outputText class="fa fa-search Fs16" />
+                                    <f:param name="index" value="#{rowIndex}" />
+                                </p:commandLink>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
 
             <p:dialog id="iniDlg" header="Iniciar Sesion" widgetVar="iniDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
                 <h:form id="iniDialogForm">
@@ -221,7 +262,7 @@
                         <p:inputText value="#{loginMB.login}" size="25" maxlength="25" styleClass="Fs14"/>
                         <p:password value="#{loginMB.pass}" size="25" styleClass="Fs14"/>
                         <p:spacer/>
-                        <p:commandButton value="Iniciar Sesion" action="#{loginMB.ingresar}" update=":iniDialogForm:growl" oncomplete="manejarLogin(xhr, status, args)"/>
+                        <p:commandButton value="Iniciar Sesion" action="#{loginMB.ingresar}" update=":iniDialogForm:growl" oncomplete="manejarLogin(xhr, status, args)" />
                         <p:spacer/>
                         <p:row>
                             <p:column>

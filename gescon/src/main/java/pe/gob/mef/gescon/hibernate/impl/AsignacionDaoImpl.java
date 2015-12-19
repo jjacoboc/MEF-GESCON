@@ -265,6 +265,62 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
     }
 
     @Override
+    public List<HashMap> getNotificationsAlertPanelByMtuser(Mtuser mtuser) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        sql.append("SELECT a.nbaselegalid AS ID, a.vnumero AS NUMERO, a.vnombre AS NOMBRE, a.vsumilla AS SUMILLA, ");
+        sql.append("        a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, t.dfechaasignacion AS FECHA, ");
+        sql.append("        1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("FROM TBASELEGAL a ");
+        sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
+        sql.append("INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
+        sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.nbaselegalid AND t.ntipoconocimientoid = 1 ");
+        sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
+        sql.append("AND (ROUND(TO_DATE (TO_CHAR (SYSTIMESTAMP, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')  ");
+        sql.append("- TO_DATE (TO_CHAR (dfechaasignacion, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')))  ");
+        sql.append(" > (select nvalor2 from mtalerta where nalertaid=1)  ");
+        sql.append("AND (t.dfechaasignacion is not null  and t.dfechaatencion is null) ");
+        sql.append("UNION ");
+        sql.append("SELECT a.npreguntaid AS ID, '' AS NUMERO, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, ");
+        sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, t.dfechaasignacion AS FECHA, ");
+        sql.append("       2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
+        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("FROM TPREGUNTA a ");
+        sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
+        sql.append("INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
+        sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.npreguntaid AND t.ntipoconocimientoid = 2 ");
+        sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
+        sql.append("AND (ROUND(TO_DATE (TO_CHAR (SYSTIMESTAMP, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')  ");
+        sql.append("- TO_DATE (TO_CHAR (dfechaasignacion, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')))  ");
+        sql.append(" > (select nvalor2 from mtalerta where nalertaid=1)  ");
+        sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
+        sql.append("UNION ");
+        sql.append("SELECT a.nconocimientoid AS ID, '' AS NUMERO, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
+        sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, t.dfechaasignacion AS FECHA, ");
+        sql.append("       a.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, d.vnombre AS TIPOCONOCIMIENTO, ");
+        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("FROM TCONOCIMIENTO a ");
+        sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
+        sql.append("INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
+        sql.append("INNER JOIN MTTIPO_CONOCIMIENTO d ON a.ntpoconocimientoid = d.ntpoconocimientoid ");
+        sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.nconocimientoid AND t.ntipoconocimientoid = a.ntpoconocimientoid ");
+        sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
+        sql.append("AND (ROUND(TO_DATE (TO_CHAR (SYSTIMESTAMP, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')  ");
+        sql.append("- TO_DATE (TO_CHAR (dfechaasignacion, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')))  ");
+        sql.append(" > (select nvalor2 from mtalerta where nalertaid=1)  ");
+        sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
+
+        return (List<HashMap>) getHibernateTemplate().execute(
+                new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws HibernateException {
+                        Query query = session.createSQLQuery(sql.toString());
+                        query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+                        return query.list();
+                    }
+                });
+    }
+
+    @Override
     public BigDecimal getModeratorByMtcategoria(BigDecimal ncategoriaid) throws Exception {
         final StringBuilder sql = new StringBuilder();
         sql.append("SELECT NUSUARIOID FROM TCATEGORIA_USER  ");
@@ -329,9 +385,9 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
                     }
                 });
     }
-    
+
     @Override
-    public BigDecimal getUserCreacionByContenido(BigDecimal idtipo,BigDecimal nconocimientoid) throws Exception {
+    public BigDecimal getUserCreacionByContenido(BigDecimal idtipo, BigDecimal nconocimientoid) throws Exception {
         final StringBuilder sql = new StringBuilder();
         sql.append("SELECT NUSUARIOID FROM MTUSER WHERE VLOGIN= (SELECT VUSUARIOCREACION FROM TCONOCIMIENTO  ");
         sql.append("WHERE NCONOCIMIENTOID = ").append(nconocimientoid).append("  AND ");

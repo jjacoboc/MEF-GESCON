@@ -15,16 +15,16 @@ import pe.gob.mef.gescon.common.Constante;
  *
  * @author JJacobo
  */
-public class Rango implements Serializable {
+public class Entidad implements Serializable {
 
-    private BigDecimal nrangoid;
+    private BigDecimal nentidadid;
+    private BigDecimal ncodigoentidad;
     private String vnombre;
     private String vdescripcion;
     private String vusuariocreacion;
     private String vusuariomodificacion;
     private Date dfechacreacion;
     private Date dfechamodificacion;
-    private BigDecimal ntiponormaid;
     private BigDecimal nactivo;
     private String vfechacreacion;
     private String vfechamodificacion;
@@ -34,17 +34,31 @@ public class Rango implements Serializable {
     }
 
     /**
-     * @return the nrangoid
+     * @return the nentidadid
      */
-    public BigDecimal getNrangoid() {
-        return nrangoid;
+    public BigDecimal getNentidadid() {
+        return nentidadid;
     }
 
     /**
-     * @param nrangoid the nrangoid to set
+     * @param nentidadid the nentidadid to set
      */
-    public void setNrangoid(BigDecimal nrangoid) {
-        this.nrangoid = nrangoid;
+    public void setNentidadid(BigDecimal nentidadid) {
+        this.nentidadid = nentidadid;
+    }
+
+    /**
+     * @return the ncodigoentidad
+     */
+    public BigDecimal getNcodigoentidad() {
+        return ncodigoentidad;
+    }
+
+    /**
+     * @param ncodigoentidad the ncodigoentidad to set
+     */
+    public void setNcodigoentidad(BigDecimal ncodigoentidad) {
+        this.ncodigoentidad = ncodigoentidad;
     }
 
     /**
@@ -129,20 +143,6 @@ public class Rango implements Serializable {
      */
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
-    }
-
-    /**
-     * @return the ntiponormaid
-     */
-    public BigDecimal getNtiponormaid() {
-        return ntiponormaid;
-    }
-
-    /**
-     * @param ntiponormaid the ntiponormaid to set
-     */
-    public void setNtiponormaid(BigDecimal ntiponormaid) {
-        this.ntiponormaid = ntiponormaid;
     }
 
     /**

@@ -706,7 +706,7 @@ public class ContenidoMB implements Serializable {
             e.getMessage();
             e.printStackTrace();
         }
-        return "/pages/Contenido/registro?faces-redirect=true";
+        return "/pages/contenido/registro?faces-redirect=true";
     }
 
     public void Save(ActionEvent event) {
@@ -1034,7 +1034,7 @@ public class ContenidoMB implements Serializable {
             e.getMessage();
             e.printStackTrace();
         }
-        return "/pages/Contenido/ver?faces-redirect=true";
+        return "/pages/contenido/ver?faces-redirect=true";
     }
 
     public String toEdit() {
@@ -1066,7 +1066,7 @@ public class ContenidoMB implements Serializable {
             e.getMessage();
             e.printStackTrace();
         }
-        return "/pages/Contenido/editar?faces-redirect=true";
+        return "/pages/contenido/editar?faces-redirect=true";
     }
 
 }

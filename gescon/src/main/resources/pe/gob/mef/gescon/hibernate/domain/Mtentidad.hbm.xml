@@ -3,16 +3,19 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Mtrango" table="MTRANGO" schema="GESCON3" optimistic-lock="version">
-        <id name="nrangoid" type="big_decimal">
-            <column name="NRANGOID" precision="22" scale="0" />
+    <class name="pe.gob.mef.gescon.hibernate.domain.Mtentidad" table="MTENTIDAD" schema="GESCON3" optimistic-lock="version">
+        <id name="nentidadid" type="big_decimal">
+            <column name="NENTIDADID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
+        <property name="ncodigoentidad" type="big_decimal">
+            <column name="NCODIGOENTIDAD" precision="22" scale="0"/>
+        </property>
         <property name="vnombre" type="string">
-            <column name="VNOMBRE" length="100" />
+            <column name="VNOMBRE" length="200" />
         </property>
         <property name="vdescripcion" type="string">
-            <column name="VDESCRIPCION" length="400" />
+            <column name="VDESCRIPCION" length="200" />
         </property>
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="25" />
@@ -26,17 +29,8 @@
         <property name="dfechamodificacion" type="timestamp">
             <column name="DFECHAMODIFICACION" />
         </property>
-        <property name="ntiponormaid" type="big_decimal">
-            <column name="NTIPONORMAID" precision="22" scale="0"/>
-        </property>
         <property name="nactivo" type="big_decimal">
             <column name="NACTIVO" precision="22" scale="0"/>
         </property>
-        <set name="tbaselegals" table="TBASELEGAL" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="NRANGOID" precision="22" scale="0" />
-            </key>
-            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.Tbaselegal" />
-        </set>
     </class>
 </hibernate-mapping>

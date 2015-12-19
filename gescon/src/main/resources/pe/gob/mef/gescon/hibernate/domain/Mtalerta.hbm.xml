@@ -29,11 +29,11 @@
         <property name="dfechfin" type="date">
             <column name="DFECHFIN" length="7" />
         </property>
-        <property name="vcondicion1" type="string">
-            <column name="VCONDICION1" length="20" />
+        <property name="ncondicion1" type="big_decimal">
+            <column name="NCONDICION1" precision="22" scale="0" />
         </property>
-        <property name="vcondicion2" type="string">
-            <column name="VCONDICION2" length="20" />
+        <property name="ncondicion2" type="big_decimal">
+            <column name="NCONDICION2" precision="22" scale="0" />
         </property>
         <property name="nvalor1" type="big_decimal">
             <column name="NVALOR1" precision="22" scale="0" />

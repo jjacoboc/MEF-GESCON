@@ -107,8 +107,8 @@
                                             <h:graphicImage library="images" name="BAJO.png" style="border: 0px; " />
                                             <h:outputText  value="Cuando el valor es " />
                                             <p:selectOneMenu value="#{alertaMB.condicion1}">
-                                                <f:selectItem itemLabel=">" itemValue=">" />
-                                                <f:selectItem itemLabel=">=" itemValue=">=" />
+                                                <f:selectItem itemLabel="menor" itemValue="1" />
+                                                <f:selectItem itemLabel="menor/igual" itemValue="2" />
                                             </p:selectOneMenu>
                                             <h:outputText  value="A: " />
                                             <p:inputText size="5" value="#{alertaMB.valor1}"  maxlength="5" /> 
@@ -119,10 +119,10 @@
                                             </p:selectOneMenu>
 
                                             <h:graphicImage library="images" name="MEDIO.png" style="border: 0px; " />
-                                            <h:outputText  value="Cuando es menor que A y " />
+                                            <h:outputText  value="Cuando es mayor que A y " />
                                             <p:selectOneMenu value="#{alertaMB.condicion2}">
-                                                <f:selectItem itemLabel=">" itemValue=">" />
-                                                <f:selectItem itemLabel=">=" itemValue=">=" />
+                                                <f:selectItem itemLabel="menor" itemValue="1" />
+                                                <f:selectItem itemLabel="menor/igual" itemValue="2" />
                                             </p:selectOneMenu>
                                             <h:outputText  value="B: " />
                                             <p:inputText size="5" value="#{alertaMB.valor2}"  maxlength="5" /> 
@@ -133,7 +133,7 @@
                                             </p:selectOneMenu>
 
                                             <h:graphicImage library="images" name="ALTO.png" style="border: 0px; " />
-                                            <h:outputText  value="Cuando es menor que B " />
+                                            <h:outputText  value="Cuando es mayor que B " />
                                         </h:panelGrid>
                                     </p:fieldset>
                                 </h:panelGrid>
@@ -194,8 +194,8 @@
                                             <h:graphicImage library="images" name="BAJO.png" style="border: 0px; " />
                                             <h:outputText  value="Cuando el valor es " />
                                             <p:selectOneMenu value="#{alertaMB.selectedAlerta.ncondicion1}">
-                                                <f:selectItem itemLabel=">" itemValue=">" />
-                                                <f:selectItem itemLabel=">=" itemValue=">=" />
+                                                <f:selectItem itemLabel="menor" itemValue="1" />
+                                                <f:selectItem itemLabel="menor/igual" itemValue="2" />
                                             </p:selectOneMenu>
                                             <h:outputText  value="A: " />
                                             <p:inputText size="5" value="#{alertaMB.selectedAlerta.nvalor1}"  maxlength="5" /> 
@@ -206,10 +206,10 @@
                                             </p:selectOneMenu>
 
                                             <h:graphicImage library="images" name="MEDIO.png" style="border: 0px; " />
-                                            <h:outputText  value="Cuando es menor que A y " />
+                                            <h:outputText  value="Cuando es mayor que A y " />
                                             <p:selectOneMenu value="#{alertaMB.selectedAlerta.ncondicion2}">
-                                                <f:selectItem itemLabel=">" itemValue=">" />
-                                                <f:selectItem itemLabel=">=" itemValue=">=" />
+                                                <f:selectItem itemLabel="menor" itemValue="1" />
+                                                <f:selectItem itemLabel="menor/igual" itemValue="2" />
                                             </p:selectOneMenu>
                                             <h:outputText  value="B: " />
                                             <p:inputText size="5" value="#{alertaMB.selectedAlerta.nvalor2}"  maxlength="5" /> 
@@ -220,7 +220,7 @@
                                             </p:selectOneMenu>
 
                                             <h:graphicImage library="images" name="ALTO.png" style="border: 0px; " />
-                                            <h:outputText  value="Cuando es menor que B " />
+                                            <h:outputText  value="Cuando es mayor que B " />
                                         </h:panelGrid>
                                     </p:fieldset>
                                 </h:panelGrid>

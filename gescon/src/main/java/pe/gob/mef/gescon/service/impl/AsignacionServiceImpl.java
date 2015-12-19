@@ -164,6 +164,38 @@ public class AsignacionServiceImpl implements AsignacionService {
         }
         return lista;
     }
+    
+    @Override
+    public List<Consulta> getNotificationsAlertPanelByMtuser(User user) {
+        List<Consulta> lista = new ArrayList<Consulta>();
+        try {
+            Mtuser mtuser = new Mtuser();
+            BeanUtils.copyProperties(mtuser, user);
+            AsignacionDao asignacionDao = (AsignacionDao) ServiceFinder.findBean("AsignacionDao");
+            List<HashMap> consulta = asignacionDao.getNotificationsAlertPanelByMtuser(mtuser);
+            if (!CollectionUtils.isEmpty(consulta)) {
+                for (HashMap map : consulta) {
+                    Consulta c = new Consulta();
+                    c.setIdconocimiento((BigDecimal) map.get("ID"));
+                    c.setCodigo((String) map.get("NUMERO"));
+                    c.setNombre((String) map.get("NOMBRE"));
+                    c.setSumilla((String) map.get("SUMILLA"));
+                    c.setFechaPublicacion((Date) map.get("FECHA"));
+                    c.setIdCategoria((BigDecimal) map.get("IDCATEGORIA"));
+                    c.setCategoria((String) map.get("CATEGORIA"));
+                    c.setIdTipoConocimiento((BigDecimal) map.get("IDTIPOCONOCIMIENTO"));
+                    c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
+                    c.setIdEstado((BigDecimal) map.get("IDESTADO"));
+                    c.setEstado((String) map.get("ESTADO"));
+                    lista.add(c);
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return lista;
+    }
 
     @Override
     public BigDecimal getModeratorByCategoria(BigDecimal ncategoriaid) throws Exception {
