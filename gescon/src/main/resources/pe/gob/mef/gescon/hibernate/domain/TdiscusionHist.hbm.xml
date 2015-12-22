@@ -1,26 +1,21 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
+<!-- Generated 18/12/2015 06:17:48 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="pe.gob.mef.gescon.hibernate.domain.TdiscusionHist" table="TDISCUSION_HIST" schema="GESCON3" optimistic-lock="version">
-        <composite-id name="id" class="pe.gob.mef.gescon.hibernate.domain.TdiscusionHistId">
-            <key-property name="nconocimientoid" type="big_decimal">
-                <column name="NCONOCIMIENTOID" precision="22" scale="0" />
-            </key-property>
-            <key-property name="nhistorialid" type="big_decimal">
-                <column name="NHISTORIALID" precision="22" scale="0" />
-            </key-property>
-            <key-property name="ndiscusionhid" type="big_decimal">
-                <column name="NDISCUSIONHID" precision="22" scale="0" />
-            </key-property>
-        </composite-id>
-        <many-to-one name="thistorial" class="pe.gob.mef.gescon.hibernate.domain.Thistorial" update="false" insert="false" fetch="select">
+        <id name="ndiscusionhid" type="big_decimal">
+            <column name="NDISCUSIONHID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="nconocimientoid" type="big_decimal">
             <column name="NCONOCIMIENTOID" precision="22" scale="0" not-null="true" />
-            <column name="NHISTORIALID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
-        <property name="vdiscusion" type="string">
-            <column name="VDISCUSION" length="500" />
+        </property>
+        <property name="vdescripcion" type="string">
+            <column name="VDESCRIPCION" length="500" />
+        </property>
+        <property name="nnumversion" type="big_decimal">
+            <column name="NNUMVERSION" precision="22" scale="0" />
         </property>
         <property name="vusuariomodificacion" type="string">
             <column name="VUSUARIOMODIFICACION" length="25" />
@@ -34,5 +29,12 @@
         <property name="dfechamodificacion" type="timestamp">
             <column name="DFECHAMODIFICACION" />
         </property>
+        
+        <set name="tdiscusionSeccionHists" table="TDISCUSION_SECCION_HIST" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="NDISCUSIONHID" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="pe.gob.mef.gescon.hibernate.domain.TdiscusionSeccionHist" />
+        </set>
     </class>
 </hibernate-mapping>

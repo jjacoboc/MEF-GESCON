@@ -2886,7 +2886,6 @@ public class LoginMB implements Serializable {
             JSFUtils.getSession().removeAttribute("baseLegalMB");
             JSFUtils.getSession().removeAttribute("categoriaMB");
             JSFUtils.getSession().removeAttribute("consultaMB");
-            JSFUtils.getSession().removeAttribute("consultaMB");
             JSFUtils.getSession().removeAttribute("listaSessionMB");
             JSFUtils.getSession().removeAttribute("wikiMB");
             JSFUtils.getSession().removeAttribute("buenaPracticaMB");

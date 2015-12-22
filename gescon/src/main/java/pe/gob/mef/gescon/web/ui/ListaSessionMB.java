@@ -42,6 +42,8 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaEstadoBaseLegalVinculo;
     private List<SelectItem> listaSituacion;
     private List<SelectItem> listaTipoConocimiento;
+    private List<SelectItem> listaTipoDiscusion;
+    private List<SelectItem> listaTipoDiscusionActivo;
     private List<SelectItem> filterEstado;
     private List<SelectItem> filterModulos;
     
@@ -229,6 +231,34 @@ public class ListaSessionMB implements Serializable{
 
     public void setListaTipoConocimiento(List<SelectItem> listaTipoConocimiento) {
         this.listaTipoConocimiento = listaTipoConocimiento;
+    }
+
+    public List<SelectItem> getListaTipoDiscusion() throws Exception {
+        if(listaTipoDiscusion == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPODISCUSION);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoDiscusion =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoDiscusion;
+    }
+
+    public void setListaTipoDiscusion(List<SelectItem> listaTipoDiscusion) {
+        this.listaTipoDiscusion = listaTipoDiscusion;
+    }
+
+    public List<SelectItem> getListaTipoDiscusionActivo() throws Exception {
+        if(listaTipoDiscusionActivo == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPODISCUSION);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoDiscusionActivo =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoDiscusionActivo;
+    }
+
+    public void setListaTipoDiscusionActivo(List<SelectItem> listaTipoDiscusionActivo) {
+        this.listaTipoDiscusionActivo = listaTipoDiscusionActivo;
     }
 
     /**

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 18/12/2015 06:17:48 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+  <class name="pe.gob.mef.gescon.hibernate.domain.TdiscusionSeccionHist" optimistic-lock="version" schema="GESCON3" table="TDISCUSION_SECCION_HIST">
+    <id name="ndiscusionseccionhid" type="big_decimal">
+      <column name="NDISCUSIONSECCIONHID" precision="22" scale="0"/>
+      <generator class="assigned"/>
+    </id>
+    <property name="ndiscusionhid" type="big_decimal">
+      <column name="NDISCUSIONHID" precision="22" scale="0"/>
+    </property>
+    <property name="vtitulo" type="string">
+      <column length="200" name="VTITULO"/>
+    </property>
+    <property name="ntipodiscusion" type="big_decimal">
+      <column name="NTIPODISCUSION" precision="22" scale="0"/>
+    </property>
+    <property name="vruta" type="string">
+      <column length="100" name="VRUTA"/>
+    </property>
+    <property name="vusuariocreacion" type="string">
+      <column length="25" name="VUSUARIOCREACION"/>
+    </property>
+    <property name="dfechacreacion" type="timestamp">
+      <column name="DFECHACREACION"/>
+    </property>
+    <property name="vusuariomodificacion" type="string">
+      <column length="25" name="VUSUARIOMODIFICACION"/>
+    </property>
+    <property name="dfechamodificacion" type="timestamp">
+      <column name="DFECHAMODIFICACION"/>
+    </property>
+  </class>
+</hibernate-mapping>

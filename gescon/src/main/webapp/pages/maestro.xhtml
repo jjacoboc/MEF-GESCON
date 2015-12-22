@@ -130,7 +130,7 @@
                         <p:dialog id="detailDlg" header="Detalle Maestro" widgetVar="detailDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
                             <h:form id="detailDialogForm">
                                 <h:panelGrid id="pgDetail" columns="1" width="100%">
-                                    <p:commandButton  value="Nuevo" actionListener="#{maestroMB.toSave}" update=":newdDialogForm:pgNewd" oncomplete="PF('newdDialog').show();" icon="ui-icon-plus white" />
+                                    <p:commandButton  value="Nuevo" actionListener="#{maestroMB.toSave}" update=":newdDialogForm:pgNewd" oncomplete="PF('newdDialog').show();" icon="fa fa-plus white" />
                                     <p:dataTable id="tbl" value="#{maestroMB.listaMaestroDetalle}" filteredValue="#{maestroMB.filteredListaMaestroDetalle}" var="row" 
                                                  paginator="true" rows="5" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" paginatorPosition="top" rowHover="true"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">

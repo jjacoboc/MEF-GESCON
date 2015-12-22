@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent">
+                    <f:view>
+                        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                        <p:tabView id="tabview">
+                            <p:tab id="tab1" title="Artículo">
+                                <ui:include src="articulo.xhtml"/>
+                            </p:tab>
+                            <p:tab id="tab2" title="Discusión">
+                                <ui:include src="discusion.xhtml"/>
+                            </p:tab>
+                            <p:tab id="tab3" title="Comentarios">
+                                
+                            </p:tab>
+                            <p:tab id="tab4" title="Historial">
+                                <ui:include src="historial.xhtml"/>
+                            </p:tab>
+                        </p:tabView>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

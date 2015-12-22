@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:form id="fh">
+        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+        <p:panel header="#{wikiMB.selectedWiki.vtitulo}" styleClass="TexAlLeft">
+            <h:panelGrid id="pgHist" columns="1" width="100%">
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.wk_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{wikiMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="15"/>
+                    <h:outputText value="#{msgs.wk_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{wikiMB.selectedWiki.dfechapublicacion}" styleClass="Fs12" style="font-style: italic;">
+                        <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                    </h:outputText>
+                </h:panelGroup>
+                <p:spacer/>
+                <h:panelGroup>
+                    <p:commandButton value="Comparar versiones seleccionadas" actionListener="#{wikiMB.toCompare}" update=":tabview:fh:growl" />
+                    <p:spacer width="5"/>
+                    <h:outputText value="(Sólo se pueden comparar dos versiones a la vez.)" styleClass="Fs12 FontBold black" style="background: yellow;" />
+                </h:panelGroup>
+                <p:spacer/>
+                <p:dataTable id="tblHist" value="#{wikiMB.listaHistorial}" filteredValue="#{wikiMB.filteredListaHistorial}" var="h" rows="10"
+                             paginator="true" paginatorPosition="bottom" selection="#{wikiMB.selectedHistoriales}" rowKey="#{h.id.nhistorialid}">
+                    <p:column selectionMode="multiple" style="width:16px;text-align:center;"/>
+                    <p:column style="text-align: center; width: 15%;" headerText="Versión" sortable="true" sortBy="#{h.nnumversion}" 
+                              filterable="true" filterBy="#{h.nnumversion}" filterMatchMode="contains" filterStyle="width: 90%;">
+                        <h:outputText value="#{h.nnumversion}" />
+                    </p:column>
+                    <p:column style="width: 35%;" headerText="Usuario" sortable="true" sortBy="#{h.vnombreusuario}"
+                              filterable="true" filterBy="#{h.vnombreusuario}" filterMatchMode="contains" filterStyle="width: 90%;">
+                        <h:outputText value="#{h.vnombreusuario}" />
+                    </p:column>
+                    <p:column style="text-align: center; width: 50%;" headerText="Fecha" sortable="true" sortBy="#{h.vfechacreacion}"
+                              filterable="true" filterBy="#{h.vfechacreacion}" filterMatchMode="contains" filterStyle="width: 90%;">
+                        <h:outputText value="#{h.vfechacreacion}" />
+                    </p:column>
+                </p:dataTable>
+            </h:panelGrid>
+            <h:panelGrid columns="1" width="100%">
+                <p:commandButton value="Regresar" ajax="false" action="/pages/consulta.xhtml"/>
+            </h:panelGrid>
+        </p:panel>
+    </h:form>
+</ui:composition>

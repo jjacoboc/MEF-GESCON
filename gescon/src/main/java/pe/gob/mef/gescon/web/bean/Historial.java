@@ -7,7 +7,10 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 import pe.gob.mef.gescon.hibernate.domain.ThistorialId;
 
@@ -42,6 +45,17 @@ public class Historial implements Serializable {
     private String vobservacion;
     private Date dfechamodificacion;
     private BigDecimal ncategoriaid;
+    private String vfechacreacion;
+    private String vfechamodificacion;
+    private String vnombreusuario;
+    private String descripcionHtml;
+    private List<SeccionHist> listaSeccionHist;
+    private List<Consulta> listaVinculosBL;
+    private List<Consulta> listaVinculosPR;
+    private List<Consulta> listaVinculosWK;
+    private List<Consulta> listaVinculosOM;
+    private List<Consulta> listaVinculosBP;
+    private List<Consulta> listaVinculosCT;
     
     public Historial(){
         
@@ -245,5 +259,101 @@ public class Historial implements Serializable {
 
     public void setNcategoriaid(BigDecimal ncategoriaid) {
         this.ncategoriaid = ncategoriaid;
+    }
+
+    public String getVfechacreacion() {
+        if(dfechacreacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechacreacion = sdf.format(dfechacreacion);
+        }
+        return vfechacreacion;
+    }
+
+    public void setVfechacreacion(String vfechacreacion) {
+        this.vfechacreacion = vfechacreacion;
+    }
+
+    public String getVfechamodificacion() {
+        if(dfechamodificacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            vfechamodificacion = sdf.format(dfechamodificacion);
+        }
+        return vfechamodificacion;
+    }
+
+    public void setVfechamodificacion(String vfechamodificacion) {
+        this.vfechamodificacion = vfechamodificacion;
+    }
+
+    public String getVnombreusuario() {
+        return vnombreusuario;
+    }
+
+    public void setVnombreusuario(String vnombreusuario) {
+        this.vnombreusuario = vnombreusuario;
+    }
+
+    public String getDescripcionHtml() {
+        return descripcionHtml;
+    }
+
+    public void setDescripcionHtml(String descripcionHtml) {
+        this.descripcionHtml = descripcionHtml;
+    }
+
+    public List<SeccionHist> getListaSeccionHist() {
+        return listaSeccionHist;
+    }
+
+    public void setListaSeccionHist(List<SeccionHist> listaSeccionHist) {
+        this.listaSeccionHist = listaSeccionHist;
+    }
+
+    public List<Consulta> getListaVinculosBL() {
+        return listaVinculosBL;
+    }
+
+    public void setListaVinculosBL(List<Consulta> listaVinculosBL) {
+        this.listaVinculosBL = listaVinculosBL;
+    }
+
+    public List<Consulta> getListaVinculosPR() {
+        return listaVinculosPR;
+    }
+
+    public void setListaVinculosPR(List<Consulta> listaVinculosPR) {
+        this.listaVinculosPR = listaVinculosPR;
+    }
+
+    public List<Consulta> getListaVinculosWK() {
+        return listaVinculosWK;
+    }
+
+    public void setListaVinculosWK(List<Consulta> listaVinculosWK) {
+        this.listaVinculosWK = listaVinculosWK;
+    }
+
+    public List<Consulta> getListaVinculosOM() {
+        return listaVinculosOM;
+    }
+
+    public void setListaVinculosOM(List<Consulta> listaVinculosOM) {
+        this.listaVinculosOM = listaVinculosOM;
+    }
+
+    public List<Consulta> getListaVinculosBP() {
+        return listaVinculosBP;
+    }
+
+    public void setListaVinculosBP(List<Consulta> listaVinculosBP) {
+        this.listaVinculosBP = listaVinculosBP;
+    }
+
+    public List<Consulta> getListaVinculosCT() {
+        return listaVinculosCT;
+    }
+
+    public void setListaVinculosCT(List<Consulta> listaVinculosCT) {
+        this.listaVinculosCT = listaVinculosCT;
     }
 }

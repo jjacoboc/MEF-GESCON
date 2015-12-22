@@ -284,7 +284,12 @@ public class AdministracionMB implements Serializable{
             consultaMB.setSelectedCategoriaFiltro(child);
             consultaMB.filtrar(new ActionEvent(new CommandButton()));
             JSFUtils.getSession().setAttribute("consultaMB", consultaMB);
-            
+            JSFUtils.getSession().removeAttribute("baseLegalMB");
+            JSFUtils.getSession().removeAttribute("categoriaMB");
+            JSFUtils.getSession().removeAttribute("listaSessionMB");
+            JSFUtils.getSession().removeAttribute("wikiMB");
+            JSFUtils.getSession().removeAttribute("buenaPracticaMB");
+            JSFUtils.getSession().removeAttribute("oportunidadMB");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

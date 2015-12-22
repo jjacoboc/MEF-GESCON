@@ -1,0 +1,141 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <style>
+        .ui-fieldset .ui-fieldset-legend {
+            padding-top: 4px;
+            padding-bottom:  4px;
+            padding-left:  5px;
+            padding-right:  5px;
+            font-size: 14px;
+        }
+    </style>
+    <h:form id="fd">
+        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+        <p:panel header="#{oportunidadMB.selectedOportunidad.vtitulo}" styleClass="TexAlLeft">
+            <h:panelGrid columns="1" width="100%">
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.om_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{oportunidadMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="15"/>
+                    <h:outputText value="#{msgs.om_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{oportunidadMB.selectedOportunidad.dfechapublicacion}" styleClass="Fs12" style="font-style: italic;">
+                        <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                    </h:outputText>
+                </h:panelGroup>
+                <p:fieldset style="border: 3px #D0525D solid;">
+                    <h:outputText value="Esta página de discusión debe ser usada exclusivamente para proponer aportes u observaciones del artículo "/>
+                    <h:outputText value="''#{oportunidadMB.selectedOportunidad.vtitulo}''. "/>
+                    <h:outputText value="Por ello, abstente de escribir reflexiones personales o no enfocados a desarrollo y redacción del artículo; sé cortés y evita ataques personales."/>
+                </p:fieldset>
+                <p:spacer/>
+                <p:commandButton value="#{msgs.om_btn_discusion}" actionListener="#{oportunidadMB.toAddDiscusion}" update=":tabview:disDialogForm:pgDis" 
+                                 oncomplete="PF('disDialog').show();" styleClass="ui-link Fs14" rendered="#{loginMB.user ne null}"/>
+            </h:panelGrid>
+            <h:panelGrid id="pgDis" columns="1" cellpadding="0" cellspacing="0" width="100%">
+                <table class="Wid100">
+                    <ui:repeat value="#{oportunidadMB.listaDiscusionSeccion}" var="s" varStatus="vs">
+                        <tr>
+                            <td style="border-bottom: gray solid 1px;">
+                                <h:outputText value="#{s.ntipodiscusion}" styleClass="Fs14 FontBold black">
+                                    <f:converter converterId="converterTipoDiscusion"/>
+                                </h:outputText>
+                                <h:outputText value=": #{s.vtitulo}" styleClass="Fs14 FontBold black"/>
+                                <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
+                                <p:commandLink value="editar" actionListener="#{oportunidadMB.toEditDiscusion}" update=":tabview:edisDialogForm:pgEdis" 
+                                               oncomplete="PF('edisDialog').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
+                                    <f:param name="index" value="#{vs.index}"/>
+                                </p:commandLink>
+                                <h:outputText value=" ]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
+                                <h:outputText value="#{s.elapsedTime}" styleClass="Fs10 Fright" style="font-style: italic;"/>
+                            </td>
+                        </tr>
+                        <tr><td><h:outputText value="#{s.discusionHtml}" escape="false" styleClass="Fs14"/></td></tr>
+                        <tr>
+                            <td>
+                                <h:outputText value="Registrado por: #{s.usuarioNombre}" styleClass="Fs10 Fright" style="font-style: italic;"/>
+                            </td>
+                        </tr>
+                        <tr><td><p:spacer/></td></tr>
+                    </ui:repeat>
+                </table>
+            </h:panelGrid>
+            <h:panelGrid columns="1" width="100%">
+                <h:panelGroup rendered="#{loginMB.user ne null}">
+                    <p:commandButton value="Registrar" actionListener="#{oportunidadMB.saveOrUpdateDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl"/>
+                    <p:spacer width="10"/>
+                    <p:commandButton value="Regresar" ajax="false" action="/pages/consulta.xhtml"/>
+                </h:panelGroup>
+                <p:commandButton value="Regresar" ajax="false" action="/pages/consulta.xhtml" rendered="#{loginMB.user eq null}"/>
+            </h:panelGrid>
+        </p:panel>
+    </h:form>
+
+    <p:dialog id="disDlg" header="#{msgs.om_lbl_pnlDiscusion}" widgetVar="disDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+        <h:form id="disDialogForm">
+            <h:panelGrid id="pgDis" columns="1">
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_tipodis}"/>
+                </h:panelGroup>
+                <p:selectOneMenu value="#{oportunidadMB.tipoDiscusion}" styleClass="Wid20">
+                    <f:selectItem itemValue="" itemLabel="Seleccione" />
+                    <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
+                </p:selectOneMenu>
+
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_titulodis}"/>
+                </h:panelGroup>
+                <p:inputText value="#{oportunidadMB.tituloDiscusion}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
+
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_detalledis}"/>
+                </h:panelGroup>
+                <p:editor id="txtHtml" value="#{oportunidadMB.discusionHtml}" />
+
+                <p:commandButton value="#{msgs.om_btn_adddiscusion}" actionListener="#{oportunidadMB.addDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+
+    <p:dialog id="edisDlg" header="#{msgs.om_lbl_pnlDiscusione}" widgetVar="edisDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+        <h:form id="edisDialogForm">
+            <h:panelGrid id="pgEdis" columns="1">
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_tipodis}"/>
+                </h:panelGroup>
+                <p:selectOneMenu value="#{oportunidadMB.selectedDiscusionSeccion.ntipodiscusion}" styleClass="Wid20">
+                    <f:selectItem itemValue="" itemLabel="Seleccione" />
+                    <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
+                </p:selectOneMenu>
+
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_titulodis}"/>
+                </h:panelGroup>
+                <p:inputText value="#{oportunidadMB.selectedDiscusionSeccion.vtitulo}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
+
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_detalledis}"/>
+                </h:panelGroup>
+                <p:editor id="txtHtml" value="#{oportunidadMB.selectedDiscusionSeccion.discusionHtml}" />
+
+                <p:commandButton value="#{msgs.om_btn_editdiscusion}" actionListener="#{oportunidadMB.editDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+</ui:composition>

@@ -48,6 +48,8 @@
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcategoriaUser.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tconocimiento.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tdiscusion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TdiscusionSeccion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TdiscusionSeccionHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TdiscusionHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Thistorial.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Timplementacion.hbm.xml</value>

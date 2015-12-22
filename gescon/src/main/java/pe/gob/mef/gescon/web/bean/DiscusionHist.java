@@ -7,34 +7,33 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  *
  * @author JJacobo
  */
-public class Discusion implements Serializable {
+public class DiscusionHist implements Serializable {
 
-    private BigDecimal ndiscusionid;
+    private BigDecimal ndiscusionhid;
     private BigDecimal nconocimientoid;
     private String vdescripcion;
+    private BigDecimal nnumversion;
     private String vusuariomodificacion;
     private String vusuariocreacion;
-    private Date dfechacreacion;
-    private Date dfechamodificacion;
-
-    public Discusion() {
-
+    private Serializable dfechacreacion;
+    private Serializable dfechamodificacion;
+    
+    public DiscusionHist() {
     }
 
-    public BigDecimal getNdiscusionid() {
-        return ndiscusionid;
+    public BigDecimal getNdiscusionhid() {
+        return ndiscusionhid;
     }
 
-    public void setNdiscusionid(BigDecimal ndiscusionid) {
-        this.ndiscusionid = ndiscusionid;
+    public void setNdiscusionhid(BigDecimal ndiscusionhid) {
+        this.ndiscusionhid = ndiscusionhid;
     }
-
+    
     public BigDecimal getNconocimientoid() {
         return nconocimientoid;
     }
@@ -49,6 +48,14 @@ public class Discusion implements Serializable {
 
     public void setVdescripcion(String vdescripcion) {
         this.vdescripcion = vdescripcion;
+    }
+
+    public BigDecimal getNnumversion() {
+        return nnumversion;
+    }
+
+    public void setNnumversion(BigDecimal nnumversion) {
+        this.nnumversion = nnumversion;
     }
 
     public String getVusuariomodificacion() {
@@ -67,19 +74,19 @@ public class Discusion implements Serializable {
         this.vusuariocreacion = vusuariocreacion;
     }
 
-    public Date getDfechacreacion() {
+    public Serializable getDfechacreacion() {
         return dfechacreacion;
     }
 
-    public void setDfechacreacion(Date dfechacreacion) {
+    public void setDfechacreacion(Serializable dfechacreacion) {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public Date getDfechamodificacion() {
+    public Serializable getDfechamodificacion() {
         return dfechamodificacion;
     }
 
-    public void setDfechamodificacion(Date dfechamodificacion) {
+    public void setDfechamodificacion(Serializable dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
     }
 }

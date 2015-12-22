@@ -23,7 +23,6 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.HistorialDao;
-import pe.gob.mef.gescon.hibernate.domain.Tarchivo;
 import pe.gob.mef.gescon.hibernate.domain.Thistorial;
 
 /**
@@ -83,7 +82,7 @@ public class HistorialDaoImpl extends HibernateDaoSupport implements HistorialDa
     public List<Thistorial> getThistorialesByTconocimiento(BigDecimal idconocimiento) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Thistorial.class);
         criteria.add(Restrictions.eq("id.nconocimientoid", idconocimiento));
-        criteria.addOrder(Order.asc("id.nhistorialid"));
+        criteria.addOrder(Order.asc("nnumversion"));
         return (List<Thistorial>) getHibernateTemplate().findByCriteria(criteria);
     }
 

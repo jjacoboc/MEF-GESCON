@@ -26,6 +26,8 @@ public class SeccionHist implements Serializable{
     private Date dfechacreacion;
     private String vusuariomodificacion;
     private Date dfechamodificacion;
+    private String detalleHtml;
+    private String detallePlain;
     
     public SeccionHist() {
         
@@ -101,5 +103,21 @@ public class SeccionHist implements Serializable{
 
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
+    }
+
+    public String getDetalleHtml() {
+        return detalleHtml;
+    }
+
+    public void setDetalleHtml(String detalleHtml) {
+        this.detalleHtml = detalleHtml;
+    }
+
+    public String getDetallePlain() {
+        return detallePlain;
+    }
+
+    public void setDetallePlain(String detallePlain) {
+        this.detallePlain = detallePlain;
     }
 }

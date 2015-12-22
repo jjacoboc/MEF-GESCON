@@ -15,8 +15,8 @@ import pe.gob.mef.gescon.util.DateUtils;
  *
  * @author JJacobo
  */
-public class Consulta implements Serializable, Comparable<Consulta>{
-    
+public class Consulta implements Serializable, Comparable<Consulta> {
+
     private BigDecimal id;
     private BigDecimal idconocimiento;
     private String codigo;
@@ -33,9 +33,9 @@ public class Consulta implements Serializable, Comparable<Consulta>{
     private String usuario;
     private String usuarioNombre;
     private String elapsedTime;
-    
+
     public Consulta() {
-        
+
     }
 
     public BigDecimal getId() {
@@ -242,51 +242,57 @@ public class Consulta implements Serializable, Comparable<Consulta>{
     public void setUsuarioNombre(String usuarioNombre) {
         this.usuarioNombre = usuarioNombre;
     }
-    
+
     /**
      * @return the elapsedTime
      */
     public String getElapsedTime() {
-        long time = DateUtils.getDifferenceYears(this.fechaPublicacion, new Date());
-        if(time > 0) {
-            this.elapsedTime =  "hace " + time + " años";
-        } else {
-            time = DateUtils.getDifferenceMonths(this.fechaPublicacion, new Date());
-            if(time > 0) {
-                this.elapsedTime =  "hace " + time + " meses";
+        long time;
+        if (this.fechaPublicacion != null) {
+            time = DateUtils.getDifferenceYears(this.fechaPublicacion, new Date());
+            if (time > 0) {
+                this.elapsedTime = "hace " + time + " años";
             } else {
-                time = DateUtils.getDifferenceDays(this.fechaPublicacion, new Date());
-                if(time > 0) {
-                    this.elapsedTime =  "hace " + time + " días";
+                time = DateUtils.getDifferenceMonths(this.fechaPublicacion, new Date());
+                if (time > 0) {
+                    this.elapsedTime = "hace " + time + " meses";
                 } else {
-                    time = DateUtils.getDifferenceHours(this.fechaPublicacion, new Date());
-                    if(time > 0) {
-                        this.elapsedTime =  "hace " + time + " horas";
+                    time = DateUtils.getDifferenceDays(this.fechaPublicacion, new Date());
+                    if (time > 0) {
+                        this.elapsedTime = "hace " + time + " días";
                     } else {
-                        time = DateUtils.getDifferenceMinutes(this.fechaPublicacion, new Date());
-                        if(time > 0) {
-                            this.elapsedTime =  "hace " + time + " minutos";
+                        time = DateUtils.getDifferenceHours(this.fechaPublicacion, new Date());
+                        if (time > 0) {
+                            this.elapsedTime = "hace " + time + " horas";
+                        } else {
+                            time = DateUtils.getDifferenceMinutes(this.fechaPublicacion, new Date());
+                            if (time > 0) {
+                                this.elapsedTime = "hace " + time + " minutos";
+                            }
                         }
                     }
                 }
             }
+        } else {
+            this.elapsedTime = "";
         }
         return this.elapsedTime;
     }
-    
+
     /**
      * @param elapsedTime the elapsedTime to set
      */
     public void setElapsedTime(String elapsedTime) {
         this.elapsedTime = elapsedTime;
     }
-    
+
     @Override
     public int compareTo(Consulta o) {
         return Comparators.ID.compare(this, o);
     }
-    
+
     public static class Comparators {
+
         public static Comparator<Consulta> ID = new Comparator<Consulta>() {
             @Override
             public int compare(Consulta o1, Consulta o2) {

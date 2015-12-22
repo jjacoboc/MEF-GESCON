@@ -27,18 +27,26 @@ import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.ConsultaService;
+import pe.gob.mef.gescon.service.DiscusionSeccionService;
+import pe.gob.mef.gescon.service.DiscusionService;
+import pe.gob.mef.gescon.service.HistorialService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.SeccionService;
 import pe.gob.mef.gescon.service.TipoConocimientoService;
+import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
+import pe.gob.mef.gescon.web.bean.Discusion;
+import pe.gob.mef.gescon.web.bean.DiscusionSeccion;
+import pe.gob.mef.gescon.web.bean.Historial;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 import pe.gob.mef.gescon.web.bean.Seccion;
 import pe.gob.mef.gescon.web.bean.TipoConocimiento;
+import pe.gob.mef.gescon.web.bean.User;
 
 /**
  *
@@ -448,11 +456,36 @@ public class ConsultaMB implements Serializable {
                     mb.setListaTargetVinculosOM(conocimientoService.getConcimientosVinculados(map));
                     map.put("ntipoconocimientoid", Constante.WIKI.toString());
                     mb.setListaTargetVinculosWK(conocimientoService.getConcimientosVinculados(map));
+                    DiscusionService discusionService = (DiscusionService) ServiceFinder.findBean("DiscusionService");
+                    List listaDiscusion = discusionService.getDiscusionesByConocimiento(mb.getSelectedWiki().getNconocimientoid());
+                    if(CollectionUtils.isNotEmpty(listaDiscusion)) {
+                        Discusion discusion = (Discusion)listaDiscusion.get(0);
+                        mb.setSelectedDiscusion(discusion);
+                        DiscusionSeccionService discusionSeccionService = (DiscusionSeccionService) ServiceFinder.findBean("DiscusionSeccionService");
+                        mb.setListaDiscusionSeccion(discusionSeccionService.getSeccionesByDiscusion(discusion.getNdiscusionid()));
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        if (CollectionUtils.isNotEmpty(mb.getListaDiscusionSeccion())) {
+                            for (DiscusionSeccion discusionSeccion : mb.getListaDiscusionSeccion()) {
+                                discusionSeccion.setDiscusionHtml(GcmFileUtils.readStringFromFileServer(discusionSeccion.getVruta(), "html.txt"));
+                                User user = userService.getUserByLogin(discusionSeccion.getVusuariocreacion());
+                                discusionSeccion.setUsuarioNombre(user.getVnombres()+" "+user.getVapellidos());
+                            }
+                        }
+                    }
+                    HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+                    mb.setListaHistorial(historialService.getHistorialesByConocimiento(mb.getSelectedWiki().getNconocimientoid()));
+                    if(CollectionUtils.isNotEmpty(mb.getListaHistorial())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (Historial historial : mb.getListaHistorial()) {
+                            User user = userService.getUserByLogin(historial.getVusuariocreacion());
+                            historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
                     JSFUtils.getSession().setAttribute("wikiMB", mb);
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/ver.xhtml");
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/vistaConsulta.xhtml");
                     break;
                 }
-                case 5: { //Buen Practica
+                case 5: { //Buena Practica
                     BuenaPracticaMB bp = new BuenaPracticaMB();
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     bp.setSelectedBuenaPractica(service.getConocimientoById(BigDecimal.valueOf(id)));
@@ -482,8 +515,92 @@ public class ConsultaMB implements Serializable {
                     bp.setListaTargetVinculosOM(conocimientoService.getConcimientosVinculados(map));
                     map.put("ntipoconocimientoid", Constante.WIKI.toString());
                     bp.setListaTargetVinculosWK(conocimientoService.getConcimientosVinculados(map));
+                    DiscusionService discusionService = (DiscusionService) ServiceFinder.findBean("DiscusionService");
+                    List listaDiscusion = discusionService.getDiscusionesByConocimiento(bp.getSelectedBuenaPractica().getNconocimientoid());
+                    if(CollectionUtils.isNotEmpty(listaDiscusion)) {
+                        Discusion discusion = (Discusion)listaDiscusion.get(0);
+                        bp.setSelectedDiscusion(discusion);
+                        DiscusionSeccionService discusionSeccionService = (DiscusionSeccionService) ServiceFinder.findBean("DiscusionSeccionService");
+                        bp.setListaDiscusionSeccion(discusionSeccionService.getSeccionesByDiscusion(discusion.getNdiscusionid()));
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        if (CollectionUtils.isNotEmpty(bp.getListaDiscusionSeccion())) {
+                            for (DiscusionSeccion discusionSeccion : bp.getListaDiscusionSeccion()) {
+                                discusionSeccion.setDiscusionHtml(GcmFileUtils.readStringFromFileServer(discusionSeccion.getVruta(), "html.txt"));
+                                User user = userService.getUserByLogin(discusionSeccion.getVusuariocreacion());
+                                discusionSeccion.setUsuarioNombre(user.getVnombres()+" "+user.getVapellidos());
+                            }
+                        }
+                    }
+                    HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+                    bp.setListaHistorial(historialService.getHistorialesByConocimiento(bp.getSelectedBuenaPractica().getNconocimientoid()));
+                    if(CollectionUtils.isNotEmpty(bp.getListaHistorial())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (Historial historial : bp.getListaHistorial()) {
+                            User user = userService.getUserByLogin(historial.getVusuariocreacion());
+                            historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
                     JSFUtils.getSession().setAttribute("buenaPracticaMB", bp);
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/ver.xhtml");
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/vistaConsulta.xhtml");
+                    break;
+                }
+                case 6: { //Oportunidad de Mejora
+                    OportunidadMB om = new OportunidadMB();
+                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    om.setSelectedOportunidad(service.getConocimientoById(BigDecimal.valueOf(id)));
+                    CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                    om.setSelectedCategoria(categoriaService.getCategoriaById(om.getSelectedOportunidad().getNcategoriaid()));
+                    om.setContenidoHtml(GcmFileUtils.readStringFromFileServer(om.getSelectedOportunidad().getVruta(), "html.txt"));
+                    SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
+                    om.setListaSeccion(seccionService.getSeccionesByConocimiento(om.getSelectedOportunidad().getNconocimientoid()));
+                    if (CollectionUtils.isNotEmpty(om.getListaSeccion())) {
+                        for (Seccion seccion : om.getListaSeccion()) {
+                            seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
+                        }
+                    }
+                    ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    HashMap map = new HashMap();
+                    map.put("nconocimientoid", om.getSelectedOportunidad().getNconocimientoid().toString());
+                    map.put("flag", true);
+                    map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+                    om.setListaTargetVinculosBL(conocimientoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+                    om.setListaTargetVinculosPR(conocimientoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+                    om.setListaTargetVinculosBP(conocimientoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+                    om.setListaTargetVinculosCT(conocimientoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+                    om.setListaTargetVinculosOM(conocimientoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.WIKI.toString());
+                    om.setListaTargetVinculosWK(conocimientoService.getConcimientosVinculados(map));
+                    DiscusionService discusionService = (DiscusionService) ServiceFinder.findBean("DiscusionService");
+                    List listaDiscusion = discusionService.getDiscusionesByConocimiento(om.getSelectedOportunidad().getNconocimientoid());
+                    if(CollectionUtils.isNotEmpty(listaDiscusion)) {
+                        Discusion discusion = (Discusion)listaDiscusion.get(0);
+                        om.setSelectedDiscusion(discusion);
+                        DiscusionSeccionService discusionSeccionService = (DiscusionSeccionService) ServiceFinder.findBean("DiscusionSeccionService");
+                        om.setListaDiscusionSeccion(discusionSeccionService.getSeccionesByDiscusion(discusion.getNdiscusionid()));
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        if (CollectionUtils.isNotEmpty(om.getListaDiscusionSeccion())) {
+                            for (DiscusionSeccion discusionSeccion : om.getListaDiscusionSeccion()) {
+                                discusionSeccion.setDiscusionHtml(GcmFileUtils.readStringFromFileServer(discusionSeccion.getVruta(), "html.txt"));
+                                User user = userService.getUserByLogin(discusionSeccion.getVusuariocreacion());
+                                discusionSeccion.setUsuarioNombre(user.getVnombres()+" "+user.getVapellidos());
+                            }
+                        }
+                    }
+                    HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+                    om.setListaHistorial(historialService.getHistorialesByConocimiento(om.getSelectedOportunidad().getNconocimientoid()));
+                    if(CollectionUtils.isNotEmpty(om.getListaHistorial())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (Historial historial : om.getListaHistorial()) {
+                            User user = userService.getUserByLogin(historial.getVusuariocreacion());
+                            historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
+                    JSFUtils.getSession().setAttribute("oportunidadMB", om);
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/oportunidad/vistaConsulta.xhtml");
                     break;
                 }
             }

@@ -68,7 +68,7 @@ public class HistorialServiceImpl implements HistorialService {
     public List<Historial> getHistorialesByConocimiento(BigDecimal idconocimiento) throws Exception {
         List<Historial> historiales = new ArrayList<Historial>();
         HistorialDao historialDao = (HistorialDao) ServiceFinder.findBean("HistorialDao");
-        List<Thistorial> lista = historialDao.getThistoriales();
+        List<Thistorial> lista = historialDao.getThistorialesByTconocimiento(idconocimiento);
         for (Thistorial thistorial : lista) {
             Historial historial = new Historial();
             BeanUtils.copyProperties(historial, thistorial);
