@@ -27,4 +27,5 @@ public interface ContenidoService {
     List<Consulta> getConcimientosVinculados(HashMap filters);
     List<Consulta> getConcimientosDisponibles(HashMap filters);
     void delete(BigDecimal conocimientoid) throws Exception;
+    void deleteArchivos(BigDecimal conocimientoid) throws Exception;
 }

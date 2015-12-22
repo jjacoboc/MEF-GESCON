@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent">
+                    <f:view>
+                        <h:form id="f">
+                            <p:panel header="Reporte de Perfiles" >
+                                <p:spacer/>
+                                <h:panelGrid id="pgNew" columns="4" >
+                                    <h:outputText value="Inicio:" />
+                                    <p:calendar id="buttoni" value="#{reporteMB.fechini}" showOn="button" />
+                                    <h:outputText value="Fin:" />
+                                    <p:calendar id="buttonf" value="#{reporteMB.fechfin}" showOn="button" />
+                                </h:panelGrid>
+                                <p:spacer/>
+                                <h:panelGrid columns="1" width="100%">
+                                    <p:commandButton  value="Generar" action="#{reporteMB.reportePerfiles}" ajax="false" style="float: right;"/>
+                                </h:panelGrid>
+
+                            </p:panel>
+                        </h:form>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

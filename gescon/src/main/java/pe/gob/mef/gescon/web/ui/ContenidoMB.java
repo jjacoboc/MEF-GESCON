@@ -47,6 +47,7 @@ import pe.gob.mef.gescon.hibernate.domain.ThistorialId;
 import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.ContenidoService;
 import pe.gob.mef.gescon.service.HistorialService;
 import pe.gob.mef.gescon.service.VinculoService;
@@ -103,8 +104,6 @@ public class ContenidoMB implements Serializable {
     private List<Consulta> listaSourceVinculosCT;
     private List<Consulta> listaTargetVinculosCT;
     private List<ArchivoConocimiento> listaArchivos = new ArrayList<ArchivoConocimiento>();
-
-    ; 
 
     /**
      * Creates a new instance of WikiMB
@@ -551,6 +550,7 @@ public class ContenidoMB implements Serializable {
     public void clearAll() {
         try {
             this.setSelectedCategoria(null);
+            this.setSelectedContenido(null);
             this.setTitulo(StringUtils.EMPTY);
             this.setDescripcion(StringUtils.EMPTY);
             this.setContenido(StringUtils.EMPTY);
@@ -868,6 +868,7 @@ public class ContenidoMB implements Serializable {
                     filters.put("ntipoconocimientoid", id);
                     ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
                     if (this.getSelectedContenido() != null) {
+                        filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid());
                         if (id.equals(Constante.BASELEGAL)) {
                             this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosBL());
@@ -1030,34 +1031,371 @@ public class ContenidoMB implements Serializable {
 
     public String toEdit() {
         try {
-            this.clearAll();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
             this.setSelectedContenido(this.getListaContenido().get(index));
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()));
             ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             this.setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedContenido().getNconocimientoid()));
-            WikiService wikiService = (WikiService) ServiceFinder.findBean("WikiService");
+            ContenidoService contenidoService = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid().toString());
             map.put("flag", true);
             map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
-            this.setListaTargetVinculosBL(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosBL(contenidoService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
-            this.setListaTargetVinculosPR(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosPR(contenidoService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
-            this.setListaTargetVinculosBP(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosBP(contenidoService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
-            this.setListaTargetVinculosCT(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosCT(contenidoService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
-            this.setListaTargetVinculosOM(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosOM(contenidoService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.WIKI.toString());
-            this.setListaTargetVinculosWK(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosWK(contenidoService.getConcimientosVinculados(map));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
         return "/pages/contenido/editar?faces-redirect=true";
+    }
+
+    public void Edit(ActionEvent event) {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaContenido())) {
+                this.setListaContenido(Collections.EMPTY_LIST);
+            }
+
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+            ThistorialId thistorialId = new ThistorialId();
+            Conocimiento conocimiento = new Conocimiento();
+            ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
+
+            this.getSelectedContenido().setVtitulo(this.getSelectedContenido().getVtitulo().trim());
+            this.getSelectedContenido().setVdescripcion(this.getSelectedContenido().getVdescripcion().trim());
+            this.getSelectedContenido().setVcontenido(this.getSelectedContenido().getVcontenido().trim());
+            this.getSelectedContenido().setDfechamodificacion(new Date());
+            this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
+            service.saveOrUpdate(this.getSelectedContenido());
+
+            listaTargetVinculos = new ArrayList<Consulta>();
+
+            if (this.getListaTargetVinculosBL() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            }
+            if (this.getListaTargetVinculosBP() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            }
+            if (this.getListaTargetVinculosCT() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            }
+            if (this.getListaTargetVinculosOM() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            }
+            if (this.getListaTargetVinculosPR() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            }
+            if (this.getListaTargetVinculosWK() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            }
+
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+                service.delete(this.getSelectedContenido().getNconocimientoid());
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    Vinculo vinculo = new Vinculo();
+                    vinculo.setNvinculoid(vinculoService.getNextPK());
+                    vinculo.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+                    vinculo.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculo.setDfechacreacion(new Date());
+                    vinculo.setVusuariocreacion(user.getVlogin());
+                    vinculoService.saveOrUpdate(vinculo);
+
+                }
+            }
+            //if (CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+            //    VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+            //    VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
+            //    for (Consulta consulta : this.getListaTargetVinculos()) {
+            //        Vinculo vinculo = new Vinculo();
+            //        vinculo.setNvinculoid(vinculoService.getNextPK());
+            //        vinculo.setNconocimientoid(conocimiento.getNconocimientoid());
+            //        vinculo.setNconocimientovinc(consulta.getIdconocimiento());
+            //        vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+            //        vinculo.setDfechacreacion(new Date());
+            //        vinculo.setVusuariocreacion(user.getVlogin());
+            //        vinculoService.saveOrUpdate(vinculo);
+            //        
+            //        TvinculoHistId vinculoHistId = new TvinculoHistId();
+            //        vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
+            //        vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
+            //        vinculoHistId.setNhistorialid(thistorialId.getNhistorialid());
+            //        VinculoHist vinculoHist = new VinculoHist();
+            //        vinculoHist.setId(vinculoHistId);
+            //        vinculoHist.setNconocimientovinc(vinculo.getNconocimientovinc());
+            //        vinculoHist.setDfechacreacion(new Date());
+            //        vinculoHist.setVusuariocreacion(user.getVlogin());
+            //        vinculoHistService.saveOrUpdate(vinculoHist);
+            //    }
+            //}
+            //this.setListaContenido(service.getContenidos());
+            //FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/wiki/lista.xhtml");
+            ArchivoConocimientoService aservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
+            service.deleteArchivos(this.getSelectedContenido().getNconocimientoid());
+            for (ArchivoConocimiento v : this.getListaArchivos()) {
+
+                ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
+                archivoconocimiento.setNarchivoid(aservice.getNextPK());
+                archivoconocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
+                archivoconocimiento.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+                archivoconocimiento.setVnombre(v.getVnombre());
+                archivoconocimiento.setNversion(BigDecimal.ONE);
+                archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "\\" + archivoconocimiento.getNversion().toString() + "\\" + archivoconocimiento.getVnombre());
+                archivoconocimiento.setVusuariocreacion(user.getVlogin());
+                archivoconocimiento.setDfechacreacion(new Date());
+                aservice.saveOrUpdate(archivoconocimiento);
+                saveFile(archivoconocimiento);
+
+            }
+
+//            Asignacion asignacion = new Asignacion();
+//            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+//            asignacion.setNasignacionid(serviceasig.getNextPK());
+//            asignacion.setNtipoconocimientoid(Constante.CONTENIDO);
+//            asignacion.setNconocimientoid(conocimiento.getNconocimientoid());
+//            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+//            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(conocimiento.getNcategoriaid()));
+//            asignacion.setDfechaasignacion(new Date());
+//            asignacion.setDfechacreacion(new Date());
+//            serviceasig.saveOrUpdate(asignacion);
+            listaContenido = service.getContenidos();
+            //listaPregunta = service.getPreguntas();
+            //RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public String toPost() {
+        try {
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedContenido(this.getListaContenido().get(index));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()));
+            ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
+            this.setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedContenido().getNconocimientoid()));
+            ContenidoService contenidoService = (ContenidoService) ServiceFinder.findBean("ContenidoService");
+            HashMap map = new HashMap();
+            map.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid().toString());
+            map.put("flag", true);
+            map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+            this.setListaTargetVinculosBL(contenidoService.getConcimientosVinculados(map));
+            map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+            this.setListaTargetVinculosPR(contenidoService.getConcimientosVinculados(map));
+            map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+            this.setListaTargetVinculosBP(contenidoService.getConcimientosVinculados(map));
+            map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+            this.setListaTargetVinculosCT(contenidoService.getConcimientosVinculados(map));
+            map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+            this.setListaTargetVinculosOM(contenidoService.getConcimientosVinculados(map));
+            map.put("ntipoconocimientoid", Constante.WIKI.toString());
+            this.setListaTargetVinculosWK(contenidoService.getConcimientosVinculados(map));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return "/pages/contenido/publicar?faces-redirect=true";
+    }
+
+    public void Post(ActionEvent event) {
+        try {
+            if (CollectionUtils.isEmpty(this.getListaContenido())) {
+                this.setListaContenido(Collections.EMPTY_LIST);
+            }
+
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+            ThistorialId thistorialId = new ThistorialId();
+            Conocimiento conocimiento = new Conocimiento();
+            ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
+
+            this.getSelectedContenido().setVtitulo(this.getSelectedContenido().getVtitulo().trim());
+            this.getSelectedContenido().setVdescripcion(this.getSelectedContenido().getVdescripcion().trim());
+            this.getSelectedContenido().setVcontenido(this.getSelectedContenido().getVcontenido().trim());
+            this.getSelectedContenido().setDfechamodificacion(new Date());
+            this.getSelectedContenido().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
+            this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
+            service.saveOrUpdate(this.getSelectedContenido());
+
+            listaTargetVinculos = new ArrayList<Consulta>();
+
+            if (this.getListaTargetVinculosBL() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            }
+            if (this.getListaTargetVinculosBP() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            }
+            if (this.getListaTargetVinculosCT() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            }
+            if (this.getListaTargetVinculosOM() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            }
+            if (this.getListaTargetVinculosPR() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            }
+            if (this.getListaTargetVinculosWK() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            }
+
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+                service.delete(this.getSelectedContenido().getNconocimientoid());
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    Vinculo vinculo = new Vinculo();
+                    vinculo.setNvinculoid(vinculoService.getNextPK());
+                    vinculo.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+                    vinculo.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculo.setDfechacreacion(new Date());
+                    vinculo.setVusuariocreacion(user.getVlogin());
+                    vinculoService.saveOrUpdate(vinculo);
+
+                }
+            }
+            //if (CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+            //    VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+            //    VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
+            //    for (Consulta consulta : this.getListaTargetVinculos()) {
+            //        Vinculo vinculo = new Vinculo();
+            //        vinculo.setNvinculoid(vinculoService.getNextPK());
+            //        vinculo.setNconocimientoid(conocimiento.getNconocimientoid());
+            //        vinculo.setNconocimientovinc(consulta.getIdconocimiento());
+            //        vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+            //        vinculo.setDfechacreacion(new Date());
+            //        vinculo.setVusuariocreacion(user.getVlogin());
+            //        vinculoService.saveOrUpdate(vinculo);
+            //        
+            //        TvinculoHistId vinculoHistId = new TvinculoHistId();
+            //        vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
+            //        vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
+            //        vinculoHistId.setNhistorialid(thistorialId.getNhistorialid());
+            //        VinculoHist vinculoHist = new VinculoHist();
+            //        vinculoHist.setId(vinculoHistId);
+            //        vinculoHist.setNconocimientovinc(vinculo.getNconocimientovinc());
+            //        vinculoHist.setDfechacreacion(new Date());
+            //        vinculoHist.setVusuariocreacion(user.getVlogin());
+            //        vinculoHistService.saveOrUpdate(vinculoHist);
+            //    }
+            //}
+            //this.setListaContenido(service.getContenidos());
+            //FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/wiki/lista.xhtml");
+            ArchivoConocimientoService aservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
+            service.deleteArchivos(this.getSelectedContenido().getNconocimientoid());
+            for (ArchivoConocimiento v : this.getListaArchivos()) {
+
+                ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
+                archivoconocimiento.setNarchivoid(aservice.getNextPK());
+                archivoconocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
+                archivoconocimiento.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+                archivoconocimiento.setVnombre(v.getVnombre());
+                archivoconocimiento.setNversion(BigDecimal.ONE);
+                archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "\\" + archivoconocimiento.getNversion().toString() + "\\" + archivoconocimiento.getVnombre());
+                archivoconocimiento.setVusuariocreacion(user.getVlogin());
+                archivoconocimiento.setDfechacreacion(new Date());
+                aservice.saveOrUpdate(archivoconocimiento);
+                saveFile(archivoconocimiento);
+
+            }
+
+//            Asignacion asignacion = new Asignacion();
+//            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+//            asignacion.setNasignacionid(serviceasig.getNextPK());
+//            asignacion.setNtipoconocimientoid(Constante.CONTENIDO);
+//            asignacion.setNconocimientoid(conocimiento.getNconocimientoid());
+//            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+//            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(conocimiento.getNcategoriaid()));
+//            asignacion.setDfechaasignacion(new Date());
+//            asignacion.setDfechacreacion(new Date());
+//            serviceasig.saveOrUpdate(asignacion);
+            listaContenido = service.getContenidos();
+            //listaPregunta = service.getPreguntas();
+            //RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void activar(ActionEvent event) {
+        try {
+            if (event != null) {
+                if (this.getSelectedContenido() != null) {
+                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    this.getSelectedContenido().setNactivo(BigDecimal.ONE);
+                    this.getSelectedContenido().setDfechamodificacion(new Date());
+                    service.saveOrUpdate(this.getSelectedContenido());
+                    this.setListaContenido(service.getConocimientosByType(Constante.CONTENIDO));
+                } else {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar el contenido a activar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void desactivar(ActionEvent event) {
+        try {
+            if (event != null) {
+                if (this.getSelectedContenido() != null) {
+                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    this.getSelectedContenido().setNactivo(BigDecimal.ZERO);
+                    this.getSelectedContenido().setDfechamodificacion(new Date());
+                    service.saveOrUpdate(this.getSelectedContenido());
+                    this.setListaContenido(service.getConocimientosByType(Constante.CONTENIDO));
+                } else {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar el contenido a desactivar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+
+                this.setSelectedContenido(this.getListaContenido().get(index));
+
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }

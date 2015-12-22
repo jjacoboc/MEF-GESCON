@@ -24,6 +24,7 @@ import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.dao.ContenidoDao;
 import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 
@@ -268,7 +269,7 @@ public class ContenidoDaoImpl extends HibernateDaoSupport implements ContenidoDa
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            sql.append("delete from TVINCULO where NCONOCIMIENTOID=:CONOCIMIENTO ");
+            sql.append("delete from TVINCULO where NCONOCIMIENTOID=:CONOCIMIENTO");
 
             object = getHibernateTemplate().execute(
                     new HibernateCallback() {
@@ -277,6 +278,30 @@ public class ContenidoDaoImpl extends HibernateDaoSupport implements ContenidoDa
                             Query query = session.createSQLQuery(sql.toString())
                             .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
                             .setParameter("CONOCIMIENTO", conocimientoid);
+                            return query.list();
+                        }
+                    });
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    @Override
+    public void deleteArchivos(final BigDecimal conocimientoid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        Object object = null;
+        try {
+            sql.append("delete from TARCHIVO_CONOCIMIENTO where NCONOCIMIENTOID=:CONOCIMIENTO AND NTIPOCONOCIMIENTOID=:TIPO");
+
+            object = getHibernateTemplate().execute(
+                    new HibernateCallback() {
+                        @Override
+                        public Object doInHibernate(Session session) throws HibernateException {
+                            Query query = session.createSQLQuery(sql.toString())
+                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                            .setParameter("CONOCIMIENTO", conocimientoid)
+                            .setParameter("TIPO", Constante.CONTENIDO);
                             return query.list();
                         }
                     });

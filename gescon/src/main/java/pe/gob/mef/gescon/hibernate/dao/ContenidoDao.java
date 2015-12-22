@@ -24,5 +24,6 @@ public interface ContenidoDao {
     List<HashMap> getConcimientosVinculados(HashMap filters);
     List<HashMap> getConcimientosDisponibles(HashMap filters);
     void delete(BigDecimal conocimientoid) throws Exception;
+    void deleteArchivos(BigDecimal conocimientoid) throws Exception;
 
 }

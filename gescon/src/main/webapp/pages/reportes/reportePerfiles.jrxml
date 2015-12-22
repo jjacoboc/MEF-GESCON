@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3dd15a90-7a0a-4e93-b22d-af9de2216094">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="NOMBRE_PERFIL" class="java.lang.String"/>
+	<field name="NOMBRE_POLITICA" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="USUARIO_CREACION" class="java.lang.String"/>
+	<field name="FECHA_CREACION" class="java.sql.Timestamp"/>
+	<field name="USUARIO_MODIFICACION" class="java.lang.String"/>
+	<field name="FECHA_MODIFICACION" class="java.sql.Timestamp"/>
+	<field name="ESTADO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="84" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="221" height="30" uuid="590e8584-411c-4a87-94af-e763bc54532a"/>
+				<imageExpression><![CDATA["C:\\Documents and Settings\\Pruebas\\Escritorio\\logo-minef.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="185" y="49" width="194" height="19" uuid="b8086b2e-bb56-47ce-8cb3-772de6462477"/>
+				<textElement>
+					<font size="15" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE PERFILES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="34" width="27" height="10" uuid="76d9441a-fde7-4622-abb5-7f3cb84e9c1f"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Pagina :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="11" width="27" height="10" uuid="0f79dde9-30d2-4f56-a357-1e4469d46ae5"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Fecha :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="22" width="27" height="10" uuid="01ab65ab-2f18-4bf4-b142-4a4c502d6ea0"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Hora :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="483" y="33" width="11" height="10" uuid="5e0ceaca-3abc-48e1-8387-d93fa58ee622"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<textField pattern="h.mm a">
+				<reportElement x="472" y="21" width="79" height="10" uuid="c5ad995d-f2ca-4424-955a-fa0aba218978"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="472" y="33" width="11" height="10" uuid="05d8842c-15f8-437b-ab82-53db20d1cc3a"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="472" y="10" width="79" height="10" uuid="8e473b6c-173c-488f-abd4-1916ddb5d5c2"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="494" y="33" width="12" height="10" uuid="b88d3f45-3482-4434-a3ea-1fc53d1dd788"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="56" splitType="Stretch">
+			<staticText>
+				<reportElement x="20" y="31" width="25" height="14" uuid="e825c472-1723-4cc0-988f-ba583706c70d"/>
+				<textElement>
+					<font size="8" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Perfil]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="31" width="31" height="14" uuid="ff4e8bdf-5874-4411-bf53-a39b4fa3d220"/>
+				<textElement>
+					<font size="8" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Politica]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="171" y="31" width="50" height="14" uuid="bb9756f8-c196-4548-941c-62f22ebcf139"/>
+				<textElement>
+					<font size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="31" width="31" height="14" uuid="cdd4712a-dee2-4925-a863-99877f0da0b0"/>
+				<textElement>
+					<font size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="307" y="23" width="42" height="14" uuid="802bd916-c438-412b-8f17-83d30b119515"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="303" y="37" width="46" height="14" uuid="12fcb4b2-207c-4afe-8d23-165420af2902"/>
+				<textElement>
+					<font size="8" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Creación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="23" width="36" height="13" uuid="2a88e179-cee2-4983-a9d0-4360f8e9331b"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="379" y="23" width="26" height="14" uuid="8b5935a2-5c34-45ad-9cf8-b705bd1a9b55"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="37" width="42" height="14" uuid="c06e99bd-ac3a-4c9d-a764-45afbef9cc4a"/>
+				<textElement>
+					<font size="8" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Creación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="429" y="36" width="52" height="14" uuid="1758000c-d165-40b8-940f-d5837be2826f"/>
+				<textElement>
+					<font size="8" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Modificación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="506" y="22" width="26" height="14" uuid="a7abde07-7fae-485d-9622-704e9855886d"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="494" y="36" width="52" height="14" uuid="ff14f948-bf85-4605-8c55-d64e10c93005"/>
+				<textElement>
+					<font size="8" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Modificación]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField>
+				<reportElement x="11" y="0" width="46" height="10" uuid="8d15e89a-03f9-458b-a9f8-4dbaa0f69679"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_PERFIL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="68" y="0" width="65" height="10" uuid="b3eb8e0f-a7b9-434f-8fab-e560636d7152"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_POLITICA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="0" width="92" height="10" uuid="fbc853e3-b048-43a6-902c-4149147542a4"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="303" y="0" width="30" height="10" uuid="84997501-20eb-459b-b8f8-0183b6edaed0"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{USUARIO_CREACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="357" y="0" width="71" height="10" uuid="4c443058-93d4-46e5-b6e1-a6cba9e0bb07"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA_CREACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="0" width="30" height="10" uuid="be58b38b-16db-4ee0-8083-ace23ec0f502"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{USUARIO_MODIFICACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="0" width="71" height="10" uuid="5e50de7e-b05c-4868-b9c1-48c4b499ef04"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA_MODIFICACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="243" y="0" width="38" height="10" uuid="228dd3ae-bb40-478f-bf4a-d6dd723fa6ae"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
