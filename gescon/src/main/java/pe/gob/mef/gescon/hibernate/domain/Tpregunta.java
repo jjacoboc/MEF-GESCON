@@ -27,6 +27,7 @@ public class Tpregunta implements java.io.Serializable {
     private String vusuariomodificacion;
     private Date dfechacreacion;
     private Date dfechamodificacion;
+    private Date dfechapublicacion;
 
     public Tpregunta() {
     }
@@ -35,7 +36,7 @@ public class Tpregunta implements java.io.Serializable {
         this.npreguntaid = npreguntaid;
     }
 
-    public Tpregunta(BigDecimal npreguntaid, BigDecimal ncategoriaid, BigDecimal nsituacionid, String vasunto, String vdetalle, BigDecimal nentidadid, String vdatoadicional, String vrespuesta, String vmsjusuario2, String vmsjespecialista, BigDecimal nactivo, String vmsjmoderador, String vmsjusuario1, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion) {
+    public Tpregunta(BigDecimal npreguntaid, BigDecimal ncategoriaid, BigDecimal nsituacionid, String vasunto, String vdetalle, BigDecimal nentidadid, String vdatoadicional, String vrespuesta, String vmsjusuario2, String vmsjespecialista, BigDecimal nactivo, String vmsjmoderador, String vmsjusuario1, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, Date dfechapublicacion) {
         this.npreguntaid = npreguntaid;
         this.ncategoriaid = ncategoriaid;
         this.nsituacionid = nsituacionid;
@@ -53,6 +54,7 @@ public class Tpregunta implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
         this.dfechacreacion = dfechacreacion;
         this.dfechamodificacion = dfechamodificacion;
+        this.dfechapublicacion = dfechapublicacion;
     }
 
     public BigDecimal getNpreguntaid() {
@@ -197,6 +199,20 @@ public class Tpregunta implements java.io.Serializable {
 
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
+    }
+
+    /**
+     * @return the dfechapublicacion
+     */
+    public Date getDfechapublicacion() {
+        return dfechapublicacion;
+    }
+
+    /**
+     * @param dfechapublicacion the dfechapublicacion to set
+     */
+    public void setDfechapublicacion(Date dfechapublicacion) {
+        this.dfechapublicacion = dfechapublicacion;
     }
 
 }
