@@ -17,5 +17,6 @@ public interface ParametroService {
     
     public BigDecimal getNextPK() throws Exception;
     public List<Parametro> getParametros() throws Exception;
+    public List<Parametro> getParametrosActived() throws Exception;
     public void saveOrUpdate(Parametro parametro) throws Exception;
 }

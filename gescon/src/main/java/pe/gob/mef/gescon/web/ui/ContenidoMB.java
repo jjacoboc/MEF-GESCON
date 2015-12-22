@@ -723,6 +723,7 @@ public class ContenidoMB implements Serializable {
             conocimiento.setVcontenido(this.getContenido().trim());
             conocimiento.setDfechacreacion(new Date());
             conocimiento.setVusuariocreacion(user.getVlogin());
+            conocimiento.setNactivo(BigDecimal.ONE);
             service.saveOrUpdate(conocimiento);
             Tconocimiento tconocimiento = new Tconocimiento();
             BeanUtils.copyProperties(tconocimiento, conocimiento);

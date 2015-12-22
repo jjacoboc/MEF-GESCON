@@ -12,7 +12,7 @@
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-                            <p:panel header="#{msgs.bl_lbl_pnlEdit}" styleClass="TexAlLeft">
+                            <p:panel header="Moderar Base Legal" styleClass="TexAlLeft">
                                 <h:panelGrid id="pgEdit" columns="3">
                                     <h:outputLabel value="#{msgs.icon_asterisk}" rendered="#{loginMB.getfMsjUsuCreaBase()}"/>
                                     <h:outputLabel  value="Mensaje del usuario:" rendered="#{loginMB.getfMsjUsuCreaBase()}"/>
@@ -21,7 +21,7 @@
 
                                     <h:outputLabel value="#{msgs.icon_asterisk}" rendered="#{loginMB.getfMsjModBase()}"/>
                                     <h:outputLabel value="Mensaje del Moderador" rendered="#{loginMB.getfMsjModBase()}"/>
-                                    <p:inputTextarea  value="#{loginMB.selectedBaseLegal.vmsjusuariocreacion}" rows="4" cols="66" style="font-weight: normal;"
+                                    <p:inputTextarea  value="#{loginMB.selectedBaseLegal.vmsjmoderador}" rows="4" cols="66" style="font-weight: normal;"
                                                       readonly="true"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfMsjModBase()}"/>
 
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
@@ -102,7 +102,7 @@
                                     <h:panelGrid id="pgEditVinc" columns="1" cellpadding="0" cellspacing="0">
                                         <p:commandLink value="#{msgs.bl_btn_vinculo}" actionListener="#{loginMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pgPick"/>
                                         <p:spacer height="5"/>
-                                        <p:dataTable value="#{loginMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada." style="width: 600px;">
+                                        <p:dataTable value="#{loginMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada.">
                                             <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
                                                 <h:outputText value="#{t.vnumero}"/>
                                             </p:column>

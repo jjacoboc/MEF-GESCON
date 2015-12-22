@@ -42,10 +42,10 @@
                 <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Tablas Maestras" icon="fa fa-table" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                     <f:param name="page" value="/pages/maestro"/>
                 </p:menuitem>
-                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Entidades" icon="fa fa-table" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Entidades" icon="fa fa-institution" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                     <f:param name="page" value="/pages/entidad"/>
                 </p:menuitem>
-                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Rango" icon="fa fa-table" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Rango" icon="fa fa-list" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                     <f:param name="page" value="/pages/rango"/>
                 </p:menuitem>
             </p:submenu>

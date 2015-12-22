@@ -1808,6 +1808,7 @@ public class LoginMB implements Serializable {
         try {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 6));
+            this.getSelectedPregunta().setDfechapublicacion(new Date());
             service.saveOrUpdate(this.getSelectedPregunta());
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -2321,7 +2322,7 @@ public class LoginMB implements Serializable {
                 pagina = null;
             } else {
                 BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
-                this.getSelectedBaseLegal().setVmsjmoderador(this.getSelectedBaseLegal().getVmsjusuariocreacion().toUpperCase());
+                this.getSelectedBaseLegal().setVmsjusuariocreacion(this.getSelectedBaseLegal().getVmsjusuariocreacion().toUpperCase());
                 service.saveOrUpdate(this.getSelectedBaseLegal());
 
                 AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -2502,6 +2503,7 @@ public class LoginMB implements Serializable {
         try {
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             this.getSelectedContenido().setNsituacionid(BigDecimal.valueOf((long) 6));
+            this.getSelectedContenido().setDfechapublicacion(new Date());
             service.saveOrUpdate(this.getSelectedContenido());
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");

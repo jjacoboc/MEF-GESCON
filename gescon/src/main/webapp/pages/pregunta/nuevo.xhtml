@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">                    
+                    <f:view>
+                        <h:form id="newDialogForm">
+                            <p:panel header="Registrar Pregunta" styleClass="TexAlLeft">
+                            <h:panelGrid id="pgNew"  columns="3">
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Categoría:"/>
+                                <h:panelGroup>
+                                    <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
+                                    <p:spacer width="15"/>
+                                    <h:outputText value="#{preguntaMB.selectedCategoria.vnombre}" />
+                                </h:panelGroup>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Asunto:"/>
+                                <p:inputText size="99" value="#{preguntaMB.asunto}" maxlength="80"/>
+
+                                <p:spacer/>
+                                <h:outputLabel value="Detalle:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:inputTextarea value="#{preguntaMB.detalle}" rows="4" cols="66" style="font-weight: normal;"
+                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                    <h:outputText id="display"/>
+                                </h:panelGrid>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Entidad" style="text-decoration: underline"/>
+                                <p:spacer/>
+
+                                <p:spacer/>                                   
+
+                                <h:panelGrid columns="3">
+                                    <h:outputLabel value="NM:"/>
+                                    <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
+                                    <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="2">
+                                    <h:outputLabel value="Nombre:"/>
+                                    <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}" />  
+                                </h:panelGrid>
+
+                                <p:spacer/>
+                                <p:spacer/>
+                                <p:spacer/>
+
+                                <h:outputLabel value="*"/>
+                                <h:outputLabel value="Dato adicional:"/>
+                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <p:inputText id="tema" size="99" value="#{preguntaMB.datoAdicional}" maxlength="80"/>
+                                    <p:watermark for="tema" value="(Opcional) Este dato solo lo podra ver el especialista"/>
+                                </h:panelGrid>
+
+                            </h:panelGrid>
+                            <h:panelGrid columns="2" width="100%">
+                                <p:commandButton value="Registrar" ajax="false" action="#{preguntaMB.save}" />
+                                <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
+                            </h:panelGrid>
+                                </p:panel>
+                        </h:form>
+
+                        <p:dialog id="catDlg" header="Seleccionar Categoría" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="catDialogForm">
+                                <h:panelGrid id="pgCat" columns="1">
+                                    <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
+                                    <p:tree id="cats" value="#{preguntaMB.tree}" var="node" animate="true" cache="true"  
+                                            selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
+                                        <p:ajax event="select" listener="#{preguntaMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":newDialogForm:pgNew" />
+                                        <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
+                                            <h:outputText value="#{node.vnombre}"/>
+                                        </p:treeNode>
+                                    </p:tree>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>
