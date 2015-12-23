@@ -27,7 +27,7 @@
             <column name="DFECHAMODIFICACION" />
         </property>
         <property name="vcomentario" type="string">
-            <column name="VCOMENTARIO" length="1000" />
+            <column name="VCOMENTARIO" length="4000" />
         </property>
         <property name="nestado" type="big_decimal">
             <column name="NESTADO" precision="22" scale="0" />

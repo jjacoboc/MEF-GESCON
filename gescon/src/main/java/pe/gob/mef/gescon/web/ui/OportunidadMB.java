@@ -34,6 +34,7 @@ import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.domain.ThistorialId;
 import pe.gob.mef.gescon.hibernate.domain.TseccionHistId;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoHistId;
+import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.DiscusionHistService;
@@ -43,11 +44,13 @@ import pe.gob.mef.gescon.service.DiscusionService;
 import pe.gob.mef.gescon.service.HistorialService;
 import pe.gob.mef.gescon.service.SeccionHistService;
 import pe.gob.mef.gescon.service.SeccionService;
+import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.service.VinculoHistService;
 import pe.gob.mef.gescon.service.VinculoService;
 import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Calificacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
@@ -115,6 +118,10 @@ public class OportunidadMB implements Serializable {
     private List<Historial> selectedHistoriales;
     private Historial selectedHistorialLeft;
     private Historial selectedHistorialRight;
+    private List<Calificacion> listaCalificacion;
+    private Calificacion selectedCalificacion;
+    private BigDecimal calificacion;
+    private String comentario;
     
     /**
      * Creates a new instance of OportunidadMB
@@ -473,6 +480,38 @@ public class OportunidadMB implements Serializable {
     public void setSelectedHistorialRight(Historial selectedHistorialRight) {
         this.selectedHistorialRight = selectedHistorialRight;
     }
+
+    public List<Calificacion> getListaCalificacion() {
+        return listaCalificacion;
+    }
+
+    public void setListaCalificacion(List<Calificacion> listaCalificacion) {
+        this.listaCalificacion = listaCalificacion;
+    }
+
+    public Calificacion getSelectedCalificacion() {
+        return selectedCalificacion;
+    }
+
+    public void setSelectedCalificacion(Calificacion selectedCalificacion) {
+        this.selectedCalificacion = selectedCalificacion;
+    }
+
+    public BigDecimal getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(BigDecimal calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
     
     @PostConstruct
     public void init() {
@@ -546,6 +585,22 @@ public class OportunidadMB implements Serializable {
             this.setTipoDiscusion(null);
             this.setDiscusionHtml(StringUtils.EMPTY);
             this.setDiscusionPlain(StringUtils.EMPTY);
+            Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
+            if (iter.hasNext() == true) {
+                iter.remove();
+                FacesContext.getCurrentInstance().renderResponse();
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void clearCalificacion() {
+        try {
+            this.setSelectedCalificacion(null);
+            this.setComentario(StringUtils.EMPTY);
+            this.setCalificacion(null);
             Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
             if (iter.hasNext() == true) {
                 iter.remove();
@@ -1598,6 +1653,128 @@ public class OportunidadMB implements Serializable {
                 this.setSelectedHistorialLeft(this.getSelectedHistoriales().get(0));
                 this.setSelectedHistorialRight(this.getSelectedHistoriales().get(1));
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/oportunidad/historialCompare.xhtml");
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void toAddCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void addCalificacion(ActionEvent event) {
+        try {
+            if (this.getCalificacion() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getComentario())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
+            Calificacion cal = new Calificacion();
+            cal.setNcalificacionid(calificacionService.getNextPK());
+            cal.setNconocimientoid(this.getSelectedOportunidad().getNconocimientoid());
+            cal.setNcalificacion(this.getCalificacion());
+            cal.setVcomentario(StringUtils.capitalize(this.getComentario().trim()));
+            cal.setDfechacreacion(new Date());
+            cal.setVusuariocreacion(user.getVlogin());
+            calificacionService.saveOrUpdate(cal);
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedOportunidad().getNconocimientoid()));
+            if (CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (Calificacion c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
+            }
+            RequestContext.getCurrentInstance().execute("PF('calDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void toEditCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedCalificacion(this.getListaCalificacion().get(index));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void editCalificacion(ActionEvent event) {
+        try {
+            if (this.getSelectedCalificacion().getNcalificacion() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSelectedCalificacion().getVcomentario())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
+            this.getSelectedCalificacion().setNcalificacion(this.getSelectedCalificacion().getNcalificacion());
+            this.getSelectedCalificacion().setVcomentario(StringUtils.capitalize(this.getSelectedCalificacion().getVcomentario().trim()));
+            this.getSelectedCalificacion().setDfechamodificacion(new Date());
+            this.getSelectedCalificacion().setVusuariomodificacion(user.getVlogin());
+            calificacionService.saveOrUpdate(this.getSelectedCalificacion());
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedOportunidad().getNconocimientoid()));
+            if (CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (Calificacion c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
+            }
+            RequestContext.getCurrentInstance().execute("PF('ecalDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void toDeleteCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedCalificacion(this.getListaCalificacion().get(index));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteCalificacion(ActionEvent event) {
+        try {
+            CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
+            calificacionService.delete(this.getSelectedCalificacion().getNcalificacionid());
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedOportunidad().getNconocimientoid()));
+            if (CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (Calificacion c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
             }
         } catch (Exception e) {
             e.getMessage();

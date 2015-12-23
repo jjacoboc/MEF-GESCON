@@ -30,6 +30,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jsoup.Jsoup;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -48,9 +49,16 @@ import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ContenidoService;
+import pe.gob.mef.gescon.service.DiscusionHistService;
+import pe.gob.mef.gescon.service.DiscusionSeccionHistService;
+import pe.gob.mef.gescon.service.DiscusionSeccionService;
+import pe.gob.mef.gescon.service.DiscusionService;
 import pe.gob.mef.gescon.service.HistorialService;
+import pe.gob.mef.gescon.service.SeccionHistService;
+import pe.gob.mef.gescon.service.VinculoHistService;
 import pe.gob.mef.gescon.service.VinculoService;
 import pe.gob.mef.gescon.service.WikiService;
+import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.ArchivoConocimiento;
@@ -58,6 +66,12 @@ import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
+import pe.gob.mef.gescon.web.bean.Discusion;
+import pe.gob.mef.gescon.web.bean.DiscusionHist;
+import pe.gob.mef.gescon.web.bean.DiscusionSeccion;
+import pe.gob.mef.gescon.web.bean.DiscusionSeccionHist;
+import pe.gob.mef.gescon.web.bean.Historial;
+import pe.gob.mef.gescon.web.bean.SeccionHist;
 import pe.gob.mef.gescon.web.bean.User;
 import pe.gob.mef.gescon.web.bean.Vinculo;
 
@@ -102,12 +116,22 @@ public class ContenidoMB implements Serializable {
     private List<Consulta> listaTargetVinculosBP;
     private List<Consulta> listaSourceVinculosCT;
     private List<Consulta> listaTargetVinculosCT;
-    private List<ArchivoConocimiento> listaArchivos = new ArrayList<ArchivoConocimiento>();
-
-    ; 
+    private List<ArchivoConocimiento> listaArchivos;
+    private Discusion selectedDiscusion;
+    private List<DiscusionSeccion> listaDiscusionSeccion;
+    private DiscusionSeccion selectedDiscusionSeccion;
+    private String tituloDiscusion;
+    private BigDecimal tipoDiscusion;
+    private String discusionHtml;
+    private String discusionPlain;
+    private List<Historial> listaHistorial;
+    private List<Historial> filteredListaHistorial;
+    private List<Historial> selectedHistoriales;
+    private Historial selectedHistorialLeft;
+    private Historial selectedHistorialRight;
 
     /**
-     * Creates a new instance of WikiMB
+     * Creates a new instance of ContenidoMB
      */
     public ContenidoMB() {
     }
@@ -532,12 +556,108 @@ public class ContenidoMB implements Serializable {
         this.listaArchivos = listaArchivos;
     }
 
+    public Discusion getSelectedDiscusion() {
+        return selectedDiscusion;
+    }
+
+    public void setSelectedDiscusion(Discusion selectedDiscusion) {
+        this.selectedDiscusion = selectedDiscusion;
+    }
+
+    public List<DiscusionSeccion> getListaDiscusionSeccion() {
+        return listaDiscusionSeccion;
+    }
+
+    public void setListaDiscusionSeccion(List<DiscusionSeccion> listaDiscusionSeccion) {
+        this.listaDiscusionSeccion = listaDiscusionSeccion;
+    }
+
+    public DiscusionSeccion getSelectedDiscusionSeccion() {
+        return selectedDiscusionSeccion;
+    }
+
+    public void setSelectedDiscusionSeccion(DiscusionSeccion selectedDiscusionSeccion) {
+        this.selectedDiscusionSeccion = selectedDiscusionSeccion;
+    }
+
+    public String getTituloDiscusion() {
+        return tituloDiscusion;
+    }
+
+    public void setTituloDiscusion(String tituloDiscusion) {
+        this.tituloDiscusion = tituloDiscusion;
+    }
+
+    public BigDecimal getTipoDiscusion() {
+        return tipoDiscusion;
+    }
+
+    public void setTipoDiscusion(BigDecimal tipoDiscusion) {
+        this.tipoDiscusion = tipoDiscusion;
+    }
+
+    public String getDiscusionHtml() {
+        return discusionHtml;
+    }
+
+    public void setDiscusionHtml(String discusionHtml) {
+        this.discusionHtml = discusionHtml;
+    }
+
+    public String getDiscusionPlain() {
+        return discusionPlain;
+    }
+
+    public void setDiscusionPlain(String discusionPlain) {
+        this.discusionPlain = discusionPlain;
+    }
+
+    public List<Historial> getListaHistorial() {
+        return listaHistorial;
+    }
+
+    public void setListaHistorial(List<Historial> listaHistorial) {
+        this.listaHistorial = listaHistorial;
+    }
+
+    public List<Historial> getFilteredListaHistorial() {
+        return filteredListaHistorial;
+    }
+
+    public void setFilteredListaHistorial(List<Historial> filteredListaHistorial) {
+        this.filteredListaHistorial = filteredListaHistorial;
+    }
+
+    public List<Historial> getSelectedHistoriales() {
+        return selectedHistoriales;
+    }
+
+    public void setSelectedHistoriales(List<Historial> selectedHistoriales) {
+        this.selectedHistoriales = selectedHistoriales;
+    }
+
+    public Historial getSelectedHistorialLeft() {
+        return selectedHistorialLeft;
+    }
+
+    public void setSelectedHistorialLeft(Historial selectedHistorialLeft) {
+        this.selectedHistorialLeft = selectedHistorialLeft;
+    }
+
+    public Historial getSelectedHistorialRight() {
+        return selectedHistorialRight;
+    }
+
+    public void setSelectedHistorialRight(Historial selectedHistorialRight) {
+        this.selectedHistorialRight = selectedHistorialRight;
+    }
+
     @PostConstruct
     public void init() {
         try {
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             this.setListaContenido(service.getContenidos());
-
+            this.setListaArchivos(new ArrayList<ArchivoConocimiento>());
             this.setListaSourceVinculos(new ArrayList<Consulta>());
             this.setListaTargetVinculos(new ArrayList<Consulta>());
             this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
@@ -564,6 +684,24 @@ public class ContenidoMB implements Serializable {
             this.setListaTargetVinculosWK(new ArrayList());
             this.setListaArchivos(new ArrayList());
             this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
+            if (iter.hasNext() == true) {
+                iter.remove();
+                FacesContext.getCurrentInstance().renderResponse();
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void clearDiscusion() {
+        try {
+            this.setSelectedDiscusionSeccion(null);
+            this.setTituloDiscusion(StringUtils.EMPTY);
+            this.setTipoDiscusion(null);
+            this.setDiscusionHtml(StringUtils.EMPTY);
+            this.setDiscusionPlain(StringUtils.EMPTY);
             Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
             if (iter.hasNext() == true) {
                 iter.remove();
@@ -1060,4 +1198,193 @@ public class ContenidoMB implements Serializable {
         return "/pages/contenido/editar?faces-redirect=true";
     }
 
+    public void toAddDiscusion(ActionEvent event) {
+        try {
+            this.clearDiscusion();
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void addDiscusion(ActionEvent event) {
+        try {
+            if(this.getTipoDiscusion() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a agregar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isBlank(this.getTituloDiscusion())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título de la discusión a agregar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isBlank(this.getDiscusionHtml())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el detalle de la discusión a agregar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            DiscusionSeccion discusionSeccion = new DiscusionSeccion();
+            discusionSeccion.setNtipodiscusion(this.getTipoDiscusion());
+            discusionSeccion.setVtitulo(StringUtils.upperCase(this.getTituloDiscusion().trim()));
+            discusionSeccion.setDiscusionHtml(this.getDiscusionHtml());
+            discusionSeccion.setDiscusionPlain(Jsoup.parse(discusionSeccion.getDiscusionHtml()).text());
+            discusionSeccion.setDfechacreacion(new Date());
+            if(this.getListaDiscusionSeccion() == null) {
+                this.setListaDiscusionSeccion(new ArrayList());
+            }
+            this.getListaDiscusionSeccion().add(discusionSeccion);
+            RequestContext.getCurrentInstance().execute("PF('disDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void toEditDiscusion(ActionEvent event) {
+        try {
+            this.clearDiscusion();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedDiscusionSeccion(this.getListaDiscusionSeccion().get(index));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void editDiscusion(ActionEvent event) {
+        try {
+            if(this.getSelectedDiscusionSeccion().getNtipodiscusion() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a editar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isBlank(this.getSelectedDiscusionSeccion().getVtitulo())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título de la discusión a editar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isBlank(this.getSelectedDiscusionSeccion().getDiscusionHtml())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el detalle de la discusión a editar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            this.getSelectedDiscusionSeccion().setVtitulo(StringUtils.upperCase(this.getSelectedDiscusionSeccion().getVtitulo().trim()));
+            RequestContext.getCurrentInstance().execute("PF('edisDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void saveOrUpdateDiscusion(ActionEvent event) {
+        Discusion discusion = null;
+        DiscusionHist discusionHist;
+        try {
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            DiscusionService discusionService = (DiscusionService) ServiceFinder.findBean("DiscusionService");
+            DiscusionHistService discusionHistService = (DiscusionHistService) ServiceFinder.findBean("DiscusionHistService");
+            if(this.getSelectedDiscusion() == null) {
+                discusion = new Discusion();
+                discusion.setNdiscusionid(discusionService.getNextPK());
+                discusion.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+                discusion.setDfechacreacion(new Date());
+                discusion.setVusuariocreacion(user.getVlogin());
+                discusionService.saveOrUpdate(discusion);
+                
+                discusionHist = new DiscusionHist();
+                discusionHist.setNnumversion(BigDecimal.ONE);
+            } else {
+                discusionHist = discusionHistService.getDiscusionHistByConocimiento(this.getSelectedContenido().getNconocimientoid());
+                int version = discusionHist.getNnumversion().intValue() + 1;
+                discusionHist.setNnumversion(BigDecimal.valueOf(version));
+            }
+            discusionHist.setNdiscusionhid(discusionHistService.getNextPK());
+            discusionHist.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+            discusionHist.setDfechacreacion(new Date());
+            discusionHist.setVusuariocreacion(user.getVlogin());
+            discusionHistService.saveOrUpdate(discusionHist);
+            
+            if(CollectionUtils.isNotEmpty(this.getListaDiscusionSeccion())) {
+                String url0 = this.path.concat(this.getSelectedContenido().getNconocimientoid().toString()).concat("/0/d/").concat(BigDecimal.ZERO.toString()).concat("/s");
+                String url1 = this.path.concat(this.getSelectedContenido().getNconocimientoid().toString()).concat("/0/d/").concat(discusionHist.getNnumversion().toString()).concat("/s");
+                DiscusionSeccionService discusionSeccionService = (DiscusionSeccionService) ServiceFinder.findBean("DiscusionSeccionService");
+                DiscusionSeccionHistService discusionSeccionHistService = (DiscusionSeccionHistService) ServiceFinder.findBean("DiscusionSeccionHistService");
+                for (DiscusionSeccion seccion : this.getListaDiscusionSeccion()) {
+                    if(seccion.getNdiscusionseccionid() == null) {
+                        seccion.setNdiscusionseccionid(discusionSeccionService.getNextPK());
+                        seccion.setNdiscusionid(discusion.getNdiscusionid());
+                        seccion.setDfechacreacion(new Date());
+                        seccion.setVusuariocreacion(user.getVlogin());
+                    } else {
+                        seccion.setDfechamodificacion(new Date());
+                        seccion.setVusuariomodificacion(user.getVlogin());
+                    }
+                    String ruta0 = url0.concat(seccion.getNdiscusionseccionid().toString()).concat("/");
+                    seccion.setNtipodiscusion(seccion.getNtipodiscusion());
+                    seccion.setVtitulo(StringUtils.upperCase(seccion.getVtitulo()));
+                    seccion.setVruta(ruta0);
+                    seccion.setDiscusionPlain(Jsoup.parse(seccion.getDiscusionHtml()).text());
+                    discusionSeccionService.saveOrUpdate(seccion);
+                    
+                    GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", seccion.getDiscusionHtml());
+                    GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", seccion.getDiscusionPlain());
+                    
+                    String ruta1 = url1.concat(seccion.getNdiscusionseccionid().toString()).concat("/");
+                    DiscusionSeccionHist seccionHist = new DiscusionSeccionHist();
+                    seccionHist.setNdiscusionseccionhid(discusionSeccionHistService.getNextPK());
+                    seccionHist.setNdiscusionhid(discusionHist.getNdiscusionhid());
+                    seccionHist.setNtipodiscusion(seccion.getNtipodiscusion());
+                    seccionHist.setVtitulo(StringUtils.upperCase(seccion.getVtitulo()));
+                    seccionHist.setVruta(ruta1);
+                    seccionHist.setDfechacreacion(new Date());
+                    seccionHist.setVusuariocreacion(user.getVlogin());
+                    discusionSeccionHistService.saveOrUpdate(seccionHist);
+                    
+                    GcmFileUtils.writeStringToFileServer(ruta1, "html.txt", seccion.getDiscusionHtml());
+                    GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", seccion.getDiscusionPlain());
+                }
+            }
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage("Información", "Discusión registrada con éxito."));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void toCompare(ActionEvent event){
+        try {
+            if (event != null) {
+                if(CollectionUtils.isEmpty(this.getSelectedHistoriales())){
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe seleccionar dos versiones para comparar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+                if(CollectionUtils.isNotEmpty(this.getSelectedHistoriales()) && this.getSelectedHistoriales().size() != 2){
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Sólo se puede comparar dos versiones a la vez.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+                SeccionHistService seccionHistService = (SeccionHistService) ServiceFinder.findBean("SeccionHistService");
+                VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
+                for(Historial historial : this.getSelectedHistoriales()) {
+                    historial.setDescripcionHtml(GcmFileUtils.readStringFromFileServer(historial.getVruta(), "html.txt"));
+                    historial.setListaSeccionHist(seccionHistService.getSeccionHistsByHistorial(historial.getId().getNhistorialid()));
+                    if (CollectionUtils.isNotEmpty(historial.getListaSeccionHist())) {
+                        for (SeccionHist seccionHist : historial.getListaSeccionHist()) {
+                            seccionHist.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "html.txt"));
+                        }
+                    }
+                }
+                this.setSelectedHistorialLeft(this.getSelectedHistoriales().get(0));
+                this.setSelectedHistorialRight(this.getSelectedHistoriales().get(1));
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/historialCompare.xhtml");
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
 }

@@ -14,31 +14,31 @@
     </style>
     <h:form id="fd">
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-        <p:panel header="#{buenaPracticaMB.selectedBuenaPractica.vtitulo}" styleClass="TexAlLeft">
+        <p:panel header="#{contenidoMB.selectedContenido.vtitulo}" styleClass="TexAlLeft">
             <h:panelGrid columns="1" width="100%">
                 <h:panelGroup>
-                    <h:outputText value="#{msgs.bp_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{msgs.wk_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{buenaPracticaMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{contenidoMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="15"/>
-                    <h:outputText value="#{msgs.bp_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{msgs.wk_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{buenaPracticaMB.selectedBuenaPractica.dfechapublicacion}" styleClass="Fs12" style="font-style: italic;">
+                    <h:outputText value="#{contenidoMB.selectedContenido.dfechapublicacion}" styleClass="Fs12" style="font-style: italic;">
                         <f:convertDateTime dateStyle="medium" type="date" locale="es" />
                     </h:outputText>
                 </h:panelGroup>
                 <p:fieldset style="border: 3px #D0525D solid;">
                     <h:outputText value="Esta página de discusión debe ser usada exclusivamente para proponer aportes u observaciones del artículo "/>
-                    <h:outputText value="#{buenaPracticaMB.selectedBuenaPractica.vtitulo}. " styleClass="FontBold"/>
+                    <h:outputText value="#{contenidoMB.selectedContenido.vtitulo}. " styleClass="FontBold"/>
                     <h:outputText value="Por ello, abstente de escribir reflexiones personales o no enfocados a desarrollo y redacción del artículo; sé cortés y evita ataques personales."/>
                 </p:fieldset>
                 <p:spacer/>
-                <p:commandButton value="#{msgs.bp_btn_discusion}" actionListener="#{buenaPracticaMB.toAddDiscusion}" update=":tabview:disDialogForm:pgDis" 
+                <p:commandButton value="#{msgs.wk_btn_discusion}" actionListener="#{contenidoMB.toAddDiscusion}" update=":tabview:disDialogForm:pgDis" 
                                  oncomplete="PF('disDialog').show();" styleClass="ui-link Fs14" rendered="#{loginMB.user ne null}"/>
             </h:panelGrid>
             <h:panelGrid id="pgDis" columns="1" cellpadding="0" cellspacing="0" width="100%">
                 <table class="Wid100">
-                    <ui:repeat value="#{buenaPracticaMB.listaDiscusionSeccion}" var="s" varStatus="vs">
+                    <ui:repeat value="#{contenidoMB.listaDiscusionSeccion}" var="s" varStatus="vs">
                         <tr>
                             <td style="border-bottom: gray solid 1px;">
                                 <h:outputText value="#{s.ntipodiscusion}" styleClass="Fs14 FontBold black">
@@ -46,7 +46,7 @@
                                 </h:outputText>
                                 <h:outputText value=": #{s.vtitulo}" styleClass="Fs14 FontBold black"/>
                                 <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
-                                <p:commandLink value="editar" actionListener="#{buenaPracticaMB.toEditDiscusion}" update=":tabview:edisDialogForm:pgEdis" 
+                                <p:commandLink value="editar" actionListener="#{contenidoMB.toEditDiscusion}" update=":tabview:edisDialogForm:pgEdis" 
                                                oncomplete="PF('edisDialog').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
                                     <f:param name="index" value="#{vs.index}"/>
                                 </p:commandLink>
@@ -66,7 +66,7 @@
             </h:panelGrid>
             <h:panelGrid columns="1" width="100%">
                 <h:panelGroup rendered="#{loginMB.user ne null}">
-                    <p:commandButton value="Registrar" actionListener="#{buenaPracticaMB.saveOrUpdateDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl"/>
+                    <p:commandButton value="Registrar" actionListener="#{contenidoMB.saveOrUpdateDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl"/>
                     <p:spacer width="10"/>
                     <p:commandButton value="Regresar" ajax="false" action="/pages/consulta.xhtml"/>
                 </h:panelGroup>
@@ -75,15 +75,15 @@
         </p:panel>
     </h:form>
 
-    <p:dialog id="disDlg" header="#{msgs.bp_lbl_pnlDiscusion}" widgetVar="disDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+    <p:dialog id="disDlg" header="#{msgs.wk_lbl_pnlDiscusion}" widgetVar="disDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
         <h:form id="disDialogForm">
             <h:panelGrid id="pgDis" columns="1">
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_tipodis}"/>
+                    <h:outputText value="#{msgs.wk_lbl_tipodis}"/>
                 </h:panelGroup>
-                <p:selectOneMenu value="#{buenaPracticaMB.tipoDiscusion}" styleClass="Wid20">
+                <p:selectOneMenu value="#{contenidoMB.tipoDiscusion}" styleClass="Wid20">
                     <f:selectItem itemValue="" itemLabel="Seleccione" />
                     <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
                 </p:selectOneMenu>
@@ -91,31 +91,31 @@
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_titulodis}"/>
+                    <h:outputText value="#{msgs.wk_lbl_titulodis}"/>
                 </h:panelGroup>
-                <p:inputText value="#{buenaPracticaMB.tituloDiscusion}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
+                <p:inputText value="#{contenidoMB.tituloDiscusion}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
 
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_detalledis}"/>
+                    <h:outputText value="#{msgs.wk_lbl_detalledis}"/>
                 </h:panelGroup>
-                <p:editor id="txtHtml" value="#{buenaPracticaMB.discusionHtml}" />
+                <p:editor id="txtHtml" value="#{contenidoMB.discusionHtml}" />
 
-                <p:commandButton value="#{msgs.bp_btn_adddiscusion}" actionListener="#{buenaPracticaMB.addDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
+                <p:commandButton value="#{msgs.wk_btn_adddiscusion}" actionListener="#{contenidoMB.addDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
             </h:panelGrid>
         </h:form>
     </p:dialog>
 
-    <p:dialog id="edisDlg" header="#{msgs.bp_lbl_pnlDiscusione}" widgetVar="edisDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+    <p:dialog id="edisDlg" header="#{msgs.wk_lbl_pnlDiscusione}" widgetVar="edisDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
         <h:form id="edisDialogForm">
             <h:panelGrid id="pgEdis" columns="1">
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_tipodis}"/>
+                    <h:outputText value="#{msgs.wk_lbl_tipodis}"/>
                 </h:panelGroup>
-                <p:selectOneMenu value="#{buenaPracticaMB.selectedDiscusionSeccion.ntipodiscusion}" styleClass="Wid20">
+                <p:selectOneMenu value="#{contenidoMB.selectedDiscusionSeccion.ntipodiscusion}" styleClass="Wid20">
                     <f:selectItem itemValue="" itemLabel="Seleccione" />
                     <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
                 </p:selectOneMenu>
@@ -123,18 +123,18 @@
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_titulodis}"/>
+                    <h:outputText value="#{msgs.wk_lbl_titulodis}"/>
                 </h:panelGroup>
-                <p:inputText value="#{buenaPracticaMB.selectedDiscusionSeccion.vtitulo}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
+                <p:inputText value="#{contenidoMB.selectedDiscusionSeccion.vtitulo}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
 
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_detalledis}"/>
+                    <h:outputText value="#{msgs.wk_lbl_detalledis}"/>
                 </h:panelGroup>
-                <p:editor id="txtHtml" value="#{buenaPracticaMB.selectedDiscusionSeccion.discusionHtml}" />
+                <p:editor id="txtHtml" value="#{contenidoMB.selectedDiscusionSeccion.discusionHtml}" />
 
-                <p:commandButton value="#{msgs.bp_btn_editdiscusion}" actionListener="#{buenaPracticaMB.editDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
+                <p:commandButton value="#{msgs.wk_btn_editdiscusion}" actionListener="#{contenidoMB.editDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
             </h:panelGrid>
         </h:form>
     </p:dialog>

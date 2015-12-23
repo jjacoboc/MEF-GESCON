@@ -24,6 +24,7 @@ import org.primefaces.model.TreeNode;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.BaseLegalService;
+import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.ConsultaService;
@@ -39,6 +40,7 @@ import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
+import pe.gob.mef.gescon.web.bean.Calificacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Discusion;
@@ -217,7 +219,7 @@ public class ConsultaMB implements Serializable {
     public void init() {
         try {
             CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-            this.setListaCategoriaFiltro(catservice.getCategorias());
+            this.setListaCategoriaFiltro(catservice.getCategoriasActived());
             createTree(this.getListaCategoriaFiltro());
             this.setListaBreadCrumb(new ArrayList<Categoria>());
             TipoConocimientoService tcservice = (TipoConocimientoService) ServiceFinder.findBean("TipoConocimientoService");
@@ -543,33 +545,35 @@ public class ConsultaMB implements Serializable {
                             historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
                         }
                     }
+                    CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
+                    mb.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(mb.getSelectedWiki().getNconocimientoid()));
+                    if(CollectionUtils.isNotEmpty(mb.getListaCalificacion())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (Calificacion calificacion : mb.getListaCalificacion()) {
+                            User user = userService.getUserByLogin(calificacion.getVusuariocreacion());
+                            calificacion.setUsuarioNombre(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
                     JSFUtils.getSession().setAttribute("wikiMB", mb);
                     FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/vistaConsulta.xhtml");
                     break;
                 }
                 case 4: { //Contenido
                     ContenidoMB ct = new ContenidoMB();
-                    int situacion;
                     ContenidoService servicect = (ContenidoService) ServiceFinder.findBean("ContenidoService");
                     ct.setSelectedContenido(servicect.getContenidoById(Constante.CONTENIDO, BigDecimal.valueOf(id)));
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     ct.setSelectedCategoria(categoriaService.getCategoriaById(ct.getSelectedContenido().getNcategoriaid()));
                     ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
                     ct.setListaArchivos(archivoservice.getArchivosByConocimiento(ct.getSelectedContenido().getNconocimientoid()));
-                    
-                    
-
                     ct.setListaSourceVinculos(new ArrayList<Consulta>());
                     ct.setListaTargetVinculos(new ArrayList<Consulta>());
-                    
-
                     ct.setListaTargetVinculosBL(new ArrayList<Consulta>());
                     ct.setListaTargetVinculosPR(new ArrayList<Consulta>());
                     ct.setListaTargetVinculosWK(new ArrayList<Consulta>());
                     ct.setListaTargetVinculosCT(new ArrayList<Consulta>());
                     ct.setListaTargetVinculosBP(new ArrayList<Consulta>());
                     ct.setListaTargetVinculosOM(new ArrayList<Consulta>());
-
                     HashMap filters = new HashMap();
                     filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("1")));
                     filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
@@ -596,8 +600,7 @@ public class ConsultaMB implements Serializable {
                     ct.getListaTargetVinculosOM().addAll(servicect.getConcimientosVinculados(filters));
 
                     JSFUtils.getSession().setAttribute("contenidoMB", ct);
-                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/ver.xhtml");
-                    
+                    FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/vistaConsulta.xhtml");                    
                     break;
                 }
                 case 5: { //Buen Practica

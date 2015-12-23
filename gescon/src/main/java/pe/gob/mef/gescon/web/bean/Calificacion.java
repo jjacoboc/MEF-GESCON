@@ -8,6 +8,7 @@ package pe.gob.mef.gescon.web.bean;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import pe.gob.mef.gescon.util.DateUtils;
 
 /**
  *
@@ -24,6 +25,8 @@ public class Calificacion implements Serializable{
     private Date dfechamodificacion;
     private String vcomentario;
     private BigDecimal nestado;
+    private String usuarioNombre;
+    private String elapsedTime;
     
     public Calificacion() {
         
@@ -99,5 +102,50 @@ public class Calificacion implements Serializable{
 
     public void setNestado(BigDecimal nestado) {
         this.nestado = nestado;
+    }
+
+    public String getUsuarioNombre() {
+        return usuarioNombre;
+    }
+
+    public void setUsuarioNombre(String usuarioNombre) {
+        this.usuarioNombre = usuarioNombre;
+    }
+
+    public String getElapsedTime() {
+        long time;
+        if (this.dfechacreacion != null) {
+            time = DateUtils.getDifferenceYears(this.dfechacreacion, new Date());
+            if (time > 0) {
+                this.elapsedTime = "hace " + time + " años";
+            } else {
+                time = DateUtils.getDifferenceMonths(this.dfechacreacion, new Date());
+                if (time > 0) {
+                    this.elapsedTime = "hace " + time + " meses";
+                } else {
+                    time = DateUtils.getDifferenceDays(this.dfechacreacion, new Date());
+                    if (time > 0) {
+                        this.elapsedTime = "hace " + time + " días";
+                    } else {
+                        time = DateUtils.getDifferenceHours(this.dfechacreacion, new Date());
+                        if (time > 0) {
+                            this.elapsedTime = "hace " + time + " horas";
+                        } else {
+                            time = DateUtils.getDifferenceMinutes(this.dfechacreacion, new Date());
+                            if (time > 0) {
+                                this.elapsedTime = "hace " + time + " minutos";
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            this.elapsedTime = "";
+        }
+        return elapsedTime;
+    }
+
+    public void setElapsedTime(String elapsedTime) {
+        this.elapsedTime = elapsedTime;
     }
 }

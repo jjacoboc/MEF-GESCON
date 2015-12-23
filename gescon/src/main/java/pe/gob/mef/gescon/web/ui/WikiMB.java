@@ -34,6 +34,7 @@ import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.domain.ThistorialId;
 import pe.gob.mef.gescon.hibernate.domain.TseccionHistId;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoHistId;
+import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.DiscusionHistService;
@@ -43,11 +44,13 @@ import pe.gob.mef.gescon.service.DiscusionService;
 import pe.gob.mef.gescon.service.HistorialService;
 import pe.gob.mef.gescon.service.SeccionHistService;
 import pe.gob.mef.gescon.service.SeccionService;
+import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.service.VinculoHistService;
 import pe.gob.mef.gescon.service.VinculoService;
 import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Calificacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
@@ -112,6 +115,10 @@ public class WikiMB implements Serializable {
     private List<Historial> selectedHistoriales;
     private Historial selectedHistorialLeft;
     private Historial selectedHistorialRight;
+    private List<Calificacion> listaCalificacion;
+    private Calificacion selectedCalificacion;
+    private BigDecimal calificacion;
+    private String comentario;
 
     /**
      * Creates a new instance of WikiMB
@@ -447,6 +454,38 @@ public class WikiMB implements Serializable {
         this.selectedHistorialRight = selectedHistorialRight;
     }
 
+    public List<Calificacion> getListaCalificacion() {
+        return listaCalificacion;
+    }
+
+    public void setListaCalificacion(List<Calificacion> listaCalificacion) {
+        this.listaCalificacion = listaCalificacion;
+    }
+
+    public Calificacion getSelectedCalificacion() {
+        return selectedCalificacion;
+    }
+
+    public void setSelectedCalificacion(Calificacion selectedCalificacion) {
+        this.selectedCalificacion = selectedCalificacion;
+    }
+
+    public BigDecimal getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(BigDecimal calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
     @PostConstruct
     public void init() {
         try {
@@ -506,7 +545,7 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void clearDiscusion() {
         try {
             this.setSelectedDiscusionSeccion(null);
@@ -514,6 +553,22 @@ public class WikiMB implements Serializable {
             this.setTipoDiscusion(null);
             this.setDiscusionHtml(StringUtils.EMPTY);
             this.setDiscusionPlain(StringUtils.EMPTY);
+            Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
+            if (iter.hasNext() == true) {
+                iter.remove();
+                FacesContext.getCurrentInstance().renderResponse();
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void clearCalificacion() {
+        try {
+            this.setSelectedCalificacion(null);
+            this.setComentario(StringUtils.EMPTY);
+            this.setCalificacion(null);
             Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
             if (iter.hasNext() == true) {
                 iter.remove();
@@ -604,12 +659,12 @@ public class WikiMB implements Serializable {
 
     public void addSection(ActionEvent event) {
         try {
-            if(StringUtils.isBlank(this.getTitulo())) {
+            if (StringUtils.isBlank(this.getTitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título de la sección requerido. Ingrese el título de la sección a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDetalleHtml())) {
+            if (StringUtils.isBlank(this.getDetalleHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Detalle de la sección requerido. Ingrese el detalle de la sección a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -642,15 +697,15 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void editSection(ActionEvent event) {
         try {
-            if(StringUtils.isBlank(this.getSelectedSeccion().getVtitulo())) {
+            if (StringUtils.isBlank(this.getSelectedSeccion().getVtitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título de la sección requerido. Ingrese el título de la sección a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedSeccion().getDetalleHtml())) {
+            if (StringUtils.isBlank(this.getSelectedSeccion().getDetalleHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Detalle de la sección requerido. Ingrese el detalle de la sección a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -661,7 +716,7 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void toAddDiscusion(ActionEvent event) {
         try {
             this.clearDiscusion();
@@ -670,20 +725,20 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void addDiscusion(ActionEvent event) {
         try {
-            if(this.getTipoDiscusion() == null) {
+            if (this.getTipoDiscusion() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getTituloDiscusion())) {
+            if (StringUtils.isBlank(this.getTituloDiscusion())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título de la discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDiscusionHtml())) {
+            if (StringUtils.isBlank(this.getDiscusionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el detalle de la discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -694,7 +749,7 @@ public class WikiMB implements Serializable {
             discusionSeccion.setDiscusionHtml(this.getDiscusionHtml());
             discusionSeccion.setDiscusionPlain(Jsoup.parse(discusionSeccion.getDiscusionHtml()).text());
             discusionSeccion.setDfechacreacion(new Date());
-            if(this.getListaDiscusionSeccion() == null) {
+            if (this.getListaDiscusionSeccion() == null) {
                 this.setListaDiscusionSeccion(new ArrayList());
             }
             this.getListaDiscusionSeccion().add(discusionSeccion);
@@ -704,7 +759,7 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void toEditDiscusion(ActionEvent event) {
         try {
             this.clearDiscusion();
@@ -715,20 +770,20 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void editDiscusion(ActionEvent event) {
         try {
-            if(this.getSelectedDiscusionSeccion().getNtipodiscusion() == null) {
+            if (this.getSelectedDiscusionSeccion().getNtipodiscusion() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedDiscusionSeccion().getVtitulo())) {
+            if (StringUtils.isBlank(this.getSelectedDiscusionSeccion().getVtitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título de la discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedDiscusionSeccion().getDiscusionHtml())) {
+            if (StringUtils.isBlank(this.getSelectedDiscusionSeccion().getDiscusionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el detalle de la discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -740,7 +795,7 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void saveOrUpdateDiscusion(ActionEvent event) {
         Discusion discusion = null;
         DiscusionHist discusionHist;
@@ -749,14 +804,14 @@ public class WikiMB implements Serializable {
             User user = loginMB.getUser();
             DiscusionService discusionService = (DiscusionService) ServiceFinder.findBean("DiscusionService");
             DiscusionHistService discusionHistService = (DiscusionHistService) ServiceFinder.findBean("DiscusionHistService");
-            if(this.getSelectedDiscusion() == null) {
+            if (this.getSelectedDiscusion() == null) {
                 discusion = new Discusion();
                 discusion.setNdiscusionid(discusionService.getNextPK());
                 discusion.setNconocimientoid(this.getSelectedWiki().getNconocimientoid());
                 discusion.setDfechacreacion(new Date());
                 discusion.setVusuariocreacion(user.getVlogin());
                 discusionService.saveOrUpdate(discusion);
-                
+
                 discusionHist = new DiscusionHist();
                 discusionHist.setNnumversion(BigDecimal.ONE);
             } else {
@@ -769,14 +824,14 @@ public class WikiMB implements Serializable {
             discusionHist.setDfechacreacion(new Date());
             discusionHist.setVusuariocreacion(user.getVlogin());
             discusionHistService.saveOrUpdate(discusionHist);
-            
-            if(CollectionUtils.isNotEmpty(this.getListaDiscusionSeccion())) {
+
+            if (CollectionUtils.isNotEmpty(this.getListaDiscusionSeccion())) {
                 String url0 = this.path.concat(this.getSelectedWiki().getNconocimientoid().toString()).concat("/0/d/").concat(BigDecimal.ZERO.toString()).concat("/s");
                 String url1 = this.path.concat(this.getSelectedWiki().getNconocimientoid().toString()).concat("/0/d/").concat(discusionHist.getNnumversion().toString()).concat("/s");
                 DiscusionSeccionService discusionSeccionService = (DiscusionSeccionService) ServiceFinder.findBean("DiscusionSeccionService");
                 DiscusionSeccionHistService discusionSeccionHistService = (DiscusionSeccionHistService) ServiceFinder.findBean("DiscusionSeccionHistService");
                 for (DiscusionSeccion seccion : this.getListaDiscusionSeccion()) {
-                    if(seccion.getNdiscusionseccionid() == null) {
+                    if (seccion.getNdiscusionseccionid() == null) {
                         seccion.setNdiscusionseccionid(discusionSeccionService.getNextPK());
                         seccion.setNdiscusionid(discusion.getNdiscusionid());
                         seccion.setDfechacreacion(new Date());
@@ -791,10 +846,10 @@ public class WikiMB implements Serializable {
                     seccion.setVruta(ruta0);
                     seccion.setDiscusionPlain(Jsoup.parse(seccion.getDiscusionHtml()).text());
                     discusionSeccionService.saveOrUpdate(seccion);
-                    
+
                     GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", seccion.getDiscusionHtml());
                     GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", seccion.getDiscusionPlain());
-                    
+
                     String ruta1 = url1.concat(seccion.getNdiscusionseccionid().toString()).concat("/");
                     DiscusionSeccionHist seccionHist = new DiscusionSeccionHist();
                     seccionHist.setNdiscusionseccionhid(discusionSeccionHistService.getNextPK());
@@ -805,7 +860,7 @@ public class WikiMB implements Serializable {
                     seccionHist.setDfechacreacion(new Date());
                     seccionHist.setVusuariocreacion(user.getVlogin());
                     discusionSeccionHistService.saveOrUpdate(seccionHist);
-                    
+
                     GcmFileUtils.writeStringToFileServer(ruta1, "html.txt", seccion.getDiscusionHtml());
                     GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", seccion.getDiscusionPlain());
                 }
@@ -965,17 +1020,17 @@ public class WikiMB implements Serializable {
 
     public void save(ActionEvent event) {
         try {
-            if(this.getSelectedCategoria() == null) {
+            if (this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getNombre())) {
+            if (StringUtils.isBlank(this.getNombre())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título del wiki requerido. Ingrese el título del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDescripcionHtml())) {
+            if (StringUtils.isBlank(this.getDescripcionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción del wiki requerido. Ingrese la descripción del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -989,7 +1044,7 @@ public class WikiMB implements Serializable {
             wiki.setNconocimientoid(conocimientoService.getNextPK());
             wiki.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             wiki.setVtitulo(StringUtils.upperCase(this.getNombre()));
-            if(this.getDescripcionPlain().length() < 400) {
+            if (this.getDescripcionPlain().length() < 400) {
                 wiki.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 wiki.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
@@ -1005,7 +1060,7 @@ public class WikiMB implements Serializable {
             wiki.setDfechacreacion(new Date());
             wiki.setVusuariocreacion(user.getVlogin());
             conocimientoService.saveOrUpdate(wiki);
-            
+
             GcmFileUtils.writeStringToFileServer(np0, "html.txt", this.getDescripcionHtml());
             GcmFileUtils.writeStringToFileServer(np0, "plain.txt", this.getDescripcionPlain());
 
@@ -1086,7 +1141,7 @@ public class WikiMB implements Serializable {
                     vinculo.setDfechacreacion(new Date());
                     vinculo.setVusuariocreacion(user.getVlogin());
                     vinculoService.saveOrUpdate(vinculo);
-                    
+
                     TvinculoHistId vinculoHistId = new TvinculoHistId();
                     vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
                     vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
@@ -1111,7 +1166,7 @@ public class WikiMB implements Serializable {
         try {
             this.clearAll();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            if(!CollectionUtils.isEmpty(this.getFilteredListaWiki())) {
+            if (!CollectionUtils.isEmpty(this.getFilteredListaWiki())) {
                 this.setSelectedWiki(this.getFilteredListaWiki().get(index));
             } else {
                 this.setSelectedWiki(this.getListaWiki().get(index));
@@ -1154,7 +1209,7 @@ public class WikiMB implements Serializable {
         try {
             this.clearAll();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            if(!CollectionUtils.isEmpty(this.getFilteredListaWiki())) {
+            if (!CollectionUtils.isEmpty(this.getFilteredListaWiki())) {
                 this.setSelectedWiki(this.getFilteredListaWiki().get(index));
             } else {
                 this.setSelectedWiki(this.getListaWiki().get(index));
@@ -1195,17 +1250,17 @@ public class WikiMB implements Serializable {
 
     public void edit(ActionEvent event) {
         try {
-            if(this.getSelectedCategoria() == null) {
+            if (this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedWiki().getVtitulo())) {
+            if (StringUtils.isBlank(this.getSelectedWiki().getVtitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título del wiki requerido. Ingrese el título del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDescripcionHtml())) {
+            if (StringUtils.isBlank(this.getDescripcionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción del wiki requerido. Ingrese la descripción del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -1216,7 +1271,7 @@ public class WikiMB implements Serializable {
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             this.getSelectedWiki().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedWiki().setVtitulo(StringUtils.upperCase(this.getSelectedWiki().getVtitulo()));
-            if(this.getDescripcionPlain().length() < 400) {
+            if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
@@ -1224,14 +1279,14 @@ public class WikiMB implements Serializable {
             this.getSelectedWiki().setDfechamodificacion(new Date());
             this.getSelectedWiki().setVusuariomodificacion(user.getVlogin());
             conocimientoService.saveOrUpdate(this.getSelectedWiki());
-            
+
             GcmFileUtils.writeStringToFileServer(this.getSelectedWiki().getVruta(), "html.txt", this.getDescripcionHtml());
             GcmFileUtils.writeStringToFileServer(this.getSelectedWiki().getVruta(), "plain.txt", this.getDescripcionPlain());
 
             HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
             Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedWiki().getNconocimientoid());
             int lastversion;
-            if(lastHistorial != null) {
+            if (lastHistorial != null) {
                 lastversion = lastHistorial.getNnumversion().intValue();
             } else {
                 lastversion = 0;
@@ -1320,7 +1375,7 @@ public class WikiMB implements Serializable {
                     vinculo.setDfechacreacion(new Date());
                     vinculo.setVusuariocreacion(user.getVlogin());
                     vinculoService.saveOrUpdate(vinculo);
-                    
+
                     TvinculoHistId vinculoHistId = new TvinculoHistId();
                     vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
                     vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
@@ -1340,12 +1395,12 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public String toPost() {
         try {
             this.clearAll();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            if(!CollectionUtils.isEmpty(this.getFilteredListaWiki())) {
+            if (!CollectionUtils.isEmpty(this.getFilteredListaWiki())) {
                 this.setSelectedWiki(this.getFilteredListaWiki().get(index));
             } else {
                 this.setSelectedWiki(this.getListaWiki().get(index));
@@ -1383,20 +1438,20 @@ public class WikiMB implements Serializable {
         }
         return "/pages/wiki/publicar?faces-redirect=true";
     }
-    
+
     public void post(ActionEvent event) {
         try {
-            if(this.getSelectedCategoria() == null) {
+            if (this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedWiki().getVtitulo())) {
+            if (StringUtils.isBlank(this.getSelectedWiki().getVtitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título del wiki requerido. Ingrese el título del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDescripcionHtml())) {
+            if (StringUtils.isBlank(this.getDescripcionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción del wiki requerido. Ingrese la descripción del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -1407,7 +1462,7 @@ public class WikiMB implements Serializable {
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             this.getSelectedWiki().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedWiki().setVtitulo(StringUtils.upperCase(this.getSelectedWiki().getVtitulo()));
-            if(this.getDescripcionPlain().length() < 400) {
+            if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
@@ -1424,7 +1479,7 @@ public class WikiMB implements Serializable {
             HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
             Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedWiki().getNconocimientoid());
             int lastversion;
-            if(lastHistorial != null) {
+            if (lastHistorial != null) {
                 lastversion = lastHistorial.getNnumversion().intValue();
             } else {
                 lastversion = 0;
@@ -1513,7 +1568,7 @@ public class WikiMB implements Serializable {
                     vinculo.setDfechacreacion(new Date());
                     vinculo.setVusuariocreacion(user.getVlogin());
                     vinculoService.saveOrUpdate(vinculo);
-                    
+
                     TvinculoHistId vinculoHistId = new TvinculoHistId();
                     vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
                     vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
@@ -1573,23 +1628,23 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
-    public void toCompare(ActionEvent event){
+
+    public void toCompare(ActionEvent event) {
         try {
             if (event != null) {
-                if(CollectionUtils.isEmpty(this.getSelectedHistoriales())){
+                if (CollectionUtils.isEmpty(this.getSelectedHistoriales())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe seleccionar dos versiones para comparar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if(CollectionUtils.isNotEmpty(this.getSelectedHistoriales()) && this.getSelectedHistoriales().size() != 2){
+                if (CollectionUtils.isNotEmpty(this.getSelectedHistoriales()) && this.getSelectedHistoriales().size() != 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Sólo se puede comparar dos versiones a la vez.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
                 SeccionHistService seccionHistService = (SeccionHistService) ServiceFinder.findBean("SeccionHistService");
                 VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
-                for(Historial historial : this.getSelectedHistoriales()) {
+                for (Historial historial : this.getSelectedHistoriales()) {
                     historial.setDescripcionHtml(GcmFileUtils.readStringFromFileServer(historial.getVruta(), "html.txt"));
                     historial.setListaSeccionHist(seccionHistService.getSeccionHistsByHistorial(historial.getId().getNhistorialid()));
                     if (CollectionUtils.isNotEmpty(historial.getListaSeccionHist())) {
@@ -1601,6 +1656,128 @@ public class WikiMB implements Serializable {
                 this.setSelectedHistorialLeft(this.getSelectedHistoriales().get(0));
                 this.setSelectedHistorialRight(this.getSelectedHistoriales().get(1));
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/historialCompare.xhtml");
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void toAddCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void addCalificacion(ActionEvent event) {
+        try {
+            if (this.getCalificacion() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getComentario())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
+            Calificacion cal = new Calificacion();
+            cal.setNcalificacionid(calificacionService.getNextPK());
+            cal.setNconocimientoid(this.getSelectedWiki().getNconocimientoid());
+            cal.setNcalificacion(this.getCalificacion());
+            cal.setVcomentario(StringUtils.capitalize(this.getComentario().trim()));
+            cal.setDfechacreacion(new Date());
+            cal.setVusuariocreacion(user.getVlogin());
+            calificacionService.saveOrUpdate(cal);
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedWiki().getNconocimientoid()));
+            if (CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (Calificacion c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
+            }
+            RequestContext.getCurrentInstance().execute("PF('calDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void toEditCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedCalificacion(this.getListaCalificacion().get(index));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void editCalificacion(ActionEvent event) {
+        try {
+            if (this.getSelectedCalificacion().getNcalificacion() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSelectedCalificacion().getVcomentario())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario al wiki.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
+            this.getSelectedCalificacion().setNcalificacion(this.getSelectedCalificacion().getNcalificacion());
+            this.getSelectedCalificacion().setVcomentario(StringUtils.capitalize(this.getSelectedCalificacion().getVcomentario().trim()));
+            this.getSelectedCalificacion().setDfechamodificacion(new Date());
+            this.getSelectedCalificacion().setVusuariomodificacion(user.getVlogin());
+            calificacionService.saveOrUpdate(this.getSelectedCalificacion());
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedWiki().getNconocimientoid()));
+            if (CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (Calificacion c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
+            }
+            RequestContext.getCurrentInstance().execute("PF('ecalDialog').hide();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void toDeleteCalificacion(ActionEvent event) {
+        try {
+            this.clearCalificacion();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedCalificacion(this.getListaCalificacion().get(index));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteCalificacion(ActionEvent event) {
+        try {
+            CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
+            calificacionService.delete(this.getSelectedCalificacion().getNcalificacionid());
+            this.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(this.getSelectedWiki().getNconocimientoid()));
+            if (CollectionUtils.isNotEmpty(this.getListaCalificacion())) {
+                UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                for (Calificacion c : this.getListaCalificacion()) {
+                    User u = userService.getUserByLogin(c.getVusuariocreacion());
+                    c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
+                }
             }
         } catch (Exception e) {
             e.getMessage();
