@@ -159,6 +159,12 @@ public class ContenidoServiceImpl implements ContenidoService {
         ContenidoDao contenidoDao = (ContenidoDao) ServiceFinder.findBean("ContenidoDao");
         contenidoDao.delete(conocimientoid);
     }
+    
+    @Override
+    public void deleteArchivos(BigDecimal conocimientoid) throws Exception {
+        ContenidoDao contenidoDao = (ContenidoDao) ServiceFinder.findBean("ContenidoDao");
+        contenidoDao.deleteArchivos(conocimientoid);
+    }
 
 
 }

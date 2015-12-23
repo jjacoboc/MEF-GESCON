@@ -39,6 +39,20 @@
                         <f:param name="page" value="/pages/categoria"/>
                     </p:menuitem>
                 </p:submenu>
+                <p:submenu label="Reportes" icon="fa fa-file-text" >
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Reporte de Usuarios" icon="fa fa-users">
+                        <f:param name="page" value="/pages/reporteUser"/>
+                    </p:menuitem>
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Reporte de Perfiles y Politicas" icon="fa fa-leanpub">
+                        <f:param name="page" value="/pages/reportePerfiles"/>
+                    </p:menuitem>
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Reporte de Estado de Registros" icon="fa fa-line-chart">
+                        <f:param name="page" value="/pages/reporteConocimientos"/>
+                    </p:menuitem>
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Reporte de Calificación de Registros" icon="fa fa-check">
+                        <f:param name="page" value="/pages/reporteCalificaciones"/>
+                    </p:menuitem>
+                </p:submenu>
                 <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Tablas Maestras" icon="fa fa-table" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                     <f:param name="page" value="/pages/maestro"/>
                 </p:menuitem>
@@ -48,6 +62,7 @@
                 <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Rango" icon="fa fa-list" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                     <f:param name="page" value="/pages/rango"/>
                 </p:menuitem>
+
             </p:submenu>
 
             <p:separator rendered="#{loginMB.politicas[msgs.MENU_MODULOS]}"/>
@@ -63,7 +78,7 @@
                     <f:param name="page" value="/pages/wiki/lista"/>
                 </p:menuitem>
                 <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Contenido" icon="fa fa-caret-square-o-right" rendered="#{loginMB.politicas[msgs.MODULO_CONTENIDO]}">
-                    <f:param name="page" value="/pages/contenido/contenido"/>
+                    <f:param name="page" value="/pages/contenido/lista"/>
                 </p:menuitem>
                 <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Buenas Practicas" icon="fa fa-check-square-o" rendered="#{loginMB.politicas[msgs.MODULO_BUENASPRACTICAS]}">
                     <f:param name="page" value="/pages/buenapractica/lista"/>
