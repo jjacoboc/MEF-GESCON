@@ -3,6 +3,7 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="P_IMAGEN" class="java.lang.String"/>
 	<field name="NOMBRE" class="java.lang.String"/>
 	<field name="CATEGORIA" class="java.lang.String"/>
 	<field name="USUARIO_CREACION" class="java.lang.String"/>
@@ -16,10 +17,6 @@
 	</background>
 	<pageHeader>
 		<band height="88" splitType="Stretch">
-			<image>
-				<reportElement x="0" y="0" width="221" height="30" uuid="df865817-a906-424f-b2b9-fd66964714dc"/>
-				<imageExpression><![CDATA["C:\\Documents and Settings\\Pruebas\\Escritorio\\logo-minef.jpg"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="436" y="21" width="27" height="10" uuid="052b8ce5-3c5b-416d-a209-8675320c061f"/>
 				<textElement>
@@ -83,6 +80,10 @@
 				</textElement>
 				<text><![CDATA[REPORTE DE ESTADO DE REGISTROS]]></text>
 			</staticText>
+			<image>
+				<reportElement key="image-1" x="0" y="1" width="193" height="30" uuid="980f065a-e938-4579-95a8-eb35a1cfe12b"/>
+				<imageExpression><![CDATA[$P{P_IMAGEN}]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>

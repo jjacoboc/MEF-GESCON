@@ -3,6 +3,7 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="P_IMAGEN" class="java.lang.String"/>
 	<field name="NOMBRE_PERFIL" class="java.lang.String"/>
 	<field name="NOMBRE_POLITICA" class="java.lang.String"/>
 	<field name="DESCRIPCION" class="java.lang.String"/>
@@ -16,10 +17,6 @@
 	</background>
 	<pageHeader>
 		<band height="84" splitType="Stretch">
-			<image>
-				<reportElement x="0" y="0" width="221" height="30" uuid="590e8584-411c-4a87-94af-e763bc54532a"/>
-				<imageExpression><![CDATA["C:\\Documents and Settings\\Pruebas\\Escritorio\\logo-minef.jpg"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="185" y="49" width="194" height="19" uuid="b8086b2e-bb56-47ce-8cb3-772de6462477"/>
 				<textElement>
@@ -83,6 +80,10 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement key="image-1" x="0" y="1" width="193" height="30" uuid="be0112b7-7ed9-44ae-893d-700a7ddf362d"/>
+				<imageExpression><![CDATA[$P{P_IMAGEN}]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>

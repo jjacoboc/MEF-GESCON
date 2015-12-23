@@ -4,6 +4,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<subDataset name="dataset1" uuid="7d246a72-18fc-4844-bf13-1a81fe7d5e20"/>
+	<parameter name="P_IMAGEN" class="java.lang.String"/>
 	<field name="NOMBRE" class="java.lang.String"/>
 	<field name="LOGIN" class="java.lang.String"/>
 	<field name="USUARIO_CREACION" class="java.lang.String"/>
@@ -16,10 +17,6 @@
 	</background>
 	<pageHeader>
 		<band height="78" splitType="Stretch">
-			<image>
-				<reportElement x="0" y="0" width="221" height="30" uuid="a9287b18-80ad-4c61-bcc8-e0b2cd9205c5"/>
-				<imageExpression><![CDATA["C:\\Documents and Settings\\Pruebas\\Escritorio\\logo-minef.jpg"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="204" y="43" width="194" height="19" uuid="f31682dd-48e9-4d21-9bc7-a862ae2be975"/>
 				<textElement>
@@ -83,6 +80,10 @@
 				</textElement>
 				<text><![CDATA[de]]></text>
 			</staticText>
+			<image>
+				<reportElement key="image-1" x="0" y="1" width="193" height="30" uuid="b2f61f6a-3e33-4d9b-99ad-c969115f6955"/>
+				<imageExpression><![CDATA[$P{P_IMAGEN}]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>

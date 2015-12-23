@@ -378,6 +378,8 @@ public class ReporteMB implements Serializable {
             listaDatosReporte = reporteService.listarUsuarios(parametrosReporte);
             
             archivo = new File(JSFUtils.getServletContext().getRealPath("/pages/reportes/reporteUser.jasper"));
+            String rutaImagen = JSFUtils.getServletContext().getRealPath("/resources/images/logo-minef.jpg");
+            parametrosJasper.put("P_IMAGEN", rutaImagen);
             //archivo = new File(JSFUtils.getServletContext().getRealPath("/reportes/reportePAP.jrxml"));
             List<HashMap<String, Object>> listaDatos = listaDatosReporte;
             JRDataSource fuenteDatos = new JRBeanCollectionDataSource(listaDatos);
@@ -417,6 +419,8 @@ public class ReporteMB implements Serializable {
             
             archivo = new File(JSFUtils.getServletContext().getRealPath("/pages/reportes/reportePerfiles.jasper"));
             //archivo = new File(JSFUtils.getServletContext().getRealPath("/reportes/reportePAP.jrxml"));
+            String rutaImagen = JSFUtils.getServletContext().getRealPath("/resources/images/logo-minef.jpg");
+            parametrosJasper.put("P_IMAGEN", rutaImagen);
             List<HashMap<String, Object>> listaDatos = listaDatosReporte;
             JRDataSource fuenteDatos = new JRBeanCollectionDataSource(listaDatos);
             JasperReport reporteJasper = (JasperReport) JRLoader.loadObjectFromFile(archivo.getPath());
@@ -455,6 +459,8 @@ public class ReporteMB implements Serializable {
             
             archivo = new File(JSFUtils.getServletContext().getRealPath("/pages/reportes/reporteConocimientos.jasper"));
             //archivo = new File(JSFUtils.getServletContext().getRealPath("/reportes/reportePAP.jrxml"));
+            String rutaImagen = JSFUtils.getServletContext().getRealPath("/resources/images/logo-minef.jpg");
+            parametrosJasper.put("P_IMAGEN", rutaImagen);
             List<HashMap<String, Object>> listaDatos = listaDatosReporte;
             JRDataSource fuenteDatos = new JRBeanCollectionDataSource(listaDatos);
             JasperReport reporteJasper = (JasperReport) JRLoader.loadObjectFromFile(archivo.getPath());
@@ -493,6 +499,8 @@ public class ReporteMB implements Serializable {
             
             archivo = new File(JSFUtils.getServletContext().getRealPath("/pages/reportes/reporteCalificaciones.jasper"));
             //archivo = new File(JSFUtils.getServletContext().getRealPath("/reportes/reportePAP.jrxml"));
+            String rutaImagen = JSFUtils.getServletContext().getRealPath("/resources/images/logo-minef.jpg");
+            parametrosJasper.put("P_IMAGEN", rutaImagen);
             List<HashMap<String, Object>> listaDatos = listaDatosReporte;
             JRDataSource fuenteDatos = new JRBeanCollectionDataSource(listaDatos);
             JasperReport reporteJasper = (JasperReport) JRLoader.loadObjectFromFile(archivo.getPath());
