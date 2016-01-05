@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class name="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" optimistic-lock="version" schema="GESCON3" table="TCONOCIMIENTO">
+  <class name="pe.gob.mef.gescon.hibernate.domain.Tconocimiento" optimistic-lock="version" schema="GESCON3"  table="TCONOCIMIENTO">
     <id name="nconocimientoid" type="big_decimal">
       <column name="NCONOCIMIENTOID" precision="22" scale="0"/>
       <generator class="assigned"/>

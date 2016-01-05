@@ -46,6 +46,19 @@ public class BaseLegalServiceImpl implements BaseLegalService{
     }
     
     @Override
+    public List<BaseLegal> getBaselegalesActivedPosted() throws Exception {
+        List<BaseLegal> baseLegales = new ArrayList<BaseLegal>();
+        BaseLegalDao baseLegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
+        List<Tbaselegal> lista = baseLegalDao.getTbaselegalesActivedPosted();
+        for(Tbaselegal tbaselegal : lista) {
+            BaseLegal baseLegal = new BaseLegal();
+            BeanUtils.copyProperties(baseLegal, tbaselegal);
+            baseLegales.add(baseLegal);
+        }
+        return baseLegales;
+    }
+    
+    @Override
     public BaseLegal getBaselegalById(BigDecimal id) throws Exception {
         BaseLegalDao baseLegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
         Tbaselegal tbaselegal = baseLegalDao.getTbaselegalById(id);

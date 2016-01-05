@@ -75,7 +75,7 @@
                                 pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
                         <p:ajax event="dateSelect" update=":fm:fromDate"/>
                     </p:calendar>
-                    <p:commandButton icon="fa fa-fw fa-chevron-right" actionListener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
+                    <p:commandButton icon="fa fa-chevron-right white" actionListener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
                 </h:panelGrid>
             </p:fieldset>
             <p:fieldset legend="Tipo de Contenido">
@@ -83,9 +83,6 @@
                     <f:selectItems value="#{consultaMB.listaTipoConocimientoFiltro}" var="tc" itemLabel="#{tc.vnombre}" itemValue="#{tc.ntpoconocimientoid}" />
                     <p:ajax event="change" listener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
                 </p:selectManyCheckbox>
-            </p:fieldset>
-            <p:fieldset >
-                <p:commandLink value="Formular Pregunta" ajax="false" action="/pages/pregunta/nuevo.xhtml" styleClass="ui-link" />
             </p:fieldset>
         </h:panelGrid>
     </h:form>

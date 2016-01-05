@@ -1229,7 +1229,7 @@ public class LoginMB implements Serializable {
                     BaseLegalService servicebl = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
                     this.setSelectedBaseLegal(servicebl.getBaselegalById(BigDecimal.valueOf(id)));
                     ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-                    this.selectedBaseLegal.setArchivo(aservice.getLastArchivoByBaseLegal(this.getSelectedBaseLegal()));
+                    this.selectedBaseLegal.setArchivo(aservice.getArchivoByBaseLegal(this.getSelectedBaseLegal()));
                     this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
                     this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
                     this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));

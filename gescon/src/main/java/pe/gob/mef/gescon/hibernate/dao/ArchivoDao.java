@@ -16,8 +16,8 @@ import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
  */
 public interface ArchivoDao {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<Tarchivo> getTarchivosByTbaselegal(Tbaselegal tbaselegal) throws Exception;
-    public Tarchivo getLastTarchivoByTbaselegal(Tbaselegal tbaselegal) throws Exception;
-    public void saveOrUpdate(Tarchivo tarchivo) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<Tarchivo> getTarchivosByTbaselegal(Tbaselegal tbaselegal) throws Exception;
+    Tarchivo getTarchivoByTbaselegal(Tbaselegal tbaselegal) throws Exception;
+    void saveOrUpdate(Tarchivo tarchivo) throws Exception;
 }

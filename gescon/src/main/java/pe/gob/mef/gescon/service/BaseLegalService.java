@@ -16,11 +16,12 @@ import pe.gob.mef.gescon.web.bean.BaseLegal;
  */
 public interface BaseLegalService {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<BaseLegal> getBaselegales() throws Exception;
-    public BaseLegal getBaselegalById(BigDecimal id) throws Exception;
-    public List<BaseLegal> getTbaselegalesLinkedById(final BigDecimal id) throws Exception;
-    public List<BaseLegal> getTbaselegalesNotLinkedById(final BigDecimal id) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<BaseLegal> getBaselegales() throws Exception;
+    List<BaseLegal> getBaselegalesActivedPosted() throws Exception;
+    BaseLegal getBaselegalById(BigDecimal id) throws Exception;
+    List<BaseLegal> getTbaselegalesLinkedById(final BigDecimal id) throws Exception;
+    List<BaseLegal> getTbaselegalesNotLinkedById(final BigDecimal id) throws Exception;
     List<Asignacion> obtenerBaseLegalxAsig(BigDecimal baselegalid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
-    public void saveOrUpdate(BaseLegal baseLegal) throws Exception;
+    void saveOrUpdate(BaseLegal baseLegal) throws Exception;
 }

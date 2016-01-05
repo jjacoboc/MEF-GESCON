@@ -22,9 +22,12 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.lucene.Indexador;
 import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.ArchivoService;
+import pe.gob.mef.gescon.service.BaseLegalHistorialService;
 import pe.gob.mef.gescon.service.BaseLegalService;
+import pe.gob.mef.gescon.service.CalificacionBaseLegalService;
 import pe.gob.mef.gescon.service.CalificacionPreguntaService;
 import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
@@ -42,7 +45,9 @@ import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
+import pe.gob.mef.gescon.web.bean.BaselegalHist;
 import pe.gob.mef.gescon.web.bean.Calificacion;
+import pe.gob.mef.gescon.web.bean.CalificacionBaselegal;
 import pe.gob.mef.gescon.web.bean.CalificacionPregunta;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
@@ -76,6 +81,8 @@ public class ConsultaMB implements Serializable {
     private StreamedContent content;
     private Pregunta selectedPregunta;
     private String searchText;
+    private String tipoConocimiento;
+    private String categoria;
 
     /**
      * Creates a new instance of ConsultaMB
@@ -219,6 +226,22 @@ public class ConsultaMB implements Serializable {
         this.searchText = searchText;
     }
 
+    public String getTipoConocimiento() {
+        return tipoConocimiento;
+    }
+
+    public void setTipoConocimiento(String tipoConocimiento) {
+        this.tipoConocimiento = tipoConocimiento;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
     public void init() {
         try {
             CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
@@ -338,10 +361,12 @@ public class ConsultaMB implements Serializable {
         TreeNode node;
         List<String> ids = new ArrayList<String>();
         try {
-            id = this.getSelectedCategoriaFiltro().getNcategoriaid().toString();
-            ids.add(id);
-            node = this.getNodeByIdCategoria(this.getTree(), id);
-            ids.addAll(getIdsSubTreeByNode(node, ids));
+            if(this.getSelectedCategoriaFiltro() != null) {
+                id = this.getSelectedCategoriaFiltro().getNcategoriaid().toString();
+                ids.add(id);
+                node = this.getNodeByIdCategoria(this.getTree(), id);
+                ids.addAll(getIdsSubTreeByNode(node, ids));
+            }
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -364,7 +389,13 @@ public class ConsultaMB implements Serializable {
             filter.put("fFromDate", this.getFechaInicio());
             filter.put("fToDate", this.getFechaFin());
             filter.put("fType", this.getTypesFilter());
-            filter.put("fText", this.getSearchText());
+            if(StringUtils.isNotBlank(this.getSearchText())) {
+                filter.put("fText", this.getSearchText());
+                filter.put("fCodes", Indexador.search(this.getSearchText()));
+            } else {
+                filter.remove("fText");
+                filter.remove("fCodes");
+            }
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
             this.setListaConsulta(service.getQueryFilter(filter));
         } catch (Exception e) {
@@ -380,7 +411,13 @@ public class ConsultaMB implements Serializable {
             filter.put("fFromDate", this.getFechaInicio());
             filter.put("fToDate", this.getFechaFin());
             filter.put("fType", this.getTypesFilter());
-            filter.put("fText", this.getSearchText());
+            if(StringUtils.isNotBlank(this.getSearchText())) {
+                filter.put("fText", this.getSearchText());
+                filter.put("fCodes", Indexador.search(this.getSearchText()));
+            } else {
+                filter.remove("fText");
+                filter.remove("fCodes");
+            }
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
             this.setListaConsulta(service.getQueryFilter(filter));
         } catch (Exception e) {
@@ -396,9 +433,68 @@ public class ConsultaMB implements Serializable {
             filter.put("fFromDate", this.getFechaInicio());
             filter.put("fToDate", this.getFechaFin());
             filter.put("fType", this.getTypesFilter());
-            filter.put("fText", this.getSearchText());
+            if(StringUtils.isNotBlank(this.getSearchText())) {
+                filter.put("fText", this.getSearchText());
+                filter.put("fCodes", Indexador.search(this.getSearchText()));
+            } else {
+                filter.remove("fText");
+                filter.remove("fCodes");
+            }
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
             this.setListaConsulta(service.getQueryFilter(filter));
+            if(CollectionUtils.isEmpty(this.getListaCategoriaFiltro())) {
+                CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                this.setListaCategoriaFiltro(catservice.getCategoriasActived());
+                createTree(this.getListaCategoriaFiltro());
+                this.setListaBreadCrumb(new ArrayList<Categoria>());
+            }
+            if(CollectionUtils.isEmpty(this.getSelectedTipoConocimiento())) {
+                TipoConocimientoService tcservice = (TipoConocimientoService) ServiceFinder.findBean("TipoConocimientoService");
+                this.setListaTipoConocimientoFiltro(tcservice.getTipoConocimientos());
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return "/pages/consulta?faces-redirect=true";
+    }
+    
+    public String advanceSearch() {
+        HashMap filter = new HashMap();
+        try {
+            for(Categoria c : this.getListaCategoriaFiltro()) {
+                if(c.getNcategoriaid().toString().equals(this.getCategoria())) {
+                    this.setSelectedCategoriaFiltro(c);
+                    break;
+                }
+            }
+            this.setSelectedTipoConocimiento(new ArrayList<String>());
+            if(StringUtils.isNotBlank(this.getTipoConocimiento())) {
+                this.getSelectedTipoConocimiento().add(this.getTipoConocimiento());
+            }
+            filter.put("fCategoria", this.getCategoriesFilter());
+            filter.put("fFromDate", this.getFechaInicio());
+            filter.put("fToDate", this.getFechaFin());
+            filter.put("fType", this.getTypesFilter());
+            if(StringUtils.isNotBlank(this.getSearchText())) {
+                filter.put("fText", this.getSearchText());
+                filter.put("fCodes", Indexador.search(this.getSearchText()));
+            } else {
+                filter.remove("fText");
+                filter.remove("fCodes");
+            }
+            ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+            this.setListaConsulta(service.getQueryFilter(filter));
+            if(CollectionUtils.isEmpty(this.getListaCategoriaFiltro())) {
+                CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                this.setListaCategoriaFiltro(catservice.getCategoriasActived());
+                createTree(this.getListaCategoriaFiltro());
+                this.setListaBreadCrumb(new ArrayList<Categoria>());
+            }
+            if(CollectionUtils.isEmpty(this.getSelectedTipoConocimiento())) {
+                TipoConocimientoService tcservice = (TipoConocimientoService) ServiceFinder.findBean("TipoConocimientoService");
+                this.setListaTipoConocimientoFiltro(tcservice.getTipoConocimientos());
+            }
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -422,8 +518,27 @@ public class ConsultaMB implements Serializable {
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     bl.setSelectedCategoria(categoriaService.getCategoriaById(bl.getSelectedBaseLegal().getNcategoriaid()));
                     ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
-                    bl.getSelectedBaseLegal().setArchivo(aservice.getLastArchivoByBaseLegal(bl.getSelectedBaseLegal()));
+                    bl.getSelectedBaseLegal().setArchivo(aservice.getArchivoByBaseLegal(bl.getSelectedBaseLegal()));
                     bl.setListaTarget(service.getTbaselegalesLinkedById(bl.getSelectedBaseLegal().getNbaselegalid()));
+                    
+                    BaseLegalHistorialService historialService = (BaseLegalHistorialService) ServiceFinder.findBean("BaseLegalHistorialService");
+                    bl.setListaHistorial(historialService.getHistorialesByBaselegal(bl.getSelectedBaseLegal().getNbaselegalid()));
+                    if(CollectionUtils.isNotEmpty(bl.getListaHistorial())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (BaselegalHist historial : bl.getListaHistorial()) {
+                            User user = userService.getUserByLogin(historial.getVusuariocreacion());
+                            historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
+                    CalificacionBaseLegalService calificacionService = (CalificacionBaseLegalService) ServiceFinder.findBean("CalificacionBaseLegalService");
+                    bl.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(bl.getSelectedBaseLegal().getNbaselegalid()));
+                    if(CollectionUtils.isNotEmpty(bl.getListaCalificacion())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (CalificacionBaselegal calificacion : bl.getListaCalificacion()) {
+                            User user = userService.getUserByLogin(calificacion.getVusuariocreacion());
+                            calificacion.setUsuarioNombre(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
                     JSFUtils.getSession().setAttribute("baseLegalMB", bl);
                     FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/baselegal/vistaConsulta.xhtml");
                     break;
@@ -489,8 +604,8 @@ public class ConsultaMB implements Serializable {
                 }
                 case 3: { //Wiki
                     WikiMB mb = new WikiMB();
-                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
-                    mb.setSelectedWiki(service.getConocimientoById(BigDecimal.valueOf(id)));
+                    ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    mb.setSelectedWiki(conocimientoService.getConocimientoById(BigDecimal.valueOf(id)));
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     mb.setSelectedCategoria(categoriaService.getCategoriaById(mb.getSelectedWiki().getNcategoriaid()));
                     mb.setDescripcionHtml(GcmFileUtils.readStringFromFileServer(mb.getSelectedWiki().getVruta(), "html.txt"));
@@ -501,7 +616,6 @@ public class ConsultaMB implements Serializable {
                             seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
                         }
                     }
-                    ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     HashMap map = new HashMap();
                     map.put("nconocimientoid", mb.getSelectedWiki().getNconocimientoid().toString());
                     map.put("flag", true);

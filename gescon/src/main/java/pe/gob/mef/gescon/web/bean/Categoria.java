@@ -7,7 +7,6 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -361,6 +360,12 @@ public class Categoria implements Serializable, Comparable<Categoria>{
             @Override
             public int compare(Categoria o1, Categoria o2) {
                 return o1.getNcategoriaid().intValue() - o2.getNcategoriaid().intValue();
+            }
+        };
+        public static Comparator<Categoria> NOMBRE = new Comparator<Categoria>() {
+            @Override
+            public int compare(Categoria o1, Categoria o2) {
+                return o1.getVnombre().compareTo(o2.getVnombre());
             }
         };
     }

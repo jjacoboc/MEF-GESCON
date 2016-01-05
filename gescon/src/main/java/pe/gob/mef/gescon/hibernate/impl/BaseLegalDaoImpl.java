@@ -61,6 +61,15 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
         criteria.addOrder(Order.desc("dfechacreacion"));
         return (List<Tbaselegal>) getHibernateTemplate().findByCriteria(criteria);
     }
+    
+    @Override
+    public List<Tbaselegal> getTbaselegalesActivedPosted() throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tbaselegal.class);
+        criteria.add(Restrictions.eq("nactivo",Constante.ESTADO_ACTIVO));
+        criteria.add(Restrictions.eq("nestadoid",Constante.SITUACION_PUBLICADO));
+        criteria.addOrder(Order.desc("dfechacreacion"));
+        return (List<Tbaselegal>) getHibernateTemplate().findByCriteria(criteria);
+    }
 
     @Override
     public Tbaselegal getTbaselegalById(BigDecimal id) throws Exception {

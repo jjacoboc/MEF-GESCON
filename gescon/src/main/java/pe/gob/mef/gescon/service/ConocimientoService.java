@@ -19,7 +19,9 @@ public interface ConocimientoService {
     
     BigDecimal getNextPK() throws Exception;
     List<Conocimiento> getConocimientos() throws Exception;
+    List<Conocimiento> getConocimientosActivedPublic() throws Exception;
     List<Conocimiento> getConocimientosByType(BigDecimal type) throws Exception;
+    List<Conocimiento> getConocimientosActivedPublicByType(BigDecimal type) throws Exception;
     Conocimiento getConocimientoById(BigDecimal id) throws Exception;
     void saveOrUpdate(Conocimiento conocimiento) throws Exception;
     void delete(Conocimiento conocimiento) throws Exception;

@@ -30,7 +30,7 @@ import pe.gob.mef.gescon.hibernate.domain.TvinculoHist;
 public class VinculoHistDaoImpl extends HibernateDaoSupport implements VinculoHistDao{
 
     /**
-     * Crea una nueva instancia de SeccionHistDaoImpl
+     * Crea una nueva instancia de VinculoHistDaoImpl
      *
      * @param sessionFactory
      */

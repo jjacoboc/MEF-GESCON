@@ -24,6 +24,7 @@ import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.dao.ConocimientoDao;
 import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 
@@ -64,9 +65,28 @@ public class ConocimientoDaoImpl extends HibernateDaoSupport implements Conocimi
     }
     
     @Override
+    public List<Tconocimiento> getTconocimientosActivedPublic() throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tconocimiento.class);
+        criteria.add(Restrictions.eq("nactivo", BigDecimal.valueOf(Long.parseLong(Constante.ESTADO_ACTIVO))));
+        criteria.add(Restrictions.eq("nsituacionid", BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO))));
+        criteria.addOrder(Order.desc("nconocimientoid"));
+        return (List<Tconocimiento>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
     public List<Tconocimiento> getTconocimientosByType(BigDecimal type) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Tconocimiento.class);
         criteria.add(Restrictions.eq("ntipoconocimientoid",type));
+        criteria.addOrder(Order.desc("nconocimientoid"));
+        return (List<Tconocimiento>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public List<Tconocimiento> getTconocimientosActivedPublicByType(BigDecimal type) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tconocimiento.class);
+        criteria.add(Restrictions.eq("ntipoconocimientoid",type));
+        criteria.add(Restrictions.eq("nactivo", BigDecimal.valueOf(Long.parseLong(Constante.ESTADO_ACTIVO))));
+        criteria.add(Restrictions.eq("nsituacionid", BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO))));
         criteria.addOrder(Order.desc("nconocimientoid"));
         return (List<Tconocimiento>) getHibernateTemplate().findByCriteria(criteria);
     }

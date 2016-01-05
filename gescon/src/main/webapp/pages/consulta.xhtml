@@ -7,7 +7,7 @@
                 template="/WEB-INF/template.xhtml">
     <style>
         .ui-columnl {
-            width: 10% !important;
+            width: 100px !important;
         }
         .ui-columnr {
             width: 90% !important;
@@ -16,7 +16,7 @@
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
-                <div class="ContainerIndent TexAlCenter">
+                <div class="ContainerIndent">
                     <h:outputScript>
                         $(function() {
                             $(".ui-datascroller-content").css("height", $("#center").height());
@@ -28,7 +28,7 @@
                         }
                     </h:outputScript>
                     <f:view>
-                        <h:panelGrid columns="2" width="100%" columnClasses="ui-columnl, ui-columnr" styleClass="TexAlLeft panelcolumns">
+                        <h:panelGrid columns="2" width="100%" columnClasses="ui-columnl, ui-columnr" styleClass="panelcolumns">
                             <h:panelGroup>
                                 <ui:include src="filtro.xhtml" />
                             </h:panelGroup>
@@ -50,7 +50,7 @@
                                             </h:panelGroup>
                                         </p:panelGrid>
                                         <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="width: 100%">
-                                            <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" mode="inline" chunkSize="10" scrollHeight="480" >
+                                            <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" mode="inline" chunkSize="10" scrollHeight="480" style="width: 100%">
                                                 <h:panelGrid columns="1" width="100%">
                                                     <h:panelGrid columns="5" cellpadding="0" cellspacing="0">
                                                         <h:outputText class="fa fa-file-text-o red Fs14" rendered="#{c.idTipoConocimiento eq 1}"/>

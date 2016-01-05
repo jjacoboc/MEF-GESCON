@@ -110,8 +110,7 @@
                                 </h:panelGrid>
                                 <p:fieldset>
                                     <h:panelGrid id="pgPostVinc" columns="1" cellpadding="0" cellspacing="0">
-                                        <p:commandLink value="#{msgs.bl_btn_vinculo}" actionListener="#{baseLegalMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pgPick"/>
-                                        <p:spacer height="5"/>
+                                        <p:commandButton value="#{msgs.bl_btn_vinculo}" actionListener="#{baseLegalMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pgPick" styleClass="ui-link Fs14"/>
                                         <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada.">
                                             <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
                                                 <h:outputText value="#{t.vnumero}"/>

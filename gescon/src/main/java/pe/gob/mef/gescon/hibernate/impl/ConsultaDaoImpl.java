@@ -48,6 +48,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
         final Date fToDate = (Date) filters.get("fToDate");
         final String fType = (String) filters.get("fType");
         final String fText = (String) filters.get("fText");
+        final String fCodes = (String) filters.get("fCodes");
         SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_SHORT);
         final StringBuilder sql = new StringBuilder();
         Object object = null;
@@ -74,7 +75,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fToDate != null) {
                 sql.append("    AND a.dfechapublicacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
-            if(fText != null) {
+            if(StringUtils.isNotBlank(fText)) {
                 sql.append("    AND a.vnombre LIKE '%").append(fText).append("%' ");
             }
             sql.append("        GROUP BY a.nbaselegalid, a.vnumero, a.vnombre, a.ncategoriaid, b.vnombre, ");
@@ -104,7 +105,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fToDate != null) {
                 sql.append("    AND a.dfechacreacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
-            if(fText != null) {
+            if(StringUtils.isNotBlank(fText)) {
                 sql.append("    AND a.vdetalle LIKE '%").append(fText).append("%' ");
             }
             sql.append("        GROUP BY a.npreguntaid, a.vasunto, a.vdetalle, a.ncategoriaid, b.vnombre, ");
@@ -136,8 +137,8 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fToDate != null) {
                 sql.append("    AND a.dfechacreacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
-            if(fText != null) {
-                sql.append("    AND a.vdescripcion LIKE '%").append(fText).append("%' ");
+            if(StringUtils.isNotBlank(fCodes)) {
+                sql.append("    AND a.nconocimientoid IN (").append(fCodes).append(") ");
             }
             sql.append("        GROUP BY a.nconocimientoid, a.vtitulo, a.vdescripcion, a.ncategoriaid, b.vnombre, ");
             sql.append("        a.dfechapublicacion, a.ntpoconocimientoid, d.vnombre, a.nsituacionid, c.vnombre ");

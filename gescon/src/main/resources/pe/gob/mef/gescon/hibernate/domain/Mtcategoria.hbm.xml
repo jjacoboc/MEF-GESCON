@@ -3,13 +3,13 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 06/11/2015 11:03:54 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-    <class name="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" table="MTCATEGORIA" schema="GESCON3" optimistic-lock="version">
+    <class name="pe.gob.mef.gescon.hibernate.domain.Mtcategoria" table="MTCATEGORIA" schema="GESCON3"  optimistic-lock="version">
         <id name="ncategoriaid" type="big_decimal">
             <column name="NCATEGORIAID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
         <property name="vdescripcion" type="string">
-            <column name="VDESCRIPCION" length="25" />
+            <column name="VDESCRIPCION" length="400" />
         </property>
         <property name="nestado" type="big_decimal">
             <column name="NESTADO" precision="22" scale="0" />
@@ -21,7 +21,7 @@
             <column name="NNIVEL" precision="22" scale="0" />
         </property>
         <property name="vnombre" type="string">
-            <column name="VNOMBRE" length="25" />
+            <column name="VNOMBRE" length="100" />
         </property>
         <property name="vusuariomodificacion" type="string">
             <column name="VUSUARIOMODIFICACION" length="25" />

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/12/2015 01:39:52 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalHist" table="TVINCULO_BASELEGAL_HIST" schema="GESCON3" optimistic-lock="version">
+        <id name="nvinculohistid" type="big_decimal">
+            <column name="NVINCULOHISTID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="nhistorialid" type="big_decimal">
+            <column name="NHISTORIALID" precision="22" scale="0"/>
+        </property>
+        <property name="nbaselegalid" type="big_decimal">
+            <column name="NBASELEGALID" precision="22" scale="0" />
+        </property>
+        <property name="nbaselegalvinculadaid" type="big_decimal">
+            <column name="NBASELEGALVINCULADAID" precision="22" scale="0" />
+        </property>
+        <property name="ntipovinculo" type="big_decimal">
+            <column name="NTIPOVINCULO" precision="22" scale="0" />
+        </property>
+        <property name="vusuariocreacion" type="string">
+            <column name="VUSUARIOCREACION" length="25" />
+        </property>
+        <property name="dfechacreacion" type="timestamp">
+            <column name="DFECHACREACION" />
+        </property>
+        <property name="vusuariomodificacion" type="string">
+            <column name="VUSUARIOMODIFICACION" length="25" />
+        </property>
+        <property name="dfechamodificacion" type="timestamp">
+            <column name="DFECHAMODIFICACION" />
+        </property>
+    </class>
+</hibernate-mapping>

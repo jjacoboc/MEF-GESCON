@@ -48,10 +48,38 @@ public class ConocimientoServiceImpl implements ConocimientoService {
     }
     
     @Override
+    public List<Conocimiento> getConocimientosActivedPublic() throws Exception {
+        List<Conocimiento> conocimientos = new ArrayList<Conocimiento>();
+        ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
+        List<Tconocimiento> lista = conocimientoDao.getTconocimientosActivedPublic();
+        Conocimiento conocimiento = new Conocimiento();
+        for (Tconocimiento tconocimiento : lista) {
+            BeanUtils.copyProperties(conocimiento, tconocimiento);
+            conocimientos.add(conocimiento);
+            conocimiento = new Conocimiento();
+        }
+        return conocimientos;
+    }
+    
+    @Override
     public List<Conocimiento> getConocimientosByType(BigDecimal type) throws Exception {
         List<Conocimiento> conocimientos = new ArrayList<Conocimiento>();
         ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
         List<Tconocimiento> lista = conocimientoDao.getTconocimientosByType(type);
+        Conocimiento conocimiento = new Conocimiento();
+        for (Tconocimiento tconocimiento : lista) {
+            BeanUtils.copyProperties(conocimiento, tconocimiento);
+            conocimientos.add(conocimiento);
+            conocimiento = new Conocimiento();
+        }
+        return conocimientos;
+    }
+    
+    @Override
+    public List<Conocimiento> getConocimientosActivedPublicByType(BigDecimal type) throws Exception {
+        List<Conocimiento> conocimientos = new ArrayList<Conocimiento>();
+        ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
+        List<Tconocimiento> lista = conocimientoDao.getTconocimientosActivedPublicByType(type);
         Conocimiento conocimiento = new Conocimiento();
         for (Tconocimiento tconocimiento : lista) {
             BeanUtils.copyProperties(conocimiento, tconocimiento);

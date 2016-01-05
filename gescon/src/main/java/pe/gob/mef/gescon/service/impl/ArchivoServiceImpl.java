@@ -47,12 +47,12 @@ public class ArchivoServiceImpl implements ArchivoService{
     }
     
     @Override
-    public Archivo getLastArchivoByBaseLegal(BaseLegal baseLegal) throws Exception {
+    public Archivo getArchivoByBaseLegal(BaseLegal baseLegal) throws Exception {
         Archivo archivo = new Archivo();
         Tbaselegal tbaselegal = new Tbaselegal();
         BeanUtils.copyProperties(tbaselegal, baseLegal);
         ArchivoDao archivoDao = (ArchivoDao) ServiceFinder.findBean("ArchivoDao");
-        Tarchivo tarchivo = archivoDao.getLastTarchivoByTbaselegal(tbaselegal);
+        Tarchivo tarchivo = archivoDao.getTarchivoByTbaselegal(tbaselegal);
         if(tarchivo != null) {
             BeanUtils.copyProperties(archivo, tarchivo);
         } else {
@@ -68,7 +68,4 @@ public class ArchivoServiceImpl implements ArchivoService{
         ArchivoDao archivoDao = (ArchivoDao) ServiceFinder.findBean("ArchivoDao");
         archivoDao.saveOrUpdate(tarchivo);
     }
-
-    
-    
 }

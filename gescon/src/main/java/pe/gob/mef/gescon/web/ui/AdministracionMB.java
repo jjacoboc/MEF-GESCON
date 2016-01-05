@@ -19,6 +19,7 @@ import org.primefaces.component.commandbutton.CommandButton;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.GeneralBean;
 import pe.gob.mef.gescon.common.Parameters;
+import pe.gob.mef.gescon.lucene.Indexador;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.util.JSFUtils;
@@ -336,5 +337,14 @@ public class AdministracionMB implements Serializable{
             e.printStackTrace();
         }
         return "/pages/consulta?faces-redirect=true";
+    }
+    
+    public void indexar(ActionEvent event){
+        try {
+            Indexador.indexDirectory();
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
     }
 }

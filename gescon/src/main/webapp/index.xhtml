@@ -74,12 +74,12 @@
                                         });
                                     });
                                 </script>
-                                <p:panelGrid columns="2" layout="grid">
-                                    <p:panel header="Bases Legales Destacadas" rendered="#{not empty administracionMB.listaDestacadosBL}" styleClass="TexAlLeft">
+                                <p:panelGrid columns="2" layout="grid" style="border-style: none; background: #F6FAFC;">
+                                    <p:panel header="Base Legal Destacada" rendered="#{not empty administracionMB.listaDestacadosBL}" styleClass="TexAlLeft">
                                         <ul id="sliderBL">
                                             <ui:repeat value="#{administracionMB.listaDestacadosBL}" var="c">                                        
                                                 <li>
-                                                    <h:panelGrid columns="2" styleClass="bx-row">
+                                                    <h:panelGrid columns="2" styleClass="bx-row" columnClasses="bx-row-col1, bx-row-col2">
                                                         <p:graphicImage cache="false" value="#{categoriaImages.image}" width="64px" height="64px" >
                                                             <f:param name="id" value="#{c.idCategoria}"/>
                                                         </p:graphicImage>

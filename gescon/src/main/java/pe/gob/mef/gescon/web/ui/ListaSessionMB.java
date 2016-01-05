@@ -37,6 +37,7 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaTipoRango;
     private List<SelectItem> listaTipoRangoActivo;
     private List<SelectItem> listaCategoria;
+    private List<SelectItem> listaCategoriaActiva;
     private List<SelectItem> listaRangoBaseLegal;
     private List<SelectItem> listaEstadoBaseLegal;
     private List<SelectItem> listaEstadoBaseLegalVinculo;
@@ -143,6 +144,18 @@ public class ListaSessionMB implements Serializable{
      */
     public void setListaCategoria(List<SelectItem> listaCategoria) {
         this.listaCategoria = listaCategoria;
+    }
+
+    public List<SelectItem> getListaCategoriaActiva() throws Exception {
+        if(listaCategoriaActiva == null){
+            CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            listaCategoriaActiva =  new Items(service.getCategoriasActived(), null, "ncategoriaid","vnombre").getItems();
+        }
+        return listaCategoriaActiva;
+    }
+
+    public void setListaCategoriaActiva(List<SelectItem> listaCategoriaActiva) {
+        this.listaCategoriaActiva = listaCategoriaActiva;
     }
 
     /**
