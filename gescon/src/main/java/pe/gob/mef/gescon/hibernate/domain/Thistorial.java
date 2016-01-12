@@ -19,15 +19,9 @@ public class Thistorial implements java.io.Serializable {
     private String vusuariomodificacion;
     private String vusuariocreacion;
     private Date dfechacreacion;
-    private BigDecimal nundejecutora;
     private String vruta;
-    private String vrango;
     private String vnumero;
     private String vtema;
-    private String vdesextra;
-    private String vautor;
-    private String vfuente;
-    private String vtipo;
     private BigDecimal nnumversion;
     private String vcontenido;
     private BigDecimal nactivo;
@@ -36,6 +30,9 @@ public class Thistorial implements java.io.Serializable {
     private String vobservacion;
     private Date dfechamodificacion;
     private BigDecimal ncategoriaid;
+    private BigDecimal nversionactual;
+    private String vmsjsolicita;
+    private String vmsjrespuesta;
     private Set timplementacionHists = new HashSet(0);
     private Set tdiscusionHists = new HashSet(0);
     private Set tvinculoHists = new HashSet(0);
@@ -51,7 +48,7 @@ public class Thistorial implements java.io.Serializable {
         this.tconocimiento = tconocimiento;
     }
 
-    public Thistorial(ThistorialId id, Tconocimiento tconocimiento, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, BigDecimal nundejecutora, String vruta, String vrango, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, BigDecimal nnumversion, String vcontenido, BigDecimal nactivo, BigDecimal nsituacionid, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ncategoriaid, Set timplementacionHists, Set tdiscusionHists, Set tvinculoHists, Set tcalificacionHists, Set tseccionHists, Set tobservacionHists) {
+    public Thistorial(ThistorialId id, Tconocimiento tconocimiento, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vruta, String vnumero, String vtema, BigDecimal nnumversion, String vcontenido, BigDecimal nactivo, BigDecimal nsituacionid, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ncategoriaid, Set timplementacionHists, Set tdiscusionHists, Set tvinculoHists, Set tcalificacionHists, Set tseccionHists, Set tobservacionHists) {
         this.id = id;
         this.tconocimiento = tconocimiento;
         this.vdescripcion = vdescripcion;
@@ -59,15 +56,9 @@ public class Thistorial implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
-        this.nundejecutora = nundejecutora;
         this.vruta = vruta;
-        this.vrango = vrango;
         this.vnumero = vnumero;
         this.vtema = vtema;
-        this.vdesextra = vdesextra;
-        this.vautor = vautor;
-        this.vfuente = vfuente;
-        this.vtipo = vtipo;
         this.nnumversion = nnumversion;
         this.vcontenido = vcontenido;
         this.nactivo = nactivo;
@@ -148,28 +139,12 @@ public class Thistorial implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public BigDecimal getNundejecutora() {
-        return this.nundejecutora;
-    }
-
-    public void setNundejecutora(BigDecimal nundejecutora) {
-        this.nundejecutora = nundejecutora;
-    }
-
     public String getVruta() {
         return this.vruta;
     }
 
     public void setVruta(String vruta) {
         this.vruta = vruta;
-    }
-
-    public String getVrango() {
-        return this.vrango;
-    }
-
-    public void setVrango(String vrango) {
-        this.vrango = vrango;
     }
 
     public String getVnumero() {
@@ -186,38 +161,6 @@ public class Thistorial implements java.io.Serializable {
 
     public void setVtema(String vtema) {
         this.vtema = vtema;
-    }
-
-    public String getVdesextra() {
-        return this.vdesextra;
-    }
-
-    public void setVdesextra(String vdesextra) {
-        this.vdesextra = vdesextra;
-    }
-
-    public String getVautor() {
-        return this.vautor;
-    }
-
-    public void setVautor(String vautor) {
-        this.vautor = vautor;
-    }
-
-    public String getVfuente() {
-        return this.vfuente;
-    }
-
-    public void setVfuente(String vfuente) {
-        this.vfuente = vfuente;
-    }
-
-    public String getVtipo() {
-        return this.vtipo;
-    }
-
-    public void setVtipo(String vtipo) {
-        this.vtipo = vtipo;
     }
 
     public BigDecimal getNnumversion() {
@@ -282,6 +225,30 @@ public class Thistorial implements java.io.Serializable {
 
     public void setNcategoriaid(BigDecimal ncategoriaid) {
         this.ncategoriaid = ncategoriaid;
+    }
+
+    public BigDecimal getNversionactual() {
+        return nversionactual;
+    }
+
+    public void setNversionactual(BigDecimal nversionactual) {
+        this.nversionactual = nversionactual;
+    }
+
+    public String getVmsjsolicita() {
+        return vmsjsolicita;
+    }
+
+    public void setVmsjsolicita(String vmsjsolicita) {
+        this.vmsjsolicita = vmsjsolicita;
+    }
+
+    public String getVmsjrespuesta() {
+        return vmsjrespuesta;
+    }
+
+    public void setVmsjrespuesta(String vmsjrespuesta) {
+        this.vmsjrespuesta = vmsjrespuesta;
     }
 
     public Set getTimplementacionHists() {

@@ -28,15 +28,9 @@ public class Historial implements Serializable {
     private String vusuariomodificacion;
     private String vusuariocreacion;
     private Date dfechacreacion;
-    private BigDecimal nundejecutora;
     private String vruta;
-    private String vrango;
     private String vnumero;
     private String vtema;
-    private String vdesextra;
-    private String vautor;
-    private String vfuente;
-    private String vtipo;
     private BigDecimal nnumversion;
     private String vcontenido;
     private BigDecimal nactivo;
@@ -45,6 +39,9 @@ public class Historial implements Serializable {
     private String vobservacion;
     private Date dfechamodificacion;
     private BigDecimal ncategoriaid;
+    private BigDecimal nversionactual;
+    private String vmsjsolicita;
+    private String vmsjrespuesta;
     private String vfechacreacion;
     private String vfechamodificacion;
     private String vnombreusuario;
@@ -125,28 +122,12 @@ public class Historial implements Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public BigDecimal getNundejecutora() {
-        return nundejecutora;
-    }
-
-    public void setNundejecutora(BigDecimal nundejecutora) {
-        this.nundejecutora = nundejecutora;
-    }
-
     public String getVruta() {
         return vruta;
     }
 
     public void setVruta(String vruta) {
         this.vruta = vruta;
-    }
-
-    public String getVrango() {
-        return vrango;
-    }
-
-    public void setVrango(String vrango) {
-        this.vrango = vrango;
     }
 
     public String getVnumero() {
@@ -163,38 +144,6 @@ public class Historial implements Serializable {
 
     public void setVtema(String vtema) {
         this.vtema = vtema;
-    }
-
-    public String getVdesextra() {
-        return vdesextra;
-    }
-
-    public void setVdesextra(String vdesextra) {
-        this.vdesextra = vdesextra;
-    }
-
-    public String getVautor() {
-        return vautor;
-    }
-
-    public void setVautor(String vautor) {
-        this.vautor = vautor;
-    }
-
-    public String getVfuente() {
-        return vfuente;
-    }
-
-    public void setVfuente(String vfuente) {
-        this.vfuente = vfuente;
-    }
-
-    public String getVtipo() {
-        return vtipo;
-    }
-
-    public void setVtipo(String vtipo) {
-        this.vtipo = vtipo;
     }
 
     public BigDecimal getNnumversion() {
@@ -259,6 +208,30 @@ public class Historial implements Serializable {
 
     public void setNcategoriaid(BigDecimal ncategoriaid) {
         this.ncategoriaid = ncategoriaid;
+    }
+
+    public BigDecimal getNversionactual() {
+        return nversionactual;
+    }
+
+    public void setNversionactual(BigDecimal nversionactual) {
+        this.nversionactual = nversionactual;
+    }
+
+    public String getVmsjsolicita() {
+        return vmsjsolicita;
+    }
+
+    public void setVmsjsolicita(String vmsjsolicita) {
+        this.vmsjsolicita = vmsjsolicita;
+    }
+
+    public String getVmsjrespuesta() {
+        return vmsjrespuesta;
+    }
+
+    public void setVmsjrespuesta(String vmsjrespuesta) {
+        this.vmsjrespuesta = vmsjrespuesta;
     }
 
     public String getVfechacreacion() {

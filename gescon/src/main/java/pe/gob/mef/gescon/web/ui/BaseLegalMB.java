@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -44,6 +45,7 @@ import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Items;
+import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
 import pe.gob.mef.gescon.service.ArchivoHistorialService;
@@ -80,10 +82,8 @@ public class BaseLegalMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(BaseLegalMB.class);
-//    private final String temppath = "\\\\192.168.1.11\\gescon\\temp\\";
-//    private final String path = "\\\\192.168.1.11\\gescon\\files\\bl\\";
-    private final String temppath = "\\\\10.2.20.58\\gescon\\temp\\";
-    private final String path = "\\\\10.2.20.58\\gescon\\files\\bl\\";
+    private String temppath;
+    private String path;
     private List<BaseLegal> listaBaseLegal;
     private List<BaseLegal> filteredListaBaseLegal;
     private BaseLegal selectedBaseLegal;
@@ -520,6 +520,9 @@ public class BaseLegalMB implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+            this.temppath = bundle.getString("pdftemppath");
+            this.path = bundle.getString("pdfpath");
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaBaseLegal(service.getBaselegales());
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");

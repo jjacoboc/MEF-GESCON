@@ -8,7 +8,6 @@ package pe.gob.mef.gescon.lucene;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
@@ -23,7 +22,6 @@ import jcifs.smb.SmbFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
-import org.apache.lucene.analysis.es.SpanishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.document.Document;
@@ -41,7 +39,6 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.util.Version;
 import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.SeccionService;
@@ -55,8 +52,8 @@ import pe.gob.mef.gescon.web.bean.Seccion;
  */
 public class Indexador {
 
-    //private static final String INDEX_DIRECTORY = "\\\\192.168.1.11\\lucene\\";
-    private static final String INDEX_DIRECTORY = "\\\\10.2.20.58\\lucene\\";
+    private static final String INDEX_DIRECTORY = "\\\\192.168.1.11\\lucene\\";
+//    private static final String INDEX_DIRECTORY = "\\\\10.2.20.58\\lucene\\";
     private static final String FIELD_PATH = "path";
     private static final String FIELD_CONTENTS = "contents";
     private static final String FIELD_FILENAME = "filename";
@@ -83,16 +80,17 @@ public class Indexador {
         File file;
         Document doc;
         try {
-            Path path = Paths.get(INDEX_DIRECTORY);
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+            String indexDirectory = bundle.getString("indexDirectory");
+            filepath = bundle.getString("filepath");
+            user = bundle.getString("user");
+            password = bundle.getString("password");
+            
+            Path path = Paths.get(indexDirectory);
             Directory directory = FSDirectory.open(path);
             IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
             IndexWriter indexWriter = new IndexWriter(directory, config);
             indexWriter.deleteAll();
-
-            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
-            filepath = bundle.getString("filepath");
-            user = bundle.getString("user");
-            password = bundle.getString("password");
 
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
@@ -163,8 +161,10 @@ public class Indexador {
         String codes = null;
         StopWords stopWords;
         try {
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+            String indexDirectory = bundle.getString("indexDirectory");
             stopWords = new StopWords();
-            Path path = Paths.get(INDEX_DIRECTORY);
+            Path path = Paths.get(indexDirectory);
             Directory directory = FSDirectory.open(path);
             IndexReader indexReader = DirectoryReader.open(directory);
             IndexSearcher indexSearcher = new IndexSearcher(indexReader);

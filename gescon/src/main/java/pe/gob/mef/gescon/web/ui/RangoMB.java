@@ -26,7 +26,6 @@ import org.primefaces.context.RequestContext;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Items;
-import pe.gob.mef.gescon.service.ParametroService;
 import pe.gob.mef.gescon.service.RangoService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;

@@ -20,14 +20,9 @@ public class Tconocimiento implements java.io.Serializable {
     private String vusuariomodificacion;
     private String vusuariocreacion;
     private Date dfechacreacion;
-    private String vejecutora;
     private String vruta;
     private String vnumero;
     private String vtema;
-    private String vdesextra;
-    private String vautor;
-    private String vfuente;
-    private String vtipo;
     private String vcontenido;
     private BigDecimal ndias;
     private BigDecimal nactivo;
@@ -47,7 +42,7 @@ public class Tconocimiento implements java.io.Serializable {
         this.nconocimientoid = nconocimientoid;
     }
 
-    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vejecutora, String vruta, String vnumero, String vtema, String vdesextra, String vautor, String vfuente, String vtipo, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Date dfechapublicacion, String vmsjsolicita, String vmsjrespuesta, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
+    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vruta, String vnumero, String vtema, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Date dfechapublicacion, String vmsjsolicita, String vmsjrespuesta, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
         this.nconocimientoid = nconocimientoid;
         this.ncategoriaid = ncategoriaid;
         this.nsituacionid = nsituacionid;
@@ -57,14 +52,9 @@ public class Tconocimiento implements java.io.Serializable {
         this.vusuariomodificacion = vusuariomodificacion;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
-        this.vejecutora = vejecutora;
         this.vruta = vruta;
         this.vnumero = vnumero;
         this.vtema = vtema;
-        this.vdesextra = vdesextra;
-        this.vautor = vautor;
-        this.vfuente = vfuente;
-        this.vtipo = vtipo;
         this.vcontenido = vcontenido;
         this.ndias = ndias;
         this.vobservacion = vobservacion;
@@ -149,14 +139,6 @@ public class Tconocimiento implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public String getVejecutora() {
-        return this.vejecutora;
-    }
-
-    public void setVejecutora(String vejecutora) {
-        this.vejecutora = vejecutora;
-    }
-
     public String getVruta() {
         return this.vruta;
     }
@@ -179,38 +161,6 @@ public class Tconocimiento implements java.io.Serializable {
 
     public void setVtema(String vtema) {
         this.vtema = vtema;
-    }
-
-    public String getVdesextra() {
-        return this.vdesextra;
-    }
-
-    public void setVdesextra(String vdesextra) {
-        this.vdesextra = vdesextra;
-    }
-
-    public String getVautor() {
-        return this.vautor;
-    }
-
-    public void setVautor(String vautor) {
-        this.vautor = vautor;
-    }
-
-    public String getVfuente() {
-        return this.vfuente;
-    }
-
-    public void setVfuente(String vfuente) {
-        this.vfuente = vfuente;
-    }
-
-    public String getVtipo() {
-        return this.vtipo;
-    }
-
-    public void setVtipo(String vtipo) {
-        this.vtipo = vtipo;
     }
 
     public String getVcontenido() {

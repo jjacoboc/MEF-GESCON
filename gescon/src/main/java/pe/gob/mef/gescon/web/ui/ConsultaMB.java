@@ -839,4 +839,21 @@ public class ConsultaMB implements Serializable {
             e.printStackTrace();
         }
     }
+    
+    public String back() {
+        try {
+            JSFUtils.getSession().removeAttribute("administracionMB");
+            JSFUtils.getSession().removeAttribute("baseLegalMB");
+            JSFUtils.getSession().removeAttribute("buenaPracticaMB");
+            JSFUtils.getSession().removeAttribute("categoriaMB");
+            JSFUtils.getSession().removeAttribute("contenidoMB");
+            JSFUtils.getSession().removeAttribute("listaSessionMB");
+            JSFUtils.getSession().removeAttribute("oportunidadMB");
+            JSFUtils.getSession().removeAttribute("wikiMB");            
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return "/pages/consulta?faces-redirect=true";
+    }
 }

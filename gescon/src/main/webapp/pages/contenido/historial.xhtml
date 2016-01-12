@@ -6,7 +6,7 @@
 
     <h:form id="fh">
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-        <p:panel header="#{contenidoMB.selectedContenido.vtitulo}" styleClass="TexAlLeft">
+        <p:panel header="#{contenidoMB.selectedContenido.vtitulo}" styleClass="TexAlLeft containerView">
             <h:panelGrid id="pgHist" columns="1" width="100%">
                 <h:panelGroup>
                     <h:outputText value="#{msgs.wk_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
@@ -43,9 +43,9 @@
                     </p:column>
                 </p:dataTable>
             </h:panelGrid>
-            <h:panelGrid columns="1" width="100%">
-                <p:commandButton value="Regresar" ajax="false" action="/pages/consulta.xhtml"/>
-            </h:panelGrid>
         </p:panel>
+        <h:panelGrid columns="1" cellpadding="0" cellspacing="0" width="100%">
+            <p:commandButton value="Regresar" ajax="false" action="#{consultaMB.back}"/>
+        </h:panelGrid>
     </h:form>
 </ui:composition>

@@ -32,32 +32,14 @@
     <property name="dfechacreacion" type="timestamp">
       <column name="DFECHACREACION"/>
     </property>
-    <property name="nundejecutora" type="big_decimal">
-      <column name="NUNDEJECUTORA" precision="22" scale="0"/>
-    </property>
     <property name="vruta" type="string">
       <column length="400" name="vruta"/>
     </property>
-    <property name="vrango" type="string">
-      <column length="20" name="VRANGO"/>
-    </property>
     <property name="vnumero" type="string">
-      <column length="20" name="VNUMERO"/>
+      <column length="25" name="VNUMERO"/>
     </property>
     <property name="vtema" type="string">
       <column length="250" name="VTEMA"/>
-    </property>
-    <property name="vdesextra" type="string">
-      <column length="20" name="VDESEXTRA"/>
-    </property>
-    <property name="vautor" type="string">
-      <column length="50" name="VAUTOR"/>
-    </property>
-    <property name="vfuente" type="string">
-      <column length="20" name="VFUENTE"/>
-    </property>
-    <property name="vtipo" type="string">
-      <column length="20" name="VTIPO"/>
     </property>
     <property name="nnumversion" type="big_decimal">
       <column name="NNUMVERSION" precision="22" scale="0"/>
@@ -82,6 +64,15 @@
     </property>
     <property name="ncategoriaid" type="big_decimal">
       <column name="NCATEGORIAID" precision="22" scale="0"/>
+    </property>
+    <property name="nversionactual" type="big_decimal">
+      <column name="NVERSIONACTUAL" precision="22" scale="0"/>
+    </property>
+    <property name="vmsjsolicita" type="string">
+      <column length="400" name="VMSJSOLICITA"/>
+    </property>
+    <property name="vmsjrespuesta" type="string">
+      <column length="400" name="VMSJRESPUESTA"/>
     </property>
     <set fetch="select" inverse="true" lazy="true" name="timplementacionHists" table="TIMPLEMENTACION_HIST">
       <key>

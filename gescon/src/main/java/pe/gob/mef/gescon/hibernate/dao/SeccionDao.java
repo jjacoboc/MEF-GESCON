@@ -20,4 +20,5 @@ public interface SeccionDao {
     List<Tseccion> getTsecciones() throws Exception;
     List<Tseccion> getTseccionesByTconocimiento(BigDecimal idconocimiento) throws Exception;
     void saveOrUpdate(Tseccion tseccion) throws Exception;
+    void deleteTseccionesByTconocimiento(final BigDecimal idconocimiento) throws Exception;
 }

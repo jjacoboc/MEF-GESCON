@@ -7,7 +7,7 @@
 
     <h:form id="f">
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-        <p:panel header="#{baseLegalMB.selectedBaseLegal.vnumero}" styleClass="TexAlLeft">
+        <p:panel header="#{baseLegalMB.selectedBaseLegal.vnumero}" styleClass="TexAlLeft containerView">
             <h:panelGrid id="pgView" columns="1">
                 <h:panelGroup>
                     <h:outputText value="#{msgs.wk_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
@@ -64,7 +64,6 @@
 
                 <p:spacer/>
                 <p:fieldset legend="Vinculos Relacionados" toggleable="true">
-                    <h:panelGrid id="pgViewVinc" columns="1" cellpadding="0" cellspacing="0">
                         <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" rowIndexVar="rowIndex"
                                      emptyMessage="Ninguna base legal vinculada." >
                             <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
@@ -84,13 +83,12 @@
                                 </h:outputText>
                             </p:column>
                         </p:dataTable>
-                    </h:panelGrid>
                 </p:fieldset>
             </h:panelGrid>
-            <h:panelGrid columns="1" width="100%">
-                <p:commandButton value="Regresar" ajax="false" action="/pages/consulta.xhtml"/>
-            </h:panelGrid>
         </p:panel>
+        <h:panelGrid columns="1" cellpadding="0" cellspacing="0" width="100%">
+            <p:commandButton value="Regresar" ajax="false" action="#{consultaMB.back}"/>
+        </h:panelGrid>
     </h:form>
 
 </ui:composition>

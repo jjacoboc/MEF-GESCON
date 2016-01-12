@@ -20,4 +20,5 @@ public interface SeccionService {
     List<Seccion> getSecciones() throws Exception;
     List<Seccion> getSeccionesByConocimiento(BigDecimal idconocimiento) throws Exception;
     void saveOrUpdate(Seccion seccion) throws Exception;
+    void deleteSeccionesByConocimiento(BigDecimal idconocimiento) throws Exception;
 }

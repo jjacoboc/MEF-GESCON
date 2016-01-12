@@ -22,14 +22,9 @@ public class Conocimiento  implements Serializable {
     private String vusuariomodificacion;
     private String vusuariocreacion;
     private Date dfechacreacion;
-    private String vejecutora;
     private String vruta;
     private String vnumero;
     private String vtema;
-    private String vdesextra;
-    private String vautor;
-    private String vfuente;
-    private String vtipo;
     private String vcontenido;
     private BigDecimal ndias;
     private BigDecimal nactivo;
@@ -115,14 +110,6 @@ public class Conocimiento  implements Serializable {
         this.dfechacreacion = dfechacreacion;
     }
 
-    public String getVejecutora() {
-        return vejecutora;
-    }
-
-    public void setVejecutora(String vejecutora) {
-        this.vejecutora = vejecutora;
-    }
-
     public String getVruta() {
         return vruta;
     }
@@ -145,38 +132,6 @@ public class Conocimiento  implements Serializable {
 
     public void setVtema(String vtema) {
         this.vtema = vtema;
-    }
-
-    public String getVdesextra() {
-        return vdesextra;
-    }
-
-    public void setVdesextra(String vdesextra) {
-        this.vdesextra = vdesextra;
-    }
-
-    public String getVautor() {
-        return vautor;
-    }
-
-    public void setVautor(String vautor) {
-        this.vautor = vautor;
-    }
-
-    public String getVfuente() {
-        return vfuente;
-    }
-
-    public void setVfuente(String vfuente) {
-        this.vfuente = vfuente;
-    }
-
-    public String getVtipo() {
-        return vtipo;
-    }
-
-    public void setVtipo(String vtipo) {
-        this.vtipo = vtipo;
     }
 
     public String getVcontenido() {

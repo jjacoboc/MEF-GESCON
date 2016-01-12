@@ -47,10 +47,25 @@ and open the template in the editor.
     font-weight: bold;
     font-size: 12px;
 }
-.icon-add{background: url(../images/add.png) no-repeat !important;}
+
+.containerView {
+    max-width: 1200px; 
+    max-height: 900px; 
+    overflow: auto;
+}
+
+.containerCompareHistory {
+    max-width: 575px; 
+    max-height: 600px; 
+    overflow: auto;
+}
+
+.topbar-background {
+    background: url(../../resources/images/banner.png) no-repeat !important;
+}
 
 .ui-commandlink{
-    color: #778D9B !important;
+    color: #3B3D3F !important;
     text-decoration: none;
     margin-right: 0px;
 }
@@ -60,7 +75,7 @@ and open the template in the editor.
 }
 
 .ui-link{
-    color: #778D9B !important;
+    color: #3B3D3F !important;
     text-decoration: none;
     margin-right: 0px;
 }
@@ -81,3 +96,9 @@ and open the template in the editor.
 .wk-picklist-list div ul li {
     font-size: 12px !important;
 }
+
+.ui-outputlabel, table tbody tr td{color:#3B3D3F !important;}
+.ui-chkbox .ui-chkbox-label{color: #3B3D3F !important;}
+.ui-datatable table thead tr th{color:#3B3D3F !important;}
+.ui-datatable table tbody tr td{color:#3B3D3F !important;}
+.ui-fieldset-content{color:#3B3D3F !important;}

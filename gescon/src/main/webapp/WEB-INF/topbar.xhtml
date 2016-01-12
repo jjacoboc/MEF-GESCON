@@ -22,17 +22,17 @@
         }
         //]]>
     </script>
-    <div id="layout-topbar">
+    <div id="layout-topbar" class="topbar-background">
         <div id="layout-topbar-indent">
             <h:form id="headerForm">
                 <p:link href="/" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}">
-                    <h:graphicImage name="logogescon.png" styleClass="Fleft" library="images" class="Fleft"  />
+                    <h:graphicImage name="logo_gesconmef.png" styleClass="Fleft" library="images" />
                 </p:link>
                 <p:link outcome="/pages/indexAdmin.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid eq msgs.administrador}">
-                    <h:graphicImage name="logogescon.png" styleClass="Fleft" library="images" class="Fleft" />
+                    <h:graphicImage name="logo_gesconmef.png" styleClass="Fleft" library="images" />
                 </p:link>
                 <p:link href="/" rendered="#{loginMB.user eq null}">
-                    <h:graphicImage name="logogescon.png" styleClass="Fleft" library="images" class="Fleft" width="180px" height="45px"/>
+                    <h:graphicImage name="logo_gesconmef.png" styleClass="Fleft" library="images" width="187px" height="68px"/>
                 </p:link>
                 <a href="#" id="mobile-menu-button" class="BordRad3 white ShowOnMobile"><i class="fa fa-bars"></i> Menu</a>
                 <a href="#" id="mobile-menu-button-gray" class="BordRad3 white ShowOnMobile"><i class="fa fa-caret-down"></i> Top Menu</a>
@@ -91,7 +91,7 @@
                         </li>                        
                     </h:panelGroup>
                     <h:panelGroup rendered="#{loginMB.user eq null}">
-                        <li class="Animated05"><p:link href="#" onclick="PF('iniDialog').show();" styleClass="Unselectable"><i class="fa fa-sign-in"/> Iniciar Sesión</p:link></li>
+                        <li class="Animated05"><p:link href="#" onclick="PF('iniDialog').show();" styleClass="Unselectable" style="color: white !important;"><i class="fa fa-sign-in"/> Iniciar Sesión</p:link></li>
                     </h:panelGroup>
                 </ul>
             </h:form>

@@ -21,9 +21,17 @@
                         </style>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <h:panelGrid columns="3">
+                                <h:outputText value="Seleccione:" />
+                                <p:selectOneRadio value="#{wikiMB.selectedSwitch}">
+                                    <f:selectItem itemLabel="Versión #{wikiMB.selectedHistorialLeft.nnumversion}" itemValue="#{wikiMB.selectedHistorialLeft.id.nhistorialid}" />
+                                    <f:selectItem itemLabel="Versión #{wikiMB.selectedHistorialRight.nnumversion}" itemValue="#{wikiMB.selectedHistorialLeft.id.nhistorialid}" />
+                                </p:selectOneRadio>
+                                <p:commandButton value="Establecer Como Versión Actual" actionListener="#{wikiMB.switchHistory}" />
+                            </h:panelGrid>
                             <h:panelGrid columns="2" styleClass="panelcolumns">
                                 <p:panel header="Versión #{wikiMB.selectedHistorialLeft.nnumversion} - #{wikiMB.selectedHistorialLeft.vnombreusuario} - #{wikiMB.selectedHistorialLeft.vfechacreacion}"
-                                         styleClass="OvAuto">
+                                         styleClass="containerCompareHistory">
                                     <h:panelGrid columns="1" width="100%">
                                         <h:panelGroup>
                                             <h:outputText value="#{msgs.wk_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
@@ -166,12 +174,9 @@
                                             </h:panelGrid>
                                         </p:fieldset>
                                     </h:panelGrid>
-                                    <h:panelGrid columns="1" width="100%">
-                                        <p:commandButton value="Regresar" ajax="false" action="/pages/wiki/vistaConsulta.xhtml"/>
-                                    </h:panelGrid>
                                 </p:panel>
                                 <p:panel header="Versión #{wikiMB.selectedHistorialRight.nnumversion} - #{wikiMB.selectedHistorialRight.vnombreusuario} - #{wikiMB.selectedHistorialRight.vfechacreacion}"
-                                         styleClass="OvAuto">
+                                         styleClass="containerCompareHistory">
                                     <h:panelGrid columns="1" width="100%">
                                         <h:panelGroup>
                                             <h:outputText value="#{msgs.wk_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
@@ -186,7 +191,7 @@
                                         <p:fieldset legend="Indice" toggleable="true" rendered="#{not empty wikiMB.selectedHistorialRight.listaSeccionHist}">
                                             <table>
                                                 <ui:repeat value="#{wikiMB.selectedHistorialRight.listaSeccionHist}" var="s">
-                                                    <tr><td><a href="#s#{s.norden}"><h:outputText value="#{s.norden}. #{s.vtitulo}" styleClass="Fs14 ui-link"/></a></td></tr>
+                                                    <tr><td><a href="#t#{s.norden}"><h:outputText value="#{s.norden}. #{s.vtitulo}" styleClass="Fs14 ui-link"/></a></td></tr>
                                                 </ui:repeat>
                                             </table>
                                         </p:fieldset>
@@ -194,7 +199,7 @@
                                         <p:fieldset legend="Secciones" toggleable="true" rendered="#{not empty wikiMB.selectedHistorialRight.listaSeccionHist}">
                                             <table>
                                                 <ui:repeat value="#{wikiMB.selectedHistorialRight.listaSeccionHist}" var="s" varStatus="vs">
-                                                    <tr id="s#{s.norden}">
+                                                    <tr id="t#{s.norden}">
                                                         <td style="border-bottom: gray solid 1px;">
                                                             <h:outputText value="#{s.vtitulo}" styleClass="Fs14 FontBold black"/>
                                                         </td>
@@ -314,10 +319,10 @@
                                             </h:panelGrid>
                                         </p:fieldset>
                                     </h:panelGrid>
-                                    <h:panelGrid columns="1" width="100%">
-                                        <p:spacer/>
-                                    </h:panelGrid>
                                 </p:panel>
+                            </h:panelGrid>
+                            <h:panelGrid columns="1" width="100%">
+                                <p:commandButton value="Regresar" ajax="false" action="/pages/wiki/vistaConsulta.xhtml"/>
                             </h:panelGrid>
                         </h:form>
                     </f:view>

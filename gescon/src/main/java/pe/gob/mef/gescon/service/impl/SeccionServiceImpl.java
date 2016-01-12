@@ -72,4 +72,9 @@ public class SeccionServiceImpl implements SeccionService{
         seccionDao.saveOrUpdate(tseccion);
     }
     
+    @Override
+    public void deleteSeccionesByConocimiento(BigDecimal idconocimiento) throws Exception {
+        SeccionDao seccionDao = (SeccionDao) ServiceFinder.findBean("SeccionDao");
+        seccionDao.deleteTseccionesByTconocimiento(idconocimiento);
+    }
 }

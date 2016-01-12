@@ -2886,12 +2886,13 @@ public class LoginMB implements Serializable {
             page = (String) JSFUtils.getRequestParameter("page");
             JSFUtils.getSession().removeAttribute("administracionMB");
             JSFUtils.getSession().removeAttribute("baseLegalMB");
+            JSFUtils.getSession().removeAttribute("buenaPracticaMB");
             JSFUtils.getSession().removeAttribute("categoriaMB");
             JSFUtils.getSession().removeAttribute("consultaMB");
+            JSFUtils.getSession().removeAttribute("contenidoMB");
             JSFUtils.getSession().removeAttribute("listaSessionMB");
-            JSFUtils.getSession().removeAttribute("wikiMB");
-            JSFUtils.getSession().removeAttribute("buenaPracticaMB");
             JSFUtils.getSession().removeAttribute("oportunidadMB");
+            JSFUtils.getSession().removeAttribute("wikiMB");            
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

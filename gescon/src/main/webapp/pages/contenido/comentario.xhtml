@@ -15,7 +15,7 @@
     </style>
     <h:form id="fc">
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-        <p:panel header="#{contenidoMB.selectedContenido.vtitulo}" styleClass="TexAlLeft">
+        <p:panel header="#{contenidoMB.selectedContenido.vtitulo}" styleClass="TexAlLeft containerView">
             <h:panelGrid columns="1" width="100%">
                 <h:panelGroup>
                     <h:outputText value="#{msgs.bp_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
@@ -69,10 +69,10 @@
                     </c:forEach>
                 </table>
             </h:panelGrid>
-            <h:panelGrid columns="1" width="100%">
-                <p:commandButton value="Regresar" ajax="false" action="/pages/consulta.xhtml" rendered="#{loginMB.user eq null}"/>
-            </h:panelGrid>
         </p:panel>
+        <h:panelGrid columns="1" cellpadding="0" cellspacing="0" width="100%">
+            <p:commandButton value="Regresar" ajax="false" action="#{consultaMB.back}"/>
+        </h:panelGrid>
     </h:form>
 
     <p:dialog id="calDlg" header="#{msgs.bp_lbl_pnlCalificacion}" widgetVar="calDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">

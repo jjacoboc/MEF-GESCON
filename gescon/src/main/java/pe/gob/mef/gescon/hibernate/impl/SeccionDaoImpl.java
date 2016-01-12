@@ -79,4 +79,20 @@ public class SeccionDaoImpl extends HibernateDaoSupport implements SeccionDao {
     public void saveOrUpdate(final Tseccion tseccion) throws Exception {
         getHibernateTemplate().saveOrUpdate(tseccion);
     }
+    
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteTseccionesByTconocimiento(final BigDecimal idconocimiento) throws Exception {
+        getHibernateTemplate().execute(
+                new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws HibernateException {
+                        StringBuilder sql = new StringBuilder();
+                        sql.append("DELETE FROM TSECCION WHERE NCONOCIMIENTOID = ");
+                        sql.append(idconocimiento.toString());
+                        Query query = session.createSQLQuery(sql.toString());
+                        return query.executeUpdate();
+                    }
+                });
+    }
 }

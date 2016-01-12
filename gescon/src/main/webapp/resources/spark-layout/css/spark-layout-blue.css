@@ -95,7 +95,7 @@ body{margin:0px; background-image:url("#{resource['spark-layout:images/backgroun
 .menu-mask-open{width:100%; height:100%; opacity:0.4 !important;}
 
 /* Layout Top Bar*/
-#layout-topbar{height:100px; width:100%; border-top:solid 6px #D0525D/*#33AFDE*/; background-color:#F6FAFC/*#F1F6F9*/; display:table;}
+#layout-topbar{height:100px; width:100%; border-top:solid 6px #F6A770/*#33AFDE*/; background-color:#F6FAFC/*#F1F6F9*/; display:table;}
 	#layout-topbar-indent{width:92%; margin:0px auto;}
 		#logo{height:50px; margin-top:26px;}
                 #logo1{height:50px; margin-top:26px;}

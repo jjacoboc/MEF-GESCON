@@ -57,6 +57,7 @@ import pe.gob.mef.gescon.service.DiscusionSeccionService;
 import pe.gob.mef.gescon.service.DiscusionService;
 import pe.gob.mef.gescon.service.HistorialService;
 import pe.gob.mef.gescon.service.SeccionHistService;
+import pe.gob.mef.gescon.service.SeccionService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.service.VinculoHistService;
 import pe.gob.mef.gescon.service.VinculoService;
@@ -75,9 +76,11 @@ import pe.gob.mef.gescon.web.bean.DiscusionHist;
 import pe.gob.mef.gescon.web.bean.DiscusionSeccion;
 import pe.gob.mef.gescon.web.bean.DiscusionSeccionHist;
 import pe.gob.mef.gescon.web.bean.Historial;
+import pe.gob.mef.gescon.web.bean.Seccion;
 import pe.gob.mef.gescon.web.bean.SeccionHist;
 import pe.gob.mef.gescon.web.bean.User;
 import pe.gob.mef.gescon.web.bean.Vinculo;
+import pe.gob.mef.gescon.web.bean.VinculoHist;
 
 /**
  *
@@ -137,6 +140,7 @@ public class ContenidoMB implements Serializable {
     private Calificacion selectedCalificacion;
     private BigDecimal calificacion;
     private String comentario;
+    private String selectedSwitch;
 
     /**
      * Creates a new instance of ContenidoMB
@@ -690,6 +694,14 @@ public class ContenidoMB implements Serializable {
 
     public void setComentario(String comentario) {
         this.comentario = comentario;
+    }
+
+    public String getSelectedSwitch() {
+        return selectedSwitch;
+    }
+
+    public void setSelectedSwitch(String selectedSwitch) {
+        this.selectedSwitch = selectedSwitch;
     }
 
     @PostConstruct
@@ -1777,6 +1789,94 @@ public class ContenidoMB implements Serializable {
                 this.setSelectedHistorialRight(this.getSelectedHistoriales().get(1));
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/historialCompare.xhtml");
             }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void switchHistory(ActionEvent event) {
+        try {
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+            if(CollectionUtils.isNotEmpty(this.getListaHistorial())) {
+                for(Historial h : this.getListaHistorial()) {
+                    h.setNversionactual(BigDecimal.ZERO);
+                    historialService.saveOrUpdate(h);
+                }
+            }
+            Historial hist = historialService.getHistorialById(BigDecimal.valueOf(Long.parseLong(this.getSelectedSwitch())));
+            hist.setNversionactual(BigDecimal.ONE);
+            historialService.saveOrUpdate(hist);
+            String html = GcmFileUtils.readStringFromFileServer(hist.getVruta(), "html.txt");
+            String plain = GcmFileUtils.readStringFromFileServer(hist.getVruta(), "plain.txt");
+            SeccionHistService seccionHistService = (SeccionHistService) ServiceFinder.findBean("SeccionHistService");
+            hist.setListaSeccionHist(seccionHistService.getSeccionHistsByHistorial(hist.getId().getNhistorialid()));
+            if (CollectionUtils.isNotEmpty(hist.getListaSeccionHist())) {
+                for (SeccionHist seccionHist : hist.getListaSeccionHist()) {
+                    seccionHist.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "html.txt"));
+                    seccionHist.setDetallePlain(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "plain.txt"));
+                }
+            }
+            
+            this.getSelectedContenido().setNcategoriaid(hist.getNcategoriaid());
+            this.getSelectedContenido().setNdias(hist.getNdias());
+            this.getSelectedContenido().setVcontenido(hist.getVcontenido());
+            this.getSelectedContenido().setVdescripcion(hist.getVdescripcion());
+            this.getSelectedContenido().setVmsjrespuesta(hist.getVmsjrespuesta());
+            this.getSelectedContenido().setVmsjsolicita(hist.getVmsjsolicita());
+            this.getSelectedContenido().setVnumero(hist.getVnumero());
+            this.getSelectedContenido().setVobservacion(hist.getVobservacion());
+            this.getSelectedContenido().setVtema(hist.getVtema());
+            this.getSelectedContenido().setVtitulo(hist.getVtitulo());
+            this.getSelectedContenido().setDfechamodificacion(new Date());
+            this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
+            
+            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            conocimientoService.saveOrUpdate(this.getSelectedContenido());
+            GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "html.txt", html);
+            GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "plain.txt", plain);
+            
+            SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
+            seccionService.deleteSeccionesByConocimiento(this.getSelectedContenido().getNconocimientoid());
+            if (CollectionUtils.isNotEmpty(hist.getListaSeccionHist())) {
+                for (SeccionHist seccionHist : hist.getListaSeccionHist()) {
+                    Seccion seccion = new Seccion();
+                    seccion.setNseccionid(seccionService.getNextPK());
+                    seccion.setNconocimientoid(seccionHist.getId().getNconocimientoid());
+                    seccion.setNorden(seccionHist.getNorden());
+                    seccion.setVruta(seccionHist.getVruta());
+                    seccion.setVtitulo(seccionHist.getVtitulo());
+                    seccion.setVusuariocreacion(user.getVlogin());
+                    seccion.setDfechacreacion(new Date());
+                    seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "html.txt"));
+                    seccion.setDetallePlain(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "plain.txt"));
+                    seccionService.saveOrUpdate(seccion);
+                    
+                    String ruta1 = this.getSelectedContenido().getVruta().concat(seccion.getNorden().toString()).concat("/");
+                    GcmFileUtils.writeStringToFileServer(ruta1, "html.txt", seccion.getDetalleHtml());
+                    GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", seccion.getDetallePlain());
+                }
+            }
+            
+            VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+            vinculoService.deleteByConocimiento(this.getSelectedContenido().getNconocimientoid());
+            VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
+            List<VinculoHist> listaVinculoHist = vinculoHistService.getVinculoHistsByHistorial(hist.getId().getNhistorialid());
+            if (CollectionUtils.isNotEmpty(listaVinculoHist)) {
+                for (VinculoHist vinculoHist : listaVinculoHist) {
+                    Vinculo vinculo = new Vinculo();
+                    vinculo.setNvinculoid(vinculoService.getNextPK());
+                    vinculo.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+                    vinculo.setNconocimientovinc(vinculoHist.getNconocimientovinc());
+                    vinculo.setNtipoconocimientovinc(vinculoHist.getNtipoconocimientovinc());
+                    vinculo.setVusuariocreacion(user.getVlogin());
+                    vinculo.setDfechacreacion(new Date());
+                    vinculoService.saveOrUpdate(vinculo);
+                }
+            }
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/vistaConsulta.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

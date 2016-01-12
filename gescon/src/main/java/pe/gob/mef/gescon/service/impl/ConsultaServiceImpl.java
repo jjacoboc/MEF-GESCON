@@ -72,7 +72,12 @@ public class ConsultaServiceImpl implements ConsultaService{
                     Consulta c = new Consulta();
                     c.setIdconocimiento((BigDecimal) map.get("ID"));
                     c.setNombre((String) map.get("NOMBRE"));
-                    c.setSumilla((String) map.get("SUMILLA"));
+                    String sumilla = (String) map.get("SUMILLA");
+                    if(sumilla.length() > 160) {
+                        sumilla = sumilla.substring(0, 160);
+                        sumilla = sumilla.substring(0, sumilla.lastIndexOf(" ")).concat("...");
+                    }
+                    c.setSumilla(sumilla);
                     c.setFechaPublicacion((Date) map.get("FECHA"));
                     c.setIdCategoria((BigDecimal) map.get("IDCATEGORIA"));
                     c.setCategoria((String) map.get("CATEGORIA"));

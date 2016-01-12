@@ -65,6 +65,7 @@ public class HistorialDaoImpl extends HibernateDaoSupport implements HistorialDa
     public Thistorial getLastThistorialByTconocimiento(BigDecimal idconocimiento) throws Exception {
         DetachedCriteria proj = DetachedCriteria.forClass(Thistorial.class);
         proj.setProjection(Projections.max("nnumversion"));
+        proj.add(Restrictions.eq("id.nconocimientoid", idconocimiento));
         DetachedCriteria criteria = DetachedCriteria.forClass(Thistorial.class);
         criteria.add(Restrictions.eq("id.nconocimientoid", idconocimiento));
         criteria.add(Property.forName("nnumversion").eq(proj));

@@ -65,6 +65,7 @@ public class BaseLegalHistorialDaoImpl extends HibernateDaoSupport implements Ba
     public TbaselegalHist getLastThistorialByTbaselegal(BigDecimal idbaselegal) throws Exception {
         DetachedCriteria proj = DetachedCriteria.forClass(TbaselegalHist.class);
         proj.setProjection(Projections.max("nnumversion"));
+        proj.add(Restrictions.eq("nbaselegalid", idbaselegal));
         DetachedCriteria criteria = DetachedCriteria.forClass(TbaselegalHist.class);
         criteria.add(Restrictions.eq("nbaselegalid", idbaselegal));
         criteria.add(Property.forName("nnumversion").eq(proj));

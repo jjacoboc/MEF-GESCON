@@ -31,9 +31,6 @@
     <property name="dfechacreacion" type="timestamp">
       <column name="DFECHACREACION"/>
     </property>
-    <property name="vejecutora" type="string">
-      <column length="4" name="VEJECUTORA"/>
-    </property>
     <property name="vruta" type="string">
       <column length="400" name="VRUTA"/>
     </property>
@@ -42,18 +39,6 @@
     </property>
     <property name="vtema" type="string">
       <column length="250" name="VTEMA"/>
-    </property>
-    <property name="vdesextra" type="string">
-      <column length="20" name="VDESEXTRA"/>
-    </property>
-    <property name="vautor" type="string">
-      <column length="50" name="VAUTOR"/>
-    </property>
-    <property name="vfuente" type="string">
-      <column length="20" name="VFUENTE"/>
-    </property>
-    <property name="vtipo" type="string">
-      <column length="20" name="VTIPO"/>
     </property>
     <property name="vcontenido" type="string">
       <column length="4000" name="VCONTENIDO"/>
@@ -76,10 +61,10 @@
     <property name="dfechapublicacion" type="timestamp">
       <column name="DFECHAPUBLICACION"/>
     </property>
-        <property name="vmsjsolicita" type="string">
+    <property name="vmsjsolicita" type="string">
       <column length="400" name="VMSJSOLICITA"/>
     </property>
-        <property name="vmsjrespuesta" type="string">
+    <property name="vmsjrespuesta" type="string">
       <column length="400" name="VMSJRESPUESTA"/>
     </property>
     <set fetch="select" inverse="true" lazy="true" name="thistorials" table="THISTORIAL">
