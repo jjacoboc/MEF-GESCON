@@ -14,12 +14,16 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.WikiDao;
+import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 
 /**
  *
@@ -192,5 +196,43 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
             e.printStackTrace();
         }
         return (List<HashMap>) object;
+    }
+    
+    @Override
+    public Tconocimiento getWikiById(BigDecimal idtipo, BigDecimal id) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tconocimiento.class);
+        criteria.add(Restrictions.eq("ntipoconocimientoid", idtipo));
+        criteria.add(Restrictions.eq("nconocimientoid", id));
+        return (Tconocimiento) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
+    }
+    
+    @Override
+    public List<HashMap> obtenerWikixAsig(final BigDecimal wikiid,final BigDecimal usuarioid, final BigDecimal tpoconocimientoid) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        Object object = null;
+        try {
+            sql.append("select nasignacionid AS IDASIGNACION, ntipoconocimientoid AS TPOCONOCIMIENTO , nconocimientoid AS IDPREGUNTA, nusuarioid AS IDUSUARIO, nestadoid AS ESTADO, VUSUARIOCREACION AS USUCREA, VUSUARIOMODIFICACION AS USUMOD, ");
+            sql.append(" DFECHACREACION AS FECHACREA, DFECHAMODIFICACION AS FECHAMOD, DFECHAASIGNACION as FECHAASIG, DFECHAATENCION AS FECHAATEN, DFECHARECEPCION AS FECHARECEP ");
+            sql.append(" from TASIGNACION ");
+            sql.append(" WHERE NCONOCIMIENTOID =:WIKI  AND NUSUARIOID=:USUARIO AND NTIPOCONOCIMIENTOID=:TIPOCONOCIMIENTO AND NESTADOID=1");
+            
+            object = getHibernateTemplate().execute(
+                    new HibernateCallback() {
+                        @Override
+                        public Object doInHibernate(Session session) throws HibernateException {
+                            Query query = session.createSQLQuery(sql.toString())
+                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
+                                    .setParameter("WIKI", wikiid)
+                                    .setParameter("USUARIO", usuarioid)
+                                    .setParameter("TIPOCONOCIMIENTO", tpoconocimientoid);
+                            return query.list();
+                        }
+                    });
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return (List<HashMap>) object;
+
     }
 }

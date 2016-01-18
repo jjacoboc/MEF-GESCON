@@ -43,9 +43,9 @@
 
                                     <h:outputLabel value="Contenido"/>
                                     <p:editor value="#{contenidoMB.selectedContenido.vcontenido}"/>
-                                    
+
                                 </h:panelGrid>
-                                
+
                                 <p:spacer/>
 
                                 <p:fieldset>
@@ -58,14 +58,13 @@
                                                         <f:facet name="header"><h:outputText value="Nombre del Archivo"/></f:facet>
                                                         <h:outputText value="#{row.vnombre}"/>
                                                     </p:column>
-                                                    <p:column style="text-align: center; width: 70px;" priority="4">
+                                                    <p:column style="text-align: center; width: 20px;" priority="4">
 
                                                         <f:facet name="header"><h:outputText value="Tipo de Archivo"/></f:facet>
                                                         <p:lightBox>
                                                             <h:outputLink value="#">
-                                                                <h:panelGrid columns="2">
+                                                                <h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
                                                                     <p:graphicImage library="images" name="pdf.png"/>
-                                                                    <h:outputText id="fileName" value="#{row.vnombre}"/>
                                                                 </h:panelGrid>
                                                             </h:outputLink>
                                                             <f:facet name="inline">
@@ -193,7 +192,7 @@
                                 </p:fieldset>
                                 <p:spacer/>
 
-                                
+
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
                                     <p:commandButton value="Regresar"  ajax="false" action="/pages/contenido/lista.xhtml" />
@@ -201,7 +200,7 @@
                             </p:panel>
                         </h:form>
 
-                        
+
                     </f:view>
                 </div>
             </div>

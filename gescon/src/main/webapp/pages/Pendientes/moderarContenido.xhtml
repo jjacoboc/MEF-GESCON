@@ -15,41 +15,45 @@
                             <p:panel header="Moderar Contenido" styleClass="TexAlLeft">
                                 <h:panelGrid id="pgModContenido"  columns="2" width="500px">                           
 
-                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{loginMB.getfMsjUsu1()}"/>
-                                    <p:inputTextarea value="#{loginMB.selectedContenido.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
-                                                     readonly="#{loginMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfMsjUsu1()}"/>
+                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{pendienteMB.getfMsjUsu1()}"/>
+                                    <p:inputTextarea value="#{pendienteMB.selectedContenido.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="#{pendienteMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfMsjUsu1()}"/>
 
-                                    <p:spacer width="10" rendered="#{loginMB.getfMsjUsu1()}"/>
-                                    <p:spacer width="10" rendered="#{loginMB.getfMsjUsu1()}"/>
+                                    <p:spacer width="10" rendered="#{pendienteMB.getfMsjUsu1()}"/>
+                                    <p:spacer width="10" rendered="#{pendienteMB.getfMsjUsu1()}"/>
 
-                                    <h:outputLabel value="Mensaje del Moderador" rendered="#{loginMB.getfSInfMod()}"/>
-                                    <p:inputTextarea  value="#{loginMB.selectedContenido.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
-                                                      readonly="#{loginMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfSInfMod()}"/>
+                                    <h:outputLabel value="Mensaje del Moderador" rendered="#{pendienteMB.getfSInfMod()}"/>
+                                    <p:inputTextarea  value="#{pendienteMB.selectedContenido.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
+                                                      readonly="#{pendienteMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfSInfMod()}"/>
 
-                                    <p:spacer width="10" rendered="#{loginMB.getfSInfMod()}"/>
-                                    <p:spacer width="10" rendered="#{loginMB.getfSInfMod()}"/>
+                                    <p:spacer width="10" rendered="#{pendienteMB.getfSInfMod()}"/>
+                                    <p:spacer width="10" rendered="#{pendienteMB.getfSInfMod()}"/>
 
-                                    <h:outputLabel value="Categoría:"/>
-                                    <h:panelGrid  columns="3">
-                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{loginMB.loadTree}" oncomplete="PF('catContenidoDialog').show();" update=":catContenidoDialogForm:pgCatContenido" />    
-                                        <p:spacer width="10"/>
-                                        <h:outputText id="catedit" value="#{loginMB.selectedContenido.ncategoriaid}" >
-                                            <f:converter converterId="converterCategoria"/>
-                                        </h:outputText>
-                                    </h:panelGrid>
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.wk_lbl_categoria}"/>
+                                        <p:spacer width="10" rendered="#{pendienteMB.selectedContenido.nsituacionid ge msgs.situacionPublicado}"/>
+                                        <h:outputText value="#{pendienteMB.selectedCategoria.vnombre}" styleClass="Fs14 FontBold black" rendered="#{pendienteMB.selectedContenido.nsituacionid ge msgs.situacionPublicado}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{pendienteMB.selectedContenido.nsituacionid lt msgs.situacionPublicado}">
+                                        <p:commandButton value="#{msgs.wk_btn_categoria}" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catContenidoDialog').show();" update=":catContenidoDialogForm:pgCatContenido" />
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="#{pendienteMB.selectedCategoria.vnombre}" styleClass="Fs18 FontBold black"/>
+                                    </h:panelGroup>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Titulo"/>
-                                    <p:inputText size="50" value="#{loginMB.selectedContenido.vtitulo}" style="text-transform: uppercase;" maxlength="25" /> 
+                                    <p:inputText size="50" value="#{pendienteMB.selectedContenido.vtitulo}" style="text-transform: uppercase;" maxlength="25" /> 
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Descripcion"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{loginMB.selectedContenido.vdescripcion}" rows="4" cols="57" style="font-weight: normal;"
+                                        <p:inputTextarea value="#{pendienteMB.selectedContenido.vdescripcion}" rows="4" cols="57" style="font-weight: normal;"
                                                          counter="displaydet" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                         <h:outputText id="displaydet"/>
                                     </h:panelGrid>
@@ -58,10 +62,10 @@
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Contenido"/>
-                                    <p:editor value="#{loginMB.selectedContenido.vcontenido}"/>
-                                    
+                                    <p:editor value="#{pendienteMB.contenidoHtml}"/>
+
                                 </h:panelGrid>
-                                
+
                                 <p:spacer/>
 
                                 <p:fieldset>
@@ -69,7 +73,7 @@
                                         <p:commandButton style=" float:left;"  value="Agregar Archivos" styleClass="ui-link Fs14" oncomplete="PF('tpoconDialog').show();"/>
                                         <p:tabView>
                                             <p:tab title="Arhivos Relacionados">
-                                                <p:dataTable id="tbl" value="#{loginMB.listaArchivos}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                                <p:dataTable id="tbl" value="#{pendienteMB.listaArchivos}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
                                                              paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
                                                     <p:column style="text-align: center; width: 70px;" priority="2">
                                                         <f:facet name="header"><h:outputText value="Nombre del Archivo"/></f:facet>
@@ -80,13 +84,12 @@
                                                         <f:facet name="header"><h:outputText value="Tipo de Archivo"/></f:facet>
                                                         <p:lightBox>
                                                             <h:outputLink value="#">
-                                                                <h:panelGrid columns="2">
+                                                                <h:panelGrid columns="1">
                                                                     <p:graphicImage library="images" name="pdf.png"/>
-                                                                    <h:outputText id="fileName" value="#{row.vnombre}"/>
                                                                 </h:panelGrid>
                                                             </h:outputLink>
                                                             <f:facet name="inline">
-                                                                <p:media player="pdf" cache="false" value="#{loginMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                                                <p:media player="pdf" cache="false" value="#{pendienteMB.pdfCT}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
                                                                     <f:param name="fileName" value="#{row.vruta}"/>
                                                                 </p:media>
                                                             </f:facet>
@@ -102,10 +105,10 @@
 
                                 <p:fieldset>
                                     <h:panelGrid id="pgNewVinc" columns="1" cellpadding="0" cellspacing="0" width="100%">
-                                        <p:commandButton value="#{msgs.wk_btn_vinculo}" actionListener="#{contenidoMB.toAddLink}" update=":pickDialogForm:pgPick" oncomplete="PF('pickDialog').show();" styleClass="ui-link Fs14"/>
+                                        <p:commandButton value="#{msgs.wk_btn_vinculo}" actionListener="#{pendienteMB.toAddLink}" update=":pickDialogForm:pgPick" oncomplete="PF('pickDialog').show();" styleClass="ui-link Fs14"/>
                                         <p:tabView id="tabview">
                                             <p:tab title="Bases Legales">
-                                                <p:dataTable value="#{loginMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
                                                              emptyMessage="Ninguna base legal vinculada." >
                                                     <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
                                                         <h:outputText value="#{p.codigo}"/>
@@ -122,7 +125,7 @@
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Contenidos">
-                                                <p:dataTable value="#{loginMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ningún contenido vinculado." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
                                                         <h:outputText value="#{p.nombre}"/>
@@ -139,7 +142,7 @@
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Buenas Prácticas">
-                                                <p:dataTable value="#{loginMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna buena práctica vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
                                                         <h:outputText value="#{p.nombre}"/>
@@ -156,7 +159,7 @@
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Oportunidades de Mejora">
-                                                <p:dataTable value="#{loginMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna oportunidad de mejora vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
                                                         <h:outputText value="#{p.nombre}"/>
@@ -173,7 +176,7 @@
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Wikis">
-                                                <p:dataTable value="#{loginMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ningún wiki vinculado." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
                                                         <h:outputText value="#{p.nombre}"/>
@@ -190,7 +193,7 @@
                                                 </p:dataTable>
                                             </p:tab>
                                             <p:tab title="Respuestas">
-                                                <p:dataTable value="#{loginMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna respuesta vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
                                                         <h:outputText value="#{p.nombre}"/>
@@ -211,15 +214,15 @@
                                 </p:fieldset>
                                 <p:spacer/>
 
-                                
+
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
-                                    <p:commandButton value="Actualizar" rendered="#{loginMB.getfButtonMod()}" actionListener="#{loginMB.saveContenidoEdit}" update=":f:pgModContenido" />
-                                    <p:commandButton value="Publicar" rendered="#{loginMB.getfButtonMod()}" ajax="false" action="#{loginMB.PublicarContenido}"/>
-                                    <p:commandButton value="Solicitar Informacion Adicional" rendered="#{loginMB.getfButtonMod()}" actionListener="#{loginMB.toSi}" update=":siModContenidoDialogForm:pgSiModContenido" oncomplete="PF('siModContenidoDialog').show();"  />
-                                    <p:commandButton value="Rechazar" rendered="#{loginMB.getfButtonMod()}" ajax="false"  action="#{loginMB.RechazarContenido}" />
-                                    <p:commandButton value="Regresar" rendered="#{loginMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
-                                    <p:commandButton value="Responder" rendered="#{loginMB.getfButtonMod() eq false}" actionListener="#{loginMB.toSi}" update=":respModContenidoDialogForm:pgRespModContenido" oncomplete="PF('respModContenidoDialog').show();"  />
+                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.saveContenidoEdit}" update=":f:pgModContenido" />
+                                    <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="#{pendienteMB.PublicarContenido}"/>
+                                    <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModContenidoDialogForm:pgSiModContenido" oncomplete="PF('siModContenidoDialog').show();"  />
+                                    <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false"  action="#{pendienteMB.rechazar}" />
+                                    <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
+                                    <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonMod() eq false}" actionListener="#{pendienteMB.toSi}" update=":respModContenidoDialogForm:pgRespModContenido" oncomplete="PF('respModContenidoDialog').show();"  />
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
@@ -230,14 +233,14 @@
                                 <h:panelGrid id="pgSiModContenido"  columns="2">
                                     <h:outputLabel value="Mensaje:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{loginMB.selectedContenido.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
-                                                         readonly="#{loginMB.getfSInfMod()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <p:inputTextarea value="#{pendienteMB.selectedContenido.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="#{pendienteMB.getfSInfMod()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
                                     <p:spacer/>
                                     <h:panelGrid style="float: right" columns="2" width="25%">
-                                        <p:commandButton value="Enviar" ajax="false" action="#{loginMB.sendContenidoSolicita}"/>
-                                        <p:commandButton value="Cancelar" actionListener="#{loginMB.toCancelRespContenidoMod}" />
+                                        <p:commandButton value="Enviar" ajax="false" action="#{pendienteMB.sendContenidoSolicita}"/>
+                                        <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelRespContenidoMod}" />
                                     </h:panelGrid>
                                 </h:panelGrid>
                             </h:form>
@@ -249,14 +252,14 @@
                                 <h:panelGrid id="pgRespModContenido"  columns="2">
                                     <h:outputLabel value="Mensaje:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{loginMB.selectedContenido.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
-                                                         readonly="#{loginMB.getfMsjUsu1()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <p:inputTextarea value="#{pendienteMB.selectedContenido.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="#{pendienteMB.getfMsjUsu1()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
                                     <p:spacer/>
                                     <h:panelGrid style="float: right" columns="2" width="25%">
-                                        <p:commandButton value="Enviar" ajax="false"  action="#{loginMB.sendContenidoRespuesta}"/>
-                                        <p:commandButton value="Cancelar" actionListener="#{loginMB.toCancelRespContenidoMod}" />
+                                        <p:commandButton value="Enviar" ajax="false"  action="#{pendienteMB.sendContenidoRespuesta}"/>
+                                        <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelRespContenidoMod}" />
                                     </h:panelGrid>
                                 </h:panelGrid>
                             </h:form>
@@ -266,9 +269,9 @@
                             <h:form id="catContenidoDialogForm">
                                 <h:panelGrid id="pgCatContenido" columns="1">
                                     <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
-                                    <p:tree id="cats" value="#{loginMB.tree}" var="node" animate="true" cache="true"  
+                                    <p:tree id="cats" value="#{pendienteMB.tree}" var="node" animate="true" cache="true"  
                                             selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                        <p:ajax event="select" listener="#{loginMB.onNodeSelect}" oncomplete="PF('catContenidoDialog').hide();" update=":f:catedit" />
+                                        <p:ajax event="select" listener="#{pendienteMB.onNodeSelect}" oncomplete="PF('catContenidoDialog').hide();" update=":f:pgModContenido" />
                                         <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>
@@ -276,7 +279,7 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
                         <p:dialog id="tpoconDlg" header="Agregar Contenidos" widgetVar="tpoconDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="tpoconDialogForm">
                                 <p:messages id="msgs" showSummary="true" showDetail="true" />
@@ -293,37 +296,37 @@
                                         <f:selectItem itemLabel="Otros" itemValue="6" />
                                     </p:selectOneRadio>
                                     <p:spacer/>
-                                    <p:fileUpload value="#{contenidoMB.uploadFile}" skinSimple="true" update=":tpoconDialogForm:pgTpoCon" fileUploadListener="#{contenidoMB.handleUploadFile}" 
-                                                      cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
-                                    <p:lightBox rendered="#{contenidoMB.uploadFile ne null}">
+                                    <p:fileUpload value="#{pendienteMB.uploadFile}" skinSimple="true" update=":f:pgNewVinc1" fileUploadListener="#{pendienteMB.handleUploadFile}" 
+                                                  cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
+                                    <p:lightBox rendered="#{pendienteMB.uploadFile ne null}">
                                         <h:outputLink value="#">
                                             <h:panelGrid columns="2">
                                                 <p:graphicImage library="images" name="pdf.png"/>
-                                                <h:outputText id="fileName" value="#{contenidoMB.uploadFile.fileName}"/>
+                                                <h:outputText id="fileName" value="#{pendienteMB.uploadFile.fileName}"/>
                                             </h:panelGrid>
                                         </h:outputLink>
                                         <f:facet name="inline">
-                                            <p:media player="pdf" cache="false" value="#{contenidoMB.content}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}"/>
+                                            <p:media player="pdf" cache="false" value="#{pendienteMB.content}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}"/>
                                         </f:facet>
                                     </p:lightBox>
-                                    <p:commandButton  value="Cancelar" actionListener="#{contenidoMB.toCancel}" update=":f:growl"/>
+                                    <p:commandButton  value="Cancelar" actionListener="#{pendienteMB.toCancelCT}" update=":f:growl"/>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
                         <p:dialog id="pickDlg" header="#{msgs.wk_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="pickDialogForm">
                                 <h:panelGrid id="pgPick" columns="1">
                                     <h:outputText value="Tipo de Conocimiento:"/>
-                                    <p:selectOneMenu value="#{loginMB.idTipoConocimiento}" styleClass="Wid20">
-                                        <p:ajax event="change" listener="#{loginMB.onListTipoConocimientoChangeCT}" update=":pickDialogForm:pgPick"/>
+                                    <p:selectOneMenu value="#{pendienteMB.idTipoConocimiento}" styleClass="Wid20">
+                                        <p:ajax event="change" listener="#{pendienteMB.onListTipoConocimientoChangeCT}" update=":pickDialogForm:pgPick"/>
                                         <f:selectItem itemValue="" itemLabel="Seleccione" />
                                         <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
                                     </p:selectOneMenu>
-                                    <p:pickList value="#{loginMB.pickListContenido}" var="p" itemValue="#{p}" converter="converterPickListConocimiento" 
+                                    <p:pickList value="#{pendienteMB.pickListContenido}" var="p" itemValue="#{p}" converter="converterPickListConocimiento" 
                                                 itemLabel="#{p.codigo} #{p.nombre} #{p.categoria} #{p.estado}" showSourceFilter="true" 
                                                 showTargetFilter="true" filterMatchMode="contains" styleClass="wk-picklist-list">
-                                        <p:ajax event="transfer" listener="#{loginMB.onTransfer}" update=":f:tabview"/>
+                                        <p:ajax event="transfer" listener="#{pendienteMB.onTransfer}" update=":f:tabview"/>
                                         <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
                                         <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
 

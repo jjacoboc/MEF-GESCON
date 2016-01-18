@@ -10,11 +10,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.hibernate.dao.WikiDao;
+import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 import pe.gob.mef.gescon.service.WikiService;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Asignacion;
+import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
 
 /**
@@ -83,5 +87,38 @@ public class WikiServiceImpl implements WikiService {
             e.printStackTrace();
         }
         return lista;
+    }
+    
+    @Override
+    public Conocimiento getWikiById(BigDecimal tipo, BigDecimal id) throws Exception {
+        WikiDao wikiDao = (WikiDao) ServiceFinder.findBean("WikiDao");
+        Tconocimiento tconocimiento = wikiDao.getWikiById(tipo, id);
+        Conocimiento conocimiento = new Conocimiento();
+        BeanUtils.copyProperties(conocimiento, tconocimiento);
+        return conocimiento;
+    }
+    
+    @Override
+    public List<Asignacion> obtenerWikixAsig(final BigDecimal wikiid, final BigDecimal usuarioid,BigDecimal tpoconocimientoid) throws Exception {
+        List<Asignacion> asignacions = new ArrayList<Asignacion>();
+        WikiDao wikiDao = (WikiDao) ServiceFinder.findBean("WikiDao");
+        List<HashMap> lista = wikiDao.obtenerWikixAsig(wikiid,usuarioid,tpoconocimientoid);
+        for (HashMap bean : lista) {
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid((BigDecimal) bean.get("IDASIGNACION"));
+            asignacion.setNtipoconocimientoid((BigDecimal) bean.get("TPOCONOCIMIENTO"));
+            asignacion.setNconocimientoid((BigDecimal) bean.get("IDPREGUNTA"));
+            asignacion.setNusuarioid((BigDecimal) bean.get("IDUSUARIO"));
+            asignacion.setNestadoid((BigDecimal) bean.get("ESTADO"));
+            asignacion.setVusuariocreacion((String) bean.get("USUCREA"));
+            asignacion.setVusuariomodificacion((String) bean.get("USUMOD"));
+            asignacion.setDfechacreacion((Date) bean.get("FECHACREA"));
+            asignacion.setDfechamodificacion((Date) bean.get("FECHAMOD"));     
+            asignacion.setDfechaasignacion((Date) bean.get("FECHAASIG"));  
+            asignacion.setDfechaatencion((Date) bean.get("FECHAATEN"));  
+            asignacion.setDfecharecepcion((Date) bean.get("FECHARECEP"));  
+            asignacions.add(asignacion);
+        }
+        return asignacions;
     }
 }
