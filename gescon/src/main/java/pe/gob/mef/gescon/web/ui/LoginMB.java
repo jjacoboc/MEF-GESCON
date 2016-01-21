@@ -39,7 +39,9 @@ import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
+import pe.gob.mef.gescon.hibernate.domain.TpassId;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
 import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.ArchivoService;
@@ -90,6 +92,8 @@ public class LoginMB implements Serializable {
     private List<Perfil> perfiles;
     private String login;
     private String pass;
+    private String newpass;
+    private String confirmpass;
     private HashMap politicas;
     private BigDecimal notificaciones;
     private BigDecimal notificacionesAsignadas;
@@ -226,6 +230,22 @@ public class LoginMB implements Serializable {
      */
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public String getNewpass() {
+        return newpass;
+    }
+
+    public void setNewpass(String newpass) {
+        this.newpass = newpass;
+    }
+
+    public String getConfirmpass() {
+        return confirmpass;
+    }
+
+    public void setConfirmpass(String confirmpass) {
+        this.confirmpass = confirmpass;
     }
 
     public HashMap getPoliticas() {
@@ -1471,39 +1491,7 @@ public class LoginMB implements Serializable {
                     filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("6")));
                     filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid());
                     this.getListaTargetVinculosOM().addAll(servicect.getConcimientosVinculados(filters));
-
-//                    if (this.getListaTargetVinculosBL() == null) {
-//                    } else {
-//                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBL());
-//                    }
-//                    if (this.getListaTargetVinculosBP() == null) {
-//                    } else {
-//                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBP());
-//                    }
-//                    if (this.getListaTargetVinculosCT() == null) {
-//                    } else {
-//                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosCT());
-//                    }
-//                    if (this.getListaTargetVinculosOM() == null) {
-//                    } else {
-//                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosOM());
-//                    }
-//                    if (this.getListaTargetVinculosWK() == null) {
-//                    } else {
-//                        this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosWK());
-//                    }
                     situacion = Integer.parseInt(this.getSelectedContenido().getNsituacionid().toString());
-
-                    //if (StringUtils.isBlank(this.getSelectedBaseLegal().getVmsjmoderador())) {
-                    //    this.setfMsjModBase("false");
-                    //} else {
-                    //    this.setfMsjModBase("true");
-                    //}
-                    //if (StringUtils.isBlank(this.getSelectedBaseLegal().getVmsjusuariocreacion())) {
-                    //    this.setfMsjUsuCreaBase("false");
-                    //} else {
-                    //    this.setfMsjUsuCreaBase("true");
-                    //}
                     if (perfil_actual == Constante.ESPECIALISTA) {
                         this.setfButtonEspe("true");
                         this.setfButton("false");
@@ -1534,13 +1522,6 @@ public class LoginMB implements Serializable {
                     if (situacion == 1) {
                         pagina = "/pages/Pendientes/moderarContenido?faces-redirect=true";
                     }
-
-                    //if (situacion == 2 || situacion == 3) {
-                    //    pagina = "/pages/Pendientes/responderPregunta?faces-redirect=true";
-                    //}
-                    //if (situacion == 5) {
-                    //    pagina = "/pages/Pendientes/publicarPregunta?faces-redirect=true";
-                    //}
                     break;
                 }
             }
@@ -2174,7 +2155,7 @@ public class LoginMB implements Serializable {
     }
 
     public String PubBaseLegal() throws Exception {
-        String pagina="/index.xhtml";
+        String pagina = "/index.xhtml";
         try {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
@@ -2240,7 +2221,7 @@ public class LoginMB implements Serializable {
             this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
             this.getSelectedAsignacion().setDfechaatencion(new Date());
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
-            pagina="/index.xhtml";
+            pagina = "/index.xhtml";
             return pagina;
 
         } catch (Exception e) {
@@ -2880,6 +2861,65 @@ public class LoginMB implements Serializable {
         }
     }
 
+    public void toUpdatePassword(ActionEvent event) {
+        try {
+            this.setPass(StringUtils.EMPTY);
+            this.setNewpass(StringUtils.EMPTY);
+            this.setConfirmpass(StringUtils.EMPTY);
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePassword(ActionEvent event) {
+        try {
+            PassService passService = (PassService) ServiceFinder.findBean("PassService");
+            Pass pas = passService.getPassByUser(this.getUser());
+            if (StringUtils.isNotBlank(this.getPass())) {
+                if (this.getPass().equals(pas.getVclave())) {
+                    if (StringUtils.isNotBlank(this.getNewpass())) {
+                        if (StringUtils.isNotBlank(this.getConfirmpass())) {
+                            if (this.getNewpass().equals(this.getConfirmpass())) {
+                                TpassId id = new TpassId();
+                                id.setNpassid(passService.getNextPK());
+                                id.setNusuarioid(this.getUser().getNusuarioid());
+                                Mtuser mtuser = new Mtuser();
+                                BeanUtils.copyProperties(this.getUser(), mtuser);
+                                Pass password = new Pass();
+                                password.setId(id);
+                                password.setMtuser(mtuser);
+                                password.setVclave(this.getNewpass());
+                                password.setVusuariocreacion(this.getUser().getVlogin());
+                                password.setDfechacreacion(new Date());
+                                passService.saveOrUpdate(pas);
+                            } else {
+                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La nueva contraseña ingresada no coincide con la confirmación.");
+                                FacesContext.getCurrentInstance().addMessage(null, message);
+                            }
+                        } else {
+                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Confirme la nueva contraseña.");
+                            FacesContext.getCurrentInstance().addMessage(null, message);
+                        }
+                    } else {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Ingrese la nueva contraseña.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                    }
+                } else {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La contraseña ingresada es incorrecta.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+            } else {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Ingrese la contraseña ingresada actual.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
     public String redirect() {
         String page = null;
         try {
@@ -2892,7 +2932,7 @@ public class LoginMB implements Serializable {
             JSFUtils.getSession().removeAttribute("contenidoMB");
             JSFUtils.getSession().removeAttribute("listaSessionMB");
             JSFUtils.getSession().removeAttribute("oportunidadMB");
-            JSFUtils.getSession().removeAttribute("wikiMB");            
+            JSFUtils.getSession().removeAttribute("wikiMB");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
