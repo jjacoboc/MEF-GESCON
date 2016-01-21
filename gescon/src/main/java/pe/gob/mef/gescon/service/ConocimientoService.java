@@ -8,6 +8,7 @@ package pe.gob.mef.gescon.service;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
 
@@ -27,4 +28,8 @@ public interface ConocimientoService {
     void delete(Conocimiento conocimiento) throws Exception;
     List<Consulta> getConcimientosVinculados(HashMap filters);
     List<Consulta> getConcimientosDisponibles(HashMap filters);
+    Conocimiento getBpracticaById(BigDecimal tipo,BigDecimal id) throws Exception;
+    List<Asignacion> obtenerBpracticaxAsig(BigDecimal bpracticaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    Conocimiento getOmejoraById(BigDecimal tipo,BigDecimal id) throws Exception;
+    List<Asignacion> obtenerOmejoraxAsig(BigDecimal omejoraid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
 }

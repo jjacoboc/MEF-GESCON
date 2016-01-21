@@ -14,12 +14,23 @@
     </style>
     <h:form id="fd">
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-        <p:panel header="#{oportunidadMB.selectedOportunidad.vtitulo}" styleClass="TexAlLeft containerView">
+        <p:panel styleClass="TexAlLeft containerView">
+            <f:facet name="header">
+                <h:outputText class="fa fa-signal white Fs14" />
+                <p:spacer width="5"/>
+                <h:outputText value="#{oportunidadMB.selectedOportunidad.vtitulo}" />
+            </f:facet>
             <h:panelGrid columns="1" width="100%">
                 <h:panelGroup>
+                    <h:outputText value="#{msgs.om_lbl_conocimiento}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{oportunidadMB.selectedOportunidad.ntipoconocimientoid}" styleClass="Fs12" style="font-style: italic;">
+                        <f:converter converterId="converterTipoConocimiento" />
+                    </h:outputText>
+                    <p:spacer width="15"/>
                     <h:outputText value="#{msgs.om_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{oportunidadMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{oportunidadMB.selectedCategoria.vnombre}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="15"/>
                     <h:outputText value="#{msgs.om_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>

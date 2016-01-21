@@ -83,6 +83,7 @@ public class ConsultaMB implements Serializable {
     private String searchText;
     private String tipoConocimiento;
     private String categoria;
+    private String ordenpor;
 
     /**
      * Creates a new instance of ConsultaMB
@@ -242,6 +243,14 @@ public class ConsultaMB implements Serializable {
         this.categoria = categoria;
     }
 
+    public String getOrdenpor() {
+        return ordenpor;
+    }
+
+    public void setOrdenpor(String ordenpor) {
+        this.ordenpor = ordenpor;
+    }
+
     public void init() {
         try {
             CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
@@ -396,6 +405,7 @@ public class ConsultaMB implements Serializable {
                 filter.remove("fText");
                 filter.remove("fCodes");
             }
+            filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
             this.setListaConsulta(service.getQueryFilter(filter));
         } catch (Exception e) {
@@ -418,6 +428,7 @@ public class ConsultaMB implements Serializable {
                 filter.remove("fText");
                 filter.remove("fCodes");
             }
+            filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
             this.setListaConsulta(service.getQueryFilter(filter));
         } catch (Exception e) {
@@ -440,6 +451,7 @@ public class ConsultaMB implements Serializable {
                 filter.remove("fText");
                 filter.remove("fCodes");
             }
+            filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
             this.setListaConsulta(service.getQueryFilter(filter));
             if(CollectionUtils.isEmpty(this.getListaCategoriaFiltro())) {
@@ -483,6 +495,7 @@ public class ConsultaMB implements Serializable {
                 filter.remove("fText");
                 filter.remove("fCodes");
             }
+            filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
             this.setListaConsulta(service.getQueryFilter(filter));
             if(CollectionUtils.isEmpty(this.getListaCategoriaFiltro())) {

@@ -11,7 +11,6 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.UserDao;
-import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.ServiceFinder;
@@ -44,6 +43,32 @@ public class UserServiceImpl implements UserService{
         List<User> users = new ArrayList<User>();
         UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
         List<Mtuser> lista = userDao.getMtusers();
+        for(Mtuser mtuser : lista) {
+            User user = new User();
+            BeanUtils.copyProperties(user, mtuser);
+            users.add(user);
+        }
+        return users;
+    }
+    
+    @Override
+    public List<User> getUsersInternal() throws Exception {
+        List<User> users = new ArrayList<User>();
+        UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
+        List<Mtuser> lista = userDao.getMtusersInternal();
+        for(Mtuser mtuser : lista) {
+            User user = new User();
+            BeanUtils.copyProperties(user, mtuser);
+            users.add(user);
+        }
+        return users;
+    }
+    
+    @Override
+    public List<User> getUsersExternal() throws Exception {
+        List<User> users = new ArrayList<User>();
+        UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
+        List<Mtuser> lista = userDao.getMtusersExternal();
         for(Mtuser mtuser : lista) {
             User user = new User();
             BeanUtils.copyProperties(user, mtuser);

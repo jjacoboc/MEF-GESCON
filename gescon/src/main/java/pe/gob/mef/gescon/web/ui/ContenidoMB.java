@@ -17,16 +17,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.PhaseId;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,8 +46,10 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 import pe.gob.mef.gescon.hibernate.domain.ThistorialId;
+import pe.gob.mef.gescon.hibernate.domain.TvinculoHistId;
 import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CalificacionService;
@@ -57,7 +62,6 @@ import pe.gob.mef.gescon.service.DiscusionSeccionService;
 import pe.gob.mef.gescon.service.DiscusionService;
 import pe.gob.mef.gescon.service.HistorialService;
 import pe.gob.mef.gescon.service.SeccionHistService;
-import pe.gob.mef.gescon.service.SeccionService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.service.VinculoHistService;
 import pe.gob.mef.gescon.service.VinculoService;
@@ -76,7 +80,6 @@ import pe.gob.mef.gescon.web.bean.DiscusionHist;
 import pe.gob.mef.gescon.web.bean.DiscusionSeccion;
 import pe.gob.mef.gescon.web.bean.DiscusionSeccionHist;
 import pe.gob.mef.gescon.web.bean.Historial;
-import pe.gob.mef.gescon.web.bean.Seccion;
 import pe.gob.mef.gescon.web.bean.SeccionHist;
 import pe.gob.mef.gescon.web.bean.User;
 import pe.gob.mef.gescon.web.bean.Vinculo;
@@ -87,13 +90,12 @@ import pe.gob.mef.gescon.web.bean.VinculoHist;
  * @author JJacobo
  */
 @ManagedBean
-@ApplicationScoped
+@SessionScoped
 public class ContenidoMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(ContenidoMB.class);
-    private final String temppath = "D:\\gescon\\temp\\";
-    private final String path = "D:\\gescon\\files\\ct\\";
+    private final String path = "ct/";
     private List<Conocimiento> listaContenido;
     private List<Asignacion> listaAsignacion;
     private Conocimiento selectedContenido;
@@ -101,7 +103,8 @@ public class ContenidoMB implements Serializable {
     private String titulo;
     private String detalle;
     private String descripcion;
-    private String contenido;
+    private String contenidoHtml;
+    private String contenidoPlain;
     private TreeNode tree;
     private Categoria selectedCategoria;
     private UploadedFile uploadFile;
@@ -247,17 +250,31 @@ public class ContenidoMB implements Serializable {
     }
 
     /**
-     * @return the contenido
+     * @return the contenidoHtml
      */
-    public String getContenido() {
-        return contenido;
+    public String getContenidoHtml() {
+        return contenidoHtml;
     }
 
     /**
-     * @param contenido the contenido to set
+     * @param contenidoHtml the contenidoHtml to set
      */
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
+    public void setContenidoHtml(String contenidoHtml) {
+        this.contenidoHtml = contenidoHtml;
+    }
+
+    /**
+     * @return the contenidoPlain
+     */
+    public String getContenidoPlain() {
+        return contenidoPlain;
+    }
+
+    /**
+     * @param contenidoPlain the contenidoPlain to set
+     */
+    public void setContenidoPlain(String contenidoPlain) {
+        this.contenidoPlain = contenidoPlain;
     }
 
     /**
@@ -696,10 +713,16 @@ public class ContenidoMB implements Serializable {
         this.comentario = comentario;
     }
 
+    /**
+     * @return the selectedSwitch
+     */
     public String getSelectedSwitch() {
         return selectedSwitch;
     }
 
+    /**
+     * @param selectedSwitch the selectedSwitch to set
+     */
     public void setSelectedSwitch(String selectedSwitch) {
         this.selectedSwitch = selectedSwitch;
     }
@@ -726,7 +749,8 @@ public class ContenidoMB implements Serializable {
             this.setSelectedContenido(null);
             this.setTitulo(StringUtils.EMPTY);
             this.setDescripcion(StringUtils.EMPTY);
-            this.setContenido(StringUtils.EMPTY);
+            this.setContenidoHtml(StringUtils.EMPTY);
+            this.setDiscusionPlain(StringUtils.EMPTY);
             this.setListaSourceVinculos(new ArrayList());
             this.setListaTargetVinculos(new ArrayList());
             this.setListaTargetVinculosBL(new ArrayList());
@@ -747,7 +771,7 @@ public class ContenidoMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void clearDiscusion() {
         try {
             this.setSelectedDiscusionSeccion(null);
@@ -765,7 +789,7 @@ public class ContenidoMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void clearCalificacion() {
         try {
             this.setSelectedCalificacion(null);
@@ -858,9 +882,18 @@ public class ContenidoMB implements Serializable {
             return new DefaultStreamedContent();
         } else {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
             String fileName = JSFUtils.getRequestParameter("fileName");
-            FileInputStream fis = new FileInputStream(new File(fileName));
-            return new DefaultStreamedContent(fis, "application/pdf");
+            if (fileName.isEmpty()) {
+                String fileNameS = (bundle.getString("pdftemppath")) + this.getUploadFile().getFileName();
+                FileInputStream fis = new FileInputStream(new File(fileNameS));
+                return new DefaultStreamedContent(fis, "application/pdf");
+            } else {
+                String fileNameS = (bundle.getString("path")) + fileName;
+                FileInputStream fis = new FileInputStream(new File(fileNameS));
+                return new DefaultStreamedContent(fis, "application/pdf");
+            }
+
         }
     }
 
@@ -868,24 +901,22 @@ public class ContenidoMB implements Serializable {
         try {
             if (event != null) {
                 UploadedFile f = event.getFile();
+
                 if (f != null) {
 
                     this.setUploadFile(f);
-                    File direc = new File(this.temppath);
+                    ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+                    File direc = new File(bundle.getString("pdftemppath"));
                     direc.mkdirs();
-                    this.setFile(new File(this.temppath, f.getFileName()));
+                    this.setFile(new File(bundle.getString("pdftemppath"), f.getFileName()));
                     FileOutputStream fileOutStream = new FileOutputStream(this.getFile());
                     fileOutStream.write(f.getContents());
                     fileOutStream.flush();
                     fileOutStream.close();
-                    this.content = new DefaultStreamedContent(f.getInputstream(), "application/pdf", f.getFileName());
+                    this.content = new DefaultStreamedContent(f.getInputstream(), f.getContentType(), f.getFileName());
 
                     ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
-                    archivoconocimiento.setNarchivoid(BigDecimal.ONE);
-                    archivoconocimiento.setNtipoconocimientoid(BigDecimal.ONE);
-                    archivoconocimiento.setNconocimientoid(BigDecimal.ONE);
                     archivoconocimiento.setVnombre(f.getFileName());
-                    archivoconocimiento.setContent(content);
                     this.listaArchivos.add(archivoconocimiento);
 
                 }
@@ -915,25 +946,61 @@ public class ContenidoMB implements Serializable {
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
-            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
-            ThistorialId thistorialId = new ThistorialId();
+
             Conocimiento conocimiento = new Conocimiento();
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             idconocimiento = service.getNextPK();
 
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             conocimiento.setNconocimientoid(idconocimiento);
             conocimiento.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong("1")));
             conocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
             conocimiento.setVtitulo(this.getTitulo().trim());
             conocimiento.setVdescripcion(this.getDescripcion().trim());
-            conocimiento.setVcontenido(this.getContenido().trim());
+            if (this.getContenidoPlain().length() < 400) {
+                conocimiento.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
+            } else {
+                conocimiento.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+            }
+
+            String np0 = this.path.concat(conocimiento.getNconocimientoid().toString()).concat("/0/");
+            conocimiento.setVruta(np0);
             conocimiento.setDfechacreacion(new Date());
             conocimiento.setVusuariocreacion(user.getVlogin());
             conocimiento.setNactivo(BigDecimal.ONE);
             service.saveOrUpdate(conocimiento);
-            Tconocimiento tconocimiento = new Tconocimiento();
-            BeanUtils.copyProperties(tconocimiento, conocimiento);
+
+            GcmFileUtils.writeStringToFileServer(np0, "html.txt", this.getContenidoHtml());
+            GcmFileUtils.writeStringToFileServer(np0, "plain.txt", this.getContenidoPlain());
+
+            String np1 = this.path.concat(conocimiento.getNconocimientoid().toString()).concat("/1/");
+            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+            ThistorialId thistorialId = new ThistorialId();
+            thistorialId.setNconocimientoid(conocimiento.getNconocimientoid());
+            thistorialId.setNhistorialid(historialService.getNextPK());
+            Historial historial = new Historial();
+            historial.setId(thistorialId);
+            historial.setNtipoconocimientoid(Constante.CONTENIDO);
+            historial.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            historial.setVtitulo(this.getTitulo());
+            historial.setVdescripcion(this.getDescripcion().trim());
+            if (this.getContenidoPlain().length() < 400) {
+                historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
+            } else {
+                historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+            }
+            historial.setNversionactual(BigDecimal.ONE);
+            historial.setNactivo(BigDecimal.ONE);
+            historial.setNsituacionid(conocimiento.getNsituacionid());
+            historial.setVruta(np1);
+            historial.setNnumversion(BigDecimal.ONE);
+            historial.setDfechacreacion(new Date());
+            historial.setVusuariocreacion(user.getVlogin());
+            historialService.saveOrUpdate(historial);
+
+            GcmFileUtils.writeStringToFileServer(np1, "html.txt", this.getContenidoHtml());
+            GcmFileUtils.writeStringToFileServer(np1, "plain.txt", this.getContenidoPlain());
 
             listaTargetVinculos = new ArrayList<Consulta>();
 
@@ -964,6 +1031,7 @@ public class ContenidoMB implements Serializable {
 
             if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                 VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+                VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
                 service.delete(conocimiento.getNconocimientoid());
                 for (Consulta consulta : this.getListaTargetVinculos()) {
                     Vinculo vinculo = new Vinculo();
@@ -975,35 +1043,21 @@ public class ContenidoMB implements Serializable {
                     vinculo.setVusuariocreacion(user.getVlogin());
                     vinculoService.saveOrUpdate(vinculo);
 
+                    TvinculoHistId vinculoHistId = new TvinculoHistId();
+                    vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
+                    vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
+                    vinculoHistId.setNhistorialid(thistorialId.getNhistorialid());
+                    VinculoHist vinculoHist = new VinculoHist();
+                    vinculoHist.setId(vinculoHistId);
+                    vinculoHist.setNconocimientovinc(vinculo.getNconocimientovinc());
+                    vinculoHist.setNtipoconocimientovinc(vinculo.getNtipoconocimientovinc());
+                    vinculoHist.setDfechacreacion(new Date());
+                    vinculoHist.setVusuariocreacion(user.getVlogin());
+                    vinculoHistService.saveOrUpdate(vinculoHist);
+
                 }
             }
-            //if (CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-            //    VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
-            //    VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
-            //    for (Consulta consulta : this.getListaTargetVinculos()) {
-            //        Vinculo vinculo = new Vinculo();
-            //        vinculo.setNvinculoid(vinculoService.getNextPK());
-            //        vinculo.setNconocimientoid(conocimiento.getNconocimientoid());
-            //        vinculo.setNconocimientovinc(consulta.getIdconocimiento());
-            //        vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
-            //        vinculo.setDfechacreacion(new Date());
-            //        vinculo.setVusuariocreacion(user.getVlogin());
-            //        vinculoService.saveOrUpdate(vinculo);
-            //        
-            //        TvinculoHistId vinculoHistId = new TvinculoHistId();
-            //        vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
-            //        vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
-            //        vinculoHistId.setNhistorialid(thistorialId.getNhistorialid());
-            //        VinculoHist vinculoHist = new VinculoHist();
-            //        vinculoHist.setId(vinculoHistId);
-            //        vinculoHist.setNconocimientovinc(vinculo.getNconocimientovinc());
-            //        vinculoHist.setDfechacreacion(new Date());
-            //        vinculoHist.setVusuariocreacion(user.getVlogin());
-            //        vinculoHistService.saveOrUpdate(vinculoHist);
-            //    }
-            //}
-            //this.setListaContenido(service.getContenidos());
-            //FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/wiki/lista.xhtml");
+
             ArchivoConocimientoService aservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             for (ArchivoConocimiento v : this.getListaArchivos()) {
 
@@ -1013,12 +1067,11 @@ public class ContenidoMB implements Serializable {
                 archivoconocimiento.setNconocimientoid(conocimiento.getNconocimientoid());
                 archivoconocimiento.setVnombre(v.getVnombre());
                 archivoconocimiento.setNversion(BigDecimal.ONE);
-                archivoconocimiento.setVruta(path + conocimiento.getNconocimientoid().toString() + "\\" + archivoconocimiento.getNversion().toString() + "\\" + archivoconocimiento.getVnombre());
+                archivoconocimiento.setVruta(path + conocimiento.getNconocimientoid().toString() + "/" + archivoconocimiento.getNversion().toString() + "/" + archivoconocimiento.getVnombre());
                 archivoconocimiento.setVusuariocreacion(user.getVlogin());
                 archivoconocimiento.setDfechacreacion(new Date());
                 aservice.saveOrUpdate(archivoconocimiento);
                 saveFile(archivoconocimiento);
-
             }
 
             Asignacion asignacion = new Asignacion();
@@ -1134,20 +1187,29 @@ public class ContenidoMB implements Serializable {
 
     public void saveFile(ArchivoConocimiento archivoconocimiento) {
         try {
-            if (this.getUploadFile() != null) {
-                String id = archivoconocimiento.getNconocimientoid().toString();
-                String version = archivoconocimiento.getNversion().toString();
-                String newPath = path + id + "\\" + version + "\\";
-                File direc = new File(newPath);
-                direc.mkdirs();
-                this.setFile(new File(newPath, archivoconocimiento.getVnombre()));
-                FileOutputStream fileOutStream = new FileOutputStream(this.getFile());
-                fileOutStream.write(this.getUploadFile().getContents());
-                fileOutStream.flush();
-                fileOutStream.close();
-                File temp = new File(temppath, this.getUploadFile().getFileName());
-                temp.delete();
+
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+            String id = archivoconocimiento.getNconocimientoid().toString();
+            String version = archivoconocimiento.getNversion().toString();
+            Integer version_ant_s = Integer.parseInt(archivoconocimiento.getNversion().toString()) - 1;
+            String version_ant_i = version_ant_s.toString();
+            File direc = new File(bundle.getString("path") + "ct" + '/' + id + '/' + version);
+            File direct = new File(bundle.getString("path") + "ct" + '/' + id + '/' + version_ant_i +'/'+ archivoconocimiento.getVnombre());
+            direc.mkdirs();
+
+            this.setFile(new File(bundle.getString("path") + "ct" + '/' + id + '/' + version, archivoconocimiento.getVnombre()));
+
+            FileOutputStream fileOutStream = new FileOutputStream(this.getFile());
+            if (direct.exists()) {
+                fileOutStream.write(FileUtils.readFileToByteArray(new File(bundle.getString("path") + "ct" + '/' + id + '/' + version_ant_i, archivoconocimiento.getVnombre())));
+            } else {
+                fileOutStream.write(FileUtils.readFileToByteArray(new File(bundle.getString("pdftemppath"), archivoconocimiento.getVnombre())));
             }
+            fileOutStream.flush();
+            fileOutStream.close();
+            File temp = new File(bundle.getString("pdftemppath"), archivoconocimiento.getVnombre());
+            temp.delete();
+            //}
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -1213,22 +1275,24 @@ public class ContenidoMB implements Serializable {
             this.setSelectedContenido(this.getListaContenido().get(index));
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()));
-            WikiService wikiService = (WikiService) ServiceFinder.findBean("WikiService");
+            ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
+            this.setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedContenido().getNconocimientoid()));
+            ContenidoService contenidoService = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid().toString());
             map.put("flag", true);
             map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
-            this.setListaTargetVinculosBL(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosBL(contenidoService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
-            this.setListaTargetVinculosPR(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosPR(contenidoService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
-            this.setListaTargetVinculosBP(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosBP(contenidoService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
-            this.setListaTargetVinculosCT(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosCT(contenidoService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
-            this.setListaTargetVinculosOM(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosOM(contenidoService.getConcimientosVinculados(map));
             map.put("ntipoconocimientoid", Constante.WIKI.toString());
-            this.setListaTargetVinculosWK(wikiService.getConcimientosVinculados(map));
+            this.setListaTargetVinculosWK(contenidoService.getConcimientosVinculados(map));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -1242,6 +1306,7 @@ public class ContenidoMB implements Serializable {
             this.setSelectedContenido(this.getListaContenido().get(index));
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()));
+            this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedContenido().getVruta(), "html.txt"));
             ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             this.setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedContenido().getNconocimientoid()));
             ContenidoService contenidoService = (ContenidoService) ServiceFinder.findBean("ContenidoService");
@@ -1275,17 +1340,59 @@ public class ContenidoMB implements Serializable {
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
-            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
-            ThistorialId thistorialId = new ThistorialId();
-            Conocimiento conocimiento = new Conocimiento();
-            ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
 
+            ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             this.getSelectedContenido().setVtitulo(this.getSelectedContenido().getVtitulo().trim());
             this.getSelectedContenido().setVdescripcion(this.getSelectedContenido().getVdescripcion().trim());
-            this.getSelectedContenido().setVcontenido(this.getSelectedContenido().getVcontenido().trim());
+            if (this.getContenidoPlain().length() < 400) {
+                this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
+            } else {
+                this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+            }
+            this.getSelectedContenido().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedContenido().setDfechamodificacion(new Date());
             this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
             service.saveOrUpdate(this.getSelectedContenido());
+
+            GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "html.txt", this.getContenidoHtml());
+            GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "plain.txt", this.getContenidoPlain());
+
+            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+            Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedContenido().getNconocimientoid());
+            int lastversion;
+            if (lastHistorial != null) {
+                lastversion = lastHistorial.getNnumversion().intValue();
+            } else {
+                lastversion = 0;
+            }
+
+            String url = this.path.concat(this.getSelectedContenido().getNconocimientoid().toString()).concat("/").concat(Integer.toString(lastversion + 1)).concat("/");
+
+            ThistorialId thistorialId = new ThistorialId();
+            thistorialId.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+            thistorialId.setNhistorialid(historialService.getNextPK());
+            Historial historial = new Historial();
+            historial.setId(thistorialId);
+            historial.setNtipoconocimientoid(Constante.CONTENIDO);
+            historial.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            historial.setVdescripcion(this.getSelectedContenido().getVdescripcion());
+            historial.setVtitulo(this.getSelectedContenido().getVtitulo());
+            if (this.getContenidoPlain().length() < 400) {
+                historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
+            } else {
+                historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+            }
+            historial.setNactivo(BigDecimal.ONE);
+            historial.setNsituacionid(this.getSelectedContenido().getNsituacionid());
+            historial.setVruta(url);
+            historial.setNnumversion(BigDecimal.valueOf(lastversion + 1));
+            historial.setDfechacreacion(new Date());
+            historial.setVusuariocreacion(user.getVlogin());
+            historialService.saveOrUpdate(historial);
+
+            GcmFileUtils.writeStringToFileServer(url, "html.txt", this.getContenidoHtml());
+            GcmFileUtils.writeStringToFileServer(url, "plain.txt", this.getContenidoPlain());
 
             listaTargetVinculos = new ArrayList<Consulta>();
 
@@ -1316,6 +1423,7 @@ public class ContenidoMB implements Serializable {
 
             if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                 VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+                VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
                 service.delete(this.getSelectedContenido().getNconocimientoid());
                 for (Consulta consulta : this.getListaTargetVinculos()) {
                     Vinculo vinculo = new Vinculo();
@@ -1327,35 +1435,21 @@ public class ContenidoMB implements Serializable {
                     vinculo.setVusuariocreacion(user.getVlogin());
                     vinculoService.saveOrUpdate(vinculo);
 
+                    TvinculoHistId vinculoHistId = new TvinculoHistId();
+                    vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
+                    vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
+                    vinculoHistId.setNhistorialid(thistorialId.getNhistorialid());
+                    VinculoHist vinculoHist = new VinculoHist();
+                    vinculoHist.setId(vinculoHistId);
+                    vinculoHist.setNconocimientovinc(vinculo.getNconocimientovinc());
+                    vinculoHist.setNtipoconocimientovinc(vinculo.getNtipoconocimientovinc());
+                    vinculoHist.setDfechacreacion(new Date());
+                    vinculoHist.setVusuariocreacion(user.getVlogin());
+                    vinculoHistService.saveOrUpdate(vinculoHist);
+
                 }
             }
-            //if (CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-            //    VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
-            //    VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
-            //    for (Consulta consulta : this.getListaTargetVinculos()) {
-            //        Vinculo vinculo = new Vinculo();
-            //        vinculo.setNvinculoid(vinculoService.getNextPK());
-            //        vinculo.setNconocimientoid(conocimiento.getNconocimientoid());
-            //        vinculo.setNconocimientovinc(consulta.getIdconocimiento());
-            //        vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
-            //        vinculo.setDfechacreacion(new Date());
-            //        vinculo.setVusuariocreacion(user.getVlogin());
-            //        vinculoService.saveOrUpdate(vinculo);
-            //        
-            //        TvinculoHistId vinculoHistId = new TvinculoHistId();
-            //        vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
-            //        vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
-            //        vinculoHistId.setNhistorialid(thistorialId.getNhistorialid());
-            //        VinculoHist vinculoHist = new VinculoHist();
-            //        vinculoHist.setId(vinculoHistId);
-            //        vinculoHist.setNconocimientovinc(vinculo.getNconocimientovinc());
-            //        vinculoHist.setDfechacreacion(new Date());
-            //        vinculoHist.setVusuariocreacion(user.getVlogin());
-            //        vinculoHistService.saveOrUpdate(vinculoHist);
-            //    }
-            //}
-            //this.setListaContenido(service.getContenidos());
-            //FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/wiki/lista.xhtml");
+
             ArchivoConocimientoService aservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             service.deleteArchivos(this.getSelectedContenido().getNconocimientoid());
             for (ArchivoConocimiento v : this.getListaArchivos()) {
@@ -1365,8 +1459,8 @@ public class ContenidoMB implements Serializable {
                 archivoconocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
                 archivoconocimiento.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
                 archivoconocimiento.setVnombre(v.getVnombre());
-                archivoconocimiento.setNversion(BigDecimal.ONE);
-                archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "\\" + archivoconocimiento.getNversion().toString() + "\\" + archivoconocimiento.getVnombre());
+                archivoconocimiento.setNversion(historial.getNnumversion());
+                archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "/" + archivoconocimiento.getNversion().toString() + "/" + archivoconocimiento.getVnombre());
                 archivoconocimiento.setVusuariocreacion(user.getVlogin());
                 archivoconocimiento.setDfechacreacion(new Date());
                 aservice.saveOrUpdate(archivoconocimiento);
@@ -1374,19 +1468,8 @@ public class ContenidoMB implements Serializable {
 
             }
 
-//            Asignacion asignacion = new Asignacion();
-//            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
-//            asignacion.setNasignacionid(serviceasig.getNextPK());
-//            asignacion.setNtipoconocimientoid(Constante.CONTENIDO);
-//            asignacion.setNconocimientoid(conocimiento.getNconocimientoid());
-//            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-//            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(conocimiento.getNcategoriaid()));
-//            asignacion.setDfechaasignacion(new Date());
-//            asignacion.setDfechacreacion(new Date());
-//            serviceasig.saveOrUpdate(asignacion);
             listaContenido = service.getContenidos();
-            //listaPregunta = service.getPreguntas();
-            //RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
+
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -1399,6 +1482,7 @@ public class ContenidoMB implements Serializable {
             this.setSelectedContenido(this.getListaContenido().get(index));
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()));
+            this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedContenido().getVruta(), "html.txt"));
             ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             this.setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedContenido().getNconocimientoid()));
             ContenidoService contenidoService = (ContenidoService) ServiceFinder.findBean("ContenidoService");
@@ -1432,19 +1516,60 @@ public class ContenidoMB implements Serializable {
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
-            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
-            ThistorialId thistorialId = new ThistorialId();
-            Conocimiento conocimiento = new Conocimiento();
-            ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
 
+            ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
+            this.getSelectedContenido().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedContenido().setVtitulo(this.getSelectedContenido().getVtitulo().trim());
             this.getSelectedContenido().setVdescripcion(this.getSelectedContenido().getVdescripcion().trim());
-            this.getSelectedContenido().setVcontenido(this.getSelectedContenido().getVcontenido().trim());
+            if (this.getContenidoPlain().length() < 400) {
+                this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
+            } else {
+                this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+            }
             this.getSelectedContenido().setDfechamodificacion(new Date());
             this.getSelectedContenido().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
             this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
             service.saveOrUpdate(this.getSelectedContenido());
 
+            GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "html.txt", this.getContenidoHtml());
+            GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "plain.txt", this.getContenidoPlain());
+
+            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+            Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedContenido().getNconocimientoid());
+            int lastversion;
+            if (lastHistorial != null) {
+                lastversion = lastHistorial.getNnumversion().intValue();
+            } else {
+                lastversion = 0;
+            }
+
+            String url = this.path.concat(this.getSelectedContenido().getNconocimientoid().toString()).concat("/").concat(Integer.toString(lastversion + 1)).concat("/");
+
+            ThistorialId thistorialId = new ThistorialId();
+            thistorialId.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+            thistorialId.setNhistorialid(historialService.getNextPK());
+            Historial historial = new Historial();
+            historial.setId(thistorialId);
+            historial.setNtipoconocimientoid(Constante.CONTENIDO);
+            historial.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            historial.setVdescripcion(this.getSelectedContenido().getVdescripcion());
+            historial.setVtitulo(this.getSelectedContenido().getVtitulo());
+            if (this.getContenidoPlain().length() < 400) {
+                historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
+            } else {
+                historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+            }
+            historial.setNactivo(BigDecimal.ONE);
+            historial.setNsituacionid(this.getSelectedContenido().getNsituacionid());
+            historial.setVruta(url);
+            historial.setNnumversion(BigDecimal.valueOf(lastversion + 1));
+            historial.setDfechacreacion(new Date());
+            historial.setVusuariocreacion(user.getVlogin());
+            historialService.saveOrUpdate(historial);
+
+            GcmFileUtils.writeStringToFileServer(url, "html.txt", this.getContenidoHtml());
+            GcmFileUtils.writeStringToFileServer(url, "plain.txt", this.getContenidoPlain());
             listaTargetVinculos = new ArrayList<Consulta>();
 
             if (this.getListaTargetVinculosBL() == null) {
@@ -1474,6 +1599,7 @@ public class ContenidoMB implements Serializable {
 
             if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                 VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
+                VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
                 service.delete(this.getSelectedContenido().getNconocimientoid());
                 for (Consulta consulta : this.getListaTargetVinculos()) {
                     Vinculo vinculo = new Vinculo();
@@ -1485,35 +1611,21 @@ public class ContenidoMB implements Serializable {
                     vinculo.setVusuariocreacion(user.getVlogin());
                     vinculoService.saveOrUpdate(vinculo);
 
+                    TvinculoHistId vinculoHistId = new TvinculoHistId();
+                    vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
+                    vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
+                    vinculoHistId.setNhistorialid(thistorialId.getNhistorialid());
+                    VinculoHist vinculoHist = new VinculoHist();
+                    vinculoHist.setId(vinculoHistId);
+                    vinculoHist.setNconocimientovinc(vinculo.getNconocimientovinc());
+                    vinculoHist.setNtipoconocimientovinc(vinculo.getNtipoconocimientovinc());
+                    vinculoHist.setDfechacreacion(new Date());
+                    vinculoHist.setVusuariocreacion(user.getVlogin());
+                    vinculoHistService.saveOrUpdate(vinculoHist);
+
                 }
             }
-            //if (CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-            //    VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
-            //    VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
-            //    for (Consulta consulta : this.getListaTargetVinculos()) {
-            //        Vinculo vinculo = new Vinculo();
-            //        vinculo.setNvinculoid(vinculoService.getNextPK());
-            //        vinculo.setNconocimientoid(conocimiento.getNconocimientoid());
-            //        vinculo.setNconocimientovinc(consulta.getIdconocimiento());
-            //        vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
-            //        vinculo.setDfechacreacion(new Date());
-            //        vinculo.setVusuariocreacion(user.getVlogin());
-            //        vinculoService.saveOrUpdate(vinculo);
-            //        
-            //        TvinculoHistId vinculoHistId = new TvinculoHistId();
-            //        vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
-            //        vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
-            //        vinculoHistId.setNhistorialid(thistorialId.getNhistorialid());
-            //        VinculoHist vinculoHist = new VinculoHist();
-            //        vinculoHist.setId(vinculoHistId);
-            //        vinculoHist.setNconocimientovinc(vinculo.getNconocimientovinc());
-            //        vinculoHist.setDfechacreacion(new Date());
-            //        vinculoHist.setVusuariocreacion(user.getVlogin());
-            //        vinculoHistService.saveOrUpdate(vinculoHist);
-            //    }
-            //}
-            //this.setListaContenido(service.getContenidos());
-            //FacesContext.getCurrentInstance().getExternalContext().redirect("/pages/wiki/lista.xhtml");
+
             ArchivoConocimientoService aservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             service.deleteArchivos(this.getSelectedContenido().getNconocimientoid());
             for (ArchivoConocimiento v : this.getListaArchivos()) {
@@ -1523,8 +1635,8 @@ public class ContenidoMB implements Serializable {
                 archivoconocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
                 archivoconocimiento.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
                 archivoconocimiento.setVnombre(v.getVnombre());
-                archivoconocimiento.setNversion(BigDecimal.ONE);
-                archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "\\" + archivoconocimiento.getNversion().toString() + "\\" + archivoconocimiento.getVnombre());
+                archivoconocimiento.setNversion(historial.getNnumversion());
+                archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "/" + archivoconocimiento.getNversion().toString() + "/" + archivoconocimiento.getVnombre());
                 archivoconocimiento.setVusuariocreacion(user.getVlogin());
                 archivoconocimiento.setDfechacreacion(new Date());
                 aservice.saveOrUpdate(archivoconocimiento);
@@ -1532,19 +1644,8 @@ public class ContenidoMB implements Serializable {
 
             }
 
-//            Asignacion asignacion = new Asignacion();
-//            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
-//            asignacion.setNasignacionid(serviceasig.getNextPK());
-//            asignacion.setNtipoconocimientoid(Constante.CONTENIDO);
-//            asignacion.setNconocimientoid(conocimiento.getNconocimientoid());
-//            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-//            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(conocimiento.getNcategoriaid()));
-//            asignacion.setDfechaasignacion(new Date());
-//            asignacion.setDfechacreacion(new Date());
-//            serviceasig.saveOrUpdate(asignacion);
             listaContenido = service.getContenidos();
-            //listaPregunta = service.getPreguntas();
-            //RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
+
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -1604,7 +1705,7 @@ public class ContenidoMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void toAddDiscusion(ActionEvent event) {
         try {
             this.clearDiscusion();
@@ -1613,20 +1714,20 @@ public class ContenidoMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void addDiscusion(ActionEvent event) {
         try {
-            if(this.getTipoDiscusion() == null) {
+            if (this.getTipoDiscusion() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getTituloDiscusion())) {
+            if (StringUtils.isBlank(this.getTituloDiscusion())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título de la discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDiscusionHtml())) {
+            if (StringUtils.isBlank(this.getDiscusionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el detalle de la discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -1637,7 +1738,7 @@ public class ContenidoMB implements Serializable {
             discusionSeccion.setDiscusionHtml(this.getDiscusionHtml());
             discusionSeccion.setDiscusionPlain(Jsoup.parse(discusionSeccion.getDiscusionHtml()).text());
             discusionSeccion.setDfechacreacion(new Date());
-            if(this.getListaDiscusionSeccion() == null) {
+            if (this.getListaDiscusionSeccion() == null) {
                 this.setListaDiscusionSeccion(new ArrayList());
             }
             this.getListaDiscusionSeccion().add(discusionSeccion);
@@ -1647,7 +1748,7 @@ public class ContenidoMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void toEditDiscusion(ActionEvent event) {
         try {
             this.clearDiscusion();
@@ -1658,20 +1759,20 @@ public class ContenidoMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void editDiscusion(ActionEvent event) {
         try {
-            if(this.getSelectedDiscusionSeccion().getNtipodiscusion() == null) {
+            if (this.getSelectedDiscusionSeccion().getNtipodiscusion() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedDiscusionSeccion().getVtitulo())) {
+            if (StringUtils.isBlank(this.getSelectedDiscusionSeccion().getVtitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título de la discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedDiscusionSeccion().getDiscusionHtml())) {
+            if (StringUtils.isBlank(this.getSelectedDiscusionSeccion().getDiscusionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el detalle de la discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -1683,7 +1784,7 @@ public class ContenidoMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void saveOrUpdateDiscusion(ActionEvent event) {
         Discusion discusion = null;
         DiscusionHist discusionHist;
@@ -1692,14 +1793,14 @@ public class ContenidoMB implements Serializable {
             User user = loginMB.getUser();
             DiscusionService discusionService = (DiscusionService) ServiceFinder.findBean("DiscusionService");
             DiscusionHistService discusionHistService = (DiscusionHistService) ServiceFinder.findBean("DiscusionHistService");
-            if(this.getSelectedDiscusion() == null) {
+            if (this.getSelectedDiscusion() == null) {
                 discusion = new Discusion();
                 discusion.setNdiscusionid(discusionService.getNextPK());
                 discusion.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
                 discusion.setDfechacreacion(new Date());
                 discusion.setVusuariocreacion(user.getVlogin());
                 discusionService.saveOrUpdate(discusion);
-                
+
                 discusionHist = new DiscusionHist();
                 discusionHist.setNnumversion(BigDecimal.ONE);
             } else {
@@ -1712,14 +1813,14 @@ public class ContenidoMB implements Serializable {
             discusionHist.setDfechacreacion(new Date());
             discusionHist.setVusuariocreacion(user.getVlogin());
             discusionHistService.saveOrUpdate(discusionHist);
-            
-            if(CollectionUtils.isNotEmpty(this.getListaDiscusionSeccion())) {
+
+            if (CollectionUtils.isNotEmpty(this.getListaDiscusionSeccion())) {
                 String url0 = this.path.concat(this.getSelectedContenido().getNconocimientoid().toString()).concat("/0/d/").concat(BigDecimal.ZERO.toString()).concat("/s");
                 String url1 = this.path.concat(this.getSelectedContenido().getNconocimientoid().toString()).concat("/0/d/").concat(discusionHist.getNnumversion().toString()).concat("/s");
                 DiscusionSeccionService discusionSeccionService = (DiscusionSeccionService) ServiceFinder.findBean("DiscusionSeccionService");
                 DiscusionSeccionHistService discusionSeccionHistService = (DiscusionSeccionHistService) ServiceFinder.findBean("DiscusionSeccionHistService");
                 for (DiscusionSeccion seccion : this.getListaDiscusionSeccion()) {
-                    if(seccion.getNdiscusionseccionid() == null) {
+                    if (seccion.getNdiscusionseccionid() == null) {
                         seccion.setNdiscusionseccionid(discusionSeccionService.getNextPK());
                         seccion.setNdiscusionid(discusion.getNdiscusionid());
                         seccion.setDfechacreacion(new Date());
@@ -1734,10 +1835,10 @@ public class ContenidoMB implements Serializable {
                     seccion.setVruta(ruta0);
                     seccion.setDiscusionPlain(Jsoup.parse(seccion.getDiscusionHtml()).text());
                     discusionSeccionService.saveOrUpdate(seccion);
-                    
+
                     GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", seccion.getDiscusionHtml());
                     GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", seccion.getDiscusionPlain());
-                    
+
                     String ruta1 = url1.concat(seccion.getNdiscusionseccionid().toString()).concat("/");
                     DiscusionSeccionHist seccionHist = new DiscusionSeccionHist();
                     seccionHist.setNdiscusionseccionhid(discusionSeccionHistService.getNextPK());
@@ -1748,7 +1849,7 @@ public class ContenidoMB implements Serializable {
                     seccionHist.setDfechacreacion(new Date());
                     seccionHist.setVusuariocreacion(user.getVlogin());
                     discusionSeccionHistService.saveOrUpdate(seccionHist);
-                    
+
                     GcmFileUtils.writeStringToFileServer(ruta1, "html.txt", seccion.getDiscusionHtml());
                     GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", seccion.getDiscusionPlain());
                 }
@@ -1760,23 +1861,23 @@ public class ContenidoMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
-    public void toCompare(ActionEvent event){
+
+    public void toCompare(ActionEvent event) {
         try {
             if (event != null) {
-                if(CollectionUtils.isEmpty(this.getSelectedHistoriales())){
+                if (CollectionUtils.isEmpty(this.getSelectedHistoriales())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe seleccionar dos versiones para comparar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if(CollectionUtils.isNotEmpty(this.getSelectedHistoriales()) && this.getSelectedHistoriales().size() != 2){
+                if (CollectionUtils.isNotEmpty(this.getSelectedHistoriales()) && this.getSelectedHistoriales().size() != 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Sólo se puede comparar dos versiones a la vez.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
                 SeccionHistService seccionHistService = (SeccionHistService) ServiceFinder.findBean("SeccionHistService");
                 VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
-                for(Historial historial : this.getSelectedHistoriales()) {
+                for (Historial historial : this.getSelectedHistoriales()) {
                     historial.setDescripcionHtml(GcmFileUtils.readStringFromFileServer(historial.getVruta(), "html.txt"));
                     historial.setListaSeccionHist(seccionHistService.getSeccionHistsByHistorial(historial.getId().getNhistorialid()));
                     if (CollectionUtils.isNotEmpty(historial.getListaSeccionHist())) {
@@ -1794,95 +1895,7 @@ public class ContenidoMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
-    public void switchHistory(ActionEvent event) {
-        try {
-            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
-            User user = loginMB.getUser();
-            HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
-            if(CollectionUtils.isNotEmpty(this.getListaHistorial())) {
-                for(Historial h : this.getListaHistorial()) {
-                    h.setNversionactual(BigDecimal.ZERO);
-                    historialService.saveOrUpdate(h);
-                }
-            }
-            Historial hist = historialService.getHistorialById(BigDecimal.valueOf(Long.parseLong(this.getSelectedSwitch())));
-            hist.setNversionactual(BigDecimal.ONE);
-            historialService.saveOrUpdate(hist);
-            String html = GcmFileUtils.readStringFromFileServer(hist.getVruta(), "html.txt");
-            String plain = GcmFileUtils.readStringFromFileServer(hist.getVruta(), "plain.txt");
-            SeccionHistService seccionHistService = (SeccionHistService) ServiceFinder.findBean("SeccionHistService");
-            hist.setListaSeccionHist(seccionHistService.getSeccionHistsByHistorial(hist.getId().getNhistorialid()));
-            if (CollectionUtils.isNotEmpty(hist.getListaSeccionHist())) {
-                for (SeccionHist seccionHist : hist.getListaSeccionHist()) {
-                    seccionHist.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "html.txt"));
-                    seccionHist.setDetallePlain(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "plain.txt"));
-                }
-            }
-            
-            this.getSelectedContenido().setNcategoriaid(hist.getNcategoriaid());
-            this.getSelectedContenido().setNdias(hist.getNdias());
-            this.getSelectedContenido().setVcontenido(hist.getVcontenido());
-            this.getSelectedContenido().setVdescripcion(hist.getVdescripcion());
-            this.getSelectedContenido().setVmsjrespuesta(hist.getVmsjrespuesta());
-            this.getSelectedContenido().setVmsjsolicita(hist.getVmsjsolicita());
-            this.getSelectedContenido().setVnumero(hist.getVnumero());
-            this.getSelectedContenido().setVobservacion(hist.getVobservacion());
-            this.getSelectedContenido().setVtema(hist.getVtema());
-            this.getSelectedContenido().setVtitulo(hist.getVtitulo());
-            this.getSelectedContenido().setDfechamodificacion(new Date());
-            this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
-            
-            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
-            conocimientoService.saveOrUpdate(this.getSelectedContenido());
-            GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "html.txt", html);
-            GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "plain.txt", plain);
-            
-            SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
-            seccionService.deleteSeccionesByConocimiento(this.getSelectedContenido().getNconocimientoid());
-            if (CollectionUtils.isNotEmpty(hist.getListaSeccionHist())) {
-                for (SeccionHist seccionHist : hist.getListaSeccionHist()) {
-                    Seccion seccion = new Seccion();
-                    seccion.setNseccionid(seccionService.getNextPK());
-                    seccion.setNconocimientoid(seccionHist.getId().getNconocimientoid());
-                    seccion.setNorden(seccionHist.getNorden());
-                    seccion.setVruta(seccionHist.getVruta());
-                    seccion.setVtitulo(seccionHist.getVtitulo());
-                    seccion.setVusuariocreacion(user.getVlogin());
-                    seccion.setDfechacreacion(new Date());
-                    seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "html.txt"));
-                    seccion.setDetallePlain(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "plain.txt"));
-                    seccionService.saveOrUpdate(seccion);
-                    
-                    String ruta1 = this.getSelectedContenido().getVruta().concat(seccion.getNorden().toString()).concat("/");
-                    GcmFileUtils.writeStringToFileServer(ruta1, "html.txt", seccion.getDetalleHtml());
-                    GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", seccion.getDetallePlain());
-                }
-            }
-            
-            VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
-            vinculoService.deleteByConocimiento(this.getSelectedContenido().getNconocimientoid());
-            VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
-            List<VinculoHist> listaVinculoHist = vinculoHistService.getVinculoHistsByHistorial(hist.getId().getNhistorialid());
-            if (CollectionUtils.isNotEmpty(listaVinculoHist)) {
-                for (VinculoHist vinculoHist : listaVinculoHist) {
-                    Vinculo vinculo = new Vinculo();
-                    vinculo.setNvinculoid(vinculoService.getNextPK());
-                    vinculo.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
-                    vinculo.setNconocimientovinc(vinculoHist.getNconocimientovinc());
-                    vinculo.setNtipoconocimientovinc(vinculoHist.getNtipoconocimientovinc());
-                    vinculo.setVusuariocreacion(user.getVlogin());
-                    vinculo.setDfechacreacion(new Date());
-                    vinculoService.saveOrUpdate(vinculo);
-                }
-            }
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/vistaConsulta.xhtml");
-        } catch (Exception e) {
-            e.getMessage();
-            e.printStackTrace();
-        }
-    }
-    
+
     public void toAddCalificacion(ActionEvent event) {
         try {
             this.clearCalificacion();

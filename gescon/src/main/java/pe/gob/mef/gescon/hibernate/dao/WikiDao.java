@@ -5,8 +5,10 @@
  */
 package pe.gob.mef.gescon.hibernate.dao;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 
 /**
  *
@@ -16,4 +18,6 @@ public interface WikiDao {
     
     List<HashMap> getConcimientosVinculados(HashMap filters);
     List<HashMap> getConcimientosDisponibles(HashMap filters);
+    Tconocimiento getWikiById(BigDecimal tipo,BigDecimal id) throws Exception;
+    List<HashMap> obtenerWikixAsig(BigDecimal wikiid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
 }

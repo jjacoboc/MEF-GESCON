@@ -15,14 +15,23 @@
     </style>
     <h:form id="fc">
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-        <p:panel header="#{baseLegalMB.selectedBaseLegal.vnumero}" styleClass="TexAlLeft containerView">
+        <p:panel styleClass="TexAlLeft containerView">
+            <f:facet name="header">
+                <h:outputText class="fa fa-file-text-o white Fs14" />
+                <p:spacer width="5"/>
+                <h:outputText value="#{baseLegalMB.selectedBaseLegal.vnumero}" />
+            </f:facet>
             <h:panelGrid columns="1" width="100%">
                 <h:panelGroup>
-                    <h:outputText value="#{msgs.wk_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{msgs.bl_lbl_conocimiento}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{baseLegalMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{msgs.bl_lbl_pnlView}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="15"/>
-                    <h:outputText value="#{msgs.wk_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{msgs.bl_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{baseLegalMB.selectedCategoria.vnombre}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="15"/>
+                    <h:outputText value="#{msgs.bl_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
                     <h:outputText value="#{baseLegalMB.selectedBaseLegal.dfechapublicacion}" styleClass="Fs12" style="font-style: italic;">
                         <f:convertDateTime dateStyle="medium" type="date" locale="es" />
@@ -35,7 +44,7 @@
                     </h:outputText>
                 </h:panelGroup>
                 <p:spacer/>
-                <p:commandButton value="#{msgs.wk_btn_calificacion}" actionListener="#{baseLegalMB.toAddCalificacion}" update=":tabview:calDialogForm:pgCal" 
+                <p:commandButton value="#{msgs.bl_btn_calificacion}" actionListener="#{baseLegalMB.toAddCalificacion}" update=":tabview:calDialogForm:pgCal" 
                                  oncomplete="PF('calDialog').show();" styleClass="ui-link Fs14" rendered="#{loginMB.user ne null}"/>
             </h:panelGrid>
             <h:panelGrid id="pgCal" columns="1" cellpadding="0" cellspacing="0" width="100%">
@@ -81,20 +90,20 @@
         </h:panelGrid>
     </h:form>
 
-    <p:dialog id="calDlg" header="#{msgs.wk_lbl_pnlCalificacion}" widgetVar="calDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+    <p:dialog id="calDlg" header="#{msgs.bl_lbl_pnlCalificacion}" widgetVar="calDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
         <h:form id="calDialogForm">
             <h:panelGrid id="pgCal" columns="1">
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.wk_lbl_calificacion}"/>
+                    <h:outputText value="#{msgs.bl_lbl_calificacion}"/>
                 </h:panelGroup>
                 <p:rating value="#{baseLegalMB.calificacion}" />
 
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.wk_lbl_comentario}"/>
+                    <h:outputText value="#{msgs.bl_lbl_comentario}"/>
                 </h:panelGroup>
                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                     <p:inputTextarea value="#{baseLegalMB.comentarioCalificacion}" rows="5" cols="100" styleClass="Fs14"
@@ -102,25 +111,25 @@
                     <h:outputText id="display"/>
                 </h:panelGrid>
 
-                <p:commandButton value="#{msgs.wk_btn_addcalificacion}" actionListener="#{baseLegalMB.addCalificacion}" update=":tabview:fc:pgCal, :tabview:fc:growl" styleClass="ui-link Fs14"/>
+                <p:commandButton value="#{msgs.bl_btn_addcalificacion}" actionListener="#{baseLegalMB.addCalificacion}" update=":tabview:fc:pgCal, :tabview:fc:growl" styleClass="ui-link Fs14"/>
             </h:panelGrid>
         </h:form>
     </p:dialog>
 
-    <p:dialog id="ecalDlg" header="#{msgs.wk_lbl_pnlCalificacione}" widgetVar="ecalDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+    <p:dialog id="ecalDlg" header="#{msgs.bl_lbl_pnlCalificacione}" widgetVar="ecalDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
         <h:form id="ecalDialogForm">
             <h:panelGrid id="pgEcal" columns="1">
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.wk_lbl_calificacion}"/>
+                    <h:outputText value="#{msgs.bl_lbl_calificacion}"/>
                 </h:panelGroup>
                 <p:rating value="#{baseLegalMB.selectedCalificacion.ncalificacion}" />
 
                 <h:panelGroup>
                     <h:outputText value="#{msgs.icon_asterisk}"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.wk_lbl_comentario}"/>
+                    <h:outputText value="#{msgs.bl_lbl_comentario}"/>
                 </h:panelGroup>
                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                     <p:inputTextarea value="#{baseLegalMB.selectedCalificacion.vcomentario}" rows="5" cols="100" styleClass="Fs14"
@@ -128,7 +137,7 @@
                     <h:outputText id="display"/>
                 </h:panelGrid>
 
-                <p:commandButton value="#{msgs.wk_btn_editcalificacion}" actionListener="#{baseLegalMB.editCalificacion}" update=":tabview:fc:pgCal, :tabview:fc:growl" styleClass="ui-link Fs14"/>
+                <p:commandButton value="#{msgs.bl_btn_editcalificacion}" actionListener="#{baseLegalMB.editCalificacion}" update=":tabview:fc:pgCal, :tabview:fc:growl" styleClass="ui-link Fs14"/>
             </h:panelGrid>
         </h:form>
     </p:dialog>

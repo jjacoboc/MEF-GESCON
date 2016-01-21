@@ -36,8 +36,8 @@ public class Categoria implements Serializable, Comparable<Categoria>{
     private BigDecimal nflagom;
     private String vimagennombre;
     private String vimagentype;
-    private String vespecialista;
-    private String vmoderador;
+    private BigDecimal nespecialista;
+    private BigDecimal nmoderador;
     private String imagen;
     private StreamedContent content;
     private List<Categoria> children;
@@ -292,20 +292,20 @@ public class Categoria implements Serializable, Comparable<Categoria>{
         this.vimagentype = vimagentype;
     }
 
-    public String getVespecialista() {
-        return vespecialista;
+    public BigDecimal getNespecialista() {
+        return nespecialista;
     }
 
-    public void setVespecialista(String vespecialista) {
-        this.vespecialista = vespecialista;
+    public void setNespecialista(BigDecimal nespecialista) {
+        this.nespecialista = nespecialista;
     }
 
-    public String getVmoderador() {
-        return vmoderador;
+    public BigDecimal getNmoderador() {
+        return nmoderador;
     }
 
-    public void setVmoderador(String vmoderador) {
-        this.vmoderador = vmoderador;
+    public void setNmoderador(BigDecimal nmoderador) {
+        this.nmoderador = nmoderador;
     }
 
     /**

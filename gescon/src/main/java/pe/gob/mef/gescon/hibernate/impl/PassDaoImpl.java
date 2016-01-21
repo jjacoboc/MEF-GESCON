@@ -24,7 +24,6 @@ import pe.gob.mef.gescon.hibernate.dao.PassDao;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.Tpass;
 
-//import pe.gob.mef.gescon.hibernate.domain.Mtpolitica;
 /**
  *
  * @author SOPORTE
@@ -53,6 +52,7 @@ public class PassDaoImpl extends HibernateDaoSupport implements PassDao {
     @Override
     public Tpass getTpassByMtuser(Mtuser mtuser) throws Exception {
         DetachedCriteria proj = DetachedCriteria.forClass(Tpass.class);
+        proj.add(Restrictions.eq("id.nusuarioid", mtuser.getNusuarioid()));
         proj.setProjection(Projections.max("dfechacreacion"));
         DetachedCriteria criteria = DetachedCriteria.forClass(Tpass.class);
         criteria.add(Restrictions.eq("id.nusuarioid", mtuser.getNusuarioid()));

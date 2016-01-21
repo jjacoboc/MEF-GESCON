@@ -34,6 +34,7 @@ import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.domain.ThistorialId;
 import pe.gob.mef.gescon.hibernate.domain.TseccionHistId;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoHistId;
+import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
@@ -50,6 +51,7 @@ import pe.gob.mef.gescon.service.VinculoService;
 import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Calificacion;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
@@ -1163,6 +1165,18 @@ public class WikiMB implements Serializable {
                     vinculoHistService.saveOrUpdate(vinculoHist);
                 }
             }
+            
+                        Asignacion asignacion = new Asignacion();
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.WIKI);
+            asignacion.setNconocimientoid(wiki.getNconocimientoid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(wiki.getNcategoriaid()));
+            asignacion.setDfechaasignacion(new Date());
+            asignacion.setDfechacreacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+            
             this.setListaWiki(conocimientoService.getConocimientosByType(Constante.WIKI));
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/lista.xhtml");
         } catch (Exception e) {

@@ -14,6 +14,7 @@
         }
         .ui-selectmanycheckbox tbody tr td label{
             font-size: 12px;
+            color: #3B3D3F;
         }
         .ui-selectmanycheckbox tbody tr td{
             vertical-align: middle;
@@ -25,6 +26,7 @@
             padding-right:  2px !important;
             font-size: 14px;
             vertical-align: middle;
+            color: #3B3D3F;
         }
         .ui-button .ui-button-text {
             padding-top: 2px !important;
@@ -37,17 +39,18 @@
             font-size: 14px;
             vertical-align: middle;
         }
+        .ui-datalist {
+            border-style: none;
+        }
     </style>
     <h:form id="fm">
         <h:panelGrid id="pgFiltro" columns="1">
-            <h:outputText value="#{consultaMB.listaConsulta.size()} Resultados" rendered="#{not empty consultaMB.listaConsulta}" styleClass="FontBold" />
-            <h:outputText value="0 Resultados" rendered="#{empty consultaMB.listaConsulta}" styleClass="FontBold" />
-            <h:outputText value="FILTROS DE BÚSQUEDA" styleClass="FontBold" />
+            <h:outputText value="Filtrar por" styleClass="FontBold Fs14" />
             <p:fieldset legend="Sub Categorías">
                 <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none" 
                             itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro eq null}" emptyMessage="No hay más sub categorías">
-                    <h:panelGrid columns="1" style="width: 100%" rendered="#{cat.nnivel eq 1}">
-                        <p:commandLink actionListener="#{consultaMB.onClickSubCategoriesFilter}" styleClass="ui-link" update=":fm:pgFiltro, :f:pgConsulta" >
+                    <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="width: 100%" rendered="#{cat.nnivel eq 1}">
+                        <p:commandLink actionListener="#{consultaMB.onClickSubCategoriesFilter}" styleClass="ui-link" update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb" >
                             <f:param name="rowIndex" value="#{rowIndex}"/>
                             <h:outputText value="#{cat.vnombre}" styleClass="Fs12"/>
                         </p:commandLink>
@@ -55,9 +58,9 @@
                 </p:dataList>
                 <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none" 
                             itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro ne null}" emptyMessage="No hay más sub categorías">
-                    <h:panelGrid columns="1" style="width: 100%" 
+                    <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="width: 100%" 
                                  rendered="#{(cat.nnivel eq (consultaMB.selectedCategoriaFiltro.nnivel + 1) and cat.ncategoriasup eq consultaMB.selectedCategoriaFiltro.ncategoriaid)}">
-                        <p:commandLink id="fcLink" actionListener="#{consultaMB.onClickSubCategoriesFilter}" styleClass="ui-link" update=":fm:pgFiltro, :f:pgConsulta" >
+                        <p:commandLink id="fcLink" actionListener="#{consultaMB.onClickSubCategoriesFilter}" styleClass="ui-link" update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb" >
                             <f:param name="rowIndex" value="#{rowIndex}"/>
                             <h:outputText value="#{cat.vnombre}" styleClass="Fs12"/>
                         </p:commandLink>
@@ -75,13 +78,13 @@
                                 pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
                         <p:ajax event="dateSelect" update=":fm:fromDate"/>
                     </p:calendar>
-                    <p:commandButton icon="fa fa-chevron-right white" actionListener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
+                    <p:commandButton icon="fa fa-chevron-right white" actionListener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb"/>
                 </h:panelGrid>
             </p:fieldset>
             <p:fieldset legend="Tipo de Contenido">
                 <p:selectManyCheckbox id="grid" value="#{consultaMB.selectedTipoConocimiento}" layout="grid" columns="1" style="font-size: 12px;" >
                     <f:selectItems value="#{consultaMB.listaTipoConocimientoFiltro}" var="tc" itemLabel="#{tc.vnombre}" itemValue="#{tc.ntpoconocimientoid}" />
-                    <p:ajax event="change" listener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta"/>
+                    <p:ajax event="change" listener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb"/>
                 </p:selectManyCheckbox>
             </p:fieldset>
         </h:panelGrid>

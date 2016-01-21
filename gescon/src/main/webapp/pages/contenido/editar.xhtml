@@ -14,13 +14,17 @@
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Editar Contenido" styleClass="TexAlLeft">
                                 <h:panelGrid id="pgNew" columns="1" width="100%">
-                                    <h:outputText value="Categoria"/>
                                     <h:panelGroup>
-                                        <p:commandButton value="Selecciona Categoria" actionListener="#{contenidoMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.wk_lbl_categoria}"/>
+                                        <p:spacer width="10" rendered="#{contenidoMB.selectedContenido.nsituacionid ge msgs.situacionPublicado}"/>
+                                        <h:outputText value="#{contenidoMB.selectedCategoria.vnombre}" styleClass="Fs14 FontBold black" rendered="#{contenidoMB.selectedContenido.nsituacionid ge msgs.situacionPublicado}"/>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{contenidoMB.selectedContenido.nsituacionid lt msgs.situacionPublicado}">
+                                        <p:commandButton value="#{msgs.wk_btn_categoria}" actionListener="#{contenidoMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
                                         <p:spacer width="15"/>
-                                        <h:outputText value="#{contenidoMB.selectedContenido.ncategoriaid}" styleClass="Fs14">
-                                             <f:converter converterId="converterCategoria"/>
-                                        </h:outputText>
+                                        <h:outputText value="#{contenidoMB.selectedCategoria.vnombre}" styleClass="Fs18 FontBold black"/>
                                     </h:panelGroup>
 
                                     <h:outputLabel value="Titulo"/>
@@ -36,7 +40,7 @@
                                     <p:spacer/>
 
                                     <h:outputLabel value="Contenido"/>
-                                    <p:editor value="#{contenidoMB.selectedContenido.vcontenido}"/>
+                                    <p:editor value="#{contenidoMB.contenidoHtml}"/>
                                 </h:panelGrid>
 
                                 <p:spacer/>
@@ -57,13 +61,14 @@
                                                         <f:facet name="header"><h:outputText value="Tipo de Archivo"/></f:facet>
                                                         <p:lightBox>
                                                             <h:outputLink value="#">
-                                                                <h:panelGrid columns="2">
+                                                                <h:panelGrid columns="1">
                                                                     <p:graphicImage library="images" name="pdf.png"/>
-                                                                    <h:outputText id="fileName" value="#{row.vnombre}"/>
                                                                 </h:panelGrid>
                                                             </h:outputLink>
                                                             <f:facet name="inline">
-                                                                <p:media player="pdf" cache="false" value="#{contenidoMB.content}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}"/>
+                                                                <p:media player="pdf" cache="false" value="#{contenidoMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                                                    <f:param name="fileName" value="#{row.vruta}"/>
+                                                                </p:media>
                                                             </f:facet>
                                                         </p:lightBox>
                                                     </p:column>
@@ -216,7 +221,7 @@
                                     <p:spacer/>
                                     <p:fileUpload value="#{contenidoMB.uploadFile}" skinSimple="true" update=":f:pgNewVinc1" fileUploadListener="#{contenidoMB.handleUploadFile}" 
                                                   multiple="true" cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
-                                    
+
                                     <p:commandButton  value="Cancelar" actionListener="#{contenidoMB.toCancel}" update=":f:growl"/>
                                 </h:panelGrid>
                             </h:form>

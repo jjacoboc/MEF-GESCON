@@ -6,12 +6,23 @@
 
     <h:form id="fh">
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-        <p:panel header="#{buenaPracticaMB.selectedBuenaPractica.vtitulo}" styleClass="TexAlLeft containerView">
+        <p:panel styleClass="TexAlLeft containerView">
+            <f:facet name="header">
+                <h:outputText class="fa fa-check-square-o white Fs14" />
+                <p:spacer width="5"/>
+                <h:outputText value="#{buenaPracticaMB.selectedBuenaPractica.vtitulo}" />
+            </f:facet>
             <h:panelGrid id="pgHist" columns="1" width="100%">
                 <h:panelGroup>
+                    <h:outputText value="#{msgs.bp_lbl_conocimiento}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{buenaPracticaMB.selectedBuenaPractica.ntipoconocimientoid}" styleClass="Fs12" style="font-style: italic;">
+                        <f:converter converterId="converterTipoConocimiento" />
+                    </h:outputText>
+                    <p:spacer width="15"/>
                     <h:outputText value="#{msgs.bp_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{buenaPracticaMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{buenaPracticaMB.selectedCategoria.vnombre}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="15"/>
                     <h:outputText value="#{msgs.bp_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>

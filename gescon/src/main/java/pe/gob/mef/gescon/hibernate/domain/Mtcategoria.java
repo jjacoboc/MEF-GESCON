@@ -30,6 +30,8 @@ public class Mtcategoria implements java.io.Serializable {
     private BigDecimal nflagom;
     private String vimagennombre;
     private String vimagentype;
+    private BigDecimal nespecialista;
+    private BigDecimal nmoderador;
     private Set tconocimientos = new HashSet(0);
     private Set tcategoriaUsers = new HashSet(0);
     private Set tpreguntas = new HashSet(0);
@@ -207,6 +209,22 @@ public class Mtcategoria implements java.io.Serializable {
 
     public void setVimagentype(String vimagentype) {
         this.vimagentype = vimagentype;
+    }
+
+    public BigDecimal getNespecialista() {
+        return nespecialista;
+    }
+
+    public void setNespecialista(BigDecimal nespecialista) {
+        this.nespecialista = nespecialista;
+    }
+
+    public BigDecimal getNmoderador() {
+        return nmoderador;
+    }
+
+    public void setNmoderador(BigDecimal nmoderador) {
+        this.nmoderador = nmoderador;
     }
 
     public Set getTconocimientos() {

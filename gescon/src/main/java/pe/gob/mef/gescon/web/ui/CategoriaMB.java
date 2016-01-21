@@ -40,6 +40,7 @@ import org.primefaces.model.UploadedFile;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Categoria;
@@ -57,6 +58,10 @@ public class CategoriaMB implements Serializable {
     private static final Log log = LogFactory.getLog(CategoriaMB.class);
     private String nombre;
     private String descripcion;
+    private List<User> listaModerador;
+    private List<User> listaEspecialista;
+    private User moderador;
+    private User especialista;
     private BigDecimal activo;
     private boolean flagbl;
     private boolean flagpr;
@@ -104,6 +109,38 @@ public class CategoriaMB implements Serializable {
      */
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public List<User> getListaModerador() {
+        return listaModerador;
+    }
+
+    public void setListaModerador(List<User> listaModerador) {
+        this.listaModerador = listaModerador;
+    }
+
+    public List<User> getListaEspecialista() {
+        return listaEspecialista;
+    }
+
+    public void setListaEspecialista(List<User> listaEspecialista) {
+        this.listaEspecialista = listaEspecialista;
+    }
+
+    public User getModerador() {
+        return moderador;
+    }
+
+    public void setModerador(User moderador) {
+        this.moderador = moderador;
+    }
+
+    public User getEspecialista() {
+        return especialista;
+    }
+
+    public void setEspecialista(User especialista) {
+        this.especialista = especialista;
     }
 
     /**
@@ -307,6 +344,9 @@ public class CategoriaMB implements Serializable {
         try {
             CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             createTree(service.getCategorias());
+            UserService userService = (UserService) ServiceFinder.findBean("UserService");
+            this.setListaModerador(userService.getUsersInternal());
+            this.setListaEspecialista(userService.getUsersInternal());
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -368,6 +408,8 @@ public class CategoriaMB implements Serializable {
         this.setFlagom(false);
         this.setFlagpr(false);
         this.setFlagwiki(false);
+        this.setModerador(null);
+        this.setEspecialista(null);
         this.setUploadFile(null);
         this.setContent(null);
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
@@ -447,6 +489,18 @@ public class CategoriaMB implements Serializable {
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
+                if(this.getSelectedCategoria().getNnivel().intValue() < (int)3) {
+                    if(this.getModerador() == null) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el moderador para la categoría a registrar.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                    if(this.getEspecialista()== null) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el especialista para la categoría a registrar.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
                 if(this.getContent() == null) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la imagen de la categoría a registrar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
@@ -464,6 +518,13 @@ public class CategoriaMB implements Serializable {
                 categoria.setNflagom(this.isFlagom() ? BigDecimal.ONE : BigDecimal.ZERO);
                 categoria.setNflagpr(this.isFlagpr() ? BigDecimal.ONE : BigDecimal.ZERO);
                 categoria.setNflagwiki(this.isFlagwiki() ? BigDecimal.ONE : BigDecimal.ZERO);
+                if(this.getSelectedCategoria().getNnivel().intValue() < (int)3) {
+                    categoria.setNespecialista(this.getEspecialista().getNusuarioid());
+                    categoria.setNmoderador(this.getModerador().getNusuarioid());
+                } else {
+                    categoria.setNespecialista(this.getSelectedCategoria().getNespecialista());
+                    categoria.setNmoderador(this.getSelectedCategoria().getNmoderador());
+                }
                 if (this.getSelectedNode() != null) {
                     Categoria parent = (Categoria) this.getSelectedNode().getData();
                     categoria.setNcategoriasup(parent.getNcategoriaid());
@@ -503,6 +564,9 @@ public class CategoriaMB implements Serializable {
             this.setFlagom(this.getSelectedCategoria().getNflagom().equals(BigDecimal.ONE));
             this.setFlagpr(this.getSelectedCategoria().getNflagpr().equals(BigDecimal.ONE));
             this.setFlagwiki(this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE));
+            UserService userService = (UserService) ServiceFinder.findBean("UserService");
+            this.setEspecialista(userService.getMtuserById(this.getSelectedCategoria().getNespecialista()));
+            this.setModerador(userService.getMtuserById(this.getSelectedCategoria().getNmoderador()));
             this.readImage(this.getSelectedCategoria());
         } catch (Exception e) {
             e.getMessage();
@@ -514,17 +578,29 @@ public class CategoriaMB implements Serializable {
         try {
             if (event != null) {
                 if(StringUtils.isBlank(this.getSelectedCategoria().getVnombre())) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el nombre de la categoría a registrar.");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el nombre de la categoría a actualizar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
                 if(StringUtils.isBlank(this.getSelectedCategoria().getVdescripcion())) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción de la categoría a registrar.");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción de la categoría a actualizar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
+                if(this.getSelectedCategoria().getNnivel().intValue() < (int)3) {
+                    if(this.getModerador() == null) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el moderador para la categoría a actualizar.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                    if(this.getEspecialista()== null) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el especialista para la categoría a actualizar.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
                 if(this.getContent() == null) {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la imagen de la categoría a registrar.");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la imagen de la categoría a actualizar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
@@ -540,6 +616,13 @@ public class CategoriaMB implements Serializable {
                 this.getSelectedCategoria().setNflagwiki(this.isFlagwiki() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedCategoria().setDfechamodificacion(new Date());
                 this.getSelectedCategoria().setVusuariomodificacion(user.getVlogin());
+                if(this.getSelectedCategoria().getNnivel().intValue() < (int)3) {
+                    this.getSelectedCategoria().setNespecialista(this.getEspecialista().getNusuarioid());
+                    this.getSelectedCategoria().setNmoderador(this.getModerador().getNusuarioid());
+                } else {
+                    this.getSelectedCategoria().setNespecialista(this.getSelectedCategoria().getNespecialista());
+                    this.getSelectedCategoria().setNmoderador(this.getSelectedCategoria().getNmoderador());
+                }
                 if (this.getContent() != null) {
                     this.getSelectedCategoria().setVimagennombre(this.getContent().getName());
                     this.getSelectedCategoria().setVimagentype(this.getContent().getContentType());

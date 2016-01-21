@@ -14,12 +14,23 @@
     </style>
     <h:form>
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-        <p:panel id="pnl" header="#{wikiMB.selectedWiki.vtitulo}" styleClass="TexAlLeft containerView">
+        <p:panel id="pnl" styleClass="TexAlLeft containerView">
+            <f:facet name="header">
+                <h:outputText class="fa fa-puzzle-piece white Fs14" />
+                <p:spacer width="5"/>
+                <h:outputText value="#{wikiMB.selectedWiki.vtitulo}" />
+            </f:facet>
             <h:panelGrid id="pgView" columns="1" width="100%" >
                 <h:panelGroup>
+                    <h:outputText value="#{msgs.wk_lbl_conocimiento}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{wikiMB.selectedWiki.ntipoconocimientoid}" styleClass="Fs12" style="font-style: italic;">
+                        <f:converter converterId="converterTipoConocimiento" />
+                    </h:outputText>
+                    <p:spacer width="15"/>
                     <h:outputText value="#{msgs.wk_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{wikiMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{wikiMB.selectedCategoria.vnombre}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="15"/>
                     <h:outputText value="#{msgs.wk_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>

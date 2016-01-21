@@ -46,6 +46,7 @@ public class UserMB implements Serializable {
     private String login;
     private String nombres;
     private String apellidos;
+    private Date fechaNacimiento;
     private String dia;
     private List<SelectItem> dias = new ArrayList<SelectItem>();
     private String mes;
@@ -72,33 +73,6 @@ public class UserMB implements Serializable {
      * Creates a new instance of MaestroMB
      */
     public UserMB() {
-    }
-
-    @PostConstruct
-    public void init() {
-        try {
-
-            UserService service = (UserService) ServiceFinder.findBean("UserService");
-            listaUser = service.getUsers();
-
-            for (int x = 1; x < 32; x++) {
-                SelectItem dias = new SelectItem();
-                dias.setLabel(String.valueOf(x));
-                dias.setValue(String.valueOf(x));
-                getDias().add(dias);
-            }
-
-            for (int j = 1997; j > 1935; j--) {
-                SelectItem años = new SelectItem();
-                años.setLabel(String.valueOf(j));
-                años.setValue(String.valueOf(j));
-                getAños().add(años);
-            }
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -155,6 +129,14 @@ public class UserMB implements Serializable {
      */
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     /**
@@ -449,6 +431,33 @@ public class UserMB implements Serializable {
      */
     public void setSelectedUser(User selectedUser) {
         this.selectedUser = selectedUser;
+    }
+    
+    @PostConstruct
+    public void init() {
+        try {
+
+            UserService service = (UserService) ServiceFinder.findBean("UserService");
+            listaUser = service.getUsers();
+
+            for (int x = 1; x < 32; x++) {
+                SelectItem dias = new SelectItem();
+                dias.setLabel(String.valueOf(x));
+                dias.setValue(String.valueOf(x));
+                getDias().add(dias);
+            }
+
+            for (int j = 1997; j > 1935; j--) {
+                SelectItem años = new SelectItem();
+                años.setLabel(String.valueOf(j));
+                años.setValue(String.valueOf(j));
+                getAños().add(años);
+            }
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void cleanAttributes() {

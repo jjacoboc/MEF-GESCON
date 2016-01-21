@@ -86,7 +86,7 @@
 
 
 /*BODY*/
-body{margin:0px; background-image:url("#{resource['spark-layout:images/background.png']}"); background-repeat:repeat; background-position:center; background-color:#C3CCD5; 
+body{margin:0px; /*background-image:url("#{resource['spark-layout:images/background.png']}");*/ background-repeat:repeat; background-position:center; background-color:/*#C3CCD5*/#F6FAFC; 
      background-attachment:fixed; font-family: 'ralewaymedium';}
 
 /* menu mask*/
@@ -187,7 +187,7 @@ body{margin:0px; background-image:url("#{resource['spark-layout:images/backgroun
     
 /*Layout Portlets Cover*/
 #layout-portlets-cover{width:92%; margin:0px auto; display: block;}
-	.layout-portlets-box{width:97%; padding:1% 1.5%; margin:8px auto; overflow: hidden; float:left; background-color:#F6FAFC/*#F1F6F9*/; border-radius:3px; -webkit-border-radius:3px; -moz-border-radius:3px;
+	.layout-portlets-box{width:97%; padding:0% 1.5% 1% 1.5%; margin:0px auto 8px auto; overflow: hidden; float:left; background-color:#F6FAFC/*#F1F6F9*/; border-radius:3px; -webkit-border-radius:3px; -moz-border-radius:3px;
 	-webkit-box-shadow: 0px 1px 0px 0px rgba(159,172,183,0.7);
 	-moz-box-shadow: 0px 1px 0px 0px rgba(159,172,183,0.7);
 	box-shadow: 0px 1px 0px 0px rgba(159,172,183,0.7);}

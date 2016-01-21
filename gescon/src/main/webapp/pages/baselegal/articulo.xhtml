@@ -7,14 +7,23 @@
 
     <h:form id="f">
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-        <p:panel header="#{baseLegalMB.selectedBaseLegal.vnumero}" styleClass="TexAlLeft containerView">
+        <p:panel styleClass="TexAlLeft containerView">
+            <f:facet name="header">
+                <h:outputText class="fa fa-file-text-o white Fs14" />
+                <p:spacer width="5"/>
+                <h:outputText value="#{baseLegalMB.selectedBaseLegal.vnumero}" />
+            </f:facet>
             <h:panelGrid id="pgView" columns="1">
                 <h:panelGroup>
-                    <h:outputText value="#{msgs.wk_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{msgs.bl_lbl_conocimiento}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
-                    <h:outputText value="#{baseLegalMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{msgs.bl_lbl_pnlView}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="15"/>
-                    <h:outputText value="#{msgs.wk_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
+                    <h:outputText value="#{msgs.bl_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{baseLegalMB.selectedCategoria.vnombre}" styleClass="Fs12" style="font-style: italic;"/>
+                    <p:spacer width="15"/>
+                    <h:outputText value="#{msgs.bl_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
                     <p:spacer width="5"/>
                     <h:outputText value="#{baseLegalMB.selectedBaseLegal.dfechapublicacion}" styleClass="Fs12" style="font-style: italic;">
                         <f:convertDateTime dateStyle="medium" type="date" locale="es" />

@@ -12,42 +12,61 @@
         .ui-columnr {
             width: 90% !important;
         }
+        .ui-selectonemenu .ui-selectonemenu-label {
+            font-size: 10px !important;
+        }
+        .ui-selectonemenu-panel .ui-selectonemenu-item {
+            font-size: 10px !important;
+        }
     </style>
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
                 <div class="ContainerIndent">
-                    <h:outputScript>
-                        $(function() {
-                        $(".ui-datascroller-content").css("height", $("#center").height());
-                        $("#fcLink").click(recall);
-                        $("#bcLink").click(recall);
-                        });
-                        function recall() {
-                        $(".ui-datascroller-content").css("height", $("#center").height() - 47);
-                        }
-                    </h:outputScript>
                     <f:view>
                         <table class="panelcolumns" style="width: 100%;">
                             <tr>
-                                <td><ui:include src="filtro.xhtml" /></td>
+                                <td colspan="2">
+                                    <h:form id="fb">
+                                        <h:panelGrid id="pgBreadCrumb" columns="2" cellpadding="0" cellspacing="0" style="width: 100%">
+                                            <h:panelGroup>
+                                                <h:outputText value="#{consultaMB.listaConsulta.size()} resultados para " rendered="#{not empty consultaMB.listaConsulta}" styleClass="Fs14" />
+                                                <h:outputText value="0 resultados para " rendered="#{empty consultaMB.listaConsulta}" styleClass="Fs14" />
+                                                <ui:repeat value="#{consultaMB.listaBreadCrumb}" var="b" rendered="#{not empty consultaMB.listaBreadCrumb}">
+                                                    <p:commandLink id="bcLink" actionListener="#{consultaMB.onClickBreadCrumb}" styleClass="ui-link"
+                                                                   update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb" >
+                                                        <h:outputText value="#{b.vnombre}" styleClass="Fs14 FontBold"/>
+                                                        <f:param name="ncategoriaid" value="#{b.ncategoriaid}"/>
+                                                    </p:commandLink>
+                                                    <h:outputText class="fa fa-fw fa-chevron-right"/>
+                                                </ui:repeat>
+                                            </h:panelGroup>
+                                            <h:panelGroup>
+                                                <table style="float: right;">
+                                                    <tr>
+                                                        <td><h:outputText value="Ordenar por " styleClass="Fs12" style="white-space: nowrap;"/></td>
+                                                        <td>
+                                                            <p:selectOneMenu value="#{consultaMB.ordenpor}">
+                                                                <f:selectItem itemValue="13 DESC" itemLabel="Calificación: Mayor a Menor" />
+                                                                <f:selectItem itemValue="13 ASC" itemLabel="Calificación: Menor a Mayor"/>
+                                                                <f:selectItem itemValue="6 ASC" itemLabel="Fecha Publicación: Ascendente"/>
+                                                                <f:selectItem itemValue="6 DESC" itemLabel="Fecha Publicación: Descendente"/>
+                                                                <p:ajax event="change" listener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb"/>
+                                                            </p:selectOneMenu>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </h:panelGroup>
+                                        </h:panelGrid>
+                                    </h:form>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border-right: 1px solid #C6D6DF"><ui:include src="filtro.xhtml" /></td>
                                 <td style="width: 100%;">
                                     <h:form id="f">
                                         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />                                    
                                         <h:panelGrid id="pgConsulta" columns="1" width="100%">
-                                            <p:panelGrid columns="1" style="width: 100%">
-                                                <h:panelGroup>
-                                                    <p:link value="Inicio" href="/" styleClass="ui-link Fs14"/>
-                                                    <ui:repeat value="#{consultaMB.listaBreadCrumb}" var="b" rendered="#{not empty consultaMB.listaBreadCrumb}">
-                                                        <h:outputText class="fa fa-fw fa-chevron-right"/>
-                                                        <p:commandLink id="bcLink" actionListener="#{consultaMB.onClickBreadCrumb}" styleClass="ui-link"
-                                                                       update=":fm:pgFiltro, :f:pgConsulta" >
-                                                            <h:outputText value="#{b.vnombre}" styleClass="Fs14"/>
-                                                            <f:param name="ncategoriaid" value="#{b.ncategoriaid}"/>
-                                                        </p:commandLink>
-                                                    </ui:repeat>
-                                                </h:panelGroup>
-                                            </p:panelGrid>
                                             <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="width: 100%">
                                                 <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" mode="inline" chunkSize="10" scrollHeight="480" style="width: 100%" >
                                                     <h:panelGrid columns="1" width="100%">

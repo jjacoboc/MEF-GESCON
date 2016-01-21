@@ -17,6 +17,7 @@ import pe.gob.mef.gescon.hibernate.dao.ConocimientoDao;
 import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
 
@@ -174,5 +175,71 @@ public class ConocimientoServiceImpl implements ConocimientoService {
             e.printStackTrace();
         }
         return lista;
+    }
+    
+    @Override
+    public Conocimiento getBpracticaById(BigDecimal tipo, BigDecimal id) throws Exception {
+        ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
+        Tconocimiento tconocimiento = conocimientoDao.getBpracticaById(tipo, id);
+        Conocimiento conocimiento = new Conocimiento();
+        BeanUtils.copyProperties(conocimiento, tconocimiento);
+        return conocimiento;
+    }
+    
+    @Override
+    public List<Asignacion> obtenerBpracticaxAsig(final BigDecimal bpracticaid, final BigDecimal usuarioid,BigDecimal tpoconocimientoid) throws Exception {
+        List<Asignacion> asignacions = new ArrayList<Asignacion>();
+        ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
+        List<HashMap> lista = conocimientoDao.obtenerBpracticaxAsig(bpracticaid,usuarioid,tpoconocimientoid);
+        for (HashMap bean : lista) {
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid((BigDecimal) bean.get("IDASIGNACION"));
+            asignacion.setNtipoconocimientoid((BigDecimal) bean.get("TPOCONOCIMIENTO"));
+            asignacion.setNconocimientoid((BigDecimal) bean.get("IDPREGUNTA"));
+            asignacion.setNusuarioid((BigDecimal) bean.get("IDUSUARIO"));
+            asignacion.setNestadoid((BigDecimal) bean.get("ESTADO"));
+            asignacion.setVusuariocreacion((String) bean.get("USUCREA"));
+            asignacion.setVusuariomodificacion((String) bean.get("USUMOD"));
+            asignacion.setDfechacreacion((Date) bean.get("FECHACREA"));
+            asignacion.setDfechamodificacion((Date) bean.get("FECHAMOD"));     
+            asignacion.setDfechaasignacion((Date) bean.get("FECHAASIG"));  
+            asignacion.setDfechaatencion((Date) bean.get("FECHAATEN"));  
+            asignacion.setDfecharecepcion((Date) bean.get("FECHARECEP"));  
+            asignacions.add(asignacion);
+        }
+        return asignacions;
+    }
+    
+    @Override
+    public Conocimiento getOmejoraById(BigDecimal tipo, BigDecimal id) throws Exception {
+        ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
+        Tconocimiento tconocimiento = conocimientoDao.getOmejoraById(tipo, id);
+        Conocimiento conocimiento = new Conocimiento();
+        BeanUtils.copyProperties(conocimiento, tconocimiento);
+        return conocimiento;
+    }
+    
+    @Override
+    public List<Asignacion> obtenerOmejoraxAsig(final BigDecimal omejoraid, final BigDecimal usuarioid,BigDecimal tpoconocimientoid) throws Exception {
+        List<Asignacion> asignacions = new ArrayList<Asignacion>();
+        ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
+        List<HashMap> lista = conocimientoDao.obtenerOmejoraxAsig(omejoraid,usuarioid,tpoconocimientoid);
+        for (HashMap bean : lista) {
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid((BigDecimal) bean.get("IDASIGNACION"));
+            asignacion.setNtipoconocimientoid((BigDecimal) bean.get("TPOCONOCIMIENTO"));
+            asignacion.setNconocimientoid((BigDecimal) bean.get("IDPREGUNTA"));
+            asignacion.setNusuarioid((BigDecimal) bean.get("IDUSUARIO"));
+            asignacion.setNestadoid((BigDecimal) bean.get("ESTADO"));
+            asignacion.setVusuariocreacion((String) bean.get("USUCREA"));
+            asignacion.setVusuariomodificacion((String) bean.get("USUMOD"));
+            asignacion.setDfechacreacion((Date) bean.get("FECHACREA"));
+            asignacion.setDfechamodificacion((Date) bean.get("FECHAMOD"));     
+            asignacion.setDfechaasignacion((Date) bean.get("FECHAASIG"));  
+            asignacion.setDfechaatencion((Date) bean.get("FECHAATEN"));  
+            asignacion.setDfecharecepcion((Date) bean.get("FECHARECEP"));  
+            asignacions.add(asignacion);
+        }
+        return asignacions;
     }
 }

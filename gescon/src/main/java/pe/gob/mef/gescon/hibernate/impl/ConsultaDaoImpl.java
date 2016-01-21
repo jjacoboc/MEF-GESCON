@@ -49,12 +49,14 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
         final String fType = (String) filters.get("fType");
         final String fText = (String) filters.get("fText");
         final String fCodes = (String) filters.get("fCodes");
+        final String order = (String) filters.get("order");
         SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_SHORT);
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
             sql.append("SELECT x.ID, x.NOMBRE, x.SUMILLA, x.IDCATEGORIA, x.CATEGORIA, x.FECHA, ");
-            sql.append("       x.IDTIPOCONOCIMIENTO, x.TIPOCONOCIMIENTO, x.IDESTADO, x.ESTADO, x.SUMA, x.CONTADOR ");
+            sql.append("       x.IDTIPOCONOCIMIENTO, x.TIPOCONOCIMIENTO, x.IDESTADO, x.ESTADO, x.SUMA, x.CONTADOR, ");
+            sql.append("       DECODE(x.CONTADOR,0,0,x.SUMA/x.CONTADOR) AS PROMEDIO ");
             sql.append("FROM (SELECT ");
             sql.append("            a.nbaselegalid AS ID, a.vnumero AS NOMBRE, a.vnombre AS SUMILLA, ");
             sql.append("            a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
@@ -84,7 +86,8 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             sql.append("WHERE 1 IN (").append(fType).append(") "); //BASE LEGAL
             sql.append("UNION ");
             sql.append("SELECT y.ID, y.NOMBRE, y.SUMILLA, y.IDCATEGORIA, y.CATEGORIA, y.FECHA, ");
-            sql.append("       y.IDTIPOCONOCIMIENTO, y.TIPOCONOCIMIENTO, y.IDESTADO, y.ESTADO, y.SUMA, y.CONTADOR ");
+            sql.append("       y.IDTIPOCONOCIMIENTO, y.TIPOCONOCIMIENTO, y.IDESTADO, y.ESTADO, y.SUMA, y.CONTADOR, ");
+            sql.append("       DECODE(y.CONTADOR,0,0,y.SUMA/y.CONTADOR) AS PROMEDIO ");
             sql.append("FROM (SELECT ");
             sql.append("            a.npreguntaid AS ID, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, a.ncategoriaid AS IDCATEGORIA, ");
             sql.append("            b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, 2 AS IDTIPOCONOCIMIENTO, ");
@@ -114,7 +117,8 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             sql.append("WHERE 2 IN (").append(fType).append(") "); //PREGUNTAS Y RESPUESTAS
             sql.append("UNION ");
             sql.append("SELECT z.ID, z.NOMBRE, z.SUMILLA, z.IDCATEGORIA, z.CATEGORIA, z.FECHA, ");
-            sql.append("       z.IDTIPOCONOCIMIENTO, z.TIPOCONOCIMIENTO, z.IDESTADO, z.ESTADO, z.SUMA, z.CONTADOR ");
+            sql.append("       z.IDTIPOCONOCIMIENTO, z.TIPOCONOCIMIENTO, z.IDESTADO, z.ESTADO, z.SUMA, z.CONTADOR, ");
+            sql.append("       DECODE(z.CONTADOR,0,0,z.SUMA/z.CONTADOR) AS PROMEDIO ");
             sql.append("FROM (SELECT ");
             sql.append("            a.nconocimientoid AS ID, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
             sql.append("            a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
@@ -144,7 +148,11 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             sql.append("        a.dfechapublicacion, a.ntpoconocimientoid, d.vnombre, a.nsituacionid, c.vnombre ");
             sql.append("        ) z ");
             sql.append("WHERE (3 IN (").append(fType).append(") OR 4 IN (").append(fType).append(") OR 5 IN (").append(fType).append(") OR 6 IN (").append(fType).append(")) "); //WIKI            
-            sql.append("ORDER BY 7 DESC ");
+            if(StringUtils.isNotBlank(order)) {
+                sql.append("ORDER BY ").append(order);
+            } else {
+                sql.append("ORDER BY 6 DESC ");
+            }
 
             object = getHibernateTemplate().execute(
                 new HibernateCallback() {

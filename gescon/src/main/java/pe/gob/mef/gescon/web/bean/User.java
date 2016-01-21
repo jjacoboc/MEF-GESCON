@@ -37,6 +37,7 @@ public class User implements Serializable {
     private String varea;
     private String vsector;
     private String vgobierno;
+    private BigDecimal nuserinterno;
 
     public void User() {
 
@@ -342,5 +343,13 @@ public class User implements Serializable {
      */
     public void setVgobierno(String vgobierno) {
         this.vgobierno = vgobierno;
+    }
+
+    public BigDecimal getNuserinterno() {
+        return nuserinterno;
+    }
+
+    public void setNuserinterno(BigDecimal nuserinterno) {
+        this.nuserinterno = nuserinterno;
     }
 }

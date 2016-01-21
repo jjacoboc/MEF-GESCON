@@ -15,25 +15,25 @@
                             <p:panel header="Moderar Pregunta" styleClass="TexAlLeft">
                                 <h:panelGrid id="pgModPreg"  columns="2" width="500px">                           
 
-                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{loginMB.getfMsjUsu1()}"/>
-                                    <p:inputTextarea value="#{loginMB.selectedPregunta.vmsjusuario1}" rows="4" cols="66" style="font-weight: normal;"
-                                                     readonly="#{loginMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfMsjUsu1()}"/>
+                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{pendienteMB.getfMsjUsu1()}"/>
+                                    <p:inputTextarea value="#{pendienteMB.selectedPregunta.vmsjusuario1}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="#{pendienteMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfMsjUsu1()}"/>
 
-                                    <p:spacer width="10" rendered="#{loginMB.getfMsjUsu1()}"/>
-                                    <p:spacer width="10" rendered="#{loginMB.getfMsjUsu1()}"/>
+                                    <p:spacer width="10" rendered="#{pendienteMB.getfMsjUsu1()}"/>
+                                    <p:spacer width="10" rendered="#{pendienteMB.getfMsjUsu1()}"/>
 
-                                    <h:outputLabel value="Mensaje del Moderador" rendered="#{loginMB.getfSInfMod()}"/>
-                                    <p:inputTextarea  value="#{loginMB.selectedPregunta.vmsjmoderador}" rows="4" cols="66" style="font-weight: normal;"
-                                                      readonly="#{loginMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{loginMB.getfSInfMod()}"/>
+                                    <h:outputLabel value="Mensaje del Moderador" rendered="#{pendienteMB.getfSInfMod()}"/>
+                                    <p:inputTextarea  value="#{pendienteMB.selectedPregunta.vmsjmoderador}" rows="4" cols="66" style="font-weight: normal;"
+                                                      readonly="#{pendienteMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfSInfMod()}"/>
 
-                                    <p:spacer width="10" rendered="#{loginMB.getfSInfMod()}"/>
-                                    <p:spacer width="10" rendered="#{loginMB.getfSInfMod()}"/>
+                                    <p:spacer width="10" rendered="#{pendienteMB.getfSInfMod()}"/>
+                                    <p:spacer width="10" rendered="#{pendienteMB.getfSInfMod()}"/>
 
                                     <h:outputLabel value="Categoría:"/>
                                     <h:panelGrid  columns="3">
-                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{loginMB.loadTree}" oncomplete="PF('catPregDialog').show();" update=":catPregDialogForm:pgCatPreg" />    
+                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catPregDialog').show();" update=":catPregDialogForm:pgCatPreg" />    
                                         <p:spacer width="10"/>
-                                        <h:outputText id="catedit" value="#{loginMB.selectedPregunta.ncategoriaid}" >
+                                        <h:outputText id="catedit" value="#{pendienteMB.selectedPregunta.ncategoriaid}" >
                                             <f:converter converterId="converterCategoria"/>
                                         </h:outputText>
                                     </h:panelGrid>
@@ -42,15 +42,15 @@
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Asunto:"/>
-                                    <p:inputText size="99" value="#{loginMB.selectedPregunta.vasunto}" readonly="#{loginMB.getfButtonMod() eq false}" maxlength="80"/>
+                                    <p:inputText size="99" value="#{pendienteMB.selectedPregunta.vasunto}" readonly="#{pendienteMB.getfButtonMod() eq false}" maxlength="80"/>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Detalle:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{loginMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
-                                                         counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." readonly="#{loginMB.getfButtonMod() eq false}"/>
+                                        <p:inputTextarea value="#{pendienteMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." readonly="#{pendienteMB.getfButtonMod() eq false}"/>
                                         <h:outputText id="displayd"/>
                                     </h:panelGrid>
 
@@ -62,28 +62,28 @@
 
                                     <h:panelGrid columns="3">
                                         <h:outputLabel value="NM:"/>
-                                        <p:inputText size="5" value="#{loginMB.selectedPregunta.nentidadid}" maxlength="5" readonly="#{loginMB.getfButtonMod() eq false}"/>
-                                        <p:commandButton actionListener="#{loginMB.toEnt}" icon="ui-icon-search" update="ent"/>
+                                        <p:inputText size="5" value="#{pendienteMB.selectedPregunta.nentidadid}" maxlength="5" readonly="#{pendienteMB.getfButtonMod() eq false}"/>
+                                        <p:commandButton actionListener="#{pendienteMB.toEnt}" icon="ui-icon-search" update="ent"/>
                                     </h:panelGrid>
                                     <h:panelGrid columns="2">
                                         <h:outputLabel value="Nombre:"/>
-                                        <p:inputText id="ent" size="50" value="#{loginMB.entidad}" readonly="#{loginMB.getfButtonMod() eq false}"/>  
+                                        <p:inputText id="ent" size="50" value="#{pendienteMB.entidad}" readonly="#{pendienteMB.getfButtonMod() eq false}"/>  
                                     </h:panelGrid>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Dato adicional:"/>
-                                    <p:inputText id="tema" size="99" value="#{loginMB.selectedPregunta.vdatoadicional}" maxlength="80" readonly="#{loginMB.getfButtonMod() eq false}"/>
+                                    <p:inputText id="tema" size="99" value="#{pendienteMB.selectedPregunta.vdatoadicional}" maxlength="80" readonly="#{pendienteMB.getfButtonMod() eq false}"/>
                                 </h:panelGrid>
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
-                                    <p:commandButton value="Actualizar" rendered="#{loginMB.getfButtonMod()}" actionListener="#{loginMB.savePregEdit}" update=":f:pgModPreg" />
-                                    <p:commandButton value="Derivar" rendered="#{loginMB.getfButtonMod()}" ajax="false" action="#{loginMB.DevEsp}"/>
-                                    <p:commandButton value="Solicitar Informacion Adicional" rendered="#{loginMB.getfButtonMod()}" actionListener="#{loginMB.toSi}" update=":siModPregDialogForm:pgSiModPreg" oncomplete="PF('siModPregDialog').show();"  />
-                                    <p:commandButton value="Rechazar" rendered="#{loginMB.getfButtonMod()}" ajax="false"  action="#{loginMB.Rechazar}" />
-                                    <p:commandButton value="Regresar" rendered="#{loginMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
-                                    <p:commandButton value="Responder" rendered="#{loginMB.getfButtonMod() eq false}" actionListener="#{loginMB.toSi}" update=":respModPregDialogForm:pgRespModPreg" oncomplete="PF('respModPregDialog').show();"  />
+                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.savePregEdit}" update=":f:pgModPreg" />
+                                    <p:commandButton value="Derivar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="#{pendienteMB.DevEsp}"/>
+                                    <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModPregDialogForm:pgSiModPreg" oncomplete="PF('siModPregDialog').show();"  />
+                                    <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false"  action="#{pendienteMB.Rechazar}" />
+                                    <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
+                                    <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonMod() eq false}" actionListener="#{pendienteMB.toSi}" update=":respModPregDialogForm:pgRespModPreg" oncomplete="PF('respModPregDialog').show();"  />
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
@@ -94,14 +94,14 @@
                                 <h:panelGrid id="pgSiModPreg"  columns="2">
                                     <h:outputLabel value="Mensaje:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{loginMB.selectedPregunta.vmsjmoderador}" rows="4" cols="66" style="font-weight: normal;"
-                                                         readonly="#{loginMB.getfSInfMod()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <p:inputTextarea value="#{pendienteMB.selectedPregunta.vmsjmoderador}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="#{pendienteMB.getfSInfMod()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
                                     <p:spacer/>
                                     <h:panelGrid style="float: right" columns="2" width="25%">
-                                        <p:commandButton value="Enviar" ajax="false" action="#{loginMB.sendSiMod}"/>
-                                        <p:commandButton value="Cancelar" actionListener="#{loginMB.toCancelSiMod}" />
+                                        <p:commandButton value="Enviar" ajax="false" action="#{pendienteMB.sendSiMod}"/>
+                                        <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelSiMod}" />
                                     </h:panelGrid>
                                 </h:panelGrid>
                             </h:form>
@@ -113,14 +113,14 @@
                                 <h:panelGrid id="pgRespModPreg"  columns="2">
                                     <h:outputLabel value="Mensaje:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{loginMB.selectedPregunta.vmsjusuario1}" rows="4" cols="66" style="font-weight: normal;"
-                                                         readonly="#{loginMB.getfMsjUsu1()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
+                                        <p:inputTextarea value="#{pendienteMB.selectedPregunta.vmsjusuario1}" rows="4" cols="66" style="font-weight: normal;"
+                                                         readonly="#{pendienteMB.getfMsjUsu1()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
                                     <p:spacer/>
                                     <h:panelGrid style="float: right" columns="2" width="25%">
-                                        <p:commandButton value="Enviar" ajax="false"  action="#{loginMB.sendUsuMod}"/>
-                                        <p:commandButton value="Cancelar" actionListener="#{loginMB.toCancelRespUsuMod}" />
+                                        <p:commandButton value="Enviar" ajax="false"  action="#{pendienteMB.sendUsuMod}"/>
+                                        <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelRespUsuMod}" />
                                     </h:panelGrid>
                                 </h:panelGrid>
                             </h:form>
@@ -130,9 +130,9 @@
                             <h:form id="catPregDialogForm">
                                 <h:panelGrid id="pgCatPreg" columns="1">
                                     <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
-                                    <p:tree id="cats" value="#{loginMB.tree}" var="node" animate="true" cache="true"  
+                                    <p:tree id="cats" value="#{pendienteMB.tree}" var="node" animate="true" cache="true"  
                                             selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                        <p:ajax event="select" listener="#{loginMB.onNodeSelect}" oncomplete="PF('catPregDialog').hide();" update=":f:catedit" />
+                                        <p:ajax event="select" listener="#{pendienteMB.onNodeSelect}" oncomplete="PF('catPregDialog').hide();" update=":f:catedit" />
                                         <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>

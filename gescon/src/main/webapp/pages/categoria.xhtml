@@ -9,6 +9,19 @@
         <div class="layout-portlets-box">
             <div class="Container100">
                 <div class="ContainerIndent">
+                    <style type="text/css">
+                        .ui-selectonemenu-list,
+                        .ui-selectonemenu-panel
+                        {
+                            max-height:150px !important;
+                            overflow: scroll;
+                        }
+                        .ui-selectonemenu-items-wrapper
+                        {
+                            height:100% !important;
+                            overflow: scroll;
+                        }
+                    </style>
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
@@ -47,9 +60,33 @@
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
 
+                                    <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
+                                    <h:outputText value="Moderador:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
+                                    <p:selectOneMenu value="#{categoriaMB.moderador}" converter="converterUsuario" panelStyle="width:180px" 
+                                                     effect="fade" var="t" style="width:160px" filter="true" filterMatchMode="startsWith"
+                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
+                                        <f:selectItems value="#{categoriaMB.listaModerador}" var="u" itemLabel="#{u.vnombres} #{u.vapellidos}" itemValue="#{u}" />
+
+                                        <p:column>
+                                            <h:outputText value="#{t.vnombres} #{t.vapellidos}" />
+                                        </p:column>
+                                    </p:selectOneMenu>
+
+                                    <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
+                                    <h:outputText value="Especialista:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
+                                    <p:selectOneMenu value="#{categoriaMB.especialista}" converter="converterUsuario" panelStyle="width:180px" 
+                                                     effect="fade" var="t" style="width:160px" filter="true" filterMatchMode="startsWith"
+                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
+                                        <f:selectItems value="#{categoriaMB.listaEspecialista}" var="u" itemLabel="#{u.vnombres} #{u.vapellidos}" itemValue="#{u}" />
+
+                                        <p:column>
+                                            <h:outputText value="#{t.vnombres} #{t.vapellidos}" />
+                                        </p:column>
+                                    </p:selectOneMenu>
+
                                     <p:spacer/>
                                     <h:outputText value="Verificación:"/>
-                                    <h:panelGrid columns="4" border="0" >
+                                    <h:panelGrid columns="6" border="0" >
                                         <p:selectBooleanCheckbox value="#{categoriaMB.flagbl}"/>
                                         <h:outputText value="Base legal"/>
                                         <p:selectBooleanCheckbox value="#{categoriaMB.flagpr}"/>
@@ -93,10 +130,34 @@
                                                          counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
+                                    
+                                    <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
+                                    <h:outputText value="Moderador:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
+                                    <p:selectOneMenu value="#{categoriaMB.moderador}" converter="converterUsuario" panelStyle="width:180px" 
+                                                     effect="fade" var="t" style="width:160px" filter="true" filterMatchMode="startsWith"
+                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
+                                        <f:selectItems value="#{categoriaMB.listaModerador}" var="u" itemLabel="#{u.vnombres} #{u.vapellidos}" itemValue="#{u}" />
+
+                                        <p:column>
+                                            <h:outputText value="#{t.vnombres} #{t.vapellidos}" />
+                                        </p:column>
+                                    </p:selectOneMenu>
+
+                                    <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
+                                    <h:outputText value="Especialista:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
+                                    <p:selectOneMenu value="#{categoriaMB.especialista}" converter="converterUsuario" panelStyle="width:180px" 
+                                                     effect="fade" var="t" style="width:160px" filter="true" filterMatchMode="startsWith"
+                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
+                                        <f:selectItems value="#{categoriaMB.listaEspecialista}" var="u" itemLabel="#{u.vnombres} #{u.vapellidos}" itemValue="#{u}" />
+
+                                        <p:column>
+                                            <h:outputText value="#{t.vnombres} #{t.vapellidos}" />
+                                        </p:column>
+                                    </p:selectOneMenu>
 
                                     <p:spacer/>
                                     <h:outputText value="Verificación:"/>
-                                    <h:panelGrid columns="4" border="0" >
+                                    <h:panelGrid columns="6" border="0" >
                                         <p:selectBooleanCheckbox value="#{categoriaMB.flagbl}"/>
                                         <h:outputText value="Base legal"/>
                                         <p:selectBooleanCheckbox value="#{categoriaMB.flagpr}"/>

@@ -17,7 +17,7 @@
         }
         function logout() {
             setTimeout(function () {
-                window.location = "/gescon/index.xhtml";
+                window.location = "/gescon/";
             }, 500);
         }
         //]]>
@@ -26,13 +26,13 @@
         <div id="layout-topbar-indent">
             <h:form id="headerForm">
                 <p:link href="/" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}">
-                    <h:graphicImage name="logo_gesconmef.png" styleClass="Fleft" library="images" />
+                    <h:graphicImage name="logogescon2.png" styleClass="Fleft" library="images" width="187px" height="68px"/>
                 </p:link>
                 <p:link outcome="/pages/indexAdmin.xhtml" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid eq msgs.administrador}">
-                    <h:graphicImage name="logo_gesconmef.png" styleClass="Fleft" library="images" />
+                    <h:graphicImage name="logogescon2.png" styleClass="Fleft" library="images" width="187px" height="68px"/>
                 </p:link>
                 <p:link href="/" rendered="#{loginMB.user eq null}">
-                    <h:graphicImage name="logo_gesconmef.png" styleClass="Fleft" library="images" width="187px" height="68px"/>
+                    <h:graphicImage name="logogescon2.png" styleClass="Fleft" library="images" width="187px" height="68px"/>
                 </p:link>
                 <a href="#" id="mobile-menu-button" class="BordRad3 white ShowOnMobile"><i class="fa fa-bars"></i> Menu</a>
                 <a href="#" id="mobile-menu-button-gray" class="BordRad3 white ShowOnMobile"><i class="fa fa-caret-down"></i> Top Menu</a>
@@ -41,29 +41,29 @@
                         <li>
                             <a class="Animated05 CursPointer">
                                 <h:panelGroup>
-                                    <i class="fa fa-user"></i>
+                                    <h:outputText value="Bienvenido, " styleClass="white"/>
+                                    <h:outputText value="#{loginMB.user.vnombres}" styleClass="white" />
                                     <p:spacer width="3"/>
-                                    <h:outputText value="#{loginMB.user.vnombres}" />
+                                    <h:outputText value="#{loginMB.user.vapellidos}" styleClass="white"/>
                                     <p:spacer width="3"/>
-                                    <h:outputText value="#{loginMB.user.vapellidos}"/>
-                                    <h:outputText value=", Bienvenido" />
-                                    <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i>
+                                    <i class="fa fa-user white"></i>
+                                    <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile white"></i>
                                 </h:panelGroup>
                             </a>
                             <ul style="width:185px; margin-left:-10px;" class="Animated03 submenu">
                                 <li><a class="Animated05"><i class="fa fa-user Fs30 Fleft"></i> <span class="Fright Fs20 TexAlRight">#{loginMB.user.vnombres} #{loginMB.user.vapellidos}<span class="Fs10 DispBlock">#{loginMB.perfil.vnombre}</span></span></a></li>
                                 <li><a href="#" class="Animated05"><i class="fa fa-dashboard"></i> Mi Perfil</a></li>
-                                <li><a href="#" class="Animated05"><i class="fa fa-key"></i> Cambiar Contraseña</a></li>
+                                <li class="Animated05"><p:commandLink actionListener="#{loginMB.toUpdatePassword}" oncomplete="PF('claDialog').show();" update=":claDialogForm:pgCla" styleClass="Unselectable"><i class="fa fa-key"></i> Cambiar Contraseña</p:commandLink></li>
                                 <li class="Animated05"><p:commandLink actionListener="#{loginMB.logout}" oncomplete="logout();" styleClass="Unselectable"><i class="fa fa-sign-out"/> Cerrar Sesión </p:commandLink></li>
                             </ul>
                         </li>
                         <li class="fa fa-ellipsis-v menu-separator"></li>
                         <li>
                             <h:panelGroup rendered="#{loginMB.notificaciones gt 0}">
-                                <a class="Animated05 CursPointer"><i class="fa fa-bell animated swing infinite red"></i> Bandeja de Notificaciones <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                                <a class="Animated05 CursPointer"><i class="fa fa-bell animated swing infinite red"></i> <h:outputText value="Bandeja de Notificaciones" styleClass="white" /> <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
                             </h:panelGroup>
                             <h:panelGroup rendered="#{loginMB.notificaciones eq 0}">
-                                <a class="Animated05 CursPointer"><i class="fa fa-bell"></i>Bandeja de Notificaciones <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                                <a class="Animated05 CursPointer"><i class="fa fa-bell"></i><h:outputText value="Bandeja de Notificaciones" styleClass="white" /> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
                             </h:panelGroup>
                             <ul style="width:200px; margin-left:0px;" class="Animated03 submenu">
                                 <li>
@@ -92,9 +92,30 @@
                     </h:panelGroup>
                     <h:panelGroup rendered="#{loginMB.user eq null}">
                         <li class="Animated05"><p:link href="#" onclick="PF('iniDialog').show();" styleClass="Unselectable" style="color: white !important;"><i class="fa fa-sign-in"/> Iniciar Sesión</p:link></li>
+                        <li class="fa fa-ellipsis-v menu-separator" style="color: white !important"></li>
+                        <li class="Animated05"><p:link href="#" styleClass="Unselectable" style="color: white !important;"><i class="fa fa-group"/> Quienes Somos</p:link></li>
                     </h:panelGroup>
                 </ul>
             </h:form>
+            
+            <p:dialog id="claDlg" header="Cambio de Contraseña" widgetVar="claDialog"   modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
+                <h:form id="claDialogForm">
+                    <h:panelGrid id="pgCla" columns="2" >
+                        <h:outputText value="Contraseña Actual:" class="FontBold"/>
+                        <p:password value="#{loginMB.pass}" size="25" styleClass="Fs14"/>
+                        
+                        <h:outputText value="Nueva Contraseña:" class="FontBold"/>
+                        <p:password value="#{loginMB.newpass}" size="25" feedback="true" promptLabel="Por favor, ingrese una contraseña" 
+                                    goodLabel="Bien" strongLabel="Fuerte" weakLabel="Débil" styleClass="Fs14"/>
+                        
+                        <h:outputText value="Confirmar Nueva Contraseña:" class="FontBold"/>
+                        <p:password value="#{loginMB.confirmpass}" size="25" styleClass="Fs14"/>
+                    </h:panelGrid>
+                    <h:panelGrid columns="1" >
+                        <p:commandButton value="Cambiar Contraseña" actionListener="#{loginMB.updatePassword}" styleClass="Fs14 FontBold"/>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
 
             <p:dialog id="asgDlg" header="Bandeja de Asignados" widgetVar="asgDialog"   modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
                 <h:form id="asgDialogForm">

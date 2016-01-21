@@ -15,15 +15,11 @@ import pe.gob.mef.gescon.hibernate.domain.Mtuser;
  */
 public interface UserDao {
     
-    public BigDecimal getNextPK() throws Exception;
-    public void saveOrUpdate(Mtuser mtuser) throws Exception;
-    public List<Mtuser> getMtusers() throws Exception;
-    public Mtuser getMtuserByLogin(String login) throws Exception;
-    /**
-     * cnishimura
-     * @param login
-     * @return
-     * @throws Exception 
-     */
+    BigDecimal getNextPK() throws Exception;
+    void saveOrUpdate(Mtuser mtuser) throws Exception;
+    List<Mtuser> getMtusers() throws Exception;
+    List<Mtuser> getMtusersInternal() throws Exception;
+    List<Mtuser> getMtusersExternal() throws Exception;
+    Mtuser getMtuserByLogin(String login) throws Exception;
     Mtuser getMtuserById(BigDecimal nusuarioid) throws Exception;
 }

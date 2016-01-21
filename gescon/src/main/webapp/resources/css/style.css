@@ -61,7 +61,7 @@ and open the template in the editor.
 }
 
 .topbar-background {
-    background: url(../../resources/images/banner.png) no-repeat !important;
+    background: url(../resources/images/banner.png) no-repeat !important;
 }
 
 .ui-commandlink{

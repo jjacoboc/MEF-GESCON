@@ -22,7 +22,7 @@
                                     </h:panelGroup>
 
                                     <h:outputLabel value="Titulo"/>
-                                    <p:inputText size="50" value="#{contenidoMB.titulo}" style="text-transform: uppercase;" maxlength="25" /> 
+                                    <p:inputText size="50" value="#{contenidoMB.titulo}" style="text-transform: uppercase;" maxlength="100" /> 
 
                                     <h:outputLabel value="Descripcion"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
@@ -34,13 +34,13 @@
                                     <p:spacer/>
 
                                     <h:outputLabel value="Contenido"/>
-                                    <p:editor value="#{contenidoMB.contenido}"/>
+                                    <p:editor value="#{contenidoMB.contenidoHtml}"/>
                                 </h:panelGrid>
 
                                 <p:spacer/>
+                                <h:panelGrid id="pgNewVinc1" columns="1" cellpadding="0" cellspacing="0" width="100%">
+                                    <p:fieldset>
 
-                                <p:fieldset>
-                                    <h:panelGrid id="pgNewVinc1" columns="1" cellpadding="0" cellspacing="0" width="100%">
                                         <p:commandButton style=" float:left;"  value="Agregar Archivos" styleClass="ui-link Fs14" oncomplete="PF('tpoconDialog').show();"/>
                                         <p:tabView>
                                             <p:tab title="Arhivos Relacionados">
@@ -55,22 +55,23 @@
                                                         <f:facet name="header"><h:outputText value="Tipo de Archivo"/></f:facet>
                                                         <p:lightBox>
                                                             <h:outputLink value="#">
-                                                                <h:panelGrid columns="2">
+                                                                <h:panelGrid columns="1">
                                                                     <p:graphicImage library="images" name="pdf.png"/>
-                                                                    <h:outputText id="fileName" value="#{row.vnombre}"/>
                                                                 </h:panelGrid>
                                                             </h:outputLink>
                                                             <f:facet name="inline">
-                                                                <p:media player="pdf" cache="false" value="#{contenidoMB.content}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}"/>
+                                                                <p:media player="pdf" cache="false" value="#{contenidoMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                                                    <f:param name="fileName" value="#{row.vruta}"/>
+                                                                </p:media>
                                                             </f:facet>
                                                         </p:lightBox>
                                                     </p:column>
                                                 </p:dataTable>
                                             </p:tab>
                                         </p:tabView>
-                                    </h:panelGrid>
-                                </p:fieldset>
 
+                                    </p:fieldset>
+                                </h:panelGrid>
                                 <p:spacer/>
 
                                 <p:fieldset>
@@ -214,7 +215,7 @@
                                     <p:spacer/>
                                     <p:fileUpload value="#{contenidoMB.uploadFile}" skinSimple="true" update=":f:pgNewVinc1" fileUploadListener="#{contenidoMB.handleUploadFile}" 
                                                   multiple="true" cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
-                                    
+
                                     <p:commandButton  value="Cancelar" actionListener="#{contenidoMB.toCancel}" update=":f:growl"/>
                                 </h:panelGrid>
                             </h:form>
