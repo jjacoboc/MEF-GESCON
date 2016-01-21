@@ -26,8 +26,6 @@ public interface AsignacionDao {
     public List<HashMap> getNotificationsReceivedPanelByMtuser(Mtuser mtuser) throws Exception;
     public List<HashMap> getNotificationsServedPanelByMtuser(Mtuser mtuser) throws Exception;
     public List<HashMap> getNotificationsAlertPanelByMtuser(Mtuser mtuser) throws Exception;
-    public BigDecimal getModeratorByMtcategoria(BigDecimal ncategoriaid) throws Exception;
-    public BigDecimal getEspecialistaByMtcategoria(BigDecimal ncategoriaid) throws Exception;
     public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception;
     public BigDecimal getUserCreacionByBaseLegal(BigDecimal nbaselegalid) throws Exception;
     public BigDecimal getUserCreacionByContenido(BigDecimal idtipo,BigDecimal nconocimientoid) throws Exception;

@@ -866,7 +866,8 @@ public class BaseLegalMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.BASELEGAL);
             asignacion.setNconocimientoid(base.getNbaselegalid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(this.getSelectedCategoria().getNcategoriaid()));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedCategoria().getNcategoriaid()).getNmoderador());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);

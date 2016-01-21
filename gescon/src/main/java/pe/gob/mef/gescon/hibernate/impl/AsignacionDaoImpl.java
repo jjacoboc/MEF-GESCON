@@ -320,40 +320,6 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
     }
 
     @Override
-    public BigDecimal getModeratorByMtcategoria(BigDecimal ncategoriaid) throws Exception {
-        final StringBuilder sql = new StringBuilder();
-        sql.append("SELECT NUSUARIOID FROM TCATEGORIA_USER  ");
-        sql.append("WHERE ncategoriaid = ").append(ncategoriaid).append(" ");
-        sql.append("AND nperfilid = ").append(Constante.MODERADOR).append(" ");
-
-        return (BigDecimal) getHibernateTemplate().execute(
-                new HibernateCallback() {
-                    @Override
-                    public Object doInHibernate(Session session) throws HibernateException {
-                        Query query = session.createSQLQuery(sql.toString());
-                        return query.uniqueResult();
-                    }
-                });
-    }
-
-    @Override
-    public BigDecimal getEspecialistaByMtcategoria(BigDecimal ncategoriaid) throws Exception {
-        final StringBuilder sql = new StringBuilder();
-        sql.append("SELECT NUSUARIOID FROM TCATEGORIA_USER  ");
-        sql.append("WHERE ncategoriaid = ").append(ncategoriaid).append(" ");
-        sql.append("AND nperfilid = ").append(Constante.ESPECIALISTA).append(" ");
-
-        return (BigDecimal) getHibernateTemplate().execute(
-                new HibernateCallback() {
-                    @Override
-                    public Object doInHibernate(Session session) throws HibernateException {
-                        Query query = session.createSQLQuery(sql.toString());
-                        return query.uniqueResult();
-                    }
-                });
-    }
-
-    @Override
     public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception {
         final StringBuilder sql = new StringBuilder();
         sql.append("SELECT NUSUARIOID FROM MTUSER WHERE VLOGIN= (SELECT VUSUARIOCREACION FROM TPREGUNTA  ");

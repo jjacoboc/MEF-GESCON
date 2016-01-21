@@ -1168,7 +1168,8 @@ public class OportunidadMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
             asignacion.setNconocimientoid(conocimiento.getNconocimientoid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(conocimiento.getNcategoriaid()));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(conocimiento.getNcategoriaid()).getNmoderador());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);

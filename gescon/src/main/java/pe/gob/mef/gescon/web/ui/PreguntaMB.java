@@ -958,7 +958,8 @@ public class PreguntaMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
             asignacion.setNconocimientoid(idpregunta);
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(pregunta.getNcategoriaid()));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(pregunta.getNcategoriaid()).getNmoderador());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);

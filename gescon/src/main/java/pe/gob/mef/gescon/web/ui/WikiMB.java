@@ -1172,7 +1172,8 @@ public class WikiMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.WIKI);
             asignacion.setNconocimientoid(wiki.getNconocimientoid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(wiki.getNcategoriaid()));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(wiki.getNcategoriaid()).getNmoderador());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
