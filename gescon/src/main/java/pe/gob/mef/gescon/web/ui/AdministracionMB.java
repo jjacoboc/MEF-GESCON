@@ -47,8 +47,6 @@ public class AdministracionMB implements Serializable{
     private List<Consulta> listaDestacadosBP;
     private List<Consulta> listaDestacadosCT;
     private List<Consulta> listaDestacadosOM;
-    private List<GeneralBean> themes;
-    private String theme;
     
     /**
      * Creates a new instance of AdministracionMB
@@ -157,37 +155,6 @@ public class AdministracionMB implements Serializable{
     public void setListaDestacadosOM(List<Consulta> listaDestacadosOM) {
         this.listaDestacadosOM = listaDestacadosOM;
     }
-
-    /**
-     * @return the themes
-     */
-    public List<GeneralBean> getThemes() {
-        if (themes == null) {
-            themes = Parameters.getListaThemes();
-        }
-        return themes;
-    }
-
-    /**
-     * @param themes the themes to set
-     */
-    public void setThemes(List<GeneralBean> themes) {
-        this.themes = themes;
-    }
-
-    /**
-     * @return the theme
-     */
-    public String getTheme() {
-        return theme;
-    }
-
-    /**
-     * @param theme the theme to set
-     */
-    public void setTheme(String theme) {
-        this.theme = theme;
-    }
     
     @PostConstruct
     public void init(){
@@ -211,14 +178,17 @@ public class AdministracionMB implements Serializable{
             Admin admin = new Admin();
             admin.setNombre("Alertas");
             admin.setImagen("fa fa-bullhorn Fs26 black");
+            admin.setPage("/pages/alerta");
             listaAdministracion.add(admin);
             admin = new Admin();
             admin.setNombre("Parámetros");
             admin.setImagen("fa fa-gears Fs26 black");
+            admin.setPage("/pages/parametro");
             listaAdministracion.add(admin);
             admin = new Admin();
             admin.setNombre("Tablas Maestras");
             admin.setImagen("fa fa-table Fs26 black");
+            admin.setPage("/pages/maestro");
             listaAdministracion.add(admin);
             
             CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
@@ -230,27 +200,27 @@ public class AdministracionMB implements Serializable{
             listaPerfil = new ArrayList<Perfil>();
             Perfil perfil = new Perfil();
             perfil.setVdescripcion("Usuario Interno");
-            perfil.setImagen("User-Red.png");
+            perfil.setImagen("fa fa-user Fs26 black");
             listaPerfil.add(perfil);
             perfil = new Perfil();
             perfil.setVdescripcion("Usuario Externo");
-            perfil.setImagen("User-Green.png");
+            perfil.setImagen("fa fa-user Fs26 black");
             listaPerfil.add(perfil);
             perfil = new Perfil();
             perfil.setVdescripcion("Especialista");
-            perfil.setImagen("Reseller-Account.png");
+            perfil.setImagen("fa fa-user Fs26 black");
             listaPerfil.add(perfil);
             perfil = new Perfil();
             perfil.setVdescripcion("Moderador");
-            perfil.setImagen("User-Policeman.png");
+            perfil.setImagen("fa fa-user-secret Fs26 black");
             listaPerfil.add(perfil);
             perfil = new Perfil();
             perfil.setVdescripcion("Administrador");
-            perfil.setImagen("Administrator.png");
+            perfil.setImagen("fa fa-user Fs26 black");
             listaPerfil.add(perfil);
             perfil = new Perfil();
             perfil.setVdescripcion("Políticas de Acceso");
-            perfil.setImagen("Book-Spelling.png");
+            perfil.setImagen("fa fa-gears Fs26 black");
             listaPerfil.add(perfil);
         } catch(Exception e) {
             e.getMessage();

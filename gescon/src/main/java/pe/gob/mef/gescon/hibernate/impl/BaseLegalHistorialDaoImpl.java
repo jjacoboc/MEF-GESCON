@@ -64,11 +64,11 @@ public class BaseLegalHistorialDaoImpl extends HibernateDaoSupport implements Ba
     @Override
     public TbaselegalHist getLastThistorialByTbaselegal(BigDecimal idbaselegal) throws Exception {
         DetachedCriteria proj = DetachedCriteria.forClass(TbaselegalHist.class);
-        proj.setProjection(Projections.max("nnumversion"));
+        proj.setProjection(Projections.max("nversion"));
         proj.add(Restrictions.eq("nbaselegalid", idbaselegal));
         DetachedCriteria criteria = DetachedCriteria.forClass(TbaselegalHist.class);
         criteria.add(Restrictions.eq("nbaselegalid", idbaselegal));
-        criteria.add(Property.forName("nnumversion").eq(proj));
+        criteria.add(Property.forName("nversion").eq(proj));
         return (TbaselegalHist) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
 

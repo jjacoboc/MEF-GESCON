@@ -129,6 +129,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
             sql.append("        INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
             sql.append("        INNER JOIN MTTIPO_CONOCIMIENTO d ON a.ntpoconocimientoid = d.ntpoconocimientoid ");
+            sql.append("        AND a.ntpoconocimientoid IN (").append(fType).append(") ");
             sql.append("        LEFT OUTER JOIN TCALIFICACION e ON a.nconocimientoid = e.nconocimientoid ");
             sql.append("        WHERE a.nactivo = :ACTIVO ");
             sql.append("        AND c.nsituacionid = 6 AND b.nestado = 1 ");

@@ -25,6 +25,12 @@
     <div id="layout-topbar" class="topbar-background">
         <div id="layout-topbar-indent">
             <h:form id="headerForm">
+                <p:notificationBar position="top" effect="slide" widgetVar="bar">
+                    <h:panelGrid columns="1" width="95%">
+                        <h:outputText value="#{msgs.notificacion}" styleClass="Fs16 white" />
+                        <p:commandLink value="[X] Cerrar" onclick="PF('bar').hide()" styleClass="Fs12 Fright white" style="color: white !important;"/>
+                    </h:panelGrid>
+                </p:notificationBar>
                 <p:link href="/" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}">
                     <h:graphicImage name="logogescon2.png" styleClass="Fleft" library="images" width="187px" height="68px"/>
                 </p:link>
@@ -98,7 +104,7 @@
                 </ul>
             </h:form>
             
-            <p:dialog id="claDlg" header="Cambio de Contraseña" widgetVar="claDialog"   modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
+            <p:dialog id="claDlg" header="Cambio de Contraseña" widgetVar="claDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" >
                 <h:form id="claDialogForm">
                     <h:panelGrid id="pgCla" columns="2" >
                         <h:outputText value="Contraseña Actual:" class="FontBold"/>
@@ -111,8 +117,9 @@
                         <h:outputText value="Confirmar Nueva Contraseña:" class="FontBold"/>
                         <p:password value="#{loginMB.confirmpass}" size="25" styleClass="Fs14"/>
                     </h:panelGrid>
-                    <h:panelGrid columns="1" >
-                        <p:commandButton value="Cambiar Contraseña" actionListener="#{loginMB.updatePassword}" styleClass="Fs14 FontBold"/>
+                    <h:panelGrid id="pgBtnsCla" columns="2" >
+                        <p:commandButton value="Cambiar Contraseña" actionListener="#{loginMB.updatePassword}" oncomplete="logout();" styleClass="Fs14 FontBold"/>
+                        <p:commandButton value="Cancelar" onclick="PF('claDialog').hide()" styleClass="Fs14 FontBold" rendered="#{!loginMB.claveCaducada}"/>
                     </h:panelGrid>
                 </h:form>
             </p:dialog>
@@ -283,7 +290,7 @@
                         <p:inputText value="#{loginMB.login}" size="25" maxlength="25" styleClass="Fs14"/>
                         <p:password value="#{loginMB.pass}" size="25" styleClass="Fs14"/>
                         <p:spacer/>
-                        <p:commandButton value="Iniciar Sesion" action="#{loginMB.ingresar}" update=":iniDialogForm:growl" oncomplete="manejarLogin(xhr, status, args)" />
+                        <p:commandButton value="Iniciar Sesion" action="#{loginMB.ingresar}" update=":iniDialogForm:growl, :claDialogForm:pgBtnsCla" oncomplete="manejarLogin(xhr, status, args)" />
                         <p:spacer/>
                         <p:row>
                             <p:column>

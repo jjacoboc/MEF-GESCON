@@ -19,12 +19,15 @@
                                             <tr>
                                                 <ui:repeat value="#{administracionMB.listaAdministracion}" var="admin">
                                                     <td>
-                                                        <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
-                                                            <p:spacer/>
-                                                            <i class="#{admin.imagen}" style="height: 32px; width: 32px;"></i>
-                                                            <h:outputText value="#{admin.nombre}" styleClass="Fs14 FontBold black"/>
-                                                            <p:spacer/>
-                                                        </p:panelGrid>
+                                                        <p:commandLink styleClass="ui-link" action="#{loginMB.redirect}" >
+                                                            <f:param name="page" value="#{admin.page}"/>
+                                                            <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
+                                                                <p:spacer/>
+                                                                <i class="#{admin.imagen}" style="height: 32px; width: 32px;"></i>
+                                                                <h:outputText value="#{admin.nombre}" styleClass="Fs14 FontBold black"/>
+                                                                <p:spacer/>
+                                                            </p:panelGrid>
+                                                        </p:commandLink>
                                                     </td>
                                                 </ui:repeat>
                                             </tr>

@@ -7,7 +7,6 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.util.Date;
-import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
 
 /**
@@ -17,7 +16,6 @@ import pe.gob.mef.gescon.hibernate.domain.TpassId;
 public class Pass implements Serializable {
 
     private TpassId id;
-    private Mtuser mtuser;
     private String vclave;
     private String vusuariocreacion;
     private Date dfechacreacion;
@@ -40,20 +38,6 @@ public class Pass implements Serializable {
      */
     public void setId(TpassId id) {
         this.id = id;
-    }
-
-    /**
-     * @return the mtuser
-     */
-    public Mtuser getMtuser() {
-        return mtuser;
-    }
-
-    /**
-     * @param mtuser the mtuser to set
-     */
-    public void setMtuser(Mtuser mtuser) {
-        this.mtuser = mtuser;
     }
 
     /**

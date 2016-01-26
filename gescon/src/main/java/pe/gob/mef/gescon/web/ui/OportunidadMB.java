@@ -537,6 +537,23 @@ public class OportunidadMB implements Serializable {
             e.printStackTrace();
         }
     }
+    
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if (!CollectionUtils.isEmpty(this.getFilteredListaOportunidad())) {
+                    this.setSelectedOportunidad(this.getFilteredListaOportunidad().get(index));
+                } else {
+                    this.setSelectedOportunidad(this.getListaOportunidad().get(index));
+                }
+                this.setFilteredListaOportunidad(new ArrayList());
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
 
     public void clearAll() {
         try {

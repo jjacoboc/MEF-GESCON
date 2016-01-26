@@ -1,0 +1,155 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">                    
+                    <f:view>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="Editar Pregunta" styleClass="TexAlLeft">
+                                <h:panelGrid id="pgModPreg"  columns="2" width="500px">                           
+
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGrid  columns="3">
+                                        <p:spacer width="10"/>
+                                        <h:outputText id="catedit" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+                                    </h:panelGrid>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputLabel value="Asunto:"/>
+                                    <p:inputText size="99" value="#{preguntaMB.selectedPregunta.vasunto}" readonly="#{preguntaMB.getfButtonModPub() eq false}" maxlength="80"/>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
+                                        <h:outputText id="displayd"/>
+                                    </h:panelGrid>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputLabel value="Respuesta"/>
+                                    <p:editor value="#{preguntaMB.selectedPregunta.vrespuesta}"/>
+                                    
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputLabel value="Entidad" style="text-decoration: underline" />
+                                    <p:spacer/>
+
+                                    <h:panelGrid columns="3">
+                                        <h:outputLabel value="NM:"/>
+                                        <p:inputText size="5" value="#{preguntaMB.selectedPregunta.nentidadid}" maxlength="5" readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
+                                        <p:commandButton actionListener="#{preguntaMB.toEntEdit}" icon="ui-icon-search" update="ent"/>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2">
+                                        <h:outputLabel value="Nombre:"/>
+                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}" readonly="#{preguntaMB.getfButtonModPub() eq false}"/>  
+                                    </h:panelGrid>
+
+                                    <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
+
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <p:inputText id="tema" size="99" value="#{preguntaMB.selectedPregunta.vdatoadicional}" maxlength="80" readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
+                                </h:panelGrid>
+                                
+                                <p:spacer width="10"/>
+                                <p:spacer width="10"/>
+                                
+                                <p:fieldset>
+                                    <h:panelGrid id="pgNewVinc" columns="1" cellpadding="0" cellspacing="0" width="100%">
+                                        <p:commandButton value="#{msgs.wk_btn_vinculo}" actionListener="#{preguntaMB.toAddLink}" update=":pickDialogForm:pgPick" oncomplete="PF('pickDialog').show();" styleClass="ui-link Fs14" />
+                                        <p:tabView id="tabview">
+                                            <p:tab title="Respuestas">
+                                                <p:dataTable value="#{preguntaMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna respuesta vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Otros Conocimientos">
+                                                <p:dataTable value="#{preguntaMB.listaTargetVinculosConocimiento}" var="p" scrollRows="5" scrollable="true" 
+                                                             emptyMessage="Ningun Conocimiento vinculado." >
+                                                    <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                                        <h:outputText value="#{p.sumilla}" />
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.tipoConocimiento}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                        </p:tabView>
+                                    </h:panelGrid>
+                                </p:fieldset>
+                                <br></br>
+                                <h:panelGrid columns="5" style="padding-left: 55px">
+                                    <p:commandButton value="Regresar" ajax="false" action="/pages/pregunta/lista.xhtml" />
+                                    <p:commandButton value="Actualizar" ajax="false" action="#{preguntaMB.update}" />
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+                        
+                        <p:dialog id="pickDlg" header="#{msgs.wk_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="pickDialogForm">
+                                <h:panelGrid id="pgPick" columns="1">
+                                    <h:outputText value="Tipo de Conocimiento:"/>
+                                    <p:selectOneMenu value="#{preguntaMB.idTipoConocimiento}" styleClass="Wid20">
+                                        <p:ajax event="change" listener="#{preguntaMB.onListTipoConocimientoChange}" update=":pickDialogForm:pgPick"/>
+                                        <f:selectItem itemValue="" itemLabel="Seleccione" />
+                                        <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
+                                    </p:selectOneMenu>
+                                    <p:pickList value="#{preguntaMB.pickListPregunta}" var="p" itemValue="#{p}" converter="converterPickListConocimiento" 
+                                                itemLabel="#{p.codigo} #{p.nombre} #{p.categoria} #{p.estado}" showSourceFilter="true" 
+                                                showTargetFilter="true" filterMatchMode="contains" styleClass="wk-picklist-list">
+                                        <p:ajax event="transfer" listener="#{preguntaMB.onTransferPreguntas}" update=":f:tabview"/>
+                                        <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
+                                        <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
+
+                                        <p:column style="width: 60%;">
+                                            <h:outputText value="#{p.codigo}" rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value=" - " rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value="#{p.nombre}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center;">
+                                            <h:outputText value="#{p.categoria}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center;">
+                                            <h:outputText value="#{p.estado}" />
+                                        </p:column>
+                                    </p:pickList>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

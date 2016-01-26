@@ -15,26 +15,32 @@ import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CalificacionPreguntaService;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.ContenidoService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.RespuestaHistService;
 import pe.gob.mef.gescon.service.UserService;
+import pe.gob.mef.gescon.service.VinculoPreguntaService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
@@ -44,13 +50,14 @@ import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 import pe.gob.mef.gescon.web.bean.RespuestaHist;
 import pe.gob.mef.gescon.web.bean.User;
+import pe.gob.mef.gescon.web.bean.VinculoPregunta;
 
 /**
  *
  * @author JJacobo
  */
 @ManagedBean
-@ApplicationScoped
+@SessionScoped
 public class PreguntaMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -106,12 +113,12 @@ public class PreguntaMB implements Serializable {
     private CalificacionPregunta selectedCalificacion;
     private BigDecimal calificacion;
     private String comentarioCalificacion;
+
     /**
      * Creates a new instance of MaestroMB
      */
     public PreguntaMB() {
     }
-    
 
     /**
      * @return the listaPregunta
@@ -737,7 +744,8 @@ public class PreguntaMB implements Serializable {
     }
 
     /**
-     * @param listaTargetVinculosConocimiento the listaTargetVinculosConocimiento to set
+     * @param listaTargetVinculosConocimiento the
+     * listaTargetVinculosConocimiento to set
      */
     public void setListaTargetVinculosConocimiento(List<Consulta> listaTargetVinculosConocimiento) {
         this.listaTargetVinculosConocimiento = listaTargetVinculosConocimiento;
@@ -822,7 +830,7 @@ public class PreguntaMB implements Serializable {
             FacesContext.getCurrentInstance().renderResponse();
         }
     }
-    
+
     public void clearCalificacion() {
         try {
             this.setSelectedCalificacion(null);
@@ -907,13 +915,14 @@ public class PreguntaMB implements Serializable {
         }
     }
 
-    public void toSave(ActionEvent event) {
+    public String toSave() {
         try {
             this.cleanAttributes();
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
+        return "/pages/pregunta/nuevo?faces-redirect=true";
     }
 
     public void toEnt(ActionEvent event) {
@@ -926,8 +935,18 @@ public class PreguntaMB implements Serializable {
         }
     }
 
+    public void toEntEdit(ActionEvent event) {
+        try {
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            this.setEntidad(service.getNomEntidadbyIdEntidad(this.getSelectedPregunta().getNentidadid()));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-    public void save(ActionEvent event) throws Exception {
+    public String save() throws Exception {
+        String pagina="";
         try {
             if (CollectionUtils.isEmpty(this.getListaPregunta())) {
                 this.setListaPregunta(Collections.EMPTY_LIST);
@@ -958,11 +977,12 @@ public class PreguntaMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
             asignacion.setNconocimientoid(idpregunta);
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-            asignacion.setNusuarioid(categoriaService.getCategoriaById(pregunta.getNcategoriaid()).getNmoderador());
+            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(pregunta.getNcategoriaid()));
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
+            
+            pagina="/pages/pregunta/lista?faces-redirect=true";
 
             listaPregunta = service.getPreguntas();
             RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
@@ -971,6 +991,7 @@ public class PreguntaMB implements Serializable {
             log.error(e.getMessage());
             e.printStackTrace();
         }
+        return pagina;
     }
 
     public void activar(ActionEvent event) {
@@ -1016,10 +1037,10 @@ public class PreguntaMB implements Serializable {
     }
 
     public String toSee() {
-        String pagina=null;
+        String pagina = null;
         try {
             int situacion;
-            
+
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
             this.setSelectedPregunta(this.getListaPregunta().get(index));
@@ -1087,7 +1108,6 @@ public class PreguntaMB implements Serializable {
 
             pagina = "/pages/pregunta/ver?faces-redirect=true";
 
-            
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -1183,18 +1203,6 @@ public class PreguntaMB implements Serializable {
     public void toModPub(ActionEvent event) {
         try {
             RequestContext.getCurrentInstance().execute("PF('seeDialog').hide();");
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void toEdit(ActionEvent event) {
-        try {
-            RequestContext.getCurrentInstance().execute("PF('respDialog').hide();");
-            RequestContext.getCurrentInstance().execute("PF('modDialog').hide();");
-            RequestContext.getCurrentInstance().execute("PF('modpubDialog').hide();");
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -1438,36 +1446,21 @@ public class PreguntaMB implements Serializable {
         }
     }
 
-    public void Publicar(ActionEvent event) throws Exception {
+    public String Publicar() throws Exception {
+        String pagina = null;
         try {
-            if (CollectionUtils.isEmpty(this.getListaPregunta())) {
-                this.setListaPregunta(Collections.EMPTY_LIST);
-            }
-
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("6")));
+            this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 6));
+            this.getSelectedPregunta().setDfechapublicacion(new Date());
             service.saveOrUpdate(this.getSelectedPregunta());
 
-            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
-            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
-            this.getSelectedAsignacion().setDfechaatencion(new Date());
-            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
-
-            //Asignacion asignacion = new Asignacion();
-            //asignacion.setNasignacionid(serviceasig.getNextPK());
-            //asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
-            //asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
-            //asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            //asignacion.setNusuarioid(BigDecimal.valueOf(Long.parseLong("4")));
-            //asignacion.setDfechacreacion(new Date());
-            //serviceasig.saveOrUpdate(asignacion);
-            this.setListaPregunta(service.getPreguntas());
-            RequestContext.getCurrentInstance().execute("PF('modpubDialog').hide();");
+            pagina = "/pages/pregunta/lista.xhtml";
 
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
+        return pagina;
     }
 
     public void Responder(ActionEvent event) throws Exception {
@@ -1632,7 +1625,7 @@ public class PreguntaMB implements Serializable {
             this.setSelectedPregunta(this.getListaPregunta().get(index));
             RespuestaHistService serviceresp = (RespuestaHistService) ServiceFinder.findBean("RespuestaHistService");
             this.setListaRespuesta(serviceresp.getHistorialByPregunta(this.getSelectedPregunta().getNpreguntaid()));
-            pagina="/pages/respuestaHistorial?faces-redirect=true";
+            pagina = "/pages/respuestaHistorial?faces-redirect=true";
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -1758,6 +1751,423 @@ public class PreguntaMB implements Serializable {
             }
         } catch (Exception e) {
             e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public String update() throws Exception {
+        String pagina = "";
+        try {
+
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user_savepreg = loginMB.getUser();
+
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            if (this.getSelectedCategoria() == null) {
+                this.getSelectedPregunta().setNcategoriaid(this.getSelectedPregunta().getNcategoriaid());
+            } else {
+                this.getSelectedPregunta().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            }
+            this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
+            this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
+            this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
+            this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta());
+            this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
+            this.getSelectedPregunta().setDfechamodificacion(new Date());
+            this.getSelectedPregunta().setVusuariomodificacion(user_savepreg.getVlogin());
+            service.saveOrUpdate(this.getSelectedPregunta());
+
+            RespuestaHistService serviceresp = (RespuestaHistService) ServiceFinder.findBean("RespuestaHistService");
+            RespuestaHist respuestahist = new RespuestaHist();
+            respuestahist.setNhistorialid(serviceresp.getNextPK());
+            respuestahist.setNpreguntaid(this.getSelectedPregunta().getNpreguntaid());
+            respuestahist.setVrespuesta(this.getSelectedPregunta().getVrespuesta());
+            respuestahist.setVusuariocreacion(user_savepreg.getVlogin());
+            respuestahist.setDfechacreacion(new Date());
+            serviceresp.saveOrUpdate(respuestahist);
+
+            listaTargetVinculos = new ArrayList<Consulta>();
+
+            if (this.getListaTargetVinculosBL() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            }
+            if (this.getListaTargetVinculosBP() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            }
+            if (this.getListaTargetVinculosCT() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            }
+            if (this.getListaTargetVinculosOM() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            }
+            if (this.getListaTargetVinculosPR() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            }
+            if (this.getListaTargetVinculosWK() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            }
+
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                VinculoPreguntaService vinculopreguntaService = (VinculoPreguntaService) ServiceFinder.findBean("VinculoPreguntaService");
+                service.delete(this.getSelectedPregunta().getNpreguntaid());
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    VinculoPregunta vinculopregunta = new VinculoPregunta();
+                    vinculopregunta.setNvinculoid(vinculopreguntaService.getNextPK());
+                    vinculopregunta.setNpreguntaid(this.getSelectedPregunta().getNpreguntaid());
+                    vinculopregunta.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculopregunta.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculopregunta.setDfechacreacion(new Date());
+                    vinculopregunta.setVusuariocreacion(user_savepreg.getVlogin());
+                    vinculopreguntaService.saveOrUpdate(vinculopregunta);
+
+                }
+            }
+            pagina = "/pages/pregunta/lista?faces-redirect=true";
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return pagina;
+    }
+
+    public String toEdit() {
+        String pagina = null;
+        try {
+            int situacion;
+            this.cleanAttributes();
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedPregunta(this.getListaPregunta().get(index));
+            this.setEntidad(service.getNomEntidadbyIdEntidad(this.getSelectedPregunta().getNentidadid()));
+
+            this.setListaSourceVinculos(new ArrayList<Consulta>());
+            this.setListaTargetVinculos(new ArrayList<Consulta>());
+            this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+
+            this.listaTargetVinculosConocimiento = new ArrayList<Consulta>();
+            this.listaTargetVinculosBL = new ArrayList<Consulta>();
+            this.listaTargetVinculosPR = new ArrayList<Consulta>();
+            this.listaTargetVinculosWK = new ArrayList<Consulta>();
+            this.listaTargetVinculosCT = new ArrayList<Consulta>();
+            this.listaTargetVinculosBP = new ArrayList<Consulta>();
+            this.listaTargetVinculosOM = new ArrayList<Consulta>();
+
+            HashMap filters = new HashMap();
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("1")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosBL().addAll(service.getConcimientosVinculados(filters));
+
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("2")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosPR().addAll(service.getConcimientosVinculados(filters));
+
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("3")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosWK().addAll(service.getConcimientosVinculados(filters));
+
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("4")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosCT().addAll(service.getConcimientosVinculados(filters));
+
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("5")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosBP().addAll(service.getConcimientosVinculados(filters));
+
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("6")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosOM().addAll(service.getConcimientosVinculados(filters));
+
+            if (this.getListaTargetVinculosBL() == null) {
+            } else {
+                this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBL());
+            }
+            if (this.getListaTargetVinculosBP() == null) {
+            } else {
+                this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBP());
+            }
+            if (this.getListaTargetVinculosCT() == null) {
+            } else {
+                this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosCT());
+            }
+            if (this.getListaTargetVinculosOM() == null) {
+            } else {
+                this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosOM());
+            }
+            if (this.getListaTargetVinculosWK() == null) {
+            } else {
+                this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosWK());
+            }
+
+            situacion = Integer.parseInt(this.getSelectedPregunta().getNsituacionid().toString());
+
+            pagina = "/pages/pregunta/editar?faces-redirect=true";
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return pagina;
+    }
+
+    public void toAddLink(ActionEvent event) {
+        try {
+            this.setIdTipoConocimiento(null);
+            this.setListaSourceVinculos(new ArrayList());
+            this.setListaTargetVinculos(new ArrayList());
+            this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void onListTipoConocimientoChange(AjaxBehaviorEvent event) {
+        try {
+            if (event != null) {
+                final BigDecimal id = (BigDecimal) ((SelectOneMenu) event.getSource()).getValue();
+                this.setIdTipoConocimiento(id);
+                if (id != null) {
+                    HashMap filters = new HashMap();
+                    filters.put("ntipoconocimientoid", id);
+                    filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+                    PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+                    if (this.getSelectedPregunta() != null) {
+                        if (id.equals(Constante.BASELEGAL)) {
+                            this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosBL());
+                        } else if (id.equals(Constante.PREGUNTAS)) {
+                            this.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosPR());
+                        } else if (id.equals(Constante.WIKI)) {
+                            this.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosWK());
+                        } else if (id.equals(Constante.CONTENIDO)) {
+                            this.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosCT());
+                        } else if (id.equals(Constante.BUENAPRACTICA)) {
+                            this.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosBP());
+                        } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                            this.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
+                            this.setListaTargetVinculos(this.getListaTargetVinculosOM());
+                        }
+                        List<String> ids = new ArrayList<String>();
+                        for (Consulta c : this.getListaTargetVinculos()) {
+                            ids.add(c.getIdconocimiento().toString());
+                        }
+                        String filter = StringUtils.join(ids, ',');
+//                        if (id.equals(Constante.PREGUNTAS)) {
+//                            filter = filter.concat(",").concat(this.getSelectedPregunta().getNpreguntaid().toString());
+//                        }
+                        filters.put("nconocimientovinc", filter);
+                    } else {
+                        this.setListaTargetVinculos(new ArrayList<Consulta>());
+                    }
+                    if (id.equals(Constante.BASELEGAL)) {
+                        this.setListaSourceVinculosBL(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosBL());
+                    } else if (id.equals(Constante.PREGUNTAS)) {
+                        this.setListaSourceVinculosPR(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosPR());
+                    } else if (id.equals(Constante.WIKI)) {
+                        this.setListaSourceVinculosWK(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosWK());
+                    } else if (id.equals(Constante.CONTENIDO)) {
+                        this.setListaSourceVinculosCT(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosCT());
+                    } else if (id.equals(Constante.BUENAPRACTICA)) {
+                        this.setListaSourceVinculosBP(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosBP());
+                    } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                        this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
+                        this.setListaSourceVinculos(this.getListaSourceVinculosOM());
+                    }
+                    this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void onTransferPreguntas(TransferEvent event) {
+        int index;
+        try {
+            if (event != null) {
+                BigDecimal id = this.getIdTipoConocimiento();
+                if (event.isAdd()) {
+                    Collections.sort(this.getListaSourceVinculos(), Consulta.Comparators.ID);
+                    for (Consulta ele : (List<Consulta>) event.getItems()) {
+                        index = Collections.binarySearch(this.getListaSourceVinculos(), ele, Consulta.Comparators.ID);
+                        if (this.getListaTargetVinculos() == null) {
+                            this.setListaTargetVinculos(new ArrayList<Consulta>());
+                        }
+                        this.getListaTargetVinculos().add(this.getListaSourceVinculos().get(index));
+                        this.getListaSourceVinculos().remove(index);
+                    }
+                }
+                if (event.isRemove()) {
+                    Collections.sort(this.getListaTargetVinculos(), Consulta.Comparators.ID);
+                    for (Consulta ele : (List<Consulta>) event.getItems()) {
+                        index = Collections.binarySearch(this.getListaTargetVinculos(), ele, Consulta.Comparators.ID);
+                        if (this.getListaSourceVinculos() == null) {
+                            this.setListaSourceVinculos(new ArrayList<Consulta>());
+                        }
+                        this.getListaSourceVinculos().add(this.getListaTargetVinculos().get(index));
+                        this.getListaTargetVinculos().remove(index);
+                    }
+                }
+                if (id.equals(Constante.BASELEGAL)) {
+                    this.setListaSourceVinculosBL(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosBL(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.PREGUNTAS)) {
+                    this.setListaSourceVinculosPR(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosPR(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.WIKI)) {
+                    this.setListaSourceVinculosWK(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosWK(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.CONTENIDO)) {
+                    this.setListaSourceVinculosCT(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosCT(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.BUENAPRACTICA)) {
+                    this.setListaSourceVinculosBP(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosBP(this.getListaTargetVinculos());
+                } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                    this.setListaSourceVinculosOM(this.getListaSourceVinculos());
+                    this.setListaTargetVinculosOM(this.getListaTargetVinculos());
+                }
+
+                this.listaTargetVinculosConocimiento = new ArrayList<Consulta>();
+
+                if (this.getListaTargetVinculosBL() == null) {
+                } else {
+                    this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBL());
+                }
+                if (this.getListaTargetVinculosBP() == null) {
+                } else {
+                    this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBP());
+                }
+                if (this.getListaTargetVinculosCT() == null) {
+                } else {
+                    this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosCT());
+                }
+                if (this.getListaTargetVinculosOM() == null) {
+                } else {
+                    this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosOM());
+                }
+//                if (this.getListaTargetVinculosPR() == null) {
+//                } else {
+//                    this.getListaTargetVinculosPR().addAll(this.getListaTargetVinculosPR());
+//                }
+                if (this.getListaTargetVinculosWK() == null) {
+                } else {
+                    this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosWK());
+                }
+
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public String toPost() {
+        String pagina = null;
+        try {
+            int situacion;
+            this.cleanAttributes();
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            this.setSelectedPregunta(this.getListaPregunta().get(index));
+            this.setEntidad(service.getNomEntidadbyIdEntidad(this.getSelectedPregunta().getNentidadid()));
+
+            this.setListaSourceVinculos(new ArrayList<Consulta>());
+            this.setListaTargetVinculos(new ArrayList<Consulta>());
+            this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+
+            this.listaTargetVinculosConocimiento = new ArrayList<Consulta>();
+            this.listaTargetVinculosBL = new ArrayList<Consulta>();
+            this.listaTargetVinculosPR = new ArrayList<Consulta>();
+            this.listaTargetVinculosWK = new ArrayList<Consulta>();
+            this.listaTargetVinculosCT = new ArrayList<Consulta>();
+            this.listaTargetVinculosBP = new ArrayList<Consulta>();
+            this.listaTargetVinculosOM = new ArrayList<Consulta>();
+
+            HashMap filters = new HashMap();
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("1")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosBL().addAll(service.getConcimientosVinculados(filters));
+
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("2")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosPR().addAll(service.getConcimientosVinculados(filters));
+
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("3")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosWK().addAll(service.getConcimientosVinculados(filters));
+
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("4")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosCT().addAll(service.getConcimientosVinculados(filters));
+
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("5")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosBP().addAll(service.getConcimientosVinculados(filters));
+
+            filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("6")));
+            filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
+            this.getListaTargetVinculosOM().addAll(service.getConcimientosVinculados(filters));
+
+            if (this.getListaTargetVinculosBL() == null) {
+            } else {
+                this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBL());
+            }
+            if (this.getListaTargetVinculosBP() == null) {
+            } else {
+                this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBP());
+            }
+            if (this.getListaTargetVinculosCT() == null) {
+            } else {
+                this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosCT());
+            }
+            if (this.getListaTargetVinculosOM() == null) {
+            } else {
+                this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosOM());
+            }
+            if (this.getListaTargetVinculosWK() == null) {
+            } else {
+                this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosWK());
+            }
+
+            situacion = Integer.parseInt(this.getSelectedPregunta().getNsituacionid().toString());
+
+            pagina = "/pages/pregunta/publicar?faces-redirect=true";
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return pagina;
+    }
+    
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+
+                this.setSelectedPregunta(this.getListaPregunta().get(index));
+
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         }
     }

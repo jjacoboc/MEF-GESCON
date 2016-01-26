@@ -60,13 +60,15 @@
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink title="Activar Wiki" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{wikiMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="Activar Wiki" styleClass="ui-link" 
                                                            rendered="#{loginMB.politicas[msgs.ACTIVAR_WIKI] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink title="Desactivar Wiki" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{wikiMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="Desactivar Wiki" styleClass="ui-link" 
                                                            rendered="#{loginMB.politicas[msgs.DESACTIVAR_WIKI] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                         </p:column>
                                     </p:dataTable>

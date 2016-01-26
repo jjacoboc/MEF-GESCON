@@ -60,13 +60,15 @@
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink title="activar buena practica" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{buenaPracticaMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar buena practica" styleClass="ui-link"
                                                            rendered="#{loginMB.politicas[msgs.ACTIVAR_BUENAPRACTICA] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink title="desactivar buena practica" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{buenaPracticaMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar buena practica" styleClass="ui-link"
                                                            rendered="#{loginMB.politicas[msgs.DESACTIVAR_BUENAPRACTICA] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                         </p:column>
                                     </p:dataTable>

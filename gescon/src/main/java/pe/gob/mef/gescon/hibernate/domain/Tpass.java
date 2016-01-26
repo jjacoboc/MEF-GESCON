@@ -9,7 +9,6 @@ import java.util.Date;
 public class Tpass implements java.io.Serializable {
 
     private TpassId id;
-    private Mtuser mtuser;
     private String vclave;
     private String vusuariocreacion;
     private Date dfechacreacion;
@@ -19,14 +18,12 @@ public class Tpass implements java.io.Serializable {
     public Tpass() {
     }
 
-    public Tpass(TpassId id, Mtuser mtuser) {
+    public Tpass(TpassId id) {
         this.id = id;
-        this.mtuser = mtuser;
     }
 
-    public Tpass(TpassId id, Mtuser mtuser, String vclave, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion) {
+    public Tpass(TpassId id, String vclave, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion) {
         this.id = id;
-        this.mtuser = mtuser;
         this.vclave = vclave;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
@@ -40,14 +37,6 @@ public class Tpass implements java.io.Serializable {
 
     public void setId(TpassId id) {
         this.id = id;
-    }
-
-    public Mtuser getMtuser() {
-        return this.mtuser;
-    }
-
-    public void setMtuser(Mtuser mtuser) {
-        this.mtuser = mtuser;
     }
 
     public String getVclave() {

@@ -49,9 +49,9 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
         Boolean flag = (Boolean) filters.get("flag");
         Object object = null;
         final StringBuilder sql = new StringBuilder();
-        if(StringUtils.isNotBlank(ntipoconocimientoid) && 
-                (ntipoconocimientoid.equals("3") || ntipoconocimientoid.equals("4") || 
-                ntipoconocimientoid.equals("5") || ntipoconocimientoid.equals("6"))) {
+        if (StringUtils.isNotBlank(ntipoconocimientoid)
+                && (ntipoconocimientoid.equals("3") || ntipoconocimientoid.equals("4")
+                || ntipoconocimientoid.equals("5") || ntipoconocimientoid.equals("6"))) {
             sql.append("SELECT ");
             sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, '' AS NUMERO, b.vtitulo AS NOMBRE, b.vdescripcion AS SUMILLA, ");
             sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
@@ -66,12 +66,12 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
             sql.append("AND a.ntipoconocimientovinc = b.ntpoconocimientoid ");
             sql.append("AND b.nactivo = :ACTIVO ");
             sql.append("WHERE a.nconocimientoid = ").append(nconocimientoid).append(" ");
-            if(flag) {
+            if (flag) {
                 sql.append("AND a.ntipoconocimientovinc = ").append(ntipoconocimientoid).append(" ");
             }
             sql.append("ORDER BY 7 DESC ");
         }
-        if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
+        if (StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
             sql.append("SELECT ");
             sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, '' AS NUMERO, b.vasunto AS NOMBRE , b.vdetalle AS SUMILLA, ");
             sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
@@ -87,7 +87,7 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
             sql.append("WHERE a.nconocimientoid = ").append(nconocimientoid).append(" ");
             sql.append("ORDER BY 7 DESC ");
         }
-        if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("1")) {
+        if (StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("1")) {
             sql.append("SELECT ");
             sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, b.vnumero AS NUMERO, b.vnombre AS NOMBRE , b.vsumilla AS SUMILLA, ");
             sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
@@ -130,7 +130,7 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("1")) {
+            if (StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("1")) {
                 sql.append("SELECT ");
                 sql.append("    a.nbaselegalid AS ID, a.vnumero AS NUMERO, a.vnombre AS NOMBRE, a.vsumilla AS SUMILLA, ");
                 sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
@@ -144,7 +144,7 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
                     sql.append("AND a.nbaselegalid NOT IN (").append(nconocimientovinc).append(") ");
                 }
             }
-            if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
+            if (StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
                 sql.append("SELECT ");
                 sql.append("    a.npreguntaid AS ID, '' AS NUMERO, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, ");
                 sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
@@ -159,9 +159,9 @@ public class WikiDaoImpl extends HibernateDaoSupport implements WikiDao{
                     sql.append("AND a.npreguntaid NOT IN (").append(nconocimientovinc).append(") ");
                 }
             }
-            if(StringUtils.isNotBlank(ntipoconocimientoid) && 
-                (ntipoconocimientoid.equals("3") || ntipoconocimientoid.equals("4") || 
-                ntipoconocimientoid.equals("5") || ntipoconocimientoid.equals("6"))) {
+            if (StringUtils.isNotBlank(ntipoconocimientoid)
+                    && (ntipoconocimientoid.equals("3") || ntipoconocimientoid.equals("4")
+                    || ntipoconocimientoid.equals("5") || ntipoconocimientoid.equals("6"))) {
                 sql.append("SELECT ");
                 sql.append("    a.nconocimientoid AS ID, '' AS NUMERO, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
                 sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");

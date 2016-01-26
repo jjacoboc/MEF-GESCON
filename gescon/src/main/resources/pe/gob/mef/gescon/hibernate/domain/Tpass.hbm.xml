@@ -12,9 +12,6 @@
                 <column name="NUSUARIOID" precision="22" scale="0" />
             </key-property>
         </composite-id>
-        <many-to-one name="mtuser" class="pe.gob.mef.gescon.hibernate.domain.Mtuser" update="false" insert="false" fetch="select">
-            <column name="NUSUARIOID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
         <property name="vclave" type="string">
             <column name="VCLAVE" length="15" />
         </property>

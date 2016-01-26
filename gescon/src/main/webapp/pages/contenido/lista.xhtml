@@ -39,13 +39,15 @@
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
+                                            <p:spacer width="5px;"/>
                                             <p:commandLink ajax="false" action="#{contenidoMB.toEdit}" styleClass="ui-link" title="actualizar contenido"
                                                            rendered="#{loginMB.politicas[msgs.EDITAR_CONTENIDO]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
+                                            <p:spacer width="5px;" rendered="#{loginMB.politicas[msgs.PUBLICAR_CONTENIDO] and row.dfechapublicacion eq null}"/>
                                             <p:commandLink ajax="false" action="#{contenidoMB.toPost}" styleClass="ui-link" title="publicar contenido"
-                                                           rendered="#{loginMB.politicas[msgs.PUBLICAR_CONTENIDO]}">
+                                                           rendered="#{loginMB.politicas[msgs.PUBLICAR_CONTENIDO] and row.dfechapublicacion eq null}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>

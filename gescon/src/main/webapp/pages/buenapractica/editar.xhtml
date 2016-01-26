@@ -46,7 +46,10 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.bp_lbl_descripcion}"/>
                                     </h:panelGroup>
-                                    <p:editor id="descHtml" value="#{buenaPracticaMB.descripcionHtml}" />
+                                    <p:editor id="descHtml" value="#{buenaPracticaMB.descripcionHtml}" 
+                                              controls="bold italic underline strikethrough subscript superscript | 
+                                                        font size style | color highlight | bullets numbering | 
+                                                        outdent indent | alignleft center alignright justify"/>
                                     
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -189,7 +192,7 @@
                                     <h:panelGroup>
                                         <p:commandButton value="Registrar" actionListener="#{buenaPracticaMB.edit}" update=":f:growl"/>
                                         <p:spacer width="10"/>
-                                        <p:commandButton value="Cancelar" ajax="false" action="/pages/buenpractica/lista.xhtml"/>
+                                        <p:commandButton value="Cancelar" ajax="false" action="/pages/buenapractica/lista.xhtml"/>
                                     </h:panelGroup>
                                     <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
                                 </h:panelGrid>

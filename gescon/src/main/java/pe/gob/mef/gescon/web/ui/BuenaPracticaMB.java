@@ -508,6 +508,23 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
+    
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if (!CollectionUtils.isEmpty(this.getFilteredListaBuenaPractica())) {
+                    this.setSelectedBuenaPractica(this.getFilteredListaBuenaPractica().get(index));
+                } else {
+                    this.setSelectedBuenaPractica(this.getListaBuenaPractica().get(index));
+                }
+                this.setFilteredListaBuenaPractica(new ArrayList());
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
 
     public void clearAll() {
         try {

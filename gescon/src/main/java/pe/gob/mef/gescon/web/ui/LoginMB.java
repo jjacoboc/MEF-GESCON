@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.web.ui;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -14,25 +15,26 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.primefaces.context.RequestContext;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
-import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
-import pe.gob.mef.gescon.hibernate.domain.TvinculoBaselegalId;
-import pe.gob.mef.gescon.service.ArchivoConocimientoService;
-import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.service.AsignacionService;
+import pe.gob.mef.gescon.service.ParametroService;
 import pe.gob.mef.gescon.service.PassService;
 import pe.gob.mef.gescon.service.PerfilService;
 import pe.gob.mef.gescon.service.PoliticaPerfilService;
 import pe.gob.mef.gescon.service.UserService;
+import pe.gob.mef.gescon.util.DateUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Consulta;
+import pe.gob.mef.gescon.web.bean.Parametro;
 import pe.gob.mef.gescon.web.bean.Pass;
 import pe.gob.mef.gescon.web.bean.Perfil;
 import pe.gob.mef.gescon.web.bean.User;
@@ -62,13 +64,17 @@ public class LoginMB implements Serializable {
     private List<Consulta> listaNotificacionesRecibidas;
     private List<Consulta> listaNotificacionesAtendidas;
     private List<Consulta> listaNotificacionesAlerta;
-    private String alertaFlag = "false";
+    private String alertaFlag;
+    private Boolean claveCaducada;
+    private String notificacion;
     private Consulta selectedNotification;
 
     /**
      * Creates a new instance of LoginMB
      */
     public LoginMB() {
+        this.alertaFlag = "false";
+        this.claveCaducada = false;
     }
 
     /**
@@ -249,6 +255,22 @@ public class LoginMB implements Serializable {
         this.alertaFlag = alertaFlag;
     }
 
+    public Boolean getClaveCaducada() {
+        return claveCaducada;
+    }
+
+    public void setClaveCaducada(Boolean claveCaducada) {
+        this.claveCaducada = claveCaducada;
+    }
+
+    public String getNotificacion() {
+        return notificacion;
+    }
+
+    public void setNotificacion(String notificacion) {
+        this.notificacion = notificacion;
+    }
+
     public Consulta getSelectedNotification() {
         return selectedNotification;
     }
@@ -262,14 +284,28 @@ public class LoginMB implements Serializable {
         try {
             if (StringUtils.isNotBlank(this.getLogin()) && StringUtils.isNotBlank(this.getPass())) {
                 UserService service = (UserService) ServiceFinder.findBean("UserService");
-                this.setUser(service.getUserByLogin(this.getLogin()));
-                if (this.getUser() != null) {
+                User usuario = service.getUserByLogin(this.getLogin());
+                if (usuario != null) {
                     PassService passService = (PassService) ServiceFinder.findBean("PassService");
-                    Pass pas = passService.getPassByUser(this.getUser());
-                    if (pas != null) {
+                    Pass pas = passService.getPassByUser(usuario);
+                    if (pas != null && this.getPass().equals(pas.getVclave())) {
+                        ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
+                        Parametro parametro = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.DIAS_CADUCIDAD_CLAVE)));
+                        long dias = DateUtils.getDifferenceDays(pas.getDfechacreacion(), new Date());
+                        if(dias > parametro.getNvalor().longValue()) {
+                            this.setClaveCaducada(true);
+                            this.setPass(StringUtils.EMPTY);
+                            this.setNewpass(StringUtils.EMPTY);
+                            this.setConfirmpass(StringUtils.EMPTY);
+                            RequestContext.getCurrentInstance().execute("PF('iniDialog').hide();");
+                            RequestContext.getCurrentInstance().execute("PF('bar').show();");
+                            RequestContext.getCurrentInstance().execute("PF('claDialog').show();");
+                            return StringUtils.EMPTY;
+                        }
                         PerfilService perfilService = (PerfilService) ServiceFinder.findBean("PerfilService");
-                        List<Perfil> listaperfiles = perfilService.getPerfilesByUser(this.getUser());
+                        List<Perfil> listaperfiles = perfilService.getPerfilesByUser(usuario);
                         if (!CollectionUtils.isEmpty(listaperfiles)) {
+                            this.setUser(usuario);
                             this.setPerfil(listaperfiles.get(0));
                             PoliticaPerfilService politicaPerfilService = (PoliticaPerfilService) ServiceFinder.findBean("PoliticaPerfilService");
                             this.setPoliticas(politicaPerfilService.obtenerPoliticasByPerfil(this.getPerfil().getNperfilid()));
@@ -278,27 +314,17 @@ public class LoginMB implements Serializable {
                             this.setNotificacionesAsignadas(asignacionService.getNumberNotificationsAssignedByUser(this.getUser()));
                             this.setNotificacionesRecibidas(asignacionService.getNumberNotificationsReceivedByUser(this.getUser()));
                             this.setNotificacionesAtendidas(asignacionService.getNumberNotificationsServedByUser(this.getUser()));
-
                             this.setListaNotificacionesAlerta(asignacionService.getNotificationsAlertPanelByMtuser(this.getUser()));
-
                             if (this.getListaNotificacionesAlerta().isEmpty()) {
                                 this.setAlertaFlag("false");
                             } else {
                                 this.setAlertaFlag("true");
                             }
-
                             if (this.getPerfil().getNperfilid().toString().equals(Constante.ROL_ADMINISTRADOR)) {
                                 page = "/pages/indexAdmin?faces-redirect=true";
-                            } else if (this.getPerfil().getNperfilid().toString().equals(Constante.ROL_MODERADOR)) {
-                                page = "/index?faces-redirect=true";
-                            } else if (this.getPerfil().getNperfilid().toString().equals(Constante.ROL_ESPECIALISTA)) {
-                                page = "/index?faces-redirect=true";
-                            } else if (this.getPerfil().getNperfilid().toString().equals(Constante.ROL_USUARIOEXTERNO)) {
-                                page = "/index?faces-redirect=true";
-                            } else if (this.getPerfil().getNperfilid().toString().equals(Constante.ROL_USUARIOINTERNO)) {
+                            } else {
                                 page = "/index?faces-redirect=true";
                             }
-
                         } else {
                             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "El usuario ingresado no cuenta con un rol asignado. \nComuníquese con el administrador del servicio.");
                             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -356,6 +382,73 @@ public class LoginMB implements Serializable {
                 AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
                 this.setListaNotificacionesAtendidas(asignacionService.getNotificationsServedPanelByUser(this.getUser()));
             }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void toUpdatePassword(ActionEvent event) {
+        try {
+            this.setPass(StringUtils.EMPTY);
+            this.setNewpass(StringUtils.EMPTY);
+            this.setConfirmpass(StringUtils.EMPTY);
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePassword(ActionEvent event) {
+        User usuario;
+        Pass pas;
+        try {
+            PassService passService = (PassService) ServiceFinder.findBean("PassService");
+            if(this.getUser() != null) {
+                usuario = this.getUser();
+            } else {
+                UserService service = (UserService) ServiceFinder.findBean("UserService");
+                usuario = service.getUserByLogin(this.getLogin());
+            }
+            pas = passService.getPassByUser(usuario);
+            if (StringUtils.isNotBlank(this.getPass())) {
+                if (this.getPass().equals(pas.getVclave())) {
+                    if (StringUtils.isNotBlank(this.getNewpass())) {
+                        if (StringUtils.isNotBlank(this.getConfirmpass())) {
+                            if (this.getNewpass().equals(this.getConfirmpass())) {
+                                TpassId id = new TpassId();
+                                id.setNpassid(passService.getNextPK());
+                                id.setNusuarioid(usuario.getNusuarioid());
+                                Mtuser mtuser = new Mtuser();
+                                BeanUtils.copyProperties(usuario, mtuser);
+                                Pass password = new Pass();
+                                password.setId(id);
+                                password.setVclave(this.getNewpass());
+                                password.setVusuariocreacion(usuario.getVlogin());
+                                password.setDfechacreacion(new Date());
+                                passService.saveOrUpdate(password);
+                                this.logout();
+                            } else {
+                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La nueva contraseña ingresada no coincide con la confirmación.");
+                                FacesContext.getCurrentInstance().addMessage(null, message);
+                            }
+                        } else {
+                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Confirme la nueva contraseña.");
+                            FacesContext.getCurrentInstance().addMessage(null, message);
+                        }
+                    } else {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Ingrese la nueva contraseña.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                    }
+                } else {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La contraseña ingresada es incorrecta.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                }
+            } else {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Ingrese la contraseña ingresada actual.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            }
+
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

@@ -15,8 +15,9 @@ import pe.gob.mef.gescon.web.bean.Parametro;
  */
 public interface ParametroService {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<Parametro> getParametros() throws Exception;
-    public List<Parametro> getParametrosActived() throws Exception;
-    public void saveOrUpdate(Parametro parametro) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<Parametro> getParametros() throws Exception;
+    List<Parametro> getParametrosActived() throws Exception;
+    Parametro getParametroById(BigDecimal id) throws Exception;
+    void saveOrUpdate(Parametro parametro) throws Exception;
 }

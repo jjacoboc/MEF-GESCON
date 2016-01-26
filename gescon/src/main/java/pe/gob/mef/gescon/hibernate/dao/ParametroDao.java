@@ -15,8 +15,9 @@ import pe.gob.mef.gescon.hibernate.domain.Mtparametro;
  */
 public interface ParametroDao {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<Mtparametro> getMtparametros() throws Exception;
-    public List<Mtparametro> getMtparametrosActived() throws Exception;
-    public void saveOrUpdate(Mtparametro mtparametro) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<Mtparametro> getMtparametros() throws Exception;
+    List<Mtparametro> getMtparametrosActived() throws Exception;
+    Mtparametro getMtparametroById(BigDecimal id) throws Exception;
+    void saveOrUpdate(Mtparametro mtparametro) throws Exception;
 }

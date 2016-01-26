@@ -48,7 +48,7 @@ public class Thistorial implements java.io.Serializable {
         this.tconocimiento = tconocimiento;
     }
 
-    public Thistorial(ThistorialId id, Tconocimiento tconocimiento, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vruta, String vnumero, String vtema, BigDecimal nnumversion, String vcontenido, BigDecimal nactivo, BigDecimal nsituacionid, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ncategoriaid, BigDecimal nversionactual ,String vmsjsolicita, String vmsjrespuesta, Set timplementacionHists, Set tdiscusionHists, Set tvinculoHists, Set tcalificacionHists, Set tseccionHists, Set tobservacionHists) {
+    public Thistorial(ThistorialId id, Tconocimiento tconocimiento, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vruta, String vnumero, String vtema, BigDecimal nnumversion, String vcontenido, BigDecimal nactivo, BigDecimal nsituacionid, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ncategoriaid, Set timplementacionHists, Set tdiscusionHists, Set tvinculoHists, Set tcalificacionHists, Set tseccionHists, Set tobservacionHists) {
         this.id = id;
         this.tconocimiento = tconocimiento;
         this.vdescripcion = vdescripcion;
@@ -67,9 +67,6 @@ public class Thistorial implements java.io.Serializable {
         this.vobservacion = vobservacion;
         this.dfechamodificacion = dfechamodificacion;
         this.ncategoriaid = ncategoriaid;
-        this.nversionactual = nversionactual;
-        this.vmsjsolicita = vmsjsolicita;
-        this.vmsjrespuesta = vmsjrespuesta;
         this.timplementacionHists = timplementacionHists;
         this.tdiscusionHists = tdiscusionHists;
         this.tvinculoHists = tvinculoHists;

@@ -16,6 +16,7 @@ public class Admin implements Serializable{
     private String nombre;
     private String descripcion;
     private String imagen;
+    private String page;
     
     public Admin(){
         
@@ -61,5 +62,13 @@ public class Admin implements Serializable{
      */
     public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
     }
 }

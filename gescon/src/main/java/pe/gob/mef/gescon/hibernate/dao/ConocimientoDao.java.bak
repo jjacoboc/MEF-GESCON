@@ -25,7 +25,7 @@ public interface ConocimientoDao {
     void delete(Tconocimiento tconocimiento) throws Exception;
     List<HashMap> getConcimientosVinculados(HashMap filters);
     List<HashMap> getConcimientosDisponibles(HashMap filters);
-    Tconocimiento getBpracticaById(BigDecimal tipo,BigDecimal id) throws Exception;
+     Tconocimiento getBpracticaById(BigDecimal tipo,BigDecimal id) throws Exception;
     List<HashMap> obtenerBpracticaxAsig(BigDecimal bpracticaid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     Tconocimiento getOmejoraById(BigDecimal tipo,BigDecimal id) throws Exception;
     List<HashMap> obtenerOmejoraxAsig(BigDecimal omejoraid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;

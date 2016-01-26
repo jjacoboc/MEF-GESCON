@@ -14,6 +14,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
@@ -61,6 +62,13 @@ public class ParametroDaoImpl extends HibernateDaoSupport implements ParametroDa
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtparametro.class);
         criteria.add(Restrictions.eq("nactivo", BigDecimal.ONE));
         return (List<Mtparametro>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public Mtparametro getMtparametroById(BigDecimal id) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Mtparametro.class);
+        criteria.add(Restrictions.eq("nparametroid", id));
+        return (Mtparametro) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
 
     @Override

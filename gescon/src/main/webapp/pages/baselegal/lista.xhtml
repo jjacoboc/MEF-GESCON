@@ -15,7 +15,7 @@
                             <p:panel header="#{msgs.bl_lbl_pnlTitulo}" styleClass="TexAlLeft">
                                 <h:panelGrid columns="1">
                                     <p:commandButton  value="Nuevo" ajax="false" action="#{baseLegalMB.toSave}" styleClass="Fleft" icon="fa fa-plus white" 
-                                                      rendered="#{loginMB.politicas[msgs.REGISTRAR_BASELEGAL]}"/>/>
+                                                      rendered="#{loginMB.politicas[msgs.REGISTRAR_BASELEGAL]}"/>
                                     <p:dataTable id="tbl" value="#{baseLegalMB.listaBaseLegal}" filteredValue="#{baseLegalMB.filteredListaBaseLegal}" var="row"
                                                  paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">

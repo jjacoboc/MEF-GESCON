@@ -510,6 +510,23 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
+    
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if (!CollectionUtils.isEmpty(this.getFilteredListaWiki())) {
+                    this.setSelectedWiki(this.getFilteredListaWiki().get(index));
+                } else {
+                    this.setSelectedWiki(this.getListaWiki().get(index));
+                }
+                this.setFilteredListaWiki(new ArrayList());
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
 
     public void clearAll() {
         try {

@@ -117,9 +117,9 @@ public class ConocimientoDaoImpl extends HibernateDaoSupport implements Conocimi
         Boolean flag = (Boolean) filters.get("flag");
         Object object = null;
         final StringBuilder sql = new StringBuilder();
-        if(StringUtils.isNotBlank(ntipoconocimientoid) && 
-                (ntipoconocimientoid.equals("3") || ntipoconocimientoid.equals("4") || 
-                ntipoconocimientoid.equals("5") || ntipoconocimientoid.equals("6"))) {
+        if (StringUtils.isNotBlank(ntipoconocimientoid)
+                && (ntipoconocimientoid.equals("3") || ntipoconocimientoid.equals("4")
+                || ntipoconocimientoid.equals("5") || ntipoconocimientoid.equals("6"))) {
             sql.append("SELECT ");
             sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, '' AS NUMERO, b.vtitulo AS NOMBRE, b.vdescripcion AS SUMILLA, ");
             sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechapublicacion AS FECHA, ");

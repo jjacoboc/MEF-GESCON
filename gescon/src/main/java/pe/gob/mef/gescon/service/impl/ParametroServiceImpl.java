@@ -54,6 +54,19 @@ public class ParametroServiceImpl implements ParametroService{
         }
         return parametros;
     }
+    
+    @Override
+    public Parametro getParametroById(BigDecimal id) throws Exception {
+        ParametroDao parametroDao = (ParametroDao) ServiceFinder.findBean("ParametroDao");
+        Mtparametro mtparametro = parametroDao.getMtparametroById(id);
+        Parametro parametro = new Parametro();
+        if(mtparametro != null) {
+            BeanUtils.copyProperties(parametro, mtparametro);
+        } else {
+            parametro = null;
+        }
+        return parametro;
+    }
 
     @Override
     public void saveOrUpdate(Parametro parametro) throws Exception {

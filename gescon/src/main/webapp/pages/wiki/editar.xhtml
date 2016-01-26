@@ -46,7 +46,10 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.wk_lbl_descripcion}"/>
                                     </h:panelGroup>
-                                    <p:editor id="descHtml" value="#{wikiMB.descripcionHtml}" />
+                                    <p:editor id="descHtml" value="#{wikiMB.descripcionHtml}" 
+                                              controls="bold italic underline strikethrough subscript superscript | 
+                                                        font size style | color highlight | bullets numbering | 
+                                                        outdent indent | alignleft center alignright justify"/>
                                     
                                     <h:outputText value="#{msgs.wk_lbl_detalle}"/>
                                     <p:fieldset>

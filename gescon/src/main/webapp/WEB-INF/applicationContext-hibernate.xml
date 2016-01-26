@@ -41,13 +41,18 @@
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtuser.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tarchivo.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TarchivoConocimiento.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TarchivoHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tasignacion.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tbaselegal.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TbaselegalHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tcalificacion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcalificacionBaselegal.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcalificacionHist.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcalificacionPregunta.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TcategoriaUser.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tconocimiento.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tdiscusion.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TdiscusionHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TdiscusionSeccion.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TdiscusionSeccionHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TdiscusionHist.hbm.xml</value>
@@ -67,6 +72,7 @@
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TuserPerfil.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tvinculo.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoBaselegal.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoBaselegalHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoHist.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoImplementacion.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TvinculoImplementacionHist.hbm.xml</value>
