@@ -237,18 +237,22 @@ public class AdministracionMB implements Serializable{
             String idchild = (String) JSFUtils.getRequestParameter("idchild");
             
             parent.setNcategoriaid(BigDecimal.valueOf(Long.parseLong(idparent)));
+            Collections.sort(this.getListaCategoria(), Categoria.Comparators.ID);
             index = Collections.binarySearch(this.getListaCategoria(), parent, Categoria.Comparators.ID);
             parent = this.getListaCategoria().get(index);
             
             child.setNcategoriaid(BigDecimal.valueOf(Long.parseLong(idchild)));
+            Collections.sort(parent.getChildren(), Categoria.Comparators.ID);
             index = Collections.binarySearch(parent.getChildren(), child, Categoria.Comparators.ID);
             child = parent.getChildren().get(index);
             
             ConsultaMB consultaMB = new ConsultaMB();
             consultaMB.init();
+            Collections.sort(consultaMB.getListaCategoriaFiltro(), Categoria.Comparators.ID);
             index = Collections.binarySearch(consultaMB.getListaCategoriaFiltro(), parent, Categoria.Comparators.ID);
             consultaMB.getListaBreadCrumb().add(consultaMB.getListaCategoriaFiltro().get(index));
             
+            Collections.sort(consultaMB.getListaCategoriaFiltro(), Categoria.Comparators.ID);
             index = Collections.binarySearch(consultaMB.getListaCategoriaFiltro(), child, Categoria.Comparators.ID);
             consultaMB.getListaBreadCrumb().add(consultaMB.getListaCategoriaFiltro().get(index));
             
