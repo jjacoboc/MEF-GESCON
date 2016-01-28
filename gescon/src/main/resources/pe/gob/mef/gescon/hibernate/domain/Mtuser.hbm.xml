@@ -12,13 +12,13 @@
             <column name="VLOGIN" length="20" />
         </property>
         <property name="vnombres" type="string">
-            <column name="VNOMBRES" length="25" />
+            <column name="VNOMBRES" length="100" />
         </property>
         <property name="vapellidos" type="string">
-            <column name="VAPELLIDOS" length="25" />
+            <column name="VAPELLIDOS" length="100" />
         </property>
         <property name="vcorreo" type="string">
-            <column name="VCORREO" length="30" />
+            <column name="VCORREO" length="100" />
         </property>
         <property name="nactivo" type="big_decimal">
             <column name="NACTIVO" precision="22" scale="0" />

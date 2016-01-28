@@ -19,6 +19,7 @@ public class User implements Serializable {
     private String vlogin;
     private String vnombres;
     private String vapellidos;
+    private String vcorreo;
     private Date dfechanacimiento;
     private BigDecimal nestado;
     private String vusuariomodificacion;
@@ -38,6 +39,7 @@ public class User implements Serializable {
     private String vsector;
     private String vgobierno;
     private BigDecimal nuserinterno;
+    private BigDecimal nactivo;
 
     public void User() {
 
@@ -97,6 +99,14 @@ public class User implements Serializable {
      */
     public void setVapellidos(String vapellidos) {
         this.vapellidos = vapellidos;
+    }
+
+    public String getVcorreo() {
+        return vcorreo;
+    }
+
+    public void setVcorreo(String vcorreo) {
+        this.vcorreo = vcorreo;
     }
 
     /**
@@ -351,5 +361,13 @@ public class User implements Serializable {
 
     public void setNuserinterno(BigDecimal nuserinterno) {
         this.nuserinterno = nuserinterno;
+    }
+
+    public BigDecimal getNactivo() {
+        return nactivo;
+    }
+
+    public void setNactivo(BigDecimal nactivo) {
+        this.nactivo = nactivo;
     }
 }

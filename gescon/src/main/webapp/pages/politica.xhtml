@@ -15,7 +15,6 @@
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Administración de Politicas" >
                                 <h:panelGrid columns="1">
-                                    <p:commandButton value="Nuevo" actionListener="#{politicaMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
                                     <p:dataTable id="tbl" value="#{politicaMB.listaPolitica}" filteredValue="#{politicaMB.filteredListaPolitica}" var="row"
                                                  paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" paginatorPosition="top" rowHover="true"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">

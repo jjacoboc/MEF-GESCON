@@ -83,7 +83,7 @@ public class BaseLegalHistorialDaoImpl extends HibernateDaoSupport implements Ba
     public List<TbaselegalHist> getThistorialesByTbaselegal(BigDecimal idbaselegal) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(TbaselegalHist.class);
         criteria.add(Restrictions.eq("nbaselegalid", idbaselegal));
-        criteria.addOrder(Order.asc("nnumversion"));
+        criteria.addOrder(Order.asc("nversion"));
         return (List<TbaselegalHist>) getHibernateTemplate().findByCriteria(criteria);
     }
 

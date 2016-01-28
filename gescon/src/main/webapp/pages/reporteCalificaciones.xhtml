@@ -16,9 +16,9 @@
                                 <p:spacer/>
                                 <h:panelGrid id="pgNew" columns="4" >
                                     <h:outputText value="Inicio:" />
-                                    <p:calendar id="buttoni" value="#{reporteMB.fechini}" showOn="button" />
+                                    <p:calendar id="buttoni" value="#{reporteMB.fechini}" showOn="button" pattern="dd/MM/yyyy"/>
                                     <h:outputText value="Fin:" />
-                                    <p:calendar id="buttonf" value="#{reporteMB.fechfin}" showOn="button" />
+                                    <p:calendar id="buttonf" value="#{reporteMB.fechfin}" showOn="button" pattern="dd/MM/yyyy"/>
                                 </h:panelGrid>
                                 <p:spacer/>
                                 <h:panelGrid columns="1" width="100%">

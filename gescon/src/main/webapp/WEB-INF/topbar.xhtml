@@ -57,8 +57,8 @@
                                 </h:panelGroup>
                             </a>
                             <ul style="width:185px; margin-left:-10px;" class="Animated03 submenu">
-                                <li><a class="Animated05"><i class="fa fa-user Fs30 Fleft"></i> <span class="Fright Fs20 TexAlRight">#{loginMB.user.vnombres} #{loginMB.user.vapellidos}<span class="Fs10 DispBlock">#{loginMB.perfil.vnombre}</span></span></a></li>
-                                <li><a href="#" class="Animated05"><i class="fa fa-dashboard"></i> Mi Perfil</a></li>
+                                <li class="Animated05"><a href="#" class="ui-commandlink"><i class="fa fa-user Fs30 Fleft"></i> <span class="Fright Fs20 TexAlRight">#{loginMB.user.vnombres} #{loginMB.user.vapellidos}<span class="Fs10 DispBlock">#{loginMB.perfil.vnombre}</span></span></a></li>
+                                <li class="Animated05"><a href="#" class="ui-commandlink"><i class="fa fa-dashboard"></i> Mi Perfil</a></li>
                                 <li class="Animated05"><p:commandLink actionListener="#{loginMB.toUpdatePassword}" oncomplete="PF('claDialog').show();" update=":claDialogForm:pgCla" styleClass="Unselectable"><i class="fa fa-key"></i> Cambiar Contraseña</p:commandLink></li>
                                 <li class="Animated05"><p:commandLink actionListener="#{loginMB.logout}" oncomplete="logout();" styleClass="Unselectable"><i class="fa fa-sign-out"/> Cerrar Sesión </p:commandLink></li>
                             </ul>

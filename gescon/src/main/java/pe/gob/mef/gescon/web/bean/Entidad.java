@@ -18,7 +18,7 @@ import pe.gob.mef.gescon.common.Constante;
 public class Entidad implements Serializable {
 
     private BigDecimal nentidadid;
-    private BigDecimal ncodigoentidad;
+    private String vcodigoentidad;
     private String vnombre;
     private String vdescripcion;
     private String vusuariocreacion;
@@ -48,17 +48,17 @@ public class Entidad implements Serializable {
     }
 
     /**
-     * @return the ncodigoentidad
+     * @return the vcodigoentidad
      */
-    public BigDecimal getNcodigoentidad() {
-        return ncodigoentidad;
+    public String getVcodigoentidad() {
+        return vcodigoentidad;
     }
 
     /**
-     * @param ncodigoentidad the ncodigoentidad to set
+     * @param vcodigoentidad the vcodigoentidad to set
      */
-    public void setNcodigoentidad(BigDecimal ncodigoentidad) {
-        this.ncodigoentidad = ncodigoentidad;
+    public void setVcodigoentidad(String vcodigoentidad) {
+        this.vcodigoentidad = vcodigoentidad;
     }
 
     /**

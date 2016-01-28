@@ -20,6 +20,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,6 +29,7 @@ import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
 import pe.gob.mef.gescon.service.PassService;
 import pe.gob.mef.gescon.service.UserService;
+import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Pass;
 import pe.gob.mef.gescon.web.bean.User;
@@ -67,6 +69,7 @@ public class UserMB implements Serializable {
     private String gobierno;
     private String area;
     private List<User> listaUser;
+    private List<User> filteredListaUser;
     private User selectedUser;
 
     /**
@@ -419,6 +422,14 @@ public class UserMB implements Serializable {
         this.listaUser = listaUser;
     }
 
+    public List<User> getFilteredListaUser() {
+        return filteredListaUser;
+    }
+
+    public void setFilteredListaUser(List<User> filteredListaUser) {
+        this.filteredListaUser = filteredListaUser;
+    }
+
     /**
      * @return the selectedUser
      */
@@ -456,6 +467,23 @@ public class UserMB implements Serializable {
 
         } catch (Exception e) {
             log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void setSelectedRow(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                if (!CollectionUtils.isEmpty(this.getFilteredListaUser())) {
+                    this.setSelectedUser(this.getFilteredListaUser().get(index));
+                } else {
+                    this.setSelectedUser(this.getListaUser().get(index));
+                }
+                this.setFilteredListaUser(new ArrayList());
+            }
+        } catch (Exception e) {
+            e.getMessage();
             e.printStackTrace();
         }
     }

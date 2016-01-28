@@ -64,7 +64,8 @@ public class RangoDaoImpl extends HibernateDaoSupport implements RangoDao{
     @Override
     public List<HashMap> getTipoRangoByMaestro(BigDecimal maestroid) throws Exception {
         final StringBuilder sql = new StringBuilder();
-        sql.append("Select ndetalleid AS ID, vnombre AS NOMBRE from TMAESTRODETALLE where nmaestroid= ").append(maestroid).append(" ");
+        sql.append("SELECT ndetalleid AS ID, vnombre AS NOMBRE ");
+        sql.append("FROM TMAESTRODETALLE WHERE nactivo = 1 AND nmaestroid = ").append(maestroid).append(" ");
         return (List<HashMap>) getHibernateTemplate().execute(
                 new HibernateCallback() {
                     @Override

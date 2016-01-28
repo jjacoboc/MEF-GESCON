@@ -99,7 +99,7 @@ public class BaseLegalMB implements Serializable {
     private Boolean chkMancomunidades;
     private Boolean chkDestacado;
     private String comentario;
-    private Date fechaPublicacion;
+    private Date fechaVigencia;
     private String tema;
     private UploadedFile uploadFile;
     private StreamedContent content;
@@ -306,17 +306,17 @@ public class BaseLegalMB implements Serializable {
     }
 
     /**
-     * @return the fechaPublicacion
+     * @return the fechaVigencia
      */
-    public Date getFechaPublicacion() {
-        return fechaPublicacion;
+    public Date getFechaVigencia() {
+        return fechaVigencia;
     }
 
     /**
-     * @param fechaPublicacion the fechaPublicacion to set
+     * @param fechaVigencia the fechaVigencia to set
      */
-    public void setFechaPublicacion(Date fechaPublicacion) {
-        this.fechaPublicacion = fechaPublicacion;
+    public void setFechaVigencia(Date fechaVigencia) {
+        this.fechaVigencia = fechaVigencia;
     }
 
     /**
@@ -554,7 +554,7 @@ public class BaseLegalMB implements Serializable {
         this.setChkMancomunidades(false);
         this.setChkDestacado(true);
         this.setComentario(StringUtils.EMPTY);
-        this.setFechaPublicacion(null);
+        this.setFechaVigencia(null);
         this.setTema(StringUtils.EMPTY);
         this.setListaRangos(new ArrayList());
         this.setListaSource(new ArrayList<BaseLegal>());
@@ -760,6 +760,7 @@ public class BaseLegalMB implements Serializable {
             base.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             base.setVnombre(StringUtils.capitalize(this.getSumilla()));
             base.setVnumero(this.getTipoNorma().concat(" - ").concat(StringUtils.upperCase(this.getNumeroNorma())));
+            base.setNtiporangoid(this.getTiporangoId());
             base.setNrangoid(this.getRangoId());
             base.setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
@@ -767,7 +768,7 @@ public class BaseLegalMB implements Serializable {
             base.setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setVsumilla(this.getComentario().trim());
-            base.setDfechapublicacion(this.getFechaPublicacion());
+            base.setDfechavigencia(this.getFechaVigencia());
             base.setVtema(this.getTema());
             base.setNactivo(BigDecimal.ONE);
             base.setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_REGISTRADO)));
@@ -782,6 +783,7 @@ public class BaseLegalMB implements Serializable {
             baseHist.setNcategoriaid(base.getNcategoriaid());
             baseHist.setVnombre(base.getVnombre());
             baseHist.setVnumero(base.getVnumero());
+            baseHist.setNtiporangoid(base.getNtiporangoid());
             baseHist.setNrangoid(base.getNrangoid());
             baseHist.setNgobnacional(base.getNgobnacional());
             baseHist.setNgobregional(base.getNgobregional());
@@ -789,7 +791,7 @@ public class BaseLegalMB implements Serializable {
             baseHist.setNmancomunidades(base.getNmancomunidades());
             baseHist.setNdestacado(base.getNdestacado());
             baseHist.setVsumilla(base.getVsumilla());
-            baseHist.setDfechapublicacion(base.getDfechapublicacion());
+            baseHist.setDfechavigencia(base.getDfechavigencia());
             baseHist.setVtema(base.getVtema());
             baseHist.setNactivo(base.getNactivo());
             baseHist.setNestadoid(base.getNestadoid());
@@ -914,6 +916,8 @@ public class BaseLegalMB implements Serializable {
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
             index = this.getSelectedBaseLegal().getVnumero().indexOf("-");
+            this.setTiporangoId(this.getSelectedBaseLegal().getNtiporangoid());
+            this.setRangoId(this.getSelectedBaseLegal().getNrangoid());
             this.setTipoNorma(this.getSelectedBaseLegal().getVnumero().substring(0, index).trim());
             this.setNumeroNorma(this.getSelectedBaseLegal().getVnumero().substring(index + 1).trim());
             this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
@@ -946,6 +950,7 @@ public class BaseLegalMB implements Serializable {
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.getSelectedBaseLegal().setVnombre(StringUtils.capitalize(this.getSelectedBaseLegal().getVnombre()));
             this.getSelectedBaseLegal().setVnumero(this.getTipoNorma().concat(" - ").concat(StringUtils.upperCase(this.getNumeroNorma())));
+            this.getSelectedBaseLegal().setNtiporangoid(this.getSelectedBaseLegal().getNtiporangoid());
             this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
             this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
@@ -953,7 +958,7 @@ public class BaseLegalMB implements Serializable {
             this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
-            this.getSelectedBaseLegal().setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
+            this.getSelectedBaseLegal().setDfechavigencia(this.getSelectedBaseLegal().getDfechavigencia());
             this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
             this.getSelectedBaseLegal().setVusuariomodificacion(user.getVlogin());
             this.getSelectedBaseLegal().setDfechamodificacion(new Date());
@@ -968,6 +973,7 @@ public class BaseLegalMB implements Serializable {
             baseHist.setNcategoriaid(this.getSelectedBaseLegal().getNcategoriaid());
             baseHist.setVnombre(this.getSelectedBaseLegal().getVnombre());
             baseHist.setVnumero(this.getSelectedBaseLegal().getVnumero());
+            baseHist.setNtiporangoid(this.getSelectedBaseLegal().getNtiporangoid());
             baseHist.setNrangoid(this.getSelectedBaseLegal().getNrangoid());
             baseHist.setNgobnacional(this.getSelectedBaseLegal().getNgobnacional());
             baseHist.setNgobregional(this.getSelectedBaseLegal().getNgobregional());
@@ -975,7 +981,7 @@ public class BaseLegalMB implements Serializable {
             baseHist.setNmancomunidades(this.getSelectedBaseLegal().getNmancomunidades());
             baseHist.setNdestacado(this.getSelectedBaseLegal().getNdestacado());
             baseHist.setVsumilla(this.getSelectedBaseLegal().getVsumilla());
-            baseHist.setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
+            baseHist.setDfechavigencia(this.getSelectedBaseLegal().getDfechavigencia());
             baseHist.setVtema(this.getSelectedBaseLegal().getVtema());
             baseHist.setNactivo(this.getSelectedBaseLegal().getNactivo());
             baseHist.setNestadoid(this.getSelectedBaseLegal().getNestadoid());
@@ -1071,6 +1077,8 @@ public class BaseLegalMB implements Serializable {
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
             index = this.getSelectedBaseLegal().getVnumero().indexOf("-");
+            this.setTiporangoId(this.getSelectedBaseLegal().getNtiporangoid());
+            this.setRangoId(this.getSelectedBaseLegal().getNrangoid());
             this.setTipoNorma(this.getSelectedBaseLegal().getVnumero().substring(0, index).trim());
             this.setNumeroNorma(this.getSelectedBaseLegal().getVnumero().substring(index + 1).trim());
             this.setChkGobNacional(this.getSelectedBaseLegal().getNgobnacional().equals(BigDecimal.ONE));
@@ -1103,6 +1111,7 @@ public class BaseLegalMB implements Serializable {
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.getSelectedBaseLegal().setVnombre(StringUtils.capitalize(this.getSelectedBaseLegal().getVnombre()));
             this.getSelectedBaseLegal().setVnumero(this.getTipoNorma().concat(" - ").concat(StringUtils.upperCase(this.getNumeroNorma())));
+            this.getSelectedBaseLegal().setNtiporangoid(this.getSelectedBaseLegal().getNtiporangoid());
             this.getSelectedBaseLegal().setNrangoid(this.getSelectedBaseLegal().getNrangoid());
             this.getSelectedBaseLegal().setNgobnacional(this.getChkGobNacional() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
@@ -1110,9 +1119,10 @@ public class BaseLegalMB implements Serializable {
             this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
-            this.getSelectedBaseLegal().setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
+            this.getSelectedBaseLegal().setDfechavigencia(this.getSelectedBaseLegal().getDfechavigencia());
             this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
             this.getSelectedBaseLegal().setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_PUBLICADO)));
+            this.getSelectedBaseLegal().setDfechapublicacion(new Date());
             this.getSelectedBaseLegal().setVusuariomodificacion(user.getVlogin());
             this.getSelectedBaseLegal().setDfechamodificacion(new Date());
             service.saveOrUpdate(this.getSelectedBaseLegal());
@@ -1126,6 +1136,7 @@ public class BaseLegalMB implements Serializable {
             baseHist.setNcategoriaid(this.getSelectedBaseLegal().getNcategoriaid());
             baseHist.setVnombre(this.getSelectedBaseLegal().getVnombre());
             baseHist.setVnumero(this.getSelectedBaseLegal().getVnumero());
+            baseHist.setNtiporangoid(this.getSelectedBaseLegal().getNtiporangoid());
             baseHist.setNrangoid(this.getSelectedBaseLegal().getNrangoid());
             baseHist.setNgobnacional(this.getSelectedBaseLegal().getNgobnacional());
             baseHist.setNgobregional(this.getSelectedBaseLegal().getNgobregional());
@@ -1133,6 +1144,7 @@ public class BaseLegalMB implements Serializable {
             baseHist.setNmancomunidades(this.getSelectedBaseLegal().getNmancomunidades());
             baseHist.setNdestacado(this.getSelectedBaseLegal().getNdestacado());
             baseHist.setVsumilla(this.getSelectedBaseLegal().getVsumilla());
+            baseHist.setDfechavigencia(this.getSelectedBaseLegal().getDfechavigencia());
             baseHist.setDfechapublicacion(this.getSelectedBaseLegal().getDfechapublicacion());
             baseHist.setVtema(this.getSelectedBaseLegal().getVtema());
             baseHist.setNactivo(this.getSelectedBaseLegal().getNactivo());

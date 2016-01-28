@@ -72,10 +72,10 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
                 sql.append("    AND a.ncategoriaid IN (").append(fCategoria).append(") ");
             }
             if(fFromDate != null) {
-                sql.append("    AND a.dfechapublicacion >= TO_DATE('").append(sdf.format(fFromDate)).append("','dd/mm/yyyy') ");
+                sql.append("    AND TRUNC(a.dfechapublicacion) >= TO_DATE('").append(sdf.format(fFromDate)).append("','dd/mm/yyyy') ");
             }
             if(fToDate != null) {
-                sql.append("    AND a.dfechapublicacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
+                sql.append("    AND TRUNC(a.dfechapublicacion) <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
             if(StringUtils.isNotBlank(fText)) {
                 sql.append("    AND a.vnombre LIKE '%").append(fText).append("%' ");
@@ -103,10 +103,10 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
                 sql.append("    AND a.ncategoriaid IN (").append(fCategoria).append(") ");
             }
             if(fFromDate != null) {
-                sql.append("    AND a.dfechacreacion >= TO_DATE('").append(sdf.format(fFromDate)).append("','dd/mm/yyyy') ");
+                sql.append("    AND TRUNC(a.dfechacreacion) >= TO_DATE('").append(sdf.format(fFromDate)).append("','dd/mm/yyyy') ");
             }
             if(fToDate != null) {
-                sql.append("    AND a.dfechacreacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
+                sql.append("    AND TRUNC(a.dfechacreacion) <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
             if(StringUtils.isNotBlank(fText)) {
                 sql.append("    AND a.vdetalle LIKE '%").append(fText).append("%' ");
@@ -137,10 +137,10 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
                 sql.append("    AND a.ncategoriaid IN (").append(fCategoria).append(") ");
             }
             if(fFromDate != null) {
-                sql.append("    AND a.dfechacreacion >= TO_DATE('").append(sdf.format(fFromDate)).append("','dd/mm/yyyy') ");
+                sql.append("    AND TRUNC(a.dfechacreacion) >= TO_DATE('").append(sdf.format(fFromDate)).append("','dd/mm/yyyy') ");
             }
             if(fToDate != null) {
-                sql.append("    AND a.dfechacreacion <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
+                sql.append("    AND TRUNC(a.dfechacreacion) <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
             if(StringUtils.isNotBlank(fCodes)) {
                 sql.append("    AND a.nconocimientoid IN (").append(fCodes).append(") ");

@@ -19,19 +19,15 @@
                                     <h:outputText value="#{baseLegalMB.selectedCategoria.vnombre}" />
                                     
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_rango}"/>
+                                    <h:outputText value="#{msgs.bl_lbl_rango}" style="white-space: nowrap;"/>
                                     <h:panelGroup>
-                                        <h:outputText value="#{baseLegalMB.selectedBaseLegal.ntiporangoid}" >
-                                            <f:converter converterId="converterTipoRango"/>
-                                        </h:outputText>
-                                        <h:outputText value=" - "/>
                                         <h:outputText value="#{baseLegalMB.selectedBaseLegal.nrangoid}" >
                                             <f:converter converterId="converterRango"/>
                                         </h:outputText>
                                     </h:panelGroup>
                                     
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_numero}"/>
+                                    <h:outputText value="#{msgs.bl_lbl_numero}" style="white-space: nowrap;"/>
                                     <h:outputText value="#{baseLegalMB.selectedBaseLegal.vnumero}" />
                                     
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -57,8 +53,8 @@
                                     </h:panelGrid>
                                     
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_fecha}"/>
-                                    <h:outputText value="#{baseLegalMB.selectedBaseLegal.dfechapublicacion}" >
+                                    <h:outputText value="#{msgs.bl_lbl_fecha}" style="white-space: nowrap;"/>
+                                    <h:outputText value="#{baseLegalMB.selectedBaseLegal.dfechavigencia}" >
                                         <f:convertDateTime dateStyle="medium" type="date" locale="es" />
                                     </h:outputText>
 
@@ -84,7 +80,7 @@
                                     <p:selectBooleanCheckbox value="#{baseLegalMB.chkDestacado}" />
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_vinculo}"/>
+                                    <h:outputText value="#{msgs.bl_lbl_vinculo}" style="white-space: nowrap;"/>
                                     <p:spacer/>
                                 </h:panelGrid>
                                 <p:fieldset>

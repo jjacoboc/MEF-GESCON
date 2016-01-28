@@ -42,7 +42,7 @@ public class EntidadMB implements Serializable{
     private static final Log log = LogFactory.getLog(EntidadMB.class);
     private BigDecimal id;
     private String nombre;
-    private BigDecimal codigo;
+    private String codigo;
     private String descripcion;
     private BigDecimal activo;
     private List<Entidad> listaEntidad;
@@ -86,14 +86,14 @@ public class EntidadMB implements Serializable{
     /**
      * @return the codigo
      */
-    public BigDecimal getCodigo() {
+    public String getCodigo() {
         return codigo;
     }
 
     /**
      * @param codigo the codigo to set
      */
-    public void setCodigo(BigDecimal codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
@@ -227,7 +227,7 @@ public class EntidadMB implements Serializable{
             }
             Entidad entidad = new Entidad();
             entidad.setVnombre(this.getNombre());
-            entidad.setNcodigoentidad(this.getCodigo());
+            entidad.setVcodigoentidad(this.getCodigo());
             entidad.setVdescripcion(this.getDescripcion());
             if (!errorValidation(entidad)) {
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -235,7 +235,7 @@ public class EntidadMB implements Serializable{
                 EntidadService service = (EntidadService) ServiceFinder.findBean("EntidadService");
                 entidad.setNentidadid(service.getNextPK());
                 entidad.setVnombre(StringUtils.upperCase(this.getNombre().trim()));
-                entidad.setNcodigoentidad(this.getCodigo());
+                entidad.setVcodigoentidad(this.getCodigo());
                 entidad.setVdescripcion(StringUtils.capitalize(this.getDescripcion().trim()));
                 entidad.setNactivo(BigDecimal.ONE);
                 entidad.setDfechacreacion(new Date());
@@ -270,7 +270,7 @@ public class EntidadMB implements Serializable{
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if (this.getSelectedEntidad().getNcodigoentidad()== null) {
+                if (this.getSelectedEntidad().getVcodigoentidad()== null) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Codigo requerido. Ingrese el codigo de la entidad.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
@@ -283,7 +283,7 @@ public class EntidadMB implements Serializable{
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user = loginMB.getUser();
                 this.getSelectedEntidad().setVnombre(StringUtils.upperCase(this.getSelectedEntidad().getVnombre().trim()));
-                this.getSelectedEntidad().setNcodigoentidad(this.getSelectedEntidad().getNcodigoentidad());
+                this.getSelectedEntidad().setVcodigoentidad(this.getSelectedEntidad().getVcodigoentidad());
                 this.getSelectedEntidad().setVdescripcion(StringUtils.capitalize(this.getSelectedEntidad().getVdescripcion().trim()));
                 this.getSelectedEntidad().setVusuariomodificacion(user.getVlogin());
                 this.getSelectedEntidad().setDfechamodificacion(new Date());
@@ -355,7 +355,7 @@ public class EntidadMB implements Serializable{
                 error = true;
                 return error;
             } 
-            else if (entidad.getNcodigoentidad()== null) {
+            else if (entidad.getVcodigoentidad()== null) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Codigo requerido. Ingrese el codigo de la entidad.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;

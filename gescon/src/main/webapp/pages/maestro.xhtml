@@ -14,7 +14,6 @@
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Administración de Maestros" >
                                 <h:panelGrid columns="1">
-                                    <p:commandButton value="Nuevo" actionListener="#{maestroMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
                                     <p:dataTable id="tbl" value="#{maestroMB.listaMaestro}" filteredValue="#{maestroMB.filteredListaMaestro}" var="row" rows="10"
                                                  paginator="true" paginatorPosition="top" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
@@ -24,7 +23,7 @@
                                                 <h:outputText value="#{row.vnombre}"/>
                                             </p:commandLink>
                                         </p:column>
-                                        <p:column style="width: 30%" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="2">
+                                        <p:column style="width: 28%" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="2">
                                             <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
                                             <h:outputText value="#{row.vdescripcion}" styleClass="Fleft"/>
                                         </p:column>
@@ -34,15 +33,15 @@
                                                 <f:converter converterId="converterSiNo"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 16%;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="4">
-                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
-                                            <h:outputText value="#{row.vusuariocreacion}" />
-                                        </p:column>
                                         <p:column style="text-align: center; width: 15%;" sortBy="#{row.dfechacreacion}" filterBy="#{row.vfechacreacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="5">
                                             <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
                                             <h:outputText value="#{row.vfechacreacion}" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 9%;">
+                                        <p:column style="text-align: center; width: 19%;" sortBy="#{row.dfechamodificacion}" filterBy="#{row.vfechamodificacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="5">
+                                            <f:facet name="header"><h:outputText value="FECHA MODIFICACIÓN"/></f:facet>
+                                            <h:outputText value="#{row.vfechamodificacion   }" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 8%;">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink actionListener="#{maestroMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar maestro">
                                                 <h:outputText class="fa fa-edit Fs16" />
@@ -138,7 +137,7 @@
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                             <h:outputText value="#{row.vnombre}" styleClass="Fleft"/>
                                         </p:column>
-                                        <p:column style="width: 30%" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="2">
+                                        <p:column style="width: 28%" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="2">
                                             <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
                                             <h:outputText value="#{row.vdescripcion}" styleClass="Fleft"/>
                                         </p:column>
@@ -148,15 +147,15 @@
                                                 <f:converter converterId="converterSiNo"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 16%;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains" filterStyle="width: 90%" priority="4">
-                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
-                                            <h:outputText value="#{row.vusuariocreacion}" />
-                                        </p:column>
                                         <p:column style="text-align: center; width: 15%;" sortBy="#{row.dfechacreacion}" filterBy="#{row.vfechacreacion}" filterMatchMode="contains" filterStyle="width:90%" priority="5">
                                             <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
                                             <h:outputText value="#{row.vfechacreacion}" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 9%;">
+                                        <p:column style="text-align: center; width: 19%;" sortBy="#{row.dfechamodificacion}" filterBy="#{row.vfechamodificacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="5">
+                                            <f:facet name="header"><h:outputText value="FECHA MODIFICACIÓN"/></f:facet>
+                                            <h:outputText value="#{row.vfechamodificacion   }" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 8%;">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink actionListener="#{maestroMB.toUpdateDetail}" update=":editdDialogForm:pgEditd" oncomplete="PF('editdDialog').show();" styleClass="ui-link" title="editar detalle">
                                                 <h:outputText class="fa fa-edit Fs16" />

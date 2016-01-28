@@ -20,7 +20,7 @@
         <ps:menu style="box-shadow: 3px 3px 5px #888888; background-color: #2E2E2E;">
             <f:facet name="options">
                 <p:commandButton id="advanceBtn" type="button" icon="fa fa-binoculars Fs18 white" title="búsqueda avanzada" styleClass="Fright btn-search" style="background-color: black !important" />
-                <p:overlayPanel id="imagePanel" for="advanceBtn" dismissable="false" dynamic="true" showEffect="fade" appendToBody="true">
+                <p:overlayPanel id="imagePanel" for="advanceBtn" dismissable="false" dynamic="true" showEffect="fade" appendToBody="true" showCloseIcon="true">
                     <h:panelGrid columns="2" width="100%" styleClass="TexAlLeft">
                         <h:outputText value="Palabras Claves:"/>
                         <p:inputText value="#{consultaMB.searchText}" styleClass="Fs14" style="width: 300px;"/>
@@ -51,7 +51,7 @@
                                 <p:ajax event="dateSelect" update=":lmf:fromDate"/>
                             </p:calendar>
                         </h:panelGrid>
-                        <p:commandButton value="Buscar" action="#{consultaMB.advanceSearch}" title="búsqueda"/>
+                        <p:commandButton ajax="true" value="Buscar" action="#{consultaMB.advanceSearch}" title="búsqueda"/>
                     </h:panelGrid>
                 </p:overlayPanel>
                 <p:commandButton action="#{consultaMB.search}" icon="fa fa-search Fs18 white" title="búsqueda" styleClass="Fright btn-search" />

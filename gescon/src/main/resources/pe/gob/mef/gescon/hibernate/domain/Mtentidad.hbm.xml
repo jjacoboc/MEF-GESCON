@@ -8,8 +8,8 @@
             <column name="NENTIDADID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <property name="ncodigoentidad" type="big_decimal">
-            <column name="NCODIGOENTIDAD" precision="22" scale="0"/>
+        <property name="vcodigoentidad" type="string">
+            <column name="VCODIGOENTIDAD" length="25"/>
         </property>
         <property name="vnombre" type="string">
             <column name="VNOMBRE" length="200" />

@@ -26,6 +26,7 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     private BigDecimal ncategoriaid;
     private String vnumero;
     private String vsumilla;
+    private Date dfechavigencia;
     private Date dfechapublicacion;
     private String vtema;
     private String vusuariocreacion;
@@ -43,6 +44,7 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     private BigDecimal ndestacado;
     private Archivo archivo;
     private List<Archivo> listaArchivo;
+    private String vfechavigencia;
     private String vfechapublicacion;
     private String vfechacreacion;
     private String vfechamodificacion;
@@ -141,6 +143,14 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
      */
     public void setVsumilla(String vsumilla) {
         this.vsumilla = vsumilla;
+    }
+
+    public Date getDfechavigencia() {
+        return dfechavigencia;
+    }
+
+    public void setDfechavigencia(Date dfechavigencia) {
+        this.dfechavigencia = dfechavigencia;
     }
 
     /**
@@ -373,6 +383,18 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
      */
     public void setListaArchivo(List<Archivo> listaArchivo) {
         this.listaArchivo = listaArchivo;
+    }
+
+    public String getVfechavigencia() {
+        if(dfechavigencia != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_MEDIUM);
+            vfechavigencia = sdf.format(dfechavigencia);
+        }
+        return vfechavigencia;
+    }
+
+    public void setVfechavigencia(String vfechavigencia) {
+        this.vfechavigencia = vfechavigencia;
     }
 
     public String getVfechapublicacion() {

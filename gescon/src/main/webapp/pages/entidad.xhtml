@@ -19,15 +19,15 @@
                                     <p:dataTable id="tbl" value="#{entidadMB.listaEntidad}" filteredValue="#{entidadMB.filteredListaEntidad}" var="row" 
                                                  paginator="true" paginatorPosition="top" rows="15" rowIndexVar="rowIndex" draggableColumns="true" rowHover="true" 
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
-                                        <p:column style="width: 20%;" sortBy="#{row.ncodigoentidad}" filterBy="#{row.ncodigoentidad}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
+                                        <p:column style="width: 10%;" sortBy="#{row.vcodigoentidad}" filterBy="#{row.vcodigoentidad}" filterMatchMode="contains" filterStyle="width: 80%;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="CODIGO"/></f:facet>
-                                            <h:outputText value="#{row.ncodigoentidad}"/>
+                                            <h:outputText value="#{row.vcodigoentidad}"/>
                                         </p:column>
-                                        <p:column style="width: 20%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
+                                        <p:column style="width: 15%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                             <h:outputText value="#{row.vnombre}"/>
                                         </p:column>
-                                        <p:column style="width: 30%" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
+                                        <p:column style="width: 25%" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
                                             <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
                                             <h:outputText value="#{row.vdescripcion}"/>
                                         </p:column>
@@ -37,20 +37,21 @@
                                                 <f:converter converterId="converterSiNo"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 16%;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="4">
-                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
-                                            <h:outputText value="#{row.vusuariocreacion}" />
-                                        </p:column>
                                         <p:column style="text-align: center; width: 15%;" sortBy="#{row.dfechacreacion}" filterBy="#{row.vfechacreacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="5">
                                             <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
                                             <h:outputText value="#{row.vfechacreacion}" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 9%;">
+                                        <p:column style="text-align: center; width: 19%;" sortBy="#{row.dfechamodificacion}" filterBy="#{row.vfechamodificacion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="5">
+                                            <f:facet name="header"><h:outputText value="FECHA MODIFICACIÓN"/></f:facet>
+                                            <h:outputText value="#{row.vfechamodificacion   }" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 8%;">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink actionListener="#{entidadMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar entidad">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
+                                            <p:spacer width="5px"/>
                                             <p:commandLink actionListener="#{entidadMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar entidad" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
@@ -98,7 +99,7 @@
 
                                     <h:outputText value="*"/>
                                     <h:outputText value="Codigo:"/>
-                                    <p:inputText size="50" value="#{entidadMB.selectedEntidad.ncodigoentidad}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" />
+                                    <p:inputText size="50" value="#{entidadMB.selectedEntidad.vcodigoentidad}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="25" />
 
                                     <h:outputText value="*"/>
                                     <h:outputText value="Descripción:"/>

@@ -19,6 +19,7 @@ public class Tbaselegal implements java.io.Serializable {
     private String vnombre;
     private String vnumero;
     private String vsumilla;
+    private Date dfechavigencia;
     private Date dfechapublicacion;
     private String vtema;
     private String vusuariocreacion;
@@ -43,7 +44,7 @@ public class Tbaselegal implements java.io.Serializable {
         this.nbaselegalid = nbaselegalid;
     }
 
-    public Tbaselegal(BigDecimal nbaselegalid, BigDecimal ncategoriaid, BigDecimal nestadoid, BigDecimal nrangoid, String vnombre, String vnumero, String vsumilla, Date dfechapublicacion, String vtema, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal ngobnacional, BigDecimal ngobregional, BigDecimal ngoblocal, BigDecimal nmancomunidades, BigDecimal nactivo, BigDecimal ndestacado, Set tvinculoBaselegals, Set tarchivos) {
+    public Tbaselegal(BigDecimal nbaselegalid, BigDecimal ncategoriaid, BigDecimal nestadoid, BigDecimal nrangoid, String vnombre, String vnumero, String vsumilla, Date dfechavigencia, Date dfechapublicacion, String vtema, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal ngobnacional, BigDecimal ngobregional, BigDecimal ngoblocal, BigDecimal nmancomunidades, BigDecimal nactivo, BigDecimal ndestacado, Set tvinculoBaselegals, Set tarchivos) {
         this.nbaselegalid = nbaselegalid;
         this.ncategoriaid = ncategoriaid;
         this.nestadoid = nestadoid;
@@ -51,6 +52,7 @@ public class Tbaselegal implements java.io.Serializable {
         this.vnombre = vnombre;
         this.vnumero = vnumero;
         this.vsumilla = vsumilla;
+        this.dfechavigencia = dfechavigencia;
         this.dfechapublicacion = dfechapublicacion;
         this.vtema = vtema;
         this.vusuariocreacion = vusuariocreacion;
@@ -129,6 +131,14 @@ public class Tbaselegal implements java.io.Serializable {
 
     public void setVsumilla(String vsumilla) {
         this.vsumilla = vsumilla;
+    }
+
+    public Date getDfechavigencia() {
+        return dfechavigencia;
+    }
+
+    public void setDfechavigencia(Date dfechavigencia) {
+        this.dfechavigencia = dfechavigencia;
     }
 
     public Date getDfechapublicacion() {

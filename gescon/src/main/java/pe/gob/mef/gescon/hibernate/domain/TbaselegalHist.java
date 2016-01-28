@@ -16,12 +16,14 @@ public class TbaselegalHist implements java.io.Serializable {
     private BigDecimal ncategoriaid;
     private String vnombre;
     private String vnumero;
+    private BigDecimal ntiporangoid;
     private BigDecimal nrangoid;
     private BigDecimal ngobnacional;
     private BigDecimal ngobregional;
     private BigDecimal ngoblocal;
     private BigDecimal nmancomunidades;
     private String vsumilla;
+    private Date dfechavigencia;
     private Date dfechapublicacion;
     private String vtema;
     private BigDecimal nactivo;
@@ -42,7 +44,7 @@ public class TbaselegalHist implements java.io.Serializable {
         this.nhistorialid = nhistorialid;
     }
 
-    public TbaselegalHist(BigDecimal nhistorialid, BigDecimal nbaselegalid, BigDecimal ncategoriaid, String vnombre, String vnumero, BigDecimal nrangoid, BigDecimal ngobnacional, BigDecimal ngobregional, BigDecimal ngoblocal, BigDecimal nmancomunidades, String vsumilla, Date dfechapublicacion, String vtema, BigDecimal nactivo, BigDecimal nestadoid, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, BigDecimal ndestacado, Set tvinculoBaselegalHists, Set tarchivoHists) {
+    public TbaselegalHist(BigDecimal nhistorialid, BigDecimal nbaselegalid, BigDecimal ncategoriaid, String vnombre, String vnumero, BigDecimal nrangoid, BigDecimal ngobnacional, BigDecimal ngobregional, BigDecimal ngoblocal, BigDecimal nmancomunidades, String vsumilla, Date dfechavigencia, Date dfechapublicacion, String vtema, BigDecimal nactivo, BigDecimal nestadoid, String vusuariocreacion, Date dfechacreacion, String vusuariomodificacion, Date dfechamodificacion, BigDecimal ndestacado, Set tvinculoBaselegalHists, Set tarchivoHists) {
         this.nhistorialid = nhistorialid;
         this.nbaselegalid = nbaselegalid;
         this.ncategoriaid = ncategoriaid;
@@ -54,6 +56,7 @@ public class TbaselegalHist implements java.io.Serializable {
         this.ngoblocal = ngoblocal;
         this.nmancomunidades = nmancomunidades;
         this.vsumilla = vsumilla;
+        this.dfechavigencia = dfechavigencia;
         this.dfechapublicacion = dfechapublicacion;
         this.vtema = vtema;
         this.nactivo = nactivo;
@@ -107,6 +110,14 @@ public class TbaselegalHist implements java.io.Serializable {
         this.vnumero = vnumero;
     }
 
+    public BigDecimal getNtiporangoid() {
+        return ntiporangoid;
+    }
+
+    public void setNtiporangoid(BigDecimal ntiporangoid) {
+        this.ntiporangoid = ntiporangoid;
+    }
+
     public BigDecimal getNrangoid() {
         return this.nrangoid;
     }
@@ -153,6 +164,14 @@ public class TbaselegalHist implements java.io.Serializable {
 
     public void setVsumilla(String vsumilla) {
         this.vsumilla = vsumilla;
+    }
+
+    public Date getDfechavigencia() {
+        return dfechavigencia;
+    }
+
+    public void setDfechavigencia(Date dfechavigencia) {
+        this.dfechavigencia = dfechavigencia;
     }
 
     public Date getDfechapublicacion() {

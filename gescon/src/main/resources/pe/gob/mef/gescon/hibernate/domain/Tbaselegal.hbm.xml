@@ -29,6 +29,9 @@
         <property name="vsumilla" type="string">
             <column name="VSUMILLA" length="400" />
         </property>
+        <property name="dfechavigencia" type="timestamp">
+            <column name="DFECHAVIGENCIA" />
+        </property>
         <property name="dfechapublicacion" type="timestamp">
             <column name="DFECHAPUBLICACION" />
         </property>
