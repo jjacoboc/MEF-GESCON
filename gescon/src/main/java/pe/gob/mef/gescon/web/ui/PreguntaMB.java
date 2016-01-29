@@ -952,6 +952,7 @@ public class PreguntaMB implements Serializable {
                 this.setListaPregunta(Collections.EMPTY_LIST);
             }
             BigDecimal idpregunta;
+            BigDecimal idperfil;
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
@@ -977,12 +978,24 @@ public class PreguntaMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
             asignacion.setNconocimientoid(idpregunta);
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(pregunta.getNcategoriaid()));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(pregunta.getNcategoriaid()).getNmoderador());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
             
-            pagina="/pages/pregunta/lista?faces-redirect=true";
+            idperfil = service.obtenerPerfilxUsuario(user.getNusuarioid());
+            
+            if(Integer.parseInt(idperfil.toString()) != Constante.USUARIOEXTERNO)
+            {
+                pagina="/pages/pregunta/lista?faces-redirect=true";
+            }else{
+                pagina="/index?faces-redirect=true";
+            }
+            
+            
+            
+            
 
             listaPregunta = service.getPreguntas();
             RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");

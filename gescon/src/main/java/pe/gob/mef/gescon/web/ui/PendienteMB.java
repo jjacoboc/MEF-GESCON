@@ -2104,8 +2104,9 @@ public class PendienteMB implements Serializable {
     public void savePregEdit(ActionEvent event) throws Exception {
         try {
 
-            PendienteMB loginMB = (PendienteMB) JSFUtils.getSessionAttribute("loginMB");
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user_savepreg = loginMB.getUser();
+            
 
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             if (this.getSelectedCategoria() == null) {
@@ -2168,7 +2169,7 @@ public class PendienteMB implements Serializable {
                     vinculopregunta.setNconocimientovinc(consulta.getIdconocimiento());
                     vinculopregunta.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
                     vinculopregunta.setDfechacreacion(new Date());
-                    vinculopregunta.setVusuariocreacion(user.getVlogin());
+                    vinculopregunta.setVusuariocreacion(user_savepreg.getVlogin());
                     vinculopreguntaService.saveOrUpdate(vinculopregunta);
 
                 }
@@ -2386,7 +2387,8 @@ public class PendienteMB implements Serializable {
                 asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
                 asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
                 asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-                asignacion.setNusuarioid(serviceasig.getUserCreacionByPregunta(this.getSelectedPregunta().getNpreguntaid()));
+                CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNmoderador());
                 asignacion.setDfechacreacion(new Date());
                 asignacion.setDfechaasignacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);

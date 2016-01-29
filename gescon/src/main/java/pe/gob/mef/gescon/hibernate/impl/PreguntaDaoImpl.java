@@ -198,7 +198,7 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
         try {
             sql.append("select vnombre AS NOMBRE ");
             sql.append(" from MTENTIDAD ");
-            sql.append(" WHERE NCODIGOENTIDAD = :ENTIDAD AND NACTIVO=1");
+            sql.append(" WHERE VCODIGOENTIDAD = :ENTIDAD AND NACTIVO=1");
 
             object = getHibernateTemplate().execute(
                     new HibernateCallback() {
