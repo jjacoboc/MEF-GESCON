@@ -59,6 +59,7 @@ import pe.gob.mef.gescon.service.RangoService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.service.VinculoBaseLegalService;
 import pe.gob.mef.gescon.service.VinculoBaselegalHistorialService;
+import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Archivo;
@@ -84,6 +85,7 @@ public class BaseLegalMB implements Serializable {
     private static final Log log = LogFactory.getLog(BaseLegalMB.class);
     private String temppath;
     private String path;
+    private final String pathBL = "bl/";
     private List<BaseLegal> listaBaseLegal;
     private List<BaseLegal> filteredListaBaseLegal;
     private BaseLegal selectedBaseLegal;
@@ -775,6 +777,9 @@ public class BaseLegalMB implements Serializable {
             base.setVusuariocreacion(user.getVlogin());
             base.setDfechacreacion(new Date());
             service.saveOrUpdate(base);
+            
+            String ruta0 = this.pathBL + base.getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", base.getVnombre());
 
             BaseLegalHistorialService serviceHistorial = (BaseLegalHistorialService) ServiceFinder.findBean("BaseLegalHistorialService");
             BaselegalHist baseHist = new BaselegalHist();
@@ -799,13 +804,16 @@ public class BaseLegalMB implements Serializable {
             baseHist.setVusuariocreacion(base.getVusuariocreacion());
             baseHist.setDfechacreacion(base.getDfechacreacion());
             serviceHistorial.saveOrUpdate(baseHist);
+            
+            String ruta1 = this.pathBL + base.getNbaselegalid().toString() + "\\" + BigDecimal.ONE.toString() + "\\";
+            GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", baseHist.getVnombre());
 
             Tbaselegal tbaselegal = new Tbaselegal();
             BeanUtils.copyProperties(tbaselegal, base);
 
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
             if (this.getUploadFile() != null) {
-                String ruta0 = path + base.getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+                ruta0 = this.path + base.getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
                 Archivo archivo = new Archivo();
                 archivo.setNarchivoid(aservice.getNextPK());
                 archivo.setTbaselegal(tbaselegal);
@@ -815,8 +823,8 @@ public class BaseLegalMB implements Serializable {
                 archivo.setDfechacreacion(new Date());
                 aservice.saveOrUpdate(archivo);
                 saveFile(ruta0);
-
-                String ruta1 = path + base.getNbaselegalid().toString() + "\\" + BigDecimal.ONE.toString() + "\\";
+                
+                ruta1 = this.path + base.getNbaselegalid().toString() + "\\" + BigDecimal.ONE.toString() + "\\";
                 ArchivoHistorialService aserviceHist = (ArchivoHistorialService) ServiceFinder.findBean("ArchivoHistorialService");
                 ArchivoHist archivoHist = new ArchivoHist();
                 archivoHist.setNarchivohistid(aserviceHist.getNextPK());
@@ -995,12 +1003,15 @@ public class BaseLegalMB implements Serializable {
             Tbaselegal tbaselegal = new Tbaselegal();
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
 
-            String ruta0 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
-            String ruta1 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
+            String ruta0 = this.pathBL + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", this.getSelectedBaseLegal().getVnombre());
+            String ruta1 = this.pathBL + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
+            GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", baseHist.getVnombre());
             
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
             Archivo archivo = aservice.getArchivoByBaseLegal(this.getSelectedBaseLegal());
             if (this.getUploadFile() != null) {
+                ruta0 = this.path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
                 archivo.setVnombre(this.getUploadFile().getFileName());
                 archivo.setVruta(ruta0 + archivo.getVnombre());
                 archivo.setVusuariomodificacion(user.getVlogin());
@@ -1009,6 +1020,7 @@ public class BaseLegalMB implements Serializable {
                 saveFile(ruta0);
             }
             
+            ruta1 = this.path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
             ArchivoHistorialService aserviceHist = (ArchivoHistorialService) ServiceFinder.findBean("ArchivoHistorialService");
             ArchivoHist archivoHist = aserviceHist.getLastArchivoHistByBaseLegalHist(baseHist);
             archivoHist.setNarchivohistid(aserviceHist.getNextPK());
@@ -1159,12 +1171,15 @@ public class BaseLegalMB implements Serializable {
             Tbaselegal tbaselegal = new Tbaselegal();
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
 
-            String ruta0 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
-            String ruta1 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
+            String ruta0 = this.pathBL + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", this.getSelectedBaseLegal().getVnombre());
+            String ruta1 = this.pathBL + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
+            GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", baseHist.getVnombre());
             
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
             Archivo archivo = aservice.getArchivoByBaseLegal(this.getSelectedBaseLegal());
             if (this.getUploadFile() != null) {
+                ruta0 = this.path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
                 archivo.setVnombre(this.getUploadFile().getFileName());
                 archivo.setVruta(ruta0 + archivo.getVnombre());
                 archivo.setVusuariomodificacion(user.getVlogin());
@@ -1173,6 +1188,7 @@ public class BaseLegalMB implements Serializable {
                 saveFile(ruta0);
             }
             
+            ruta1 = this.path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
             ArchivoHistorialService aserviceHist = (ArchivoHistorialService) ServiceFinder.findBean("ArchivoHistorialService");
             ArchivoHist archivoHist = aserviceHist.getLastArchivoHistByBaseLegalHist(baseHist);
             archivoHist.setNarchivohistid(aserviceHist.getNextPK());

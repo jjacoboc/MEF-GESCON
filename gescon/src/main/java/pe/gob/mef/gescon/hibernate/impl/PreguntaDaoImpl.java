@@ -24,6 +24,7 @@ import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.hibernate.dao.PreguntaDao;
 import pe.gob.mef.gescon.hibernate.domain.Tpregunta;
 
@@ -59,6 +60,15 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
     @Override
     public List<Tpregunta> getTpreguntas() throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Tpregunta.class);
+        criteria.addOrder(Order.desc("dfechacreacion"));
+        return (List<Tpregunta>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public List<Tpregunta> getTpreguntasActivedPosted() throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Tpregunta.class);
+        criteria.add(Restrictions.eq("nactivo",Constante.ESTADO_ACTIVO));
+        criteria.add(Restrictions.eq("nsituacionid",Constante.SITUACION_PUBLICADO));
         criteria.addOrder(Order.desc("dfechacreacion"));
         return (List<Tpregunta>) getHibernateTemplate().findByCriteria(criteria);
     }

@@ -10,9 +10,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -39,11 +41,16 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Parameters;
+import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.ConocimientoService;
+import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.SeccionService;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
+import pe.gob.mef.gescon.web.bean.Pregunta;
 import pe.gob.mef.gescon.web.bean.Seccion;
 
 /**
@@ -58,6 +65,7 @@ public class Indexador {
     private static final String FIELD_CONTENTS = "contents";
     private static final String FIELD_FILENAME = "filename";
     private static final String FIELD_CODE = "code";
+    private static final String FIELD_TYPE = "type";
     private static final String FILE_NAME = "plain.txt";
 
     public static void main(String args[]) {
@@ -91,6 +99,68 @@ public class Indexador {
             IndexWriterConfig config = new IndexWriterConfig(new SimpleAnalyzer());
             IndexWriter indexWriter = new IndexWriter(directory, config);
             indexWriter.deleteAll();
+            
+            PreguntaService preguntaService = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            List<Pregunta> listaP = preguntaService.getPreguntasActivedPosted();
+            if (!CollectionUtils.isEmpty(listaP)) {
+                String prgpath = bundle.getString("prgpath");
+                for (Pregunta p : listaP) {
+                    url = prgpath + p.getNpreguntaid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+                    auth = new NtlmPasswordAuthentication(null, user, password);
+                    dir = new SmbFile(url, auth);
+                    file = new File(dir.getUncPath(), FILE_NAME);
+                    
+                    if (file.exists()) {
+                        doc = new Document();
+                        doc.add(new TextField(FIELD_PATH, dir.getUncPath(), Store.YES));
+                        doc.add(new TextField(FIELD_FILENAME, FILE_NAME, Store.YES));
+                        doc.add(new TextField(FIELD_CODE, p.getNpreguntaid().toString(), Store.YES));
+                        doc.add(new TextField(FIELD_TYPE, Constante.PREGUNTAS.toString(), Store.YES));
+
+                        FileInputStream is = new FileInputStream(file);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                        StringBuilder stringBuffer = new StringBuilder();
+                        String line = null;
+                        while ((line = reader.readLine()) != null) {
+                            stringBuffer.append(line).append("\n");
+                        }
+                        reader.close();
+                        doc.add(new TextField(FIELD_CONTENTS, stringBuffer.toString(), Store.YES));
+                        indexWriter.addDocument(doc);
+                    }
+                }
+            }
+            
+            BaseLegalService baseLegalService = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
+            List<BaseLegal> listaB = baseLegalService.getBaselegalesActivedPosted();
+            if (!CollectionUtils.isEmpty(listaB)) {
+                String pdfpath = bundle.getString("pdfpath");
+                for (BaseLegal b : listaB) {
+                    url = pdfpath + b.getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+                    auth = new NtlmPasswordAuthentication(null, user, password);
+                    dir = new SmbFile(url, auth);
+                    file = new File(dir.getUncPath(), FILE_NAME);
+                    
+                    if (file.exists()) {
+                        doc = new Document();
+                        doc.add(new TextField(FIELD_PATH, dir.getUncPath(), Store.YES));
+                        doc.add(new TextField(FIELD_FILENAME, FILE_NAME, Store.YES));
+                        doc.add(new TextField(FIELD_CODE, b.getNbaselegalid().toString(), Store.YES));
+                        doc.add(new TextField(FIELD_TYPE, Constante.BASELEGAL.toString(), Store.YES));
+
+                        FileInputStream is = new FileInputStream(file);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                        StringBuilder stringBuffer = new StringBuilder();
+                        String line = null;
+                        while ((line = reader.readLine()) != null) {
+                            stringBuffer.append(line).append("\n");
+                        }
+                        reader.close();
+                        doc.add(new TextField(FIELD_CONTENTS, stringBuffer.toString(), Store.YES));
+                        indexWriter.addDocument(doc);
+                    }
+                }
+            }
 
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
@@ -107,6 +177,7 @@ public class Indexador {
                         doc.add(new TextField(FIELD_PATH, dir.getUncPath(), Store.YES));
                         doc.add(new TextField(FIELD_FILENAME, FILE_NAME, Store.YES));
                         doc.add(new TextField(FIELD_CODE, c.getNconocimientoid().toString(), Store.YES));
+                        doc.add(new TextField(FIELD_TYPE, c.getNtipoconocimientoid().toString(), Store.YES));
 
                         FileInputStream is = new FileInputStream(file);
                         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -133,6 +204,7 @@ public class Indexador {
                                 doc.add(new TextField(FIELD_PATH, dir.getUncPath(), Store.YES));
                                 doc.add(new TextField(FIELD_FILENAME, FILE_NAME, Store.YES));
                                 doc.add(new TextField(FIELD_CODE, c.getNconocimientoid().toString(), Store.YES));
+                                doc.add(new TextField(FIELD_TYPE, c.getNtipoconocimientoid().toString(), Store.YES));
 
                                 FileInputStream fis = new FileInputStream(file);
                                 BufferedReader br = new BufferedReader(new InputStreamReader(fis));
@@ -157,8 +229,11 @@ public class Indexador {
         }
     }
 
-    public static String search(String text) {
-        String codes = null;
+    public static HashMap search(String text) {
+        String codesBL = null;
+        String codesPR = null;
+        String codesC = null;
+        HashMap map = new HashMap();
         StopWords stopWords;
         try {
             ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
@@ -173,20 +248,40 @@ public class Indexador {
             QueryParser queryParser = new QueryParser(FIELD_CONTENTS, new StandardAnalyzer(CharArraySet.copy(words)));
             Query query = queryParser.parse(text);
             TopDocs topDocs = indexSearcher.search(query, 10);
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sbBL = new StringBuilder();
+            StringBuilder sbPR = new StringBuilder();
+            StringBuilder sbC = new StringBuilder();
             for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
                 Document document = indexSearcher.doc(scoreDoc.doc);
-                sb.append(",").append(document.get(FIELD_CODE));
+                String type = document.get(FIELD_TYPE);
+                if(type.equals(Constante.BASELEGAL.toString())) {
+                    sbBL.append(",").append(document.get(FIELD_CODE));
+                }else if(type.equals(Constante.PREGUNTAS.toString())) {
+                    sbPR.append(",").append(document.get(FIELD_CODE));
+                } else {
+                    sbC.append(",").append(document.get(FIELD_CODE));
+                }
             }
-            codes = sb.toString();
-            if (StringUtils.isNotBlank(codes)) {
-                codes = codes.substring(1);
+            codesBL = sbBL.toString();
+            codesPR = sbPR.toString();
+            codesC = sbC.toString();
+            if (StringUtils.isNotBlank(codesBL)) {
+                codesBL = codesBL.substring(1);
             }
+            if (StringUtils.isNotBlank(codesPR)) {
+                codesPR = codesPR.substring(1);
+            }
+            if (StringUtils.isNotBlank(codesC)) {
+                codesC = codesC.substring(1);
+            }
+            map.put("codesBL", codesBL);
+            map.put("codesPR", codesPR);
+            map.put("codesC", codesC);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return codes;
+        return map;
     }
 }

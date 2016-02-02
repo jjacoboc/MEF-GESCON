@@ -75,12 +75,6 @@
                                                          counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
-
-                                    <h:outputText value="*"/>
-                                    <h:outputText value="Parametro:"/>
-                                    <p:selectOneMenu value="#{alertaMB.selectedParametro}">
-                                        <f:selectItems value="#{alertaMB.listaParametro}"/>
-                                    </p:selectOneMenu>
                                     <p:spacer/>
                                     <p:spacer/>
                                     <p:fieldset legend="Alerta Via Email">
@@ -111,7 +105,10 @@
                                                 <f:selectItem itemLabel="menor/igual" itemValue="2" />
                                             </p:selectOneMenu>
                                             <h:outputText  value="A: " />
-                                            <p:inputText size="5" value="#{alertaMB.valor1}"  maxlength="5" /> 
+                                            <p:selectOneMenu value="#{alertaMB.valor1}">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{alertaMB.listaParametro}"/>
+                                            </p:selectOneMenu>
                                             <p:selectOneMenu value="#{alertaMB.tipo1}">
                                                 <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
                                                 <f:selectItem itemLabel="Semanas" itemValue="1" />
@@ -125,7 +122,10 @@
                                                 <f:selectItem itemLabel="menor/igual" itemValue="2" />
                                             </p:selectOneMenu>
                                             <h:outputText  value="B: " />
-                                            <p:inputText size="5" value="#{alertaMB.valor2}"  maxlength="5" /> 
+                                            <p:selectOneMenu value="#{alertaMB.valor2}">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{alertaMB.listaParametro}"/>
+                                            </p:selectOneMenu>
                                             <p:selectOneMenu value="#{alertaMB.tipo2}">
                                                 <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
                                                 <f:selectItem itemLabel="Semanas" itemValue="1" />
@@ -162,11 +162,6 @@
                                         <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
                                     </p:selectOneMenu>
 
-                                    <h:outputText value="*"/>
-                                    <h:outputText value="Parametro:"/>
-                                    <p:selectOneMenu value="#{alertaMB.selectedAlerta.nparametroid}">
-                                        <f:selectItems value="#{alertaMB.listaParametro}"/>
-                                    </p:selectOneMenu>
                                     <p:spacer/>
                                     <p:spacer/>
                                     <p:fieldset legend="Alerta Via Email">
@@ -198,7 +193,10 @@
                                                 <f:selectItem itemLabel="menor/igual" itemValue="2" />
                                             </p:selectOneMenu>
                                             <h:outputText  value="A: " />
-                                            <p:inputText size="5" value="#{alertaMB.selectedAlerta.nvalor1}"  maxlength="5" /> 
+                                            <p:selectOneMenu value="#{alertaMB.selectedAlerta.nvalor1}">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{alertaMB.listaParametro}"/>
+                                            </p:selectOneMenu>
                                             <p:selectOneMenu value="#{alertaMB.selectedAlerta.ntipo1}">
                                                 <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
                                                 <f:selectItem itemLabel="Semanas" itemValue="1" />
@@ -212,7 +210,10 @@
                                                 <f:selectItem itemLabel="menor/igual" itemValue="2" />
                                             </p:selectOneMenu>
                                             <h:outputText  value="B: " />
-                                            <p:inputText size="5" value="#{alertaMB.selectedAlerta.nvalor2}"  maxlength="5" /> 
+                                            <p:selectOneMenu value="#{alertaMB.selectedAlerta.nvalor2}">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{alertaMB.listaParametro}"/>
+                                            </p:selectOneMenu>
                                             <p:selectOneMenu value="#{alertaMB.selectedAlerta.ntipo2}">
                                                 <f:selectItem itemLabel="Dias Calendario" itemValue="0" />
                                                 <f:selectItem itemLabel="Semanas" itemValue="1" />

@@ -7,8 +7,6 @@ package pe.gob.mef.gescon.web.ui;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -16,18 +14,22 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
 import pe.gob.mef.gescon.service.PassService;
+import pe.gob.mef.gescon.service.UbigeoService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
@@ -39,24 +41,24 @@ import pe.gob.mef.gescon.web.bean.User;
  * @author JJacobo
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class UserMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(UserMB.class);
     private BigDecimal id;
-    private String login;
     private String nombres;
     private String apellidos;
+    private String login;
+    private String clave;
+    private String confirmaClave;
     private Date fechaNacimiento;
-    private String dia;
-    private List<SelectItem> dias = new ArrayList<SelectItem>();
-    private String mes;
-    private String año;
-    private List<SelectItem> años = new ArrayList<SelectItem>();
-    private String sexo;
     private String dni;
-    private String pass;
+    private String sexo;
+    private String correo;
+    private List<SelectItem> listaDepartamento;
+    private List<SelectItem> listaProvincia;
+    private List<SelectItem> listaDistrito;
     private String departamento;
     private String provincia;
     private String distrito;
@@ -143,76 +145,6 @@ public class UserMB implements Serializable {
     }
 
     /**
-     * @return the dia
-     */
-    public String getDia() {
-        return dia;
-    }
-
-    /**
-     * @param dia the dia to set
-     */
-    public void setDia(String dia) {
-        this.dia = dia;
-    }
-
-    /**
-     * @return the dias
-     */
-    public List<SelectItem> getDias() {
-        return dias;
-    }
-
-    /**
-     * @param dias the dias to set
-     */
-    public void setDias(List<SelectItem> dias) {
-        this.dias = dias;
-    }
-
-    /**
-     * @return the mes
-     */
-    public String getMes() {
-        return mes;
-    }
-
-    /**
-     * @param mes the mes to set
-     */
-    public void setMes(String mes) {
-        this.mes = mes;
-    }
-
-    /**
-     * @return the año
-     */
-    public String getAño() {
-        return año;
-    }
-
-    /**
-     * @param año the año to set
-     */
-    public void setAño(String año) {
-        this.año = año;
-    }
-
-    /**
-     * @return the años
-     */
-    public List<SelectItem> getAños() {
-        return años;
-    }
-
-    /**
-     * @param años the años to set
-     */
-    public void setAños(List<SelectItem> años) {
-        this.años = años;
-    }
-
-    /**
      * @return the sexo
      */
     public String getSexo() {
@@ -226,18 +158,58 @@ public class UserMB implements Serializable {
         this.sexo = sexo;
     }
 
-    /**
-     * @return the pass
-     */
-    public String getPass() {
-        return pass;
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public List<SelectItem> getListaDepartamento() {
+        return listaDepartamento;
+    }
+
+    public void setListaDepartamento(List<SelectItem> listaDepartamento) {
+        this.listaDepartamento = listaDepartamento;
+    }
+
+    public List<SelectItem> getListaProvincia() {
+        return listaProvincia;
+    }
+
+    public void setListaProvincia(List<SelectItem> listaProvincia) {
+        this.listaProvincia = listaProvincia;
+    }
+
+    public List<SelectItem> getListaDistrito() {
+        return listaDistrito;
+    }
+
+    public void setListaDistrito(List<SelectItem> listaDistrito) {
+        this.listaDistrito = listaDistrito;
     }
 
     /**
-     * @param pass the pass to set
+     * @return the clave
      */
-    public void setPass(String pass) {
-        this.pass = pass;
+    public String getClave() {
+        return clave;
+    }
+
+    /**
+     * @param clave the clave to set
+     */
+    public void setClave(String clave) {
+        this.clave = clave;
+    }
+
+    public String getConfirmaClave() {
+        return confirmaClave;
+    }
+
+    public void setConfirmaClave(String confirmaClave) {
+        this.confirmaClave = confirmaClave;
     }
 
     /**
@@ -447,26 +419,52 @@ public class UserMB implements Serializable {
     @PostConstruct
     public void init() {
         try {
-
-            UserService service = (UserService) ServiceFinder.findBean("UserService");
-            listaUser = service.getUsers();
-
-            for (int x = 1; x < 32; x++) {
-                SelectItem dias = new SelectItem();
-                dias.setLabel(String.valueOf(x));
-                dias.setValue(String.valueOf(x));
-                getDias().add(dias);
-            }
-
-            for (int j = 1997; j > 1935; j--) {
-                SelectItem años = new SelectItem();
-                años.setLabel(String.valueOf(j));
-                años.setValue(String.valueOf(j));
-                getAños().add(años);
-            }
-
+            UserService userService = (UserService) ServiceFinder.findBean("UserService");
+            this.setListaUser(userService.getUsers());
+            UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
+            listaDepartamento =  new Items(ubigeoService.getDepartamentos(), null, "vcoddep","vdescdep").getItems();
         } catch (Exception e) {
             log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void handleDepartamentoChangeValue(AjaxBehaviorEvent event) {
+        try {
+            if (event != null) {
+                String coddep = (String) ((SelectOneMenu) event.getSource()).getValue();
+                this.setDepartamento(coddep);
+                if (StringUtils.isNotBlank(coddep)) {
+                    UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
+                    listaProvincia =  new Items(ubigeoService.getProvinciasPorDepartamento(coddep), null, "vcodprov","vdescprov").getItems();
+                } else {
+                    this.setListaProvincia(new ArrayList());
+                    this.setListaDistrito(new ArrayList());
+                    this.setProvincia(StringUtils.EMPTY);
+                    this.setDistrito(StringUtils.EMPTY);
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void handleProvinciaChangeValue(AjaxBehaviorEvent event) {
+        try {
+            if (event != null) {
+                String codprov = (String) ((SelectOneMenu) event.getSource()).getValue();
+                this.setProvincia(codprov);
+                if (StringUtils.isNotBlank(codprov)) {
+                    UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
+                    listaDistrito =  new Items(ubigeoService.getDistritosPorProvincia(this.getDepartamento(), codprov), null, "vcoddist","vdescdist").getItems();
+                } else {
+                    this.setListaDistrito(new ArrayList());
+                    this.setDistrito(StringUtils.EMPTY);
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
             e.printStackTrace();
         }
     }
@@ -490,137 +488,260 @@ public class UserMB implements Serializable {
 
     public void cleanAttributes() {
         this.setId(BigDecimal.ZERO);
+        this.setDni(StringUtils.EMPTY);
         this.setNombres(StringUtils.EMPTY);
         this.setApellidos(StringUtils.EMPTY);
         this.setLogin(StringUtils.EMPTY);
-        this.setDia("1");
+        this.setClave(StringUtils.EMPTY);
+        this.setConfirmaClave(StringUtils.EMPTY);
+        this.setFechaNacimiento(null);
+        this.setSexo(StringUtils.EMPTY);
+        this.setCorreo(StringUtils.EMPTY);
+        this.setListaProvincia(new ArrayList());
+        this.setListaDistrito(new ArrayList());
+        this.setDepartamento(StringUtils.EMPTY);
+        this.setProvincia(StringUtils.EMPTY);
+        this.setDistrito(StringUtils.EMPTY);
+        this.setProfesion(StringUtils.EMPTY);
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {
             iter.remove();
             FacesContext.getCurrentInstance().renderResponse();
         }
     }
-
-    public void save() throws ParseException {
-
-        BigDecimal iduser;
-        String fecha;
-        Date date1;
-
-        fecha = this.dia + "/" + this.mes + "/" + this.año;
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = formato.parse(fecha);
-
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Correct", "Correct");
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-
-        try {
-
-            User user = new User();
-            user.setVnombres(this.getNombres());
-            user.setVapellidos(this.getApellidos());
-            user.setVlogin(this.getLogin());
-            user.setDfechacreacion(new Date());
-            user.setDfechanacimiento(date);
-            user.setVsexo(this.getSexo());
-            user.setVdni(this.getDni());
-            user.setVdpto(this.getDepartamento());
-            user.setVprov(this.getProvincia());
-            user.setVdist(this.getDistrito());
-            user.setVprofesion(this.getProfesion());
-            user.setVentidad(this.getEntidad());
-            user.setVpliego(this.getPliego());
-            user.setVcargo(this.getCargo());
-            user.setVarea(this.getArea());
-            user.setVsector(this.getSector());
-            user.setVgobierno(this.getGobierno());
-            user.setNestado(BigDecimal.ONE);
-            UserService service = (UserService) ServiceFinder.findBean("UserService");
-            iduser = service.getNextPK();
-            user.setNusuarioid(iduser);
-            service.saveOrUpdate(user);
-
-            TpassId tpassid = new TpassId();
-            PassService passservice = (PassService) ServiceFinder.findBean("PassService");
-            tpassid.setNpassid(passservice.getNextPK());
-            tpassid.setNusuarioid(iduser);
-            Pass pass = new Pass();
-            pass.setId(tpassid);
-            pass.setVclave(this.getPass());
-            pass.setDfechacreacion(new Date());
-            passservice.saveOrUpdate(pass);
-            RequestContext.getCurrentInstance().execute("PF('iniDialog').hide();");
-            RequestContext.getCurrentInstance().execute("PF('regDialog').hide();");
-            this.cleanAttributes();
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void saveadm() throws ParseException {
-
-        BigDecimal iduser;
-        String fecha;
-        Date date1;
-
-        fecha = this.dia + "/" + this.mes + "/" + this.año;
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = formato.parse(fecha);
-
-        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Correct", "Correct");
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-
-        try {
-
-            User user = new User();
-            user.setVnombres(this.getNombres());
-            user.setVapellidos(this.getApellidos());
-            user.setVlogin(this.getLogin());
-            user.setDfechacreacion(new Date());
-            user.setDfechanacimiento(date);
-            user.setVsexo(this.getSexo());
-            user.setVdni(this.getDni());
-            user.setVdpto(this.getDepartamento());
-            user.setVprov(this.getProvincia());
-            user.setVdist(this.getDistrito());
-            user.setVprofesion(this.getProfesion());
-            user.setVentidad(this.getEntidad());
-            user.setVpliego(this.getPliego());
-            user.setVcargo(this.getCargo());
-            user.setVarea(this.getArea());
-            user.setVsector(this.getSector());
-            user.setVgobierno(this.getGobierno());
-            user.setNestado(BigDecimal.ONE);
-            UserService service = (UserService) ServiceFinder.findBean("UserService");
-            iduser = service.getNextPK();
-            user.setNusuarioid(iduser);
-            service.saveOrUpdate(user);
-
-            TpassId tpassid = new TpassId();
-            PassService passservice = (PassService) ServiceFinder.findBean("PassService");
-            tpassid.setNpassid(passservice.getNextPK());
-            tpassid.setNusuarioid(iduser);
-            Pass pass = new Pass();
-            pass.setId(tpassid);
-            pass.setVclave(this.getPass());
-            pass.setDfechacreacion(new Date());
-            passservice.saveOrUpdate(pass);
-            this.setListaUser(service.getUsers());
-            RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
-            this.cleanAttributes();
-            
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
+    
     public void toSave(ActionEvent event) {
         try {
             this.cleanAttributes();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void save(ActionEvent event){
+        try {
+            if (StringUtils.isBlank(this.getDni())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el DNI del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getNombres())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el nombre del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getApellidos())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el apellido del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getClave())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la clave del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getConfirmaClave())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Confirme la clave del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (!this.getClave().equals(this.getConfirmaClave())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "La confirmación debe ser igual a la clave ingresada.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getFechaNacimiento() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la fecha de nacimiento del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getCorreo())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el correo electrónico del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getDepartamento())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el departamento del lugar de residencia.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getProvincia())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la provincia del lugar de residencia.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getDistrito())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el distrito del lugar de residencia.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            UserService service = (UserService) ServiceFinder.findBean("UserService");
+            User user = service.getUserByDNI(this.getDni());
+            if(user != null){
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "El DNI ingresado ya se encuentra registrado.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            user = service.getUserByLogin(this.getLogin());
+            if(user != null){
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "El nombre de usuario ingresado ya se encuentra registrado.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            user = new User();
+            user.setNusuarioid(service.getNextPK());
+            user.setVnombres(this.getNombres());
+            user.setVapellidos(this.getApellidos());
+            user.setVlogin(this.getLogin());
+            user.setDfechanacimiento(this.getFechaNacimiento());
+            user.setVsexo(this.getSexo());
+            user.setVdni(this.getDni());
+            user.setVcorreo(this.getCorreo());
+            user.setVdpto(this.getDepartamento());
+            user.setVprov(this.getProvincia());
+            user.setVdist(this.getDistrito());
+            user.setVprofesion(this.getProfesion());
+            user.setVentidad(this.getEntidad());
+            user.setVpliego(this.getPliego());
+            user.setVcargo(this.getCargo());
+            user.setVarea(this.getArea());
+            user.setVsector(this.getSector());
+            user.setVgobierno(this.getGobierno());
+            user.setNestado(BigDecimal.ONE);
+            user.setNuserinterno(BigDecimal.ZERO);
+            user.setDfechacreacion(new Date());
+            user.setVusuariocreacion(this.getLogin());
+            service.saveOrUpdate(user);
+
+            TpassId tpassid = new TpassId();
+            PassService passservice = (PassService) ServiceFinder.findBean("PassService");
+            tpassid.setNpassid(passservice.getNextPK());
+            tpassid.setNusuarioid(user.getNusuarioid());
+            Pass pass = new Pass();
+            pass.setId(tpassid);
+            pass.setVclave(this.getClave());
+            pass.setDfechacreacion(new Date());
+            pass.setVusuariocreacion(this.getLogin());
+            passservice.saveOrUpdate(pass);
+            RequestContext.getCurrentInstance().execute("PF('iniDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('regDialog').hide();");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void saveadm(ActionEvent event) {
+
+        try {
+            if (StringUtils.isBlank(this.getDni())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el DNI del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getNombres())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el nombre del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getApellidos())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el apellido del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getClave())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la clave del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getConfirmaClave())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Confirme la clave del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (!this.getClave().equals(this.getConfirmaClave())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "La confirmación debe ser igual a la clave ingresada.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getFechaNacimiento() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la fecha de nacimiento del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getCorreo())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el correo electrónico del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getDepartamento())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el departamento del lugar de residencia.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getProvincia())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la provincia del lugar de residencia.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getDistrito())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el distrito del lugar de residencia.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            UserService userService = (UserService) ServiceFinder.findBean("UserService");
+            User user = userService.getUserByDNI(this.getDni());
+            if(user != null){
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "El DNI ingresado ya se encuentra registrado.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            user = userService.getUserByLogin(this.getLogin());
+            if(user != null){
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "El nombre de usuario ingresado ya se encuentra registrado.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User usuario = loginMB.getUser();
+            user = new User();
+            user.setNusuarioid(userService.getNextPK());
+            user.setVnombres(this.getNombres());
+            user.setVapellidos(this.getApellidos());
+            user.setVlogin(this.getLogin());
+            user.setDfechanacimiento(this.getFechaNacimiento());
+            user.setVsexo(this.getSexo());
+            user.setVdni(this.getDni());
+            user.setVcorreo(this.getCorreo());
+            user.setVdpto(this.getDepartamento());
+            user.setVprov(this.getProvincia());
+            user.setVdist(this.getDistrito());
+            user.setVprofesion(this.getProfesion());
+            user.setVentidad(this.getEntidad());
+            user.setVpliego(this.getPliego());
+            user.setVcargo(this.getCargo());
+            user.setVarea(this.getArea());
+            user.setVsector(this.getSector());
+            user.setVgobierno(this.getGobierno());
+            user.setNestado(BigDecimal.ONE);
+            user.setDfechacreacion(new Date());
+            user.setVusuariocreacion(usuario.getVlogin());
+            userService.saveOrUpdate(user);
+
+            TpassId tpassid = new TpassId();
+            PassService passservice = (PassService) ServiceFinder.findBean("PassService");
+            tpassid.setNpassid(passservice.getNextPK());
+            tpassid.setNusuarioid(user.getNusuarioid());
+            Pass pass = new Pass();
+            pass.setId(tpassid);
+            pass.setVclave(this.getClave());
+            pass.setDfechacreacion(new Date());
+            pass.setVusuariocreacion(usuario.getVlogin());
+            passservice.saveOrUpdate(pass);
+            
+            this.setListaUser(userService.getUsers());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/usuarioexterno/lista.xhtml");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();

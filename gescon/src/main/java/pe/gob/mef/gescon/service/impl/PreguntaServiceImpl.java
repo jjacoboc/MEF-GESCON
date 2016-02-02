@@ -48,6 +48,19 @@ public class PreguntaServiceImpl implements PreguntaService {
     }
     
     @Override
+    public List<Pregunta> getPreguntasActivedPosted() throws Exception {
+        List<Pregunta> preguntas = new ArrayList<Pregunta>();
+        PreguntaDao preguntaDao = (PreguntaDao) ServiceFinder.findBean("PreguntaDao");
+        List<Tpregunta> lista = preguntaDao.getTpreguntasActivedPosted();
+        for (Tpregunta tpregunta : lista) {
+            Pregunta pregunta = new Pregunta();
+            BeanUtils.copyProperties(pregunta, tpregunta);
+            preguntas.add(pregunta);
+        }
+        return preguntas;
+    }
+    
+    @Override
     public Pregunta getPreguntaById(BigDecimal id) throws Exception {
         PreguntaDao preguntaDao = (PreguntaDao) ServiceFinder.findBean("PreguntaDao");
         Tpregunta tpregunta = preguntaDao.getTpreguntaById(id);

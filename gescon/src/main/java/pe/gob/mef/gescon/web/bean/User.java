@@ -7,7 +7,9 @@ package pe.gob.mef.gescon.web.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import pe.gob.mef.gescon.common.Constante;
 
 /**
  *
@@ -40,6 +42,10 @@ public class User implements Serializable {
     private String vgobierno;
     private BigDecimal nuserinterno;
     private BigDecimal nactivo;
+    private String vnombreCompleto;
+    private String vfechanacimiento;
+    private String vfechacreacion;
+    private String vfechamodificacion;
 
     public void User() {
 
@@ -369,5 +375,50 @@ public class User implements Serializable {
 
     public void setNactivo(BigDecimal nactivo) {
         this.nactivo = nactivo;
+    }
+
+    public String getVnombreCompleto() {
+        this.vnombreCompleto = this.vnombres + " " + this.vapellidos;
+        return vnombreCompleto;
+    }
+
+    public void setVnombreCompleto(String vnombreCompleto) {
+        this.vnombreCompleto = vnombreCompleto;
+    }
+
+    public String getVfechanacimiento() {
+        if(dfechanacimiento != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_MEDIUM);
+            vfechanacimiento = sdf.format(dfechanacimiento);
+        }
+        return vfechanacimiento;
+    }
+
+    public void setVfechanacimiento(String vfechanacimiento) {
+        this.vfechanacimiento = vfechanacimiento;
+    }
+
+    public String getVfechacreacion() {
+        if(dfechacreacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_MEDIUM);
+            vfechacreacion = sdf.format(dfechacreacion);
+        }
+        return vfechacreacion;
+    }
+
+    public void setVfechacreacion(String vfechacreacion) {
+        this.vfechacreacion = vfechacreacion;
+    }
+
+    public String getVfechamodificacion() {
+        if(dfechamodificacion != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_MEDIUM);
+            vfechamodificacion = sdf.format(dfechamodificacion);
+        }
+        return vfechamodificacion;
+    }
+
+    public void setVfechamodificacion(String vfechamodificacion) {
+        this.vfechamodificacion = vfechamodificacion;
     }
 }

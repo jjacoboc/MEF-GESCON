@@ -47,8 +47,9 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
         final Date fFromDate = (Date) filters.get("fFromDate");
         final Date fToDate = (Date) filters.get("fToDate");
         final String fType = (String) filters.get("fType");
-        final String fText = (String) filters.get("fText");
-        final String fCodes = (String) filters.get("fCodes");
+        final String fCodesBL = (String) filters.get("fCodesBL");
+        final String fCodesPR = (String) filters.get("fCodesPR");
+        final String fCodesC = (String) filters.get("fCodesC");
         final String order = (String) filters.get("order");
         SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_SHORT);
         final StringBuilder sql = new StringBuilder();
@@ -77,8 +78,8 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fToDate != null) {
                 sql.append("    AND TRUNC(a.dfechapublicacion) <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
-            if(StringUtils.isNotBlank(fText)) {
-                sql.append("    AND a.vnombre LIKE '%").append(fText).append("%' ");
+            if(StringUtils.isNotBlank(fCodesBL)) {
+                sql.append("    AND a.nbaselegalid IN (").append(fCodesBL).append(") ");
             }
             sql.append("        GROUP BY a.nbaselegalid, a.vnumero, a.vnombre, a.ncategoriaid, b.vnombre, ");
             sql.append("        a.dfechapublicacion, 1, 'Base Legal', a.nestadoid, c.vnombre ");
@@ -108,8 +109,8 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fToDate != null) {
                 sql.append("    AND TRUNC(a.dfechacreacion) <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
-            if(StringUtils.isNotBlank(fText)) {
-                sql.append("    AND a.vdetalle LIKE '%").append(fText).append("%' ");
+            if(StringUtils.isNotBlank(fCodesPR)) {
+                sql.append("    AND a.npreguntaid IN (").append(fCodesPR).append(") ");
             }
             sql.append("        GROUP BY a.npreguntaid, a.vasunto, a.vdetalle, a.ncategoriaid, b.vnombre, ");
             sql.append("        a.dfechapublicacion, 2, 'Preguntas y Respuestas', a.nsituacionid, c.vnombre ");
@@ -142,8 +143,8 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(fToDate != null) {
                 sql.append("    AND TRUNC(a.dfechacreacion) <= TO_DATE('").append(sdf.format(fToDate)).append("','dd/mm/yyyy') ");
             }
-            if(StringUtils.isNotBlank(fCodes)) {
-                sql.append("    AND a.nconocimientoid IN (").append(fCodes).append(") ");
+            if(StringUtils.isNotBlank(fCodesC)) {
+                sql.append("    AND a.nconocimientoid IN (").append(fCodesC).append(") ");
             }
             sql.append("        GROUP BY a.nconocimientoid, a.vtitulo, a.vdescripcion, a.ncategoriaid, b.vnombre, ");
             sql.append("        a.dfechapublicacion, a.ntpoconocimientoid, d.vnombre, a.nsituacionid, c.vnombre ");
@@ -174,6 +175,11 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
         return (List<HashMap>) object;
     }
     
+    /**
+     *
+     * @param filters
+     * @return
+     */
     @Override
     public List<HashMap> getDestacadosByTipoConocimiento(HashMap filters) {
         String ntipoconocimientoid = ((BigDecimal) filters.get("ntipoconocimientoid")).toString();

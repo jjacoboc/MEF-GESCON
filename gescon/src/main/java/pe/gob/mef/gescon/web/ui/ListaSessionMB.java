@@ -45,6 +45,8 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaTipoConocimiento;
     private List<SelectItem> listaTipoDiscusion;
     private List<SelectItem> listaTipoDiscusionActivo;
+    private List<SelectItem> listaProfesion;
+    private List<SelectItem> listaProfesionActiva;
     private List<SelectItem> filterEstado;
     private List<SelectItem> filterModulos;
     
@@ -272,6 +274,34 @@ public class ListaSessionMB implements Serializable{
 
     public void setListaTipoDiscusionActivo(List<SelectItem> listaTipoDiscusionActivo) {
         this.listaTipoDiscusionActivo = listaTipoDiscusionActivo;
+    }
+
+    public List<SelectItem> getListaProfesion() throws Exception {
+        if(listaProfesion == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_PROFESIONES);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaProfesion =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaProfesion;
+    }
+
+    public void setListaProfesion(List<SelectItem> listaProfesion) {
+        this.listaProfesion = listaProfesion;
+    }
+
+    public List<SelectItem> getListaProfesionActiva() throws Exception {
+        if(listaProfesionActiva == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_PROFESIONES);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaProfesionActiva =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaProfesionActiva;
+    }
+
+    public void setListaProfesionActiva(List<SelectItem> listaProfesionActiva) {
+        this.listaProfesionActiva = listaProfesionActiva;
     }
 
     /**

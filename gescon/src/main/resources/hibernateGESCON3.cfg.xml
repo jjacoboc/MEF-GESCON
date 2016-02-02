@@ -18,8 +18,8 @@
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tpregunta.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TvinculoHist.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TbaselegalHist.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TuserPerfil.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tconocimiento.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/TuserPerfil.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TarchivoHist.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TvinculoImplementacionHist.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tobservacion.hbm.xml"/>
@@ -31,12 +31,13 @@
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/MttipoConocimiento.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TcalificacionBaselegal.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tarchivo.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtentidad.hbm.xml"/>
-    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtmaestro.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tbaselegal.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtmaestro.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtentidad.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtalerta.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TvinculoBaselegalHist.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtpolitica.hbm.xml"/>
+    <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtubigeo.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Mtrango.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/Tpass.hbm.xml"/>
     <mapping resource="pe/gob/mef/gescon/hibernate/domain/TrespuestaHist.hbm.xml"/>

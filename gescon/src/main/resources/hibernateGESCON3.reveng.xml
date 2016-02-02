@@ -2,7 +2,5 @@
 <!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd">
 <hibernate-reverse-engineering>
   <schema-selection match-schema="GESCON3"/>
-  <table-filter match-name="TBASELEGAL_HIST"/>
-  <table-filter match-name="TARCHIVO_HIST"/>
-  <table-filter match-name="TVINCULO_BASELEGAL_HIST"/>
+  <table-filter match-name="MTUBIGEO"/>
 </hibernate-reverse-engineering>

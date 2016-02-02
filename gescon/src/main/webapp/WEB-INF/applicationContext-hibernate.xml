@@ -38,6 +38,7 @@
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtrango.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtsituacion.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/MttipoConocimiento.hbm.xml</value>
+                <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtubigeo.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Mtuser.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/Tarchivo.hbm.xml</value>
                 <value>classpath:pe/gob/mef/gescon/hibernate/domain/TarchivoConocimiento.hbm.xml</value>

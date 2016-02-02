@@ -19,29 +19,27 @@
                                     <p:dataTable id="tbl" value="#{userMB.listaUser}" filteredValue="#{userMB.filteredListaUser}" paginator="true" rowHover="true"
                                                  var="row" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" paginatorPosition="top" 
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="#{msgs.lbl_listavacia}">
-                                        <p:column style="width: 10%; text-align: center;" priority="1">
+                                        <p:column style="width: 10%; text-align: center;" sortBy="#{row.vdni}" filterBy="#{row.vdni}" filterStyle="width: 80%; text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="#{msgs.us_lbl_columna01}"/></f:facet>
                                             <h:outputText value="#{row.vdni}"/>
                                         </p:column>
-                                        <p:column style="width: 10%;" priority="2">
+                                        <p:column style="width: 16%;" sortBy="#{row.vnombres}" filterBy="#{row.vnombres}" filterStyle="width: 90%;" priority="2">
                                             <f:facet name="header"><h:outputText value="#{msgs.us_lbl_columna02}"/></f:facet>
                                             <h:outputText value="#{row.vnombres}"/>
                                         </p:column>
-                                        <p:column style="width: 10%;" priority="3">
+                                        <p:column style="width: 16%;" sortBy="#{row.vapellidos}" filterBy="#{row.vapellidos}" filterStyle="width: 90%;" priority="3">
                                             <f:facet name="header"><h:outputText value="#{msgs.us_lbl_columna03}"/></f:facet>
                                             <h:outputText value="#{row.vapellidos}"/>
                                         </p:column>
-                                        <p:column style="width: 20%; text-align: center;" priority="4">
+                                        <p:column style="width: 23%;" sortBy="#{row.vcorreo}" filterBy="#{row.vcorreo}" filterStyle="width: 90%;" priority="4">
                                             <f:facet name="header"><h:outputText value="#{msgs.us_lbl_columna04}"/></f:facet>
                                             <h:outputText value="#{row.vcorreo}"/>
                                         </p:column>
-                                        <p:column style="width: 10%; text-align: center;" priority="5">
+                                        <p:column style="width: 15%; text-align: center;" sortBy="#{row.dfechacreacion}" filterBy="#{row.vfechacreacion}" filterStyle="width: 80%;" priority="5">
                                             <f:facet name="header"><h:outputText value="#{msgs.us_lbl_columna05}"/></f:facet>
-                                            <h:outputText value="#{row.dfechacreacion}">
-                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                            </h:outputText>
+                                            <h:outputText value="#{row.vfechacreacion}"/>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 10%;" priority="6">
+                                        <p:column style="text-align: center; width: 10%;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="6">
                                             <f:facet name="header"><h:outputText value="#{msgs.us_lbl_columna06}"/></f:facet>
                                             <h:outputText value="#{row.nactivo}">
                                                 <f:converter converterId="converterSiNo"/>

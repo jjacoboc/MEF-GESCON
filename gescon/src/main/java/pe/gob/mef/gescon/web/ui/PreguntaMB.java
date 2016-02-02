@@ -32,15 +32,14 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CalificacionPreguntaService;
 import pe.gob.mef.gescon.service.CategoriaService;
-import pe.gob.mef.gescon.service.ContenidoService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.RespuestaHistService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.service.VinculoPreguntaService;
+import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
@@ -62,6 +61,7 @@ public class PreguntaMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(PreguntaMB.class);
+    private final String path = "pr/";
     private List<Pregunta> listaPregunta;
     private List<Pregunta> flistaPregunta;
     private List<RespuestaHist> listaRespuesta;
@@ -971,6 +971,10 @@ public class PreguntaMB implements Serializable {
             pregunta.setVusuariocreacion(user.getVlogin());
             pregunta.setNsituacionid(BigDecimal.valueOf(Long.parseLong("1")));
             service.saveOrUpdate(pregunta);
+            
+            String ruta0 = this.path + pregunta.getNpreguntaid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+            String texto = pregunta.getVasunto() + " \n " + pregunta.getVdetalle() + " \n " + pregunta.getVrespuesta();
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
 
             Asignacion asignacion = new Asignacion();
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
@@ -992,14 +996,8 @@ public class PreguntaMB implements Serializable {
             }else{
                 pagina="/index?faces-redirect=true";
             }
-            
-            
-            
-            
-
             listaPregunta = service.getPreguntas();
             RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -1491,6 +1489,10 @@ public class PreguntaMB implements Serializable {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf(Long.parseLong("5")));
             service.saveOrUpdate(this.getSelectedPregunta());
+            
+            String ruta0 = this.path + this.getSelectedPregunta().getNpreguntaid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
 
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
@@ -1798,6 +1800,10 @@ public class PreguntaMB implements Serializable {
             respuestahist.setVusuariocreacion(user_savepreg.getVlogin());
             respuestahist.setDfechacreacion(new Date());
             serviceresp.saveOrUpdate(respuestahist);
+            
+            String ruta0 = this.path + this.getSelectedPregunta().getNpreguntaid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
 
             listaTargetVinculos = new ArrayList<Consulta>();
 

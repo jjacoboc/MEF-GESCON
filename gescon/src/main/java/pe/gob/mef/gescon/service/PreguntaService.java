@@ -20,6 +20,7 @@ public interface PreguntaService {
     
     BigDecimal getNextPK() throws Exception;
     List<Pregunta> getPreguntas() throws Exception;
+    List<Pregunta> getPreguntasActivedPosted() throws Exception;
     Pregunta getPreguntaById(BigDecimal id) throws Exception;
     void saveOrUpdate(Pregunta pregunta) throws Exception;
     String traerNomCategoria(BigDecimal categoriaid) throws Exception;

@@ -20,6 +20,7 @@ public interface UserService {
     List<User> getUsers() throws Exception;
     List<User> getUsersInternal() throws Exception;
     List<User> getUsersExternal() throws Exception;
+    User getUserByDNI(String dni) throws Exception;
     User getUserByLogin(String login) throws Exception;
     User getMtuserById(BigDecimal nusuarioid) throws Exception;
 }

@@ -17,8 +17,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 import org.primefaces.component.commandbutton.CommandButton;
 import pe.gob.mef.gescon.common.Constante;
-import pe.gob.mef.gescon.common.GeneralBean;
-import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.lucene.Indexador;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConsultaService;

@@ -23,6 +23,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
 import javax.imageio.ImageIO;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
@@ -38,6 +39,7 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.UserService;
@@ -58,10 +60,10 @@ public class CategoriaMB implements Serializable {
     private static final Log log = LogFactory.getLog(CategoriaMB.class);
     private String nombre;
     private String descripcion;
-    private List<User> listaModerador;
-    private List<User> listaEspecialista;
-    private User moderador;
-    private User especialista;
+    private List<SelectItem> listaModerador;
+    private List<SelectItem> listaEspecialista;
+    private BigDecimal moderador;
+    private BigDecimal especialista;
     private BigDecimal activo;
     private boolean flagbl;
     private boolean flagpr;
@@ -111,35 +113,35 @@ public class CategoriaMB implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public List<User> getListaModerador() {
+    public List<SelectItem> getListaModerador() {
         return listaModerador;
     }
 
-    public void setListaModerador(List<User> listaModerador) {
+    public void setListaModerador(List<SelectItem> listaModerador) {
         this.listaModerador = listaModerador;
     }
 
-    public List<User> getListaEspecialista() {
+    public List<SelectItem> getListaEspecialista() {
         return listaEspecialista;
     }
 
-    public void setListaEspecialista(List<User> listaEspecialista) {
+    public void setListaEspecialista(List<SelectItem> listaEspecialista) {
         this.listaEspecialista = listaEspecialista;
     }
 
-    public User getModerador() {
+    public BigDecimal getModerador() {
         return moderador;
     }
 
-    public void setModerador(User moderador) {
+    public void setModerador(BigDecimal moderador) {
         this.moderador = moderador;
     }
 
-    public User getEspecialista() {
+    public BigDecimal getEspecialista() {
         return especialista;
     }
 
-    public void setEspecialista(User especialista) {
+    public void setEspecialista(BigDecimal especialista) {
         this.especialista = especialista;
     }
 
@@ -345,8 +347,8 @@ public class CategoriaMB implements Serializable {
             CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             createTree(service.getCategorias());
             UserService userService = (UserService) ServiceFinder.findBean("UserService");
-            this.setListaModerador(userService.getUsersInternal());
-            this.setListaEspecialista(userService.getUsersInternal());
+            this.setListaModerador(new Items(userService.getUsersInternal(), null, "nusuarioid","vnombreCompleto").getItems());
+            this.setListaEspecialista(new Items(userService.getUsersInternal(), null, "nusuarioid","vnombreCompleto").getItems());
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -519,8 +521,8 @@ public class CategoriaMB implements Serializable {
                 categoria.setNflagpr(this.isFlagpr() ? BigDecimal.ONE : BigDecimal.ZERO);
                 categoria.setNflagwiki(this.isFlagwiki() ? BigDecimal.ONE : BigDecimal.ZERO);
                 if(this.getSelectedCategoria().getNnivel().intValue() < (int)3) {
-                    categoria.setNespecialista(this.getEspecialista().getNusuarioid());
-                    categoria.setNmoderador(this.getModerador().getNusuarioid());
+                    categoria.setNespecialista(this.getEspecialista());
+                    categoria.setNmoderador(this.getModerador());
                 } else {
                     categoria.setNespecialista(this.getSelectedCategoria().getNespecialista());
                     categoria.setNmoderador(this.getSelectedCategoria().getNmoderador());
@@ -564,9 +566,8 @@ public class CategoriaMB implements Serializable {
             this.setFlagom(this.getSelectedCategoria().getNflagom().equals(BigDecimal.ONE));
             this.setFlagpr(this.getSelectedCategoria().getNflagpr().equals(BigDecimal.ONE));
             this.setFlagwiki(this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE));
-            UserService userService = (UserService) ServiceFinder.findBean("UserService");
-            this.setEspecialista(userService.getMtuserById(this.getSelectedCategoria().getNespecialista()));
-            this.setModerador(userService.getMtuserById(this.getSelectedCategoria().getNmoderador()));
+            this.setEspecialista(this.getSelectedCategoria().getNespecialista());
+            this.setModerador(this.getSelectedCategoria().getNmoderador());
             this.readImage(this.getSelectedCategoria());
         } catch (Exception e) {
             e.getMessage();
@@ -617,8 +618,8 @@ public class CategoriaMB implements Serializable {
                 this.getSelectedCategoria().setDfechamodificacion(new Date());
                 this.getSelectedCategoria().setVusuariomodificacion(user.getVlogin());
                 if(this.getSelectedCategoria().getNnivel().intValue() < (int)3) {
-                    this.getSelectedCategoria().setNespecialista(this.getEspecialista().getNusuarioid());
-                    this.getSelectedCategoria().setNmoderador(this.getModerador().getNusuarioid());
+                    this.getSelectedCategoria().setNespecialista(this.getEspecialista());
+                    this.getSelectedCategoria().setNmoderador(this.getModerador());
                 } else {
                     this.getSelectedCategoria().setNespecialista(this.getSelectedCategoria().getNespecialista());
                     this.getSelectedCategoria().setNmoderador(this.getSelectedCategoria().getNmoderador());
@@ -723,7 +724,7 @@ public class CategoriaMB implements Serializable {
         String password;
         String url;
         try {
-            if (categoria != null) {
+            if (categoria != null && StringUtils.isNotBlank(categoria.getVimagennombre())) {
                 ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
                 filepath = bundle.getString("filepath");
                 user = bundle.getString("user");

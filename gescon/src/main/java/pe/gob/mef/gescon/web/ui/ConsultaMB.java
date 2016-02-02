@@ -399,11 +399,14 @@ public class ConsultaMB implements Serializable {
             filter.put("fToDate", this.getFechaFin());
             filter.put("fType", this.getTypesFilter());
             if(StringUtils.isNotBlank(this.getSearchText())) {
-                filter.put("fText", this.getSearchText());
-                filter.put("fCodes", Indexador.search(this.getSearchText()));
+                HashMap map = Indexador.search(this.getSearchText());
+                filter.put("fCodesBL", (String) map.get("codesBL"));
+                filter.put("fCodesPR", (String) map.get("codesPR"));
+                filter.put("fCodesC", (String) map.get("codesC"));
             } else {
-                filter.remove("fText");
-                filter.remove("fCodes");
+                filter.remove("fCodesBL");
+                filter.remove("fCodesPR");
+                filter.remove("fCodesC");
             }
             filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
@@ -422,11 +425,14 @@ public class ConsultaMB implements Serializable {
             filter.put("fToDate", this.getFechaFin());
             filter.put("fType", this.getTypesFilter());
             if(StringUtils.isNotBlank(this.getSearchText())) {
-                filter.put("fText", this.getSearchText());
-                filter.put("fCodes", Indexador.search(this.getSearchText()));
+                HashMap map = Indexador.search(this.getSearchText());
+                filter.put("fCodesBL", (String) map.get("codesBL"));
+                filter.put("fCodesPR", (String) map.get("codesPR"));
+                filter.put("fCodesC", (String) map.get("codesC"));
             } else {
-                filter.remove("fText");
-                filter.remove("fCodes");
+                filter.remove("fCodesBL");
+                filter.remove("fCodesPR");
+                filter.remove("fCodesC");
             }
             filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
@@ -445,11 +451,14 @@ public class ConsultaMB implements Serializable {
             filter.put("fToDate", this.getFechaFin());
             filter.put("fType", this.getTypesFilter());
             if(StringUtils.isNotBlank(this.getSearchText())) {
-                filter.put("fText", this.getSearchText());
-                filter.put("fCodes", Indexador.search(this.getSearchText()));
+                HashMap map = Indexador.search(this.getSearchText());
+                filter.put("fCodesBL", (String) map.get("codesBL"));
+                filter.put("fCodesPR", (String) map.get("codesPR"));
+                filter.put("fCodesC", (String) map.get("codesC"));
             } else {
-                filter.remove("fText");
-                filter.remove("fCodes");
+                filter.remove("fCodesBL");
+                filter.remove("fCodesPR");
+                filter.remove("fCodesC");
             }
             filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
@@ -489,11 +498,14 @@ public class ConsultaMB implements Serializable {
             filter.put("fToDate", this.getFechaFin());
             filter.put("fType", this.getTypesFilter());
             if(StringUtils.isNotBlank(this.getSearchText())) {
-                filter.put("fText", this.getSearchText());
-                filter.put("fCodes", Indexador.search(this.getSearchText()));
+                HashMap map = Indexador.search(this.getSearchText());
+                filter.put("fCodesBL", (String) map.get("codesBL"));
+                filter.put("fCodesPR", (String) map.get("codesPR"));
+                filter.put("fCodesC", (String) map.get("codesC"));
             } else {
-                filter.remove("fText");
-                filter.remove("fCodes");
+                filter.remove("fCodesBL");
+                filter.remove("fCodesPR");
+                filter.remove("fCodesC");
             }
             filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");

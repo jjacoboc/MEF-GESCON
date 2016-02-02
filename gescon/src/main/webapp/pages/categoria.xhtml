@@ -32,7 +32,8 @@
                                             selectionMode="single" selection="#{categoriaMB.selectedNode}" style="width: 100%;border: 0;">
                                         <p:ajax event="select" listener="#{categoriaMB.onNodeSelect}" update=":f:ctx" />
                                         <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
-                                            <h:outputText value="#{node.vnombre}"/>
+                                            <h:outputText value="#{node.vnombre}" rendered="#{node.nestado eq 1}"/>
+                                            <h:outputText value="#{node.vnombre}" style="text-decoration: line-through;" rendered="#{node.nestado eq 0}"/>
                                         </p:treeNode>
                                     </p:tree>
                                     <p:contextMenu id="ctx" for="cats" style="font-size: 10px; width: 200px;">
@@ -62,26 +63,20 @@
 
                                     <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
                                     <h:outputText value="Moderador:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
-                                    <p:selectOneMenu value="#{categoriaMB.moderador}" converter="converterUsuario" panelStyle="width:180px" 
-                                                     effect="fade" var="t" style="width:160px" filter="true" filterMatchMode="startsWith"
+                                    <p:selectOneMenu value="#{categoriaMB.moderador}" panelStyle="width:180px" effect="fade" 
+                                                     var="t" style="width:160px" filter="true" filterMatchMode="startsWith"
                                                      rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
-                                        <f:selectItems value="#{categoriaMB.listaModerador}" var="u" itemLabel="#{u.vnombres} #{u.vapellidos}" itemValue="#{u}" />
-
-                                        <p:column>
-                                            <h:outputText value="#{t.vnombres} #{t.vapellidos}" />
-                                        </p:column>
+                                        <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                        <f:selectItems value="#{categoriaMB.listaModerador}" />
                                     </p:selectOneMenu>
 
                                     <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
                                     <h:outputText value="Especialista:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
-                                    <p:selectOneMenu value="#{categoriaMB.especialista}" converter="converterUsuario" panelStyle="width:180px" 
-                                                     effect="fade" var="t" style="width:160px" filter="true" filterMatchMode="startsWith"
+                                    <p:selectOneMenu value="#{categoriaMB.especialista}" panelStyle="width:180px" effect="fade" 
+                                                     var="t" style="width:160px" filter="true" filterMatchMode="startsWith"
                                                      rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
-                                        <f:selectItems value="#{categoriaMB.listaEspecialista}" var="u" itemLabel="#{u.vnombres} #{u.vapellidos}" itemValue="#{u}" />
-
-                                        <p:column>
-                                            <h:outputText value="#{t.vnombres} #{t.vapellidos}" />
-                                        </p:column>
+                                        <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                        <f:selectItems value="#{categoriaMB.listaEspecialista}"/>
                                     </p:selectOneMenu>
 
                                     <p:spacer/>

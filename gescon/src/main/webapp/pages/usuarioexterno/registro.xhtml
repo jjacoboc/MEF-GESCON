@@ -16,8 +16,19 @@
                             <p:panel header="#{msgs.us_lbl_pnlNew}" styleClass="TexAlLeft">
                                 <h:panelGrid columns="1" styleClass="Wid100">
                                     <h:outputText value="Accede a todos los servicios del portal con solo un nombre y contraseña" styleClass="Fs16 FontBold"/>
-                                    <p:fieldset legend="Datos del Usuario">
+                                    <p:fieldset legend="Información General">
                                         <h:panelGrid columns="3">
+                                            <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputLabel value="El Usuario Trabaja en el MEF? "/>
+                                            <p:selectOneRadio id="console9" value="#{userMB.trabajaMef}">
+                                                <f:selectItem itemLabel="SI" itemValue="1" />
+                                                <f:selectItem itemLabel="NO" itemValue="0" />
+                                            </p:selectOneRadio>
+                                            
+                                            <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputText value="DNI: "/>
+                                            <p:inputMask value="#{userMB.dni}" maxlength="8" mask="9?9999999" />
+                                            
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="Nombres: "/>
                                             <p:inputText size="50" value="#{userMB.nombres}"  maxlength="100" />
@@ -32,16 +43,12 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="Contraseña: " />
-                                            <p:password value="#{userMB.pass}" feedback="true" goodLabel="Bien" weakLabel="Débil" strongLabel="Fuerte"
+                                            <p:password value="#{userMB.clave}" feedback="true" goodLabel="Bien" weakLabel="Débil" strongLabel="Fuerte"
                                                         promptLabel="Por favor, ingrese una contraseña" size="25"  maxlength="25" redisplay="false" />
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="Confirmar Contraseña: " />
-                                            <p:password value="#{userMB.pass}" size="25"  maxlength="25"/>
-
-                                            <h:outputText value="#{msgs.icon_asterisk}"/>
-                                            <h:outputText value="DNI: "/>
-                                            <p:inputMask value="#{userMB.dni}" maxlength="8" mask="9?9999999" />
+                                            <p:password value="#{userMB.confirmaClave}" size="25"  maxlength="25"/>
                                             
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="Fecha de Nacimiento: "/>
@@ -54,6 +61,10 @@
                                                 <f:selectItem itemLabel="Masculino" itemValue="M" />
                                                 <f:selectItem itemLabel="Femenino" itemValue="F" />
                                             </p:selectOneMenu>
+                                            
+                                            <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputText value="Correo: "/>
+                                            <p:inputText size="50" value="#{userMB.correo}"  maxlength="100" />
                                         </h:panelGrid>
                                     </p:fieldset>
 
@@ -61,35 +72,25 @@
                                         <h:panelGrid columns="3">
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Departamento: "/>
-                                            <p:selectOneMenu id="console5" value="#{userMB.departamento}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
-                                                <f:selectItem itemLabel="Lima" itemValue="1" />
-                                                <f:selectItem itemLabel="La Libertad" itemValue="2" />
-                                                <f:selectItem itemLabel="Ancash" itemValue="3" />
-                                                <f:selectItem itemLabel="Arequipa" itemValue="4" />
-                                                <f:selectItem itemLabel="Ica" itemValue="5" />
-                                                <f:selectItem itemLabel="Tumbes" itemValue="6" />
+                                            <p:selectOneMenu id="dep" value="#{userMB.departamento}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <p:ajax event="change" listener="#{userMB.handleDepartamentoChangeValue}" update=":f:prov, :f:dist"/>
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{userMB.listaDepartamento}"/>
                                             </p:selectOneMenu>
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Provincia: "/>
-                                            <p:selectOneMenu id="console6" value="#{userMB.provincia}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
-                                                <f:selectItem itemLabel="Lima" itemValue="1" />
-                                                <f:selectItem itemLabel="Provincia 1" itemValue="2" />
-                                                <f:selectItem itemLabel="Provincia 2" itemValue="3" />
-                                                <f:selectItem itemLabel="Provincia 3" itemValue="4" />
-                                                <f:selectItem itemLabel="Provincia 4" itemValue="5" />
-                                                <f:selectItem itemLabel="Provincia 5" itemValue="6" />
+                                            <p:selectOneMenu id="prov" value="#{userMB.provincia}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <p:ajax event="change" listener="#{userMB.handleProvinciaChangeValue}" update=":f:dist"/>
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{userMB.listaProvincia}"/>
                                             </p:selectOneMenu>
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Distrito: "/>
-                                            <p:selectOneMenu id="console7" value="#{userMB.distrito}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
-                                                <f:selectItem itemLabel="Lima" itemValue="1" />
-                                                <f:selectItem itemLabel="Pueblo Libre" itemValue="2" />
-                                                <f:selectItem itemLabel="Lince" itemValue="3" />
-                                                <f:selectItem itemLabel="Magdalena" itemValue="4" />
-                                                <f:selectItem itemLabel="Jesus Maria" itemValue="5" />
-                                                <f:selectItem itemLabel="San Isidro" itemValue="6" />
+                                            <p:selectOneMenu id="dist" value="#{userMB.distrito}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{userMB.listaDistrito}"/>
                                             </p:selectOneMenu>
                                         </h:panelGrid>
                                     </p:fieldset>
@@ -98,21 +99,10 @@
                                         <h:panelGrid columns="3">
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Profesion: "/>
-                                            <p:selectOneMenu id="console8" value="#{userMB.profesion}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
-                                                <f:selectItem itemLabel="Profesion 1" itemValue="1" />
-                                                <f:selectItem itemLabel="Profesion 2" itemValue="2" />
-                                                <f:selectItem itemLabel="Profesion 3" itemValue="3" />
-                                                <f:selectItem itemLabel="Profesion 4" itemValue="4" />
-                                                <f:selectItem itemLabel="Profesion 5" itemValue="5" />
-                                                <f:selectItem itemLabel="Profesion 6" itemValue="6" />
+                                            <p:selectOneMenu value="#{userMB.profesion}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{listaSessionMB.listaProfesionActiva}"/>
                                             </p:selectOneMenu>
-
-                                            <h:outputText value="#{msgs.icon_asterisk}"/>
-                                            <h:outputLabel value="Trabaja en el Ministerio? "/>
-                                            <p:selectOneRadio id="console9" value="#{userMB.trabajaMef}">
-                                                <f:selectItem itemLabel="SI" itemValue="1" />
-                                                <f:selectItem itemLabel="NO" itemValue="0" />
-                                            </p:selectOneRadio>
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Entidad: "/>
@@ -182,7 +172,7 @@
                                         </h:panelGrid>
                                     </p:fieldset>
                                     
-                                    <p:commandButton actionListener="#{userMB.save}" value="Registrar" />
+                                    <p:commandButton actionListener="#{userMB.saveadm}" value="Registrar" />
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>

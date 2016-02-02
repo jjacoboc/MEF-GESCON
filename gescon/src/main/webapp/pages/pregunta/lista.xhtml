@@ -14,7 +14,8 @@
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
                             <p:panel header="Administración de Preguntas" styleClass="TexAlLeft">
                                 <h:panelGrid columns="1">
-                                    <p:commandButton  value="Nuevo" ajax="false" action="#{preguntaMB.toSave}"  styleClass="Fleft" icon="fa fa-plus white"  />
+                                    <p:commandButton value="Nuevo" ajax="false" action="#{preguntaMB.toSave}" styleClass="Fleft" icon="fa fa-plus white" 
+                                                     rendered="#{loginMB.politicas[msgs.REGISTRAR_PREGUNTAS]}"/>
                                     <p:dataTable id="tbl" value="#{preguntaMB.listaPregunta}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
                                         <p:column style="width: 120px;" sortBy="#{row.vasunto}" filterBy="#{row.vasunto}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
@@ -49,29 +50,31 @@
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{preguntaMB.toEdit}" styleClass="ui-link" title="actualizar Pregunta">
+                                            <p:commandLink ajax="false" action="#{preguntaMB.toEdit}" styleClass="ui-link" title="actualizar Pregunta"
+                                                           rendered="#{loginMB.politicas[msgs.EDITAR_PREGUNTAS]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
                                             <p:commandLink ajax="false" action="#{preguntaMB.toPost}" styleClass="ui-link" title="publicar Pregunta"
-                                                           rendered="#{row.nsituacionid eq 5 or row.nsituacionid eq 6}">
+                                                           rendered="#{loginMB.politicas[msgs.PUBLICAR_PREGUNTAS] and row.dfechapublicacion eq null}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{preguntaMB.toHistorial}" styleClass="ui-link" title="Historial de Respuestas">
+                                            <p:commandLink ajax="false" action="#{preguntaMB.toHistorial}" styleClass="ui-link" title="Historial de Respuestas"
+                                                           rendered="#{loginMB.politicas[msgs.HISTORIAL_RESPUESTA]}">
                                                 <h:outputText class="fa fa-history Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
                                             <p:commandLink actionListener="#{preguntaMB.setSelectedRow}" title="Activar Pregunta" styleClass="ui-link" oncomplete="PF('confirmActDlg').show();"
-                                                           rendered="#{row.nactivo eq 0}">
+                                                           rendered="#{loginMB.politicas[msgs.ACTIVAR_PREGUNTAS] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:commandLink actionListener="#{preguntaMB.setSelectedRow}" title="Desactivar Pregunta" styleClass="ui-link" oncomplete="PF('confirmDesDlg').show();"
-                                                           rendered="#{row.nactivo eq 1}">
+                                                           rendered="#{loginMB.politicas[msgs.DESACTIVAR_PREGUNTAS] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>

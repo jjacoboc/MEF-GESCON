@@ -88,7 +88,7 @@
                 </p:selectManyCheckbox>
             </p:fieldset>
             <p:fieldset>
-                <p:commandLink value="Formular Pregunta" ajax="false" action="/pages/pregunta/nuevo.xhtml" styleClass="ui-link" />
+                <p:commandLink value="Formular Pregunta" ajax="false" action="/pages/pregunta/nuevo.xhtml" styleClass="ui-link" rendered="#{loginMB.politicas[msgs.REGISTRAR_PREGUNTAS]}" />
             </p:fieldset>
         </h:panelGrid>
     </h:form>

@@ -339,35 +339,16 @@
                             <h:outputLabel value="Nombre de Usuario: "/>
                             <p:inputText size="50" value="#{userMB.login}"  maxlength="25" />
 
-                            <h:outputLabel for="pwd1" value="Contraseña: " />
-                            <p:password id="pwd1" value="#{userMB.pass}" match="pwd2" label="Password 1"  required="true" />
+                            <h:outputLabel value="Contraseña: " />
+                            <p:password value="#{userMB.clave}" feedback="true" goodLabel="Bien" weakLabel="Débil" strongLabel="Fuerte"
+                                        promptLabel="Por favor, ingrese una contraseña" size="25" maxlength="25" redisplay="false" />
 
-                            <h:outputLabel for="pwd2" value="Confirmar contraseña: " />
-                            <p:password id="pwd2" value="#{userMB.pass}" label="Password 2" required="true"  />
+                            <h:outputLabel value="Confirmar Contraseña: " />
+                            <p:password value="#{userMB.confirmaClave}" size="25" maxlength="25"/>
 
                             <h:outputLabel value="Fecha de nacimiento: "/>
-                            <h:panelGrid columns="3">
-                                <p:selectOneMenu id="console1" value="#{userMB.dia}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:60px">
-                                    <f:selectItems value="#{userMB.dias}" />
-                                </p:selectOneMenu>
-                                <p:selectOneMenu id="console2" value="#{userMB.mes}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
-                                    <f:selectItem itemLabel="Enero" itemValue="1" />
-                                    <f:selectItem itemLabel="Febrero" itemValue="2" />
-                                    <f:selectItem itemLabel="Marzo" itemValue="3" />
-                                    <f:selectItem itemLabel="Abril" itemValue="4" />
-                                    <f:selectItem itemLabel="Mayo" itemValue="5" />
-                                    <f:selectItem itemLabel="Junio" itemValue="6" />
-                                    <f:selectItem itemLabel="Julio" itemValue="7" />
-                                    <f:selectItem itemLabel="Agosto" itemValue="8" />
-                                    <f:selectItem itemLabel="Setiembre" itemValue="9" />
-                                    <f:selectItem itemLabel="Octubre" itemValue="10" />
-                                    <f:selectItem itemLabel="Noviembre" itemValue="11" />
-                                    <f:selectItem itemLabel="Diciembre" itemValue="12" />
-                                </p:selectOneMenu>
-                                <p:selectOneMenu id="console3" value="#{userMB.año}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:80px">
-                                    <f:selectItems value="#{userMB.años}" />
-                                </p:selectOneMenu>
-                            </h:panelGrid>
+                            <p:calendar locale="es" value="#{userMB.fechaNacimiento}" size="12" pattern="dd/MM/yyyy" 
+                                        showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" styleClass="Fs14"/>
 
                             <h:outputLabel value="Sexo: "/>
                             <p:selectOneMenu id="console4" value="#{userMB.sexo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
