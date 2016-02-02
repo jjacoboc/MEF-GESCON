@@ -1,17 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="52f79583-213c-4478-b3a3-97f98e558d74">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="52f79583-213c-4478-b3a3-97f98e558d74">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="34"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="71"/>
 	<subDataset name="dataset1" uuid="7d246a72-18fc-4844-bf13-1a81fe7d5e20"/>
 	<parameter name="P_IMAGEN" class="java.lang.String"/>
 	<field name="NOMBRE" class="java.lang.String"/>
 	<field name="LOGIN" class="java.lang.String"/>
 	<field name="USUARIO_CREACION" class="java.lang.String"/>
-	<field name="FECHA_CREACION" class="java.lang.String"/>
+	<field name="FECHA_CREACION" class="java.util.Date"/>
 	<field name="USUARIO_MODIFICACION" class="java.lang.String"/>
-	<field name="FECHA_MODIFICACION" class="java.lang.String"/>
+	<field name="FECHA_MODIFICACION" class="java.util.Date"/>
 	<field name="ESTADO" class="java.lang.String"/>
+	<group name="MENSAJE">
+		<groupExpression><![CDATA[$F{NOMBRE}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<printWhenExpression><![CDATA[new Boolean($F{LOGIN}==null)]]></printWhenExpression>
+				<staticText>
+					<reportElement x="16" y="0" width="247" height="14" uuid="755400e2-6606-4d5b-8b32-34b4e99462d6"/>
+					<textElement>
+						<font isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[No se encontraton registros]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -96,7 +111,7 @@
 				<text><![CDATA[Nombre]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="106" y="11" width="29" height="14" uuid="4a1309d0-0798-4a78-8741-fd64534969fc"/>
+				<reportElement x="116" y="11" width="29" height="14" uuid="4a1309d0-0798-4a78-8741-fd64534969fc"/>
 				<textElement>
 					<font isBold="true" isItalic="false" isUnderline="true"/>
 				</textElement>
@@ -117,14 +132,14 @@
 				<text><![CDATA[Modificación]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="324" y="4" width="37" height="14" uuid="6d694520-7bde-4169-ae0c-00864ab4f34a"/>
+				<reportElement x="332" y="4" width="37" height="14" uuid="6d694520-7bde-4169-ae0c-00864ab4f34a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="319" y="18" width="46" height="14" uuid="4b1583a8-b396-49ea-b76a-c388bb00529b"/>
+				<reportElement x="327" y="18" width="46" height="14" uuid="4b1583a8-b396-49ea-b76a-c388bb00529b"/>
 				<textElement>
 					<font isBold="true" isItalic="false" isUnderline="true"/>
 				</textElement>
@@ -145,21 +160,21 @@
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="243" y="4" width="42" height="14" uuid="7125da2f-2081-420f-803e-2cd22f9ccfb3"/>
+				<reportElement x="259" y="4" width="42" height="14" uuid="7125da2f-2081-420f-803e-2cd22f9ccfb3"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Usuario]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="241" y="19" width="46" height="14" uuid="48aa722e-960d-40e1-bc09-a97553a66171"/>
+				<reportElement x="257" y="19" width="46" height="14" uuid="48aa722e-960d-40e1-bc09-a97553a66171"/>
 				<textElement>
 					<font isBold="true" isItalic="false" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Creación]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="169" y="11" width="43" height="15" uuid="4996be7d-7938-4e71-a92f-f3344680685c"/>
+				<reportElement x="186" y="11" width="43" height="15" uuid="4996be7d-7938-4e71-a92f-f3344680685c"/>
 				<textElement>
 					<font isBold="true" isItalic="false" isUnderline="true"/>
 				</textElement>
@@ -168,51 +183,51 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="27" splitType="Stretch">
-			<textField>
-				<reportElement x="16" y="0" width="72" height="20" uuid="b2cefa1a-dc23-4bab-8919-4dbf574b0bd8"/>
-				<textElement>
+		<band height="33" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="16" y="0" width="72" height="30" uuid="b2cefa1a-dc23-4bab-8919-4dbf574b0bd8"/>
+				<textElement textAlignment="Justified">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="106" y="0" width="30" height="20" uuid="9553b9ed-9abd-41e7-9030-77ff09877970"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="116" y="0" width="41" height="20" uuid="9553b9ed-9abd-41e7-9030-77ff09877970"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{LOGIN}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="247" y="0" width="30" height="20" uuid="6a5be459-41bc-4605-ae3f-032ef944f4ca"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="266" y="0" width="30" height="20" uuid="6a5be459-41bc-4605-ae3f-032ef944f4ca"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{USUARIO_CREACION}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="306" y="0" width="71" height="20" uuid="47ecf93a-0cfc-42f7-be59-75da70f75eca"/>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="330" y="0" width="38" height="20" uuid="47ecf93a-0cfc-42f7-be59-75da70f75eca"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{FECHA_CREACION}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="405" y="0" width="42" height="20" uuid="0c3d927c-2b28-475b-b28c-5b5ded433703"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{USUARIO_MODIFICACION}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="469" y="0" width="71" height="20" uuid="dac7d937-9bdd-4510-ae10-e5c9ac424ec3"/>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="487" y="0" width="38" height="20" uuid="dac7d937-9bdd-4510-ae10-e5c9ac424ec3"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{FECHA_MODIFICACION}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="162" y="0" width="57" height="20" uuid="9b364e0a-afaa-44de-acc5-adbb678bbca9"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="184" y="0" width="57" height="20" uuid="9b364e0a-afaa-44de-acc5-adbb678bbca9"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>

@@ -92,6 +92,14 @@ public class ReporteServiceImpl implements ReporteService{
         List<HashMap<String,Object>> result = reporteDao.listarCalificaciones(parametros);
         for (HashMap<String,Object> r : result) {
             HashMap<String,Object> map = new HashMap<String,Object>();
+            map.put("NOMBRE", r.get("NOMBRE"));
+            map.put("CATEGORIA", r.get("CATEGORIA"));
+            map.put("TIPOCONOCIMIENTO", r.get("TIPOCONOCIMIENTO"));
+            map.put("USUARIO_CREACION", r.get("USUARIO_CREACION"));
+            map.put("FECHA_CREACION", r.get("FECHA_CREACION"));
+            map.put("USUARIO_MODIFICACION", r.get("USUARIO_MODIFICACION"));
+            map.put("FECHA_MODIFICACION", r.get("FECHA_MODIFICACION"));
+            map.put("ESTADO", r.get("ESTADO"));
             map.put("CALIFICACION", r.get("CALIFICACION"));
             lista.add(map);
         }
