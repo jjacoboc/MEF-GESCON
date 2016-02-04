@@ -72,6 +72,9 @@
 
             <p:submenu label="Administración" icon="fa fa-wrench" rendered="#{loginMB.politicas[msgs.MENU_ADMINISTRACION]}">
                 <p:submenu label="Configuración" icon="fa fa-gear" rendered="#{loginMB.politicas[msgs.MENU_CONFIGURACION]}">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Usuarios" icon="fa fa-users" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                        <f:param name="page" value="/pages/usuarioexterno/lista"/>
+                    </p:menuitem>
                     <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Perfiles de Usuario" icon="fa fa-newspaper-o" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                         <f:param name="page" value="/pages/perfil"/>
                     </p:menuitem>

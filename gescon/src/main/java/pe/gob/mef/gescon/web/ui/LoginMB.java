@@ -292,7 +292,7 @@ public class LoginMB implements Serializable {
                         ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
                         Parametro parametro = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.DIAS_CADUCIDAD_CLAVE)));
                         long dias = DateUtils.getDifferenceDays(pas.getDfechacreacion(), new Date());
-                        if(dias > parametro.getNvalor().longValue()) {
+                        if(dias > Long.parseLong(parametro.getVvalor())) {
                             this.setClaveCaducada(true);
                             this.setPass(StringUtils.EMPTY);
                             this.setNewpass(StringUtils.EMPTY);

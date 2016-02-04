@@ -12,6 +12,10 @@ and open the template in the editor.
     background: #F2DEDE !important;
 }
 
+.ui-datalist {
+    border: none;
+}
+
 .ui-datalist .ui-datalist-content {
     border: none;
     margin: 0%

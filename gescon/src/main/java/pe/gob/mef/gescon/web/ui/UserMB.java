@@ -415,20 +415,20 @@ public class UserMB implements Serializable {
     public void setSelectedUser(User selectedUser) {
         this.selectedUser = selectedUser;
     }
-    
+
     @PostConstruct
     public void init() {
         try {
             UserService userService = (UserService) ServiceFinder.findBean("UserService");
             this.setListaUser(userService.getUsers());
             UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
-            listaDepartamento =  new Items(ubigeoService.getDepartamentos(), null, "vcoddep","vdescdep").getItems();
+            listaDepartamento = new Items(ubigeoService.getDepartamentos(), null, "vcoddep", "vdescdep").getItems();
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
     }
-    
+
     public void handleDepartamentoChangeValue(AjaxBehaviorEvent event) {
         try {
             if (event != null) {
@@ -436,7 +436,7 @@ public class UserMB implements Serializable {
                 this.setDepartamento(coddep);
                 if (StringUtils.isNotBlank(coddep)) {
                     UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
-                    listaProvincia =  new Items(ubigeoService.getProvinciasPorDepartamento(coddep), null, "vcodprov","vdescprov").getItems();
+                    listaProvincia = new Items(ubigeoService.getProvinciasPorDepartamento(coddep), null, "vcodprov", "vdescprov").getItems();
                 } else {
                     this.setListaProvincia(new ArrayList());
                     this.setListaDistrito(new ArrayList());
@@ -449,7 +449,7 @@ public class UserMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void handleProvinciaChangeValue(AjaxBehaviorEvent event) {
         try {
             if (event != null) {
@@ -457,7 +457,7 @@ public class UserMB implements Serializable {
                 this.setProvincia(codprov);
                 if (StringUtils.isNotBlank(codprov)) {
                     UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
-                    listaDistrito =  new Items(ubigeoService.getDistritosPorProvincia(this.getDepartamento(), codprov), null, "vcoddist","vdescdist").getItems();
+                    listaDistrito = new Items(ubigeoService.getDistritosPorProvincia(this.getDepartamento(), codprov), null, "vcoddist", "vdescdist").getItems();
                 } else {
                     this.setListaDistrito(new ArrayList());
                     this.setDistrito(StringUtils.EMPTY);
@@ -468,7 +468,7 @@ public class UserMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void setSelectedRow(ActionEvent event) {
         try {
             if (event != null) {
@@ -509,7 +509,7 @@ public class UserMB implements Serializable {
             FacesContext.getCurrentInstance().renderResponse();
         }
     }
-    
+
     public void toSave(ActionEvent event) {
         try {
             this.cleanAttributes();
@@ -519,7 +519,17 @@ public class UserMB implements Serializable {
         }
     }
 
-    public void save(ActionEvent event){
+    public String toSave() {
+        try {
+            this.cleanAttributes();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return "/pages/usuarioexterno/registro?faces-redirect=true";
+    }
+
+    public void save(ActionEvent event) {
         try {
             if (StringUtils.isBlank(this.getDni())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el DNI del usuario a registrar.");
@@ -578,22 +588,22 @@ public class UserMB implements Serializable {
             }
             UserService service = (UserService) ServiceFinder.findBean("UserService");
             User user = service.getUserByDNI(this.getDni());
-            if(user != null){
+            if (user != null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "El DNI ingresado ya se encuentra registrado.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
             user = service.getUserByLogin(this.getLogin());
-            if(user != null){
+            if (user != null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "El nombre de usuario ingresado ya se encuentra registrado.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
             user = new User();
             user.setNusuarioid(service.getNextPK());
-            user.setVnombres(this.getNombres());
-            user.setVapellidos(this.getApellidos());
-            user.setVlogin(this.getLogin());
+            user.setVnombres(StringUtils.capitalize(this.getNombres()));
+            user.setVapellidos(StringUtils.capitalize(this.getApellidos()));
+            user.setVlogin(StringUtils.lowerCase(this.getLogin()));
             user.setDfechanacimiento(this.getFechaNacimiento());
             user.setVsexo(this.getSexo());
             user.setVdni(this.getDni());
@@ -609,6 +619,7 @@ public class UserMB implements Serializable {
             user.setVsector(this.getSector());
             user.setVgobierno(this.getGobierno());
             user.setNestado(BigDecimal.ONE);
+            user.setNactivo(BigDecimal.ONE);
             user.setNuserinterno(BigDecimal.ZERO);
             user.setDfechacreacion(new Date());
             user.setVusuariocreacion(this.getLogin());
@@ -635,6 +646,11 @@ public class UserMB implements Serializable {
     public void saveadm(ActionEvent event) {
 
         try {
+            if (StringUtils.isBlank(this.getTrabajaMef())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Indique si el usuario a registra labora en el MEF.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
             if (StringUtils.isBlank(this.getDni())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el DNI del usuario a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -692,13 +708,13 @@ public class UserMB implements Serializable {
             }
             UserService userService = (UserService) ServiceFinder.findBean("UserService");
             User user = userService.getUserByDNI(this.getDni());
-            if(user != null){
+            if (user != null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "El DNI ingresado ya se encuentra registrado.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
             user = userService.getUserByLogin(this.getLogin());
-            if(user != null){
+            if (user != null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "El nombre de usuario ingresado ya se encuentra registrado.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -707,9 +723,9 @@ public class UserMB implements Serializable {
             User usuario = loginMB.getUser();
             user = new User();
             user.setNusuarioid(userService.getNextPK());
-            user.setVnombres(this.getNombres());
-            user.setVapellidos(this.getApellidos());
-            user.setVlogin(this.getLogin());
+            user.setVnombres(StringUtils.capitalize(this.getNombres()));
+            user.setVapellidos(StringUtils.capitalize(this.getApellidos()));
+            user.setVlogin(StringUtils.lowerCase(this.getLogin()));
             user.setDfechanacimiento(this.getFechaNacimiento());
             user.setVsexo(this.getSexo());
             user.setVdni(this.getDni());
@@ -725,6 +741,8 @@ public class UserMB implements Serializable {
             user.setVsector(this.getSector());
             user.setVgobierno(this.getGobierno());
             user.setNestado(BigDecimal.ONE);
+            user.setNactivo(BigDecimal.ONE);
+            user.setNuserinterno(BigDecimal.valueOf(Long.parseLong(this.getTrabajaMef())));
             user.setDfechacreacion(new Date());
             user.setVusuariocreacion(usuario.getVlogin());
             userService.saveOrUpdate(user);
@@ -739,7 +757,7 @@ public class UserMB implements Serializable {
             pass.setDfechacreacion(new Date());
             pass.setVusuariocreacion(usuario.getVlogin());
             passservice.saveOrUpdate(pass);
-            
+
             this.setListaUser(userService.getUsers());
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/usuarioexterno/lista.xhtml");
         } catch (Exception e) {
@@ -748,28 +766,34 @@ public class UserMB implements Serializable {
         }
     }
 
-    public void toUpdate(ActionEvent event) {
+    public String toUpdate() {
         try {
-            if (event != null) {
-//                if(this.getSelectedMaestro() == null) {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Seleccione el maestro que desea editar.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                }
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            if (!CollectionUtils.isEmpty(this.getFilteredListaUser())) {
+                this.setSelectedUser(this.getFilteredListaUser().get(index));
+            } else {
+                this.setSelectedUser(this.getListaUser().get(index));
             }
+            UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
+            listaProvincia = new Items(ubigeoService.getProvinciasPorDepartamento(this.getSelectedUser().getVdpto()), null, "vcodprov", "vdescprov").getItems();
+            listaDistrito = new Items(ubigeoService.getDistritosPorProvincia(this.getSelectedUser().getVdpto(), this.getSelectedUser().getVprov()), null, "vcoddist", "vdescdist").getItems();
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
+        return "/pages/usuarioexterno/editar?faces-redirect=true";
     }
-    
+
     public void activar(ActionEvent event) {
         try {
-            if(event != null) {
-                if(this.getSelectedUser() != null) {
+            if (event != null) {
+                if (this.getSelectedUser() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     UserService service = (UserService) ServiceFinder.findBean("UserService");
                     this.getSelectedUser().setNestado(BigDecimal.ONE);
-                    //this.getSelectedUser().setd(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedUser().setDfechamodificacion(new Date());
+                    this.getSelectedUser().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedUser());
                     this.setListaUser(service.getUsers());
                 } else {
@@ -782,19 +806,21 @@ public class UserMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void desactivar(ActionEvent event) {
         try {
-            if(event != null) {
-                if(this.getSelectedUser() != null) {
+            if (event != null) {
+                if (this.getSelectedUser() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     UserService service = (UserService) ServiceFinder.findBean("UserService");
                     this.getSelectedUser().setNestado(BigDecimal.ZERO);
-                    //this.getSelectedParametro().setDfechmod(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedUser().setDfechamodificacion(new Date());
+                    this.getSelectedUser().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedUser());
                     this.setListaUser(service.getUsers());
                 } else {
-                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar el parametro a desactivar.");
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar el usuario a desactivar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                 }
             }
@@ -803,51 +829,71 @@ public class UserMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void update(ActionEvent event) {
         try {
-            if(event != null) {
-                //if(StringUtils.isBlank(this.getSelectedParametro().getVnombre())) {
-                //    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Nombre requerido. Ingrese el nombre del parametro.");
-                //    FacesContext.getCurrentInstance().addMessage(null, message);
-                //    return;
-                //}
-                //if(StringUtils.isBlank(this.getSelectedParametro().getVvalor())) {
-                //    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Nombre requerido. Ingrese el valor del parametro.");
-                //    FacesContext.getCurrentInstance().addMessage(null, message);
-                //    return;
-                //}
-                //if(StringUtils.isBlank(this.getSelectedParametro().getVdescripcion())) {
-                //    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Descripción requerida. Ingrese la descripción del parametro.");
-                //    FacesContext.getCurrentInstance().addMessage(null, message);
-                //   return;
-                //}
-                this.getSelectedUser().setVnombres(this.getSelectedUser().getVnombres());
-                this.getSelectedUser().setVapellidos(this.getSelectedUser().getVapellidos());
-                this.getSelectedUser().setVlogin(this.getSelectedUser().getVlogin());
-                this.getSelectedUser().setVdpto(this.getSelectedUser().getVdpto());
-                this.getSelectedUser().setVprov(this.getSelectedUser().getVprov());
-                this.getSelectedUser().setVdist(this.getSelectedUser().getVdist());
-                this.getSelectedUser().setVdni(this.getSelectedUser().getVdni());
-                this.getSelectedUser().setVsexo(this.getSelectedUser().getVsexo());
-                this.getSelectedUser().setVentidad(this.getSelectedUser().getVentidad());
-                this.getSelectedUser().setVpliego(this.getSelectedUser().getVpliego());
-                this.getSelectedUser().setVcargo(this.getSelectedUser().getVcargo());
-                this.getSelectedUser().setVarea(this.getSelectedUser().getVarea());
-                this.getSelectedUser().setVsector(this.getSelectedUser().getVsector());
-                this.getSelectedUser().setVgobierno(this.getSelectedUser().getVgobierno());
-                //this.getSelectedMestro().setIdUsuaModi(user.getUsuario());
-                //this.getSelectedParametro().setDfechmod(new Date());
-                UserService service = (UserService) ServiceFinder.findBean("UserService");
-                service.saveOrUpdate(this.getSelectedUser());
-                this.setListaUser(service.getUsers());
-                RequestContext.getCurrentInstance().execute("PF('editDialog').hide();");
-                this.cleanAttributes();
+            if (StringUtils.isBlank(this.getNombres())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el nombre del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
             }
+            if (StringUtils.isBlank(this.getApellidos())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el apellido del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getFechaNacimiento() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la fecha de nacimiento del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getCorreo())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el correo electrónico del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getDepartamento())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el departamento del lugar de residencia.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getProvincia())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la provincia del lugar de residencia.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getDistrito())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el distrito del lugar de residencia.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            this.getSelectedUser().setVnombres(StringUtils.capitalize(this.getSelectedUser().getVnombres()));
+            this.getSelectedUser().setVapellidos(StringUtils.capitalize(this.getSelectedUser().getVapellidos()));
+            UserService service = (UserService) ServiceFinder.findBean("UserService");
+            service.saveOrUpdate(this.getSelectedUser());
+            this.setListaUser(service.getUsers());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/usuarioexterno/lista.xhtml");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
     }
 
+    public String toView() {
+        try {
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            if (!CollectionUtils.isEmpty(this.getFilteredListaUser())) {
+                this.setSelectedUser(this.getFilteredListaUser().get(index));
+            } else {
+                this.setSelectedUser(this.getListaUser().get(index));
+            }
+            UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
+            listaProvincia = new Items(ubigeoService.getProvinciasPorDepartamento(this.getSelectedUser().getVdpto()), null, "vcodprov", "vdescprov").getItems();
+            listaDistrito = new Items(ubigeoService.getDistritosPorProvincia(this.getSelectedUser().getVdpto(), this.getSelectedUser().getVprov()), null, "vcoddist", "vdescdist").getItems();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return "/pages/usuarioexterno/ver?faces-redirect=true";
+    }
 }

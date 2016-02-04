@@ -13,7 +13,7 @@ public class Mtparametro implements java.io.Serializable {
 
     private BigDecimal nparametroid;
     private String vnombre;
-    private BigDecimal nvalor;
+    private String vvalor;
     private String vdescripcion;
     private String vusuariocreacion;
     private String vusuariomodificacion;
@@ -29,10 +29,10 @@ public class Mtparametro implements java.io.Serializable {
         this.nparametroid = nparametroid;
     }
 
-    public Mtparametro(BigDecimal nparametroid, String vnombre, BigDecimal nvalor, String vdescripcion, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nactivo, Set mtalertas) {
+    public Mtparametro(BigDecimal nparametroid, String vnombre, String vvalor, String vdescripcion, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nactivo, Set mtalertas) {
         this.nparametroid = nparametroid;
         this.vnombre = vnombre;
-        this.nvalor = nvalor;
+        this.vvalor = vvalor;
         this.vdescripcion = vdescripcion;
         this.vusuariocreacion = vusuariocreacion;
         this.vusuariomodificacion = vusuariomodificacion;
@@ -58,12 +58,12 @@ public class Mtparametro implements java.io.Serializable {
         this.vnombre = vnombre;
     }
 
-    public BigDecimal getNvalor() {
-        return this.nvalor;
+    public String getVvalor() {
+        return this.vvalor;
     }
 
-    public void setNvalor(BigDecimal nvalor) {
-        this.nvalor = nvalor;
+    public void setVvalor(String vvalor) {
+        this.vvalor = vvalor;
     }
 
     public String getVdescripcion() {

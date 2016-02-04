@@ -42,7 +42,7 @@ public class ParametroMB implements Serializable{
     private static final Log log = LogFactory.getLog(ParametroMB.class);
     private BigDecimal id;
     private String nombre;
-    private BigDecimal valor;
+    private String valor;
     private String descripcion;
     private BigDecimal activo;
     private List<Parametro> listaParametro;
@@ -86,14 +86,14 @@ public class ParametroMB implements Serializable{
     /**
      * @return the valor
      */
-    public BigDecimal getValor() {
+    public String getValor() {
         return valor;
     }
 
     /**
      * @param valor the valor to set
      */
-    public void setValor(BigDecimal valor) {
+    public void setValor(String valor) {
         this.valor = valor;
     }
     
@@ -178,7 +178,7 @@ public class ParametroMB implements Serializable{
         this.setId(BigDecimal.ZERO);
         this.setDescripcion(StringUtils.EMPTY);
         this.setNombre(StringUtils.EMPTY);
-        this.setValor(null);
+        this.setValor(StringUtils.EMPTY);
         this.setActivo(BigDecimal.ONE);
         this.setSelectedParametro(null);
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
@@ -221,7 +221,7 @@ public class ParametroMB implements Serializable{
             }
             Parametro parametro = new Parametro();
             parametro.setVnombre(this.getNombre());
-            parametro.setNvalor(this.getValor());
+            parametro.setVvalor(this.getValor());
             parametro.setVdescripcion(this.getDescripcion());
             if (!errorValidation(parametro)) {
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -229,7 +229,7 @@ public class ParametroMB implements Serializable{
                 ParametroService service = (ParametroService) ServiceFinder.findBean("ParametroService");
                 parametro.setNparametroid(service.getNextPK());
                 parametro.setVnombre(StringUtils.upperCase(this.getNombre().trim()));
-                parametro.setNvalor(this.getValor());
+                parametro.setVvalor(this.getValor());
                 parametro.setVdescripcion(StringUtils.capitalize(this.getDescripcion().trim()));
                 parametro.setNactivo(BigDecimal.ONE);
                 parametro.setDfechacreacion(new Date());
@@ -264,7 +264,7 @@ public class ParametroMB implements Serializable{
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if (this.getSelectedParametro().getNvalor()== null) {
+                if (StringUtils.isBlank(this.getSelectedParametro().getVvalor())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Valor requerido. Ingrese el valor del parametro.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
@@ -277,7 +277,7 @@ public class ParametroMB implements Serializable{
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user = loginMB.getUser();
                 this.getSelectedParametro().setVnombre(StringUtils.upperCase(this.getSelectedParametro().getVnombre().trim()));
-                this.getSelectedParametro().setNvalor(this.getSelectedParametro().getNvalor());
+                this.getSelectedParametro().setVvalor(this.getSelectedParametro().getVvalor());
                 this.getSelectedParametro().setVdescripcion(StringUtils.capitalize(this.getSelectedParametro().getVdescripcion().trim()));
                 this.getSelectedParametro().setVusuariomodificacion(user.getVlogin());
                 this.getSelectedParametro().setDfechamodificacion(new Date());
@@ -343,19 +343,19 @@ public class ParametroMB implements Serializable{
         FacesMessage message;
         boolean error = false;
         try {
-            if (parametro.getVnombre() == null || parametro.getVnombre().isEmpty()) {
+            if (StringUtils.isBlank(parametro.getVnombre())) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Nombre requerido. Ingrese el nombre del parametro.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;
                 return error;
             } 
-            else if (parametro.getNvalor()== null) {
+            else if (StringUtils.isBlank(parametro.getVvalor())) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Valor requerido. Ingrese el valor del parametro.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;
                 return error;
             }
-            else if (parametro.getVdescripcion()== null || parametro.getVdescripcion().isEmpty()) {
+            else if (StringUtils.isBlank(parametro.getVdescripcion())) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción requerida. Ingrese la descripción del parametro.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;

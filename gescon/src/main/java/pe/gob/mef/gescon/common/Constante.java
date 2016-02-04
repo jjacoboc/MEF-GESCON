@@ -58,7 +58,12 @@ public class Constante implements Serializable {
     public static int USUARIOEXTERNO =3;
     public static int USUARIOINTERNO =4;
     
-    public static String DIAS_CADUCIDAD_CLAVE = "67";
+    public static String DIAS_CADUCIDAD_CLAVE = "1";
+    public static String CALIFICACION1 = "2";
+    public static String CALIFICACION2 = "3";
+    public static String CALIFICACION3 = "4";
+    public static String CALIFICACION4 = "5";
+    public static String CALIFICACION5 = "6";
     
     // Tipo de Conocimiento
     public static BigDecimal BASELEGAL = new BigDecimal(1);

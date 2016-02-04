@@ -933,7 +933,7 @@ public class ContenidoMB implements Serializable {
         return "/pages/contenido/registro?faces-redirect=true";
     }
 
-    public void Save(ActionEvent event) {
+    public void save(ActionEvent event) {
         try {
             if (CollectionUtils.isEmpty(this.getListaContenido())) {
                 this.setListaContenido(Collections.EMPTY_LIST);
@@ -1329,7 +1329,7 @@ public class ContenidoMB implements Serializable {
         return "/pages/contenido/editar?faces-redirect=true";
     }
 
-    public void Edit(ActionEvent event) {
+    public void edit(ActionEvent event) {
         try {
             if (CollectionUtils.isEmpty(this.getListaContenido())) {
                 this.setListaContenido(Collections.EMPTY_LIST);
@@ -1505,7 +1505,7 @@ public class ContenidoMB implements Serializable {
         return "/pages/contenido/publicar?faces-redirect=true";
     }
 
-    public void Post(ActionEvent event) {
+    public void post(ActionEvent event) {
         try {
             if (CollectionUtils.isEmpty(this.getListaContenido())) {
                 this.setListaContenido(Collections.EMPTY_LIST);
@@ -1525,6 +1525,7 @@ public class ContenidoMB implements Serializable {
                 this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
             }
             this.getSelectedContenido().setDfechamodificacion(new Date());
+            this.getSelectedContenido().setDfechapublicacion(new Date());
             this.getSelectedContenido().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
             this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
             service.saveOrUpdate(this.getSelectedContenido());

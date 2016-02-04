@@ -39,46 +39,76 @@
                         <f:convertDateTime dateStyle="medium" type="date" locale="es" />
                     </h:outputText>
                 </h:panelGroup>
-                <p:spacer/>
+            </h:panelGrid>
+            <h:panelGrid columns="1" width="100%">
+                <h:panelGrid columns="3">
+                    <h:outputText value="1 estrella" styleClass="Fs12 FontBold blue"/>
+                    <p:rating value="1" readonly="true" />
+                    <h:outputText value="#{consultaMB.calificacion1}" styleClass="Fs12 FontBold"/>
+                    <h:outputText value="2 estrellas" styleClass="Fs12 FontBold blue"/>
+                    <p:rating value="2" readonly="true" />
+                    <h:outputText value="#{consultaMB.calificacion2}" styleClass="Fs12 FontBold"/>
+                    <h:outputText value="3 estrellas" styleClass="Fs12 FontBold blue"/>
+                    <p:rating value="3" readonly="true" />
+                    <h:outputText value="#{consultaMB.calificacion3}" styleClass="Fs12 FontBold"/>
+                    <h:outputText value="4 estrellas" styleClass="Fs12 FontBold blue"/>
+                    <p:rating value="4" readonly="true" />
+                    <h:outputText value="#{consultaMB.calificacion4}" styleClass="Fs12 FontBold"/>
+                    <h:outputText value="5 estrellas" styleClass="Fs12 FontBold blue"/>
+                    <p:rating value="5" readonly="true" />
+                    <h:outputText value="#{consultaMB.calificacion5}" styleClass="Fs12 FontBold"/>
+                </h:panelGrid>
+                <hr/>
+                <h:outputText value="#{buenaPracticaMB.listaCalificacion.size()} Calificaciones y Comentarios" styleClass="Fs16 FontBold black" rendered="#{not empty buenaPracticaMB.listaCalificacion}" />
+                <p:spacer rendered="#{loginMB.user ne null}"/>
                 <p:commandButton value="#{msgs.bp_btn_calificacion}" actionListener="#{buenaPracticaMB.toAddCalificacion}" update=":tabview:calDialogForm:pgCal" 
                                  oncomplete="PF('calDialog').show();" styleClass="ui-link Fs14" rendered="#{loginMB.user ne null}"/>
             </h:panelGrid>
             <h:panelGrid id="pgCal" columns="1" cellpadding="0" cellspacing="0" width="100%">
-                <table class="Wid100">
-                    <c:forEach items="#{buenaPracticaMB.listaCalificacion}" var="c" varStatus="vs">
-                        <tr>
-                            <td>
-                                <h:panelGroup>
-                                    <h:outputText value="#{c.usuarioNombre}" styleClass="Fs14 FontBold blue" />
-                                    <p:spacer width="10"/>
-                                    <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
-                                    <p:commandLink value="editar" actionListener="#{buenaPracticaMB.toEditCalificacion}" update=":tabview:ecalDialogForm:pgEcal" 
-                                                   oncomplete="PF('ecalDialog').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
-                                        <f:param name="index" value="#{vs.index}"/>
-                                    </p:commandLink>
-                                    <h:outputText value=" ]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
-                                    <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
-                                    <p:commandLink value="eliminar" actionListener="#{buenaPracticaMB.toDeleteCalificacion}" update=":tabview:ecalDialogForm:pgEcal" 
-                                                   oncomplete="PF('confirmDlg').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
-                                        <f:param name="index" value="#{vs.index}"/>
-                                    </p:commandLink>
-                                    <h:outputText value=" ]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
-                                </h:panelGroup>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <h:panelGrid columns="3" cellpadding="0" cellspacing="0">
-                                    <p:rating value="#{c.ncalificacion}" readonly="true" />
-                                    <p:spacer width="20"/>
-                                    <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic;"/>
-                                </h:panelGrid>
-                            </td>
-                        </tr>
-                        <tr style="border-bottom: gray solid 1px;"><td><h:outputText value="#{c.vcomentario}" escape="false" styleClass="Fs14"/></td></tr>
-                        <tr><td><hr/></td></tr>
-                    </c:forEach>
-                </table>
+                <p:dataList value="#{buenaPracticaMB.listaCalificacion}" var="c" type="definition" rowIndexVar="rowIndex" 
+                            emptyMessage="Ningún comentario encontrado.">
+                    <h:panelGrid columns="1" cellpadding="0" cellspacing="0" styleClass="Wid100">
+                        <h:panelGrid columns="8">
+                            <h:panelGrid columns="3" cellpadding="0" cellspacing="0">
+                                <p:rating value="#{c.ncalificacion}" readonly="true" />
+                                <p:spacer width="10"/>
+                                <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic;"/>
+                            </h:panelGrid>
+                            <p:spacer width="10" rendered="#{loginMB.user ne null}"/>
+                            <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
+                            <p:commandLink value="editar" actionListener="#{buenaPracticaMB.toEditCalificacion}" update=":tabview:ecalDialogForm:pgEcal" 
+                                           oncomplete="PF('ecalDialog').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
+                                <f:param name="index" value="#{rowIndex}"/>
+                            </p:commandLink>
+                            <h:outputText value=" ]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
+                            <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
+                            <p:commandLink value="eliminar" actionListener="#{buenaPracticaMB.toDeleteCalificacion}" update=":tabview:ecalDialogForm:pgEcal" 
+                                           oncomplete="PF('confirmDlg').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
+                                <f:param name="index" value="#{rowIndex}"/>
+                            </p:commandLink>
+                            <h:outputText value=" ]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="11" cellpadding="0" cellspacing="0">
+                            <h:outputText value="Por" styleClass="Fs12" />
+                            <p:spacer width="5"/>
+                            <h:outputText value="#{c.usuarioNombre}" styleClass="Fs12 FontBold blue" />
+                            <p:spacer width="5"/>
+                            <h:outputText value="el día" styleClass="Fs12" />
+                            <p:spacer width="5"/>
+                            <h:outputText value="#{c.dfechacreacion}" styleClass="Fs12">
+                                <f:convertDateTime pattern="dd/MM/yyyy" type="date" locale="es"/>
+                            </h:outputText>
+                            <p:spacer width="5"/>
+                            <h:outputText value="a horas" styleClass="Fs12" />
+                            <p:spacer width="5"/>
+                            <h:outputText value="#{c.dfechacreacion}" styleClass="Fs12">
+                                <f:convertDateTime pattern="HH:mm:ss" type="time" locale="es"/>
+                            </h:outputText>
+                        </h:panelGrid>
+                        <h:outputText value="#{c.vcomentario}" escape="false" styleClass="Fs14"/>
+                        <hr/>
+                    </h:panelGrid>
+                </p:dataList>
             </h:panelGrid>
         </p:panel>
         <h:panelGrid columns="1" cellpadding="0" cellspacing="0" width="100%">

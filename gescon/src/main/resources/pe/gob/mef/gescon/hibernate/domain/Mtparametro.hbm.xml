@@ -11,8 +11,8 @@
         <property name="vnombre" type="string">
             <column name="VNOMBRE" length="25" />
         </property>
-        <property name="nvalor" type="big_decimal">
-            <column name="NVALOR" precision="22" scale="0" />
+        <property name="vvalor" type="string">
+            <column name="VVALOR" length="25" />
         </property>
         <property name="vdescripcion" type="string">
             <column name="VDESCRIPCION" length="400" />

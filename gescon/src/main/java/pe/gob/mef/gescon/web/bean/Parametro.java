@@ -19,7 +19,7 @@ public class Parametro implements Serializable{
     
     private BigDecimal nparametroid;
     private String vnombre;
-    private BigDecimal nvalor;
+    private String vvalor;
     private String vdescripcion;
     private BigDecimal nactivo;
     private String vusuariocreacion;
@@ -62,17 +62,17 @@ public class Parametro implements Serializable{
     }
 
     /**
-     * @return the nvalor
+     * @return the vvalor
      */
-    public BigDecimal getNvalor() {
-        return nvalor;
+    public String getVvalor() {
+        return vvalor;
     }
 
     /**
-     * @param nvalor the nvalor to set
+     * @param vvalor the vvalor to set
      */
-    public void setNvalor(BigDecimal nvalor) {
-        this.nvalor = nvalor;
+    public void setVvalor(String vvalor) {
+        this.vvalor = vvalor;
     }
 
 

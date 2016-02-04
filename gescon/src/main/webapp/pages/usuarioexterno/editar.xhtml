@@ -13,58 +13,48 @@
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-                            <p:panel header="#{msgs.us_lbl_pnlNew}" styleClass="TexAlLeft">
+                            <p:panel header="#{msgs.us_lbl_pnlEdit}" styleClass="TexAlLeft">
                                 <h:panelGrid columns="1" styleClass="Wid100">
-                                    <h:outputText value="Accede a todos los servicios del portal con solo un nombre y contraseña" styleClass="Fs16 FontBold"/>
                                     <p:fieldset legend="Información General">
                                         <h:panelGrid columns="3">
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="El Usuario Labora en el MEF? "/>
-                                            <p:selectOneRadio id="console9" value="#{userMB.trabajaMef}">
+                                            <p:selectOneRadio id="console9" value="#{userMB.selectedUser.nuserinterno}">
                                                 <f:selectItem itemLabel="SI" itemValue="1" />
                                                 <f:selectItem itemLabel="NO" itemValue="0" />
                                             </p:selectOneRadio>
                                             
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="DNI: "/>
-                                            <p:inputMask value="#{userMB.dni}" maxlength="8" mask="9?9999999" />
+                                            <p:inputMask value="#{userMB.selectedUser.vdni}" maxlength="8" mask="9?9999999" readonly="true" />
                                             
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="Nombres: "/>
-                                            <p:inputText size="50" value="#{userMB.nombres}"  maxlength="100" />
+                                            <p:inputText size="50" value="#{userMB.selectedUser.vnombres}" maxlength="100" />
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="Apellidos: "/>
-                                            <p:inputText size="50" value="#{userMB.apellidos}"  maxlength="100" />
+                                            <p:inputText size="50" value="#{userMB.selectedUser.vapellidos}" maxlength="100" />
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="Nombre de Usuario: "/>
-                                            <p:inputText value="#{userMB.login}" size="25"  maxlength="25" style="text-transform: lowercase;"/>
+                                            <p:inputText value="#{userMB.selectedUser.vlogin}" size="25" maxlength="25" readonly="true" />
 
-                                            <h:outputText value="#{msgs.icon_asterisk}"/>
-                                            <h:outputText value="Contraseña: " />
-                                            <p:password value="#{userMB.clave}" feedback="true" goodLabel="Bien" weakLabel="Débil" strongLabel="Fuerte"
-                                                        promptLabel="Por favor, ingrese una contraseña" size="25"  maxlength="25" redisplay="false" />
-
-                                            <h:outputText value="#{msgs.icon_asterisk}"/>
-                                            <h:outputText value="Confirmar Contraseña: " />
-                                            <p:password value="#{userMB.confirmaClave}" size="25"  maxlength="25"/>
-                                            
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="Fecha de Nacimiento: "/>
-                                            <p:calendar locale="es" value="#{userMB.fechaNacimiento}" size="12" pattern="dd/MM/yyyy" 
+                                            <p:calendar locale="es" value="#{userMB.selectedUser.dfechanacimiento}" size="12" pattern="dd/MM/yyyy" 
                                                         showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" styleClass="Fs14"/>
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="Sexo: "/>
-                                            <p:selectOneMenu id="console4" value="#{userMB.sexo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console4" value="#{userMB.selectedUser.vsexo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Masculino" itemValue="M" />
                                                 <f:selectItem itemLabel="Femenino" itemValue="F" />
                                             </p:selectOneMenu>
                                             
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputText value="Correo: "/>
-                                            <p:inputText size="50" value="#{userMB.correo}"  maxlength="100" />
+                                            <p:inputText size="50" value="#{userMB.selectedUser.vcorreo}" maxlength="100" />
                                         </h:panelGrid>
                                     </p:fieldset>
 
@@ -72,7 +62,7 @@
                                         <h:panelGrid columns="3">
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Departamento: "/>
-                                            <p:selectOneMenu id="dep" value="#{userMB.departamento}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                            <p:selectOneMenu id="dep" value="#{userMB.selectedUser.vdpto}" filter="true" panelStyle="Wid100" styleClass="Wid100">
                                                 <p:ajax event="change" listener="#{userMB.handleDepartamentoChangeValue}" update=":f:prov, :f:dist"/>
                                                 <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                                 <f:selectItems value="#{userMB.listaDepartamento}"/>
@@ -80,7 +70,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Provincia: "/>
-                                            <p:selectOneMenu id="prov" value="#{userMB.provincia}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                            <p:selectOneMenu id="prov" value="#{userMB.selectedUser.vprov}" filter="true" panelStyle="Wid100" styleClass="Wid100">
                                                 <p:ajax event="change" listener="#{userMB.handleProvinciaChangeValue}" update=":f:dist"/>
                                                 <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                                 <f:selectItems value="#{userMB.listaProvincia}"/>
@@ -88,7 +78,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Distrito: "/>
-                                            <p:selectOneMenu id="dist" value="#{userMB.distrito}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                            <p:selectOneMenu id="dist" value="#{userMB.selectedUser.vdist}" filter="true" panelStyle="Wid100" styleClass="Wid100">
                                                 <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                                 <f:selectItems value="#{userMB.listaDistrito}"/>
                                             </p:selectOneMenu>
@@ -99,14 +89,14 @@
                                         <h:panelGrid columns="3">
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Profesion: "/>
-                                            <p:selectOneMenu value="#{userMB.profesion}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                            <p:selectOneMenu value="#{userMB.selectedUser.vprofesion}" filter="true" panelStyle="Wid100" styleClass="Wid100">
                                                 <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                                 <f:selectItems value="#{listaSessionMB.listaProfesionActiva}"/>
                                             </p:selectOneMenu>
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Entidad: "/>
-                                            <p:selectOneMenu id="console10" value="#{userMB.entidad}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console10" value="#{userMB.selectedUser.ventidad}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Entidad 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Entidad 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Entidad 3" itemValue="3" />
@@ -117,7 +107,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Cargo: "/>
-                                            <p:selectOneMenu id="console11" value="#{userMB.cargo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console11" value="#{userMB.selectedUser.vcargo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Cargo 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Cargo 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Cargo 3" itemValue="3" />
@@ -128,7 +118,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Pliego: "/>
-                                            <p:selectOneMenu id="console12" value="#{userMB.pliego}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console12" value="#{userMB.selectedUser.vpliego}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Pliego 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Pliego 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Pliego 3" itemValue="3" />
@@ -139,7 +129,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Area: "/>
-                                            <p:selectOneMenu id="console13" value="#{userMB.area}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console13" value="#{userMB.selectedUser.varea}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Area 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Area 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Area 3" itemValue="3" />
@@ -150,7 +140,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Sector: "/>
-                                            <p:selectOneMenu id="console14" value="#{userMB.sector}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console14" value="#{userMB.selectedUser.vsector}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Sector 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Sector 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Sector 3" itemValue="3" />
@@ -161,7 +151,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Gobierno: "/>
-                                            <p:selectOneMenu id="console15" value="#{userMB.gobierno}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console15" value="#{userMB.selectedUser.vgobierno}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Gobierno 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Gobierno 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Gobierno 3" itemValue="3" />
@@ -173,7 +163,7 @@
                                     </p:fieldset>
                                     <h:panelGrid columns="2" width="100%">
                                         <h:panelGroup>
-                                            <p:commandButton value="Registrar" actionListener="#{userMB.saveadm}" update=":f:growl"/>
+                                            <p:commandButton value="Registrar" actionListener="#{userMB.update}" update=":f:growl"/>
                                             <p:spacer width="10"/>
                                             <p:commandButton value="Cancelar" ajax="false" action="/pages/usuarioexterno/lista.xhtml"/>
                                         </h:panelGroup>

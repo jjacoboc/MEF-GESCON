@@ -36,7 +36,7 @@ import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.DiscusionSeccionService;
 import pe.gob.mef.gescon.service.DiscusionService;
 import pe.gob.mef.gescon.service.HistorialService;
-import pe.gob.mef.gescon.service.ContenidoService;
+import pe.gob.mef.gescon.service.ParametroService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.SeccionService;
 import pe.gob.mef.gescon.service.TipoConocimientoService;
@@ -84,6 +84,11 @@ public class ConsultaMB implements Serializable {
     private String tipoConocimiento;
     private String categoria;
     private String ordenpor;
+    private String calificacion1;
+    private String calificacion2;
+    private String calificacion3;
+    private String calificacion4;
+    private String calificacion5;
 
     /**
      * Creates a new instance of ConsultaMB
@@ -251,8 +256,54 @@ public class ConsultaMB implements Serializable {
         this.ordenpor = ordenpor;
     }
 
+    public String getCalificacion1() {
+        return calificacion1;
+    }
+
+    public void setCalificacion1(String calificacion1) {
+        this.calificacion1 = calificacion1;
+    }
+
+    public String getCalificacion2() {
+        return calificacion2;
+    }
+
+    public void setCalificacion2(String calificacion2) {
+        this.calificacion2 = calificacion2;
+    }
+
+    public String getCalificacion3() {
+        return calificacion3;
+    }
+
+    public void setCalificacion3(String calificacion3) {
+        this.calificacion3 = calificacion3;
+    }
+
+    public String getCalificacion4() {
+        return calificacion4;
+    }
+
+    public void setCalificacion4(String calificacion4) {
+        this.calificacion4 = calificacion4;
+    }
+
+    public String getCalificacion5() {
+        return calificacion5;
+    }
+
+    public void setCalificacion5(String calificacion5) {
+        this.calificacion5 = calificacion5;
+    }
+
     public void init() {
         try {
+            ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
+            this.setCalificacion1(parametroService.getParametroById(BigDecimal.valueOf(Long.valueOf(Constante.CALIFICACION1))).getVvalor());
+            this.setCalificacion2(parametroService.getParametroById(BigDecimal.valueOf(Long.valueOf(Constante.CALIFICACION2))).getVvalor());
+            this.setCalificacion3(parametroService.getParametroById(BigDecimal.valueOf(Long.valueOf(Constante.CALIFICACION3))).getVvalor());
+            this.setCalificacion4(parametroService.getParametroById(BigDecimal.valueOf(Long.valueOf(Constante.CALIFICACION4))).getVvalor());
+            this.setCalificacion5(parametroService.getParametroById(BigDecimal.valueOf(Long.valueOf(Constante.CALIFICACION5))).getVvalor());
             CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setListaCategoriaFiltro(catservice.getCategoriasActived());
             createTree(this.getListaCategoriaFiltro());
@@ -696,53 +747,69 @@ public class ConsultaMB implements Serializable {
                 }
                 case 4: { //Contenido
                     ContenidoMB ct = new ContenidoMB();
-                    ContenidoService servicect = (ContenidoService) ServiceFinder.findBean("ContenidoService");
-                    ct.setSelectedContenido(servicect.getContenidoById(Constante.CONTENIDO, BigDecimal.valueOf(id)));
+                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    ct.setSelectedContenido(service.getConocimientoById(BigDecimal.valueOf(id)));
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     ct.setSelectedCategoria(categoriaService.getCategoriaById(ct.getSelectedContenido().getNcategoriaid()));
                     ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
                     ct.setListaArchivos(archivoservice.getArchivosByConocimiento(ct.getSelectedContenido().getNconocimientoid()));
-                    ct.setListaSourceVinculos(new ArrayList<Consulta>());
-                    ct.setListaTargetVinculos(new ArrayList<Consulta>());
-                    ct.setListaTargetVinculosBL(new ArrayList<Consulta>());
-                    ct.setListaTargetVinculosPR(new ArrayList<Consulta>());
-                    ct.setListaTargetVinculosWK(new ArrayList<Consulta>());
-                    ct.setListaTargetVinculosCT(new ArrayList<Consulta>());
-                    ct.setListaTargetVinculosBP(new ArrayList<Consulta>());
-                    ct.setListaTargetVinculosOM(new ArrayList<Consulta>());
                     HashMap filters = new HashMap();
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("1")));
                     filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
-                    ct.getListaTargetVinculosBL().addAll(servicect.getConcimientosVinculados(filters));
-
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("2")));
-                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
-                    ct.getListaTargetVinculosPR().addAll(servicect.getConcimientosVinculados(filters));
-
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("3")));
-                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
-                    ct.getListaTargetVinculosWK().addAll(servicect.getConcimientosVinculados(filters));
-
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("4")));
-                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
-                    ct.getListaTargetVinculosCT().addAll(servicect.getConcimientosVinculados(filters));
-
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("5")));
-                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
-                    ct.getListaTargetVinculosBP().addAll(servicect.getConcimientosVinculados(filters));
-
-                    filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("6")));
-                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
-                    ct.getListaTargetVinculosOM().addAll(servicect.getConcimientosVinculados(filters));
-
+                    filters.put("flag", true);
+                    filters.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+                    ct.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
+                    filters.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+                    ct.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
+                    filters.put("ntipoconocimientoid", Constante.WIKI.toString());
+                    ct.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
+                    filters.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+                    ct.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
+                    filters.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+                    ct.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
+                    filters.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+                    ct.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
+                    DiscusionService discusionService = (DiscusionService) ServiceFinder.findBean("DiscusionService");
+                    List listaDiscusion = discusionService.getDiscusionesByConocimiento(ct.getSelectedContenido().getNconocimientoid());
+                    if(CollectionUtils.isNotEmpty(listaDiscusion)) {
+                        Discusion discusion = (Discusion)listaDiscusion.get(0);
+                        ct.setSelectedDiscusion(discusion);
+                        DiscusionSeccionService discusionSeccionService = (DiscusionSeccionService) ServiceFinder.findBean("DiscusionSeccionService");
+                        ct.setListaDiscusionSeccion(discusionSeccionService.getSeccionesByDiscusion(discusion.getNdiscusionid()));
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        if (CollectionUtils.isNotEmpty(ct.getListaDiscusionSeccion())) {
+                            for (DiscusionSeccion discusionSeccion : ct.getListaDiscusionSeccion()) {
+                                discusionSeccion.setDiscusionHtml(GcmFileUtils.readStringFromFileServer(discusionSeccion.getVruta(), "html.txt"));
+                                User user = userService.getUserByLogin(discusionSeccion.getVusuariocreacion());
+                                discusionSeccion.setUsuarioNombre(user.getVnombres()+" "+user.getVapellidos());
+                            }
+                        }
+                    }
+                    HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
+                    ct.setListaHistorial(historialService.getHistorialesByConocimiento(ct.getSelectedContenido().getNconocimientoid()));
+                    if(CollectionUtils.isNotEmpty(ct.getListaHistorial())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (Historial historial : ct.getListaHistorial()) {
+                            User user = userService.getUserByLogin(historial.getVusuariocreacion());
+                            historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
+                    CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
+                    ct.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(ct.getSelectedContenido().getNconocimientoid()));
+                    if(CollectionUtils.isNotEmpty(ct.getListaCalificacion())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (Calificacion calificacion : ct.getListaCalificacion()) {
+                            User user = userService.getUserByLogin(calificacion.getVusuariocreacion());
+                            calificacion.setUsuarioNombre(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
                     JSFUtils.getSession().setAttribute("contenidoMB", ct);
                     FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/vistaConsulta.xhtml");                    
                     break;
                 }
                 case 5: { //Buen Practica
                     BuenaPracticaMB bp = new BuenaPracticaMB();
-                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
-                    bp.setSelectedBuenaPractica(service.getConocimientoById(BigDecimal.valueOf(id)));
+                    ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    bp.setSelectedBuenaPractica(conocimientoService.getConocimientoById(BigDecimal.valueOf(id)));
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     bp.setSelectedCategoria(categoriaService.getCategoriaById(bp.getSelectedBuenaPractica().getNcategoriaid()));
                     bp.setDescripcionHtml(GcmFileUtils.readStringFromFileServer(bp.getSelectedBuenaPractica().getVruta(), "html.txt"));
@@ -753,7 +820,6 @@ public class ConsultaMB implements Serializable {
                             seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
                         }
                     }
-                    ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     HashMap map = new HashMap();
                     map.put("nconocimientoid", bp.getSelectedBuenaPractica().getNconocimientoid().toString());
                     map.put("flag", true);
@@ -794,14 +860,23 @@ public class ConsultaMB implements Serializable {
                             historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
                         }
                     }
+                    CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
+                    bp.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(bp.getSelectedBuenaPractica().getNconocimientoid()));
+                    if(CollectionUtils.isNotEmpty(bp.getListaCalificacion())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (Calificacion calificacion : bp.getListaCalificacion()) {
+                            User user = userService.getUserByLogin(calificacion.getVusuariocreacion());
+                            calificacion.setUsuarioNombre(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
                     JSFUtils.getSession().setAttribute("buenaPracticaMB", bp);
                     FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/vistaConsulta.xhtml");
                     break;
                 }
                 case 6: { //Oportunidad de Mejora
                     OportunidadMB om = new OportunidadMB();
-                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
-                    om.setSelectedOportunidad(service.getConocimientoById(BigDecimal.valueOf(id)));
+                    ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                    om.setSelectedOportunidad(conocimientoService.getConocimientoById(BigDecimal.valueOf(id)));
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     om.setSelectedCategoria(categoriaService.getCategoriaById(om.getSelectedOportunidad().getNcategoriaid()));
                     om.setContenidoHtml(GcmFileUtils.readStringFromFileServer(om.getSelectedOportunidad().getVruta(), "html.txt"));
@@ -812,7 +887,6 @@ public class ConsultaMB implements Serializable {
                             seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
                         }
                     }
-                    ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     HashMap map = new HashMap();
                     map.put("nconocimientoid", om.getSelectedOportunidad().getNconocimientoid().toString());
                     map.put("flag", true);
@@ -851,6 +925,15 @@ public class ConsultaMB implements Serializable {
                         for (Historial historial : om.getListaHistorial()) {
                             User user = userService.getUserByLogin(historial.getVusuariocreacion());
                             historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                        }
+                    }
+                    CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
+                    om.setListaCalificacion(calificacionService.getCalificacionesByConocimiento(om.getSelectedOportunidad().getNconocimientoid()));
+                    if(CollectionUtils.isNotEmpty(om.getListaCalificacion())) {
+                        UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        for (Calificacion calificacion : om.getListaCalificacion()) {
+                            User user = userService.getUserByLogin(calificacion.getVusuariocreacion());
+                            calificacion.setUsuarioNombre(user.getVnombres()+" "+user.getVapellidos());
                         }
                     }
                     JSFUtils.getSession().setAttribute("oportunidadMB", om);

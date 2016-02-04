@@ -78,10 +78,12 @@ public class ContenidoDaoImpl extends HibernateDaoSupport implements ContenidoDa
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            sql.append("select nasignacionid AS IDASIGNACION, ntipoconocimientoid AS TPOCONOCIMIENTO , nconocimientoid AS IDPREGUNTA, nusuarioid AS IDUSUARIO, nestadoid AS ESTADO, VUSUARIOCREACION AS USUCREA, VUSUARIOMODIFICACION AS USUMOD, ");
-            sql.append(" DFECHACREACION AS FECHACREA, DFECHAMODIFICACION AS FECHAMOD, DFECHAASIGNACION as FECHAASIG, DFECHAATENCION AS FECHAATEN, DFECHARECEPCION AS FECHARECEP ");
-            sql.append(" from TASIGNACION ");
-            sql.append(" WHERE NCONOCIMIENTOID =:BASE  AND NUSUARIOID=:USUARIO AND NTIPOCONOCIMIENTOID=:TIPOCONOCIMIENTO AND NESTADOID=1");
+            sql.append("SELECT nasignacionid AS IDASIGNACION, ntipoconocimientoid AS TPOCONOCIMIENTO, nconocimientoid AS IDPREGUNTA, ");
+            sql.append("nusuarioid AS IDUSUARIO, nestadoid AS ESTADO, VUSUARIOCREACION AS USUCREA, VUSUARIOMODIFICACION AS USUMOD, ");
+            sql.append("DFECHACREACION AS FECHACREA, DFECHAMODIFICACION AS FECHAMOD, DFECHAASIGNACION as FECHAASIG, ");
+            sql.append("DFECHAATENCION AS FECHAATEN, DFECHARECEPCION AS FECHARECEP ");
+            sql.append("FROM TASIGNACION ");
+            sql.append("WHERE NCONOCIMIENTOID = :BASE AND NUSUARIOID = :USUARIO AND NTIPOCONOCIMIENTOID = :TIPOCONOCIMIENTO AND NESTADOID = 1");
             
             object = getHibernateTemplate().execute(
                     new HibernateCallback() {
@@ -155,8 +157,8 @@ public class ContenidoDaoImpl extends HibernateDaoSupport implements ContenidoDa
         }
         if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("1")) {
             sql.append("SELECT ");
-            sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, b.vnumero AS NUMERO, b.vnombre AS NOMBRE , b.vsumilla AS SUMILLA, ");
-            sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
+            sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, b.vnumero AS NUMERO, b.vnombre AS NOMBRE, ");
+            sql.append("    b.vsumilla AS SUMILLA, b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
             sql.append("    1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, ");
             sql.append("    b.nestadoid AS IDESTADO, d.vnombre AS ESTADO ");
             sql.append("FROM TVINCULO a ");
@@ -238,7 +240,7 @@ public class ContenidoDaoImpl extends HibernateDaoSupport implements ContenidoDa
                 sql.append("    INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
                 sql.append("    INNER JOIN MTTIPO_CONOCIMIENTO d ON a.ntpoconocimientoid = d.ntpoconocimientoid ");
                 sql.append("WHERE a.nactivo = :ACTIVO ");
-                sql.append("AND a.nsituacionid = 6 AND a.NTPOCONOCIMIENTOID= ").append(ntipoconocimientoid).append(" "); // Publicado
+                sql.append("AND a.nsituacionid = 6 AND a.NTPOCONOCIMIENTOID = ").append(ntipoconocimientoid).append(" "); // Publicado
                 if (StringUtils.isNotBlank(nconocimientovinc)) {
                     sql.append(" AND a.nconocimientoid NOT IN (").append(nconocimientovinc).append(") ");
                 }
@@ -269,7 +271,7 @@ public class ContenidoDaoImpl extends HibernateDaoSupport implements ContenidoDa
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            sql.append("delete from TVINCULO where NCONOCIMIENTOID=:CONOCIMIENTO");
+            sql.append("delete from TVINCULO where NCONOCIMIENTOID = :CONOCIMIENTO");
 
             object = getHibernateTemplate().execute(
                     new HibernateCallback() {
@@ -292,7 +294,7 @@ public class ContenidoDaoImpl extends HibernateDaoSupport implements ContenidoDa
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            sql.append("delete from TARCHIVO_CONOCIMIENTO where NCONOCIMIENTOID=:CONOCIMIENTO AND NTIPOCONOCIMIENTOID=:TIPO");
+            sql.append("delete from TARCHIVO_CONOCIMIENTO where NCONOCIMIENTOID = :CONOCIMIENTO AND NTIPOCONOCIMIENTOID=:TIPO");
 
             object = getHibernateTemplate().execute(
                     new HibernateCallback() {

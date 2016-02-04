@@ -59,12 +59,15 @@
                                             <tr>
                                                 <ui:repeat value="#{administracionMB.listaPerfil}" var="per">
                                                     <td>
-                                                        <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
-                                                            <p:spacer/>
-                                                            <i class="#{per.imagen}" style="height: 32px; width: 32px;"></i>
-                                                            <h:outputText value="#{per.vdescripcion}" styleClass="Fs14 FontBold black"/>
-                                                            <p:spacer/>
-                                                        </p:panelGrid>
+                                                        <p:commandLink styleClass="ui-link" action="#{loginMB.redirect}" >
+                                                            <f:param name="page" value="/pages/perfil"/>
+                                                            <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
+                                                                <p:spacer/>
+                                                                <i class="#{per.imagen}" style="height: 32px; width: 32px;"></i>
+                                                                <h:outputText value="#{per.vdescripcion}" styleClass="Fs14 FontBold black"/>
+                                                                <p:spacer/>
+                                                            </p:panelGrid>
+                                                        </p:commandLink>
                                                     </td>
                                                 </ui:repeat>
                                             </tr>

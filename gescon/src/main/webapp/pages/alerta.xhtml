@@ -14,7 +14,6 @@
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Administración de Alertas" >
                                 <h:panelGrid columns="1">
-                                    <p:commandButton value="Nuevo" actionListener="#{alertaMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
                                     <p:dataTable id="tbl" value="#{alertaMB.listaAlerta}" filteredValue="#{alertaMB.filteredListaAlerta}" var="row" 
                                                  paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" paginatorPosition="top" rowHover="true"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">

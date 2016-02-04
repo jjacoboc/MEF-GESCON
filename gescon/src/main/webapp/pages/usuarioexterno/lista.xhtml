@@ -15,7 +15,7 @@
                             <p:panel header="#{msgs.us_lbl_pnlTitulo}" styleClass="TexAlLeft">
                                 <h:panelGrid columns="1">
                                     <p:commandButton  value="#{msgs.us_btn_nuevo}" ajax="false" action="#{userMB.toSave}" styleClass="Fleft" icon="fa fa-plus white" 
-                                                      rendered="#{loginMB.politicas[msgs.REGISTRAR_WIKI]}"/>
+                                                      rendered="#{loginMB.politicas[msgs.REGISTRAR_USUARIO]}"/>
                                     <p:dataTable id="tbl" value="#{userMB.listaUser}" filteredValue="#{userMB.filteredListaUser}" paginator="true" rowHover="true"
                                                  var="row" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" paginatorPosition="top" 
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="#{msgs.lbl_listavacia}">
@@ -47,24 +47,24 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" priority="7">
                                             <f:facet name="header"><h:outputText value="#{msgs.us_lbl_columna07}"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{userMB.toView}" styleClass="ui-link" title="Ver Wiki">
+                                            <p:commandLink ajax="false" action="#{userMB.toView}" styleClass="ui-link" title="ver usuario">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{userMB.toEdit}" styleClass="ui-link" title="Actualizar Wiki"
-                                                           rendered="#{loginMB.politicas[msgs.EDITAR_WIKI]}">
+                                            <p:commandLink ajax="false" action="#{userMB.toUpdate}" styleClass="ui-link" title="actualizar usuario"
+                                                           rendered="#{loginMB.politicas[msgs.EDITAR_USUARIO]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{userMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="Activar Wiki" styleClass="ui-link" 
-                                                           rendered="#{loginMB.politicas[msgs.ACTIVAR_WIKI] and row.nactivo eq 0}">
+                                            <p:commandLink actionListener="#{userMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar usuario" styleClass="ui-link" 
+                                                           rendered="#{loginMB.politicas[msgs.ACTIVAR_USUARIO] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{userMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="Desactivar Wiki" styleClass="ui-link" 
-                                                           rendered="#{loginMB.politicas[msgs.DESACTIVAR_WIKI] and row.nactivo eq 1}">
+                                            <p:commandLink actionListener="#{userMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar usuario" styleClass="ui-link" 
+                                                           rendered="#{loginMB.politicas[msgs.DESACTIVAR_USUARIO] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>

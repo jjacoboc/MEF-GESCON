@@ -52,17 +52,16 @@
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{contenidoMB.setSelectedRow}" title="Activar Contenido" styleClass="ui-link" oncomplete="PF('confirmActDlg').show();"
-                                                           rendered="#{loginMB.politicas[msgs.ACTIVAR_WIKI] and row.nactivo eq 0}">
+                                            <p:commandLink actionListener="#{contenidoMB.setSelectedRow}" title="activar contenido" styleClass="ui-link" oncomplete="PF('confirmActDlg').show();"
+                                                           rendered="#{loginMB.politicas[msgs.ACTIVAR_CONTENIDO] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{contenidoMB.setSelectedRow}" title="Desactivar Contenido" styleClass="ui-link" oncomplete="PF('confirmDesDlg').show();"
-                                                           rendered="#{loginMB.politicas[msgs.DESACTIVAR_WIKI] and row.nactivo eq 1}">
+                                            <p:commandLink actionListener="#{contenidoMB.setSelectedRow}" title="desactivar contenido" styleClass="ui-link" oncomplete="PF('confirmDesDlg').show();"
+                                                           rendered="#{loginMB.politicas[msgs.DESACTIVAR_CONTENIDO] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                  
                                         </p:column>
                                     </p:dataTable>
                                 </h:panelGrid>
