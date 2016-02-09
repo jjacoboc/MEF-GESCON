@@ -95,4 +95,42 @@ public class ConsultaServiceImpl implements ConsultaService{
         return lista;
     }
     
+    @Override
+    public List<HashMap<String,Object>> listarReporte(HashMap filters) {
+        List<HashMap<String,Object>> lista = new ArrayList<HashMap<String,Object>>();
+        try {
+            ConsultaDao consultaDao = (ConsultaDao) ServiceFinder.findBean("ConsultaDao");
+            List<HashMap<String,Object>> consulta = consultaDao.listarReporte(filters);
+            if(!CollectionUtils.isEmpty(consulta)) {
+                for(HashMap<String,Object> r : consulta) {
+                    HashMap<String,Object> map = new HashMap<String,Object>();
+                    map.put("ID", r.get("ID"));
+                    map.put("NOMBRE", r.get("NOMBRE"));
+                    map.put("SUMILLA", r.get("SUMILLA"));
+                    map.put("FECHA", r.get("FECHA"));
+                    map.put("IDCATEGORIA", r.get("IDCATEGORIA"));
+                    map.put("CATEGORIA", r.get("CATEGORIA"));
+                    map.put("IDTIPOCONOCIMIENTO", r.get("IDTIPOCONOCIMIENTO"));
+                    map.put("TIPOCONOCIMIENTO", r.get("TIPOCONOCIMIENTO"));
+                    map.put("IDESTADO", r.get("IDESTADO"));
+                    map.put("ESTADO", r.get("ESTADO"));
+                    BigDecimal contador = (BigDecimal) r.get("CONTADOR");
+                    BigDecimal suma = (BigDecimal) r.get("SUMA");
+
+                    if(BigDecimal.ZERO.equals(contador)) {
+                        map.put("CONTADOR", 0);
+                    } else {
+                        int calificacion = Math.round(Float.parseFloat(suma.toString()) / Integer.parseInt(contador.toString()));
+                        map.put("CONTADOR", calificacion);
+                    }
+                    lista.add(map);
+                }
+            }
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return lista;
+    }
+    
 }

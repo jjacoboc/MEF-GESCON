@@ -355,7 +355,7 @@ public class EntidadMB implements Serializable{
                 error = true;
                 return error;
             } 
-            else if (entidad.getVcodigoentidad()== null) {
+            else if (entidad.getVcodigoentidad()== null ) {
                 message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Codigo requerido. Ingrese el codigo de la entidad.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 error = true;

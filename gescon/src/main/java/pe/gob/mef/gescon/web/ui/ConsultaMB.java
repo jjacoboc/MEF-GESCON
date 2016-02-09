@@ -5,6 +5,7 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
+import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -16,6 +17,16 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.util.JRLoader;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DefaultTreeNode;
@@ -963,5 +974,60 @@ public class ConsultaMB implements Serializable {
             e.printStackTrace();
         }
         return "/pages/consulta?faces-redirect=true";
+    }
+    
+    public void reporte() {
+        HashMap parametrosReporte = new HashMap();
+        HashMap parametrosJasper = new HashMap();
+        File archivo;
+        List<HashMap<String, Object>> listaDatosReporte;
+        
+        HashMap filter = new HashMap();
+        try {
+            filter.put("fCategoria", this.getCategoriesFilter());
+            filter.put("fFromDate", this.getFechaInicio());
+            filter.put("fToDate", this.getFechaFin());
+            filter.put("fType", this.getTypesFilter());
+            if(StringUtils.isNotBlank(this.getSearchText())) {
+                HashMap map = Indexador.search(this.getSearchText());
+                filter.put("fCodesBL", (String) map.get("codesBL"));
+                filter.put("fCodesPR", (String) map.get("codesPR"));
+                filter.put("fCodesC", (String) map.get("codesC"));
+            } else {
+                filter.remove("fCodesBL");
+                filter.remove("fCodesPR");
+                filter.remove("fCodesC");
+            }
+            filter.put("order", this.getOrdenpor());
+            ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+            listaDatosReporte = service.listarReporte(filter);
+
+            
+            archivo = new File(JSFUtils.getServletContext().getRealPath("/pages/reportes/reporteConsulta.jasper"));
+            String rutaImagen = JSFUtils.getServletContext().getRealPath("/resources/images/logo-minef.jpg");
+            parametrosJasper.put("P_IMAGEN", rutaImagen);
+            //archivo = new File(JSFUtils.getServletContext().getRealPath("/reportes/reportePAP.jrxml"));
+            List<HashMap<String, Object>> listaDatos = listaDatosReporte;
+            JRDataSource fuenteDatos = new JRBeanCollectionDataSource(listaDatos);
+            JasperReport reporteJasper = (JasperReport) JRLoader.loadObjectFromFile(archivo.getPath());
+            //JasperReport reporteJasper = JasperCompileManager.compileReport(archivo.getPath());
+            JasperPrint documentoPdf = JasperFillManager.fillReport(reporteJasper, parametrosJasper, fuenteDatos);
+            HttpServletResponse response = JSFUtils.getResponse();
+            if (documentoPdf != null) {
+                response.setContentType("application/pdf");
+                response.setHeader("Content-Disposition", "attachment;filename=" + 
+                        "ReporteConsulta" + 
+                        ".pdf");
+                ServletOutputStream ouputStream = response.getOutputStream();
+                JRPdfExporter pdfExporter = new JRPdfExporter();
+                pdfExporter.setParameter(JRExporterParameter.JASPER_PRINT, documentoPdf);
+                pdfExporter.setParameter(JRExporterParameter.OUTPUT_STREAM, ouputStream);
+                pdfExporter.exportReport();
+                FacesContext.getCurrentInstance().responseComplete();
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
     }
 }

@@ -17,4 +17,5 @@ public interface ConsultaService {
     
     List<Consulta> getQueryFilter(HashMap filters);
     List<Consulta> getDestacadosByTipoConocimiento(HashMap filters);
+    List<HashMap<String,Object>> listarReporte(HashMap filters);
 }
