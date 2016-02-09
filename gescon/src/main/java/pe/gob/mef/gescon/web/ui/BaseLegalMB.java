@@ -819,6 +819,7 @@ public class BaseLegalMB implements Serializable {
                 archivo.setTbaselegal(tbaselegal);
                 archivo.setVnombre(this.getUploadFile().getFileName());
                 archivo.setVruta(ruta0 + archivo.getVnombre());
+                archivo.setNversion(BigDecimal.ZERO);
                 archivo.setVusuariocreacion(user.getVlogin());
                 archivo.setDfechacreacion(new Date());
                 aservice.saveOrUpdate(archivo);
@@ -832,6 +833,7 @@ public class BaseLegalMB implements Serializable {
                 archivoHist.setNbaselegalid(baseHist.getNbaselegalid());
                 archivoHist.setVnombre(archivo.getVnombre());
                 archivoHist.setVruta(ruta1 + archivo.getVnombre());
+                archivoHist.setNversion(BigDecimal.ONE);
                 archivoHist.setVusuariocreacion(user.getVlogin());
                 archivoHist.setDfechacreacion(new Date());
                 aserviceHist.saveOrUpdate(archivoHist);
@@ -933,6 +935,8 @@ public class BaseLegalMB implements Serializable {
             this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
             this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
             this.setChkDestacado(this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ONE));
+            RangoService rangoService = (RangoService) ServiceFinder.findBean("RangoService");
+            this.setListaRangos(new Items(rangoService.getRangosActivosByTipo(this.getSelectedBaseLegal().getNtiporangoid()), null, "nrangoid", "vnombre").getItems());
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
@@ -1023,6 +1027,7 @@ public class BaseLegalMB implements Serializable {
             ruta1 = this.path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
             ArchivoHistorialService aserviceHist = (ArchivoHistorialService) ServiceFinder.findBean("ArchivoHistorialService");
             ArchivoHist archivoHist = aserviceHist.getLastArchivoHistByBaseLegalHist(baseHist);
+            archivoHist = archivoHist != null ? archivoHist : new ArchivoHist();
             archivoHist.setNarchivohistid(aserviceHist.getNextPK());
             archivoHist.setNhistorialid(baseHist.getNhistorialid());
             archivoHist.setNbaselegalid(baseHist.getNbaselegalid());
@@ -1098,6 +1103,8 @@ public class BaseLegalMB implements Serializable {
             this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
             this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
             this.setChkDestacado(this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ONE));
+            RangoService rangoService = (RangoService) ServiceFinder.findBean("RangoService");
+            this.setListaRangos(new Items(rangoService.getRangosActivosByTipo(this.getSelectedBaseLegal().getNtiporangoid()), null, "nrangoid", "vnombre").getItems());
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
@@ -1191,6 +1198,7 @@ public class BaseLegalMB implements Serializable {
             ruta1 = this.path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
             ArchivoHistorialService aserviceHist = (ArchivoHistorialService) ServiceFinder.findBean("ArchivoHistorialService");
             ArchivoHist archivoHist = aserviceHist.getLastArchivoHistByBaseLegalHist(baseHist);
+            archivoHist = archivoHist != null ? archivoHist : new ArchivoHist();
             archivoHist.setNarchivohistid(aserviceHist.getNextPK());
             archivoHist.setNhistorialid(baseHist.getNhistorialid());
             archivoHist.setNbaselegalid(baseHist.getNbaselegalid());
@@ -1264,6 +1272,8 @@ public class BaseLegalMB implements Serializable {
             this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
             this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
             this.setChkDestacado(this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ONE));
+            RangoService rangoService = (RangoService) ServiceFinder.findBean("RangoService");
+            this.setListaRangos(new Items(rangoService.getRangosActivosByTipo(this.getSelectedBaseLegal().getNtiporangoid()), null, "nrangoid", "vnombre").getItems());
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setFilteredListaBaseLegal(new ArrayList());

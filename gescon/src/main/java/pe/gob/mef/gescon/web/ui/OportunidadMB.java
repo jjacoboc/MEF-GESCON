@@ -1114,6 +1114,7 @@ public class OportunidadMB implements Serializable {
                 conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
             } else {
                 conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
+                conocimiento.setDfechapublicacion(new Date());
             }
             String np0 = this.path.concat(conocimiento.getNconocimientoid().toString()).concat("/0/");
             conocimiento.setVruta(np0);

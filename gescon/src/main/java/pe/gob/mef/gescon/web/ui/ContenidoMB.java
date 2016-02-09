@@ -950,7 +950,12 @@ public class ContenidoMB implements Serializable {
             this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             conocimiento.setNconocimientoid(idconocimiento);
             conocimiento.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-            conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong("1")));
+            if (this.getSelectedCategoria().getNflagbp().equals(BigDecimal.ONE)) {
+                conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
+            } else {
+                conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
+                conocimiento.setDfechapublicacion(new Date());
+            }
             conocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
             conocimiento.setVtitulo(this.getTitulo().trim());
             conocimiento.setVdescripcion(this.getDescripcion().trim());

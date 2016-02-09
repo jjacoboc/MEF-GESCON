@@ -55,16 +55,16 @@
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputText value="#{msgs.bl_lbl_fecha}" style="white-space: nowrap;"/>
                                     <h:outputText value="#{baseLegalMB.selectedBaseLegal.dfechavigencia}" >
-                                        <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                        <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy" />
                                     </h:outputText>
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputText value="#{msgs.bl_lbl_ambito}"/>                                
                                     <h:panelGrid columns="4">
-                                        <p:selectBooleanCheckbox value="#{baseLegalMB.chkGobNacional}" itemLabel="Gobierno Nacional" />
-                                        <p:selectBooleanCheckbox value="#{baseLegalMB.chkGobRegional}" itemLabel="Gobierno Regional" />
-                                        <p:selectBooleanCheckbox value="#{baseLegalMB.chkGobLocal}" itemLabel="Gobierno Local" />
-                                        <p:selectBooleanCheckbox value="#{baseLegalMB.chkMancomunidades}" itemLabel="Mancomunidades" />
+                                        <p:selectBooleanCheckbox value="#{baseLegalMB.chkGobNacional}" itemLabel="Gobierno Nacional" disabled="true" />
+                                        <p:selectBooleanCheckbox value="#{baseLegalMB.chkGobRegional}" itemLabel="Gobierno Regional" disabled="true" />
+                                        <p:selectBooleanCheckbox value="#{baseLegalMB.chkGobLocal}" itemLabel="Gobierno Local" disabled="true" />
+                                        <p:selectBooleanCheckbox value="#{baseLegalMB.chkMancomunidades}" itemLabel="Mancomunidades" disabled="true" />
                                     </h:panelGrid>
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -77,7 +77,7 @@
                                     
                                     <p:spacer/>
                                     <h:outputText value="#{msgs.bl_lbl_destacado}"/>
-                                    <p:selectBooleanCheckbox value="#{baseLegalMB.chkDestacado}" />
+                                    <p:selectBooleanCheckbox value="#{baseLegalMB.chkDestacado}" disabled="true" />
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputText value="#{msgs.bl_lbl_vinculo}" style="white-space: nowrap;"/>

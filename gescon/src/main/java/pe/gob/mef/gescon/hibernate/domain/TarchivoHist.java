@@ -14,6 +14,7 @@ public class TarchivoHist implements java.io.Serializable {
     private BigDecimal nbaselegalid;
     private String vnombre;
     private String vruta;
+    private BigDecimal nversion;
     private String vusuariocreacion;
     private Date dfechacreacion;
     private String vusuariomodificacion;
@@ -108,6 +109,14 @@ public class TarchivoHist implements java.io.Serializable {
 
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
+    }
+
+    public BigDecimal getNversion() {
+        return nversion;
+    }
+
+    public void setNversion(BigDecimal nversion) {
+        this.nversion = nversion;
     }
 
 }

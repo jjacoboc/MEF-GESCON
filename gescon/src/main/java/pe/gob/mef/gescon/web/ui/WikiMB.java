@@ -81,6 +81,7 @@ public class WikiMB implements Serializable {
     private Conocimiento selectedWiki;
     private TreeNode tree;
     private Categoria selectedCategoria;
+    private Boolean chkDestacado;
     private String nombre;
     private String descripcionHtml;
     private String descripcionPlain;
@@ -167,6 +168,14 @@ public class WikiMB implements Serializable {
 
     public void setSelectedCategoria(Categoria selectedCategoria) {
         this.selectedCategoria = selectedCategoria;
+    }
+
+    public Boolean getChkDestacado() {
+        return chkDestacado;
+    }
+
+    public void setChkDestacado(Boolean chkDestacado) {
+        this.chkDestacado = chkDestacado;
     }
 
     public String getNombre() {
@@ -536,6 +545,7 @@ public class WikiMB implements Serializable {
             this.setSelectedSeccion(null);
             this.setTitulo(StringUtils.EMPTY);
             this.setDetalleHtml(StringUtils.EMPTY);
+            this.setChkDestacado(true);
             this.setListaSeccion(new ArrayList());
             this.setListaSourceVinculos(new ArrayList());
             this.setListaTargetVinculos(new ArrayList());
@@ -1075,13 +1085,15 @@ public class WikiMB implements Serializable {
             if (this.getDescripcionPlain().length() < 400) {
                 wiki.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                wiki.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                wiki.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 300)));
             }
             wiki.setNactivo(BigDecimal.ONE);
+            wiki.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             if (this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE)) {
                 wiki.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
             } else {
                 wiki.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
+                wiki.setDfechapublicacion(new Date());
             }
             String np0 = this.path.concat(wiki.getNconocimientoid().toString()).concat("/0/");
             wiki.setVruta(np0);
@@ -1182,8 +1194,7 @@ public class WikiMB implements Serializable {
                     vinculoHistService.saveOrUpdate(vinculoHist);
                 }
             }
-            
-                        Asignacion asignacion = new Asignacion();
+            Asignacion asignacion = new Asignacion();
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             asignacion.setNasignacionid(serviceasig.getNextPK());
             asignacion.setNtipoconocimientoid(Constante.WIKI);
@@ -1222,6 +1233,7 @@ public class WikiMB implements Serializable {
                     seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
                 }
             }
+            this.setChkDestacado(this.getSelectedWiki().getNdestacado().equals(BigDecimal.ONE));
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedWiki().getNconocimientoid().toString());
@@ -1265,6 +1277,7 @@ public class WikiMB implements Serializable {
                     seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
                 }
             }
+            this.setChkDestacado(this.getSelectedWiki().getNdestacado().equals(BigDecimal.ONE));
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedWiki().getNconocimientoid().toString());
@@ -1315,8 +1328,9 @@ public class WikiMB implements Serializable {
             if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 300)));
             }
+            this.getSelectedWiki().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedWiki().setDfechamodificacion(new Date());
             this.getSelectedWiki().setVusuariomodificacion(user.getVlogin());
             conocimientoService.saveOrUpdate(this.getSelectedWiki());
@@ -1456,6 +1470,7 @@ public class WikiMB implements Serializable {
                     seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
                 }
             }
+            this.setChkDestacado(this.getSelectedWiki().getNdestacado().equals(BigDecimal.ONE));
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedWiki().getNconocimientoid().toString());
@@ -1506,8 +1521,9 @@ public class WikiMB implements Serializable {
             if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 300)));
             }
+            this.getSelectedWiki().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedWiki().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
             this.getSelectedWiki().setDfechapublicacion(new Date());
             this.getSelectedWiki().setDfechamodificacion(new Date());

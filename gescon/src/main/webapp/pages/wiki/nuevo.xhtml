@@ -3,8 +3,9 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
                 template="/WEB-INF/template.xhtml">
-    
+
     <style>
         .ui-picklist-filter {
             font-size: 14px !important;
@@ -30,6 +31,15 @@
                                         <h:outputText value="#{wikiMB.selectedCategoria.vnombre}" styleClass="Fs14"/>
                                     </h:panelGroup>
 
+                                    <h:panelGrid columns="6" cellpadding="0" cellspacing="0">
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.bl_lbl_destacado}"/>
+                                        <p:spacer width="5"/>
+                                        <p:selectBooleanCheckbox value="#{wikiMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Los Wikis destacados serán mostrados en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
+                                    </h:panelGrid>                                    
+
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
                                         <p:spacer width="5"/>
@@ -42,13 +52,21 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.wk_lbl_descripcion}"/>
                                     </h:panelGroup>
+                                    
                                     <p:editor id="descHtml" value="#{wikiMB.descripcionHtml}" 
                                               controls="bold italic underline strikethrough subscript superscript | 
-                                                        font size style | color highlight | bullets numbering | 
-                                                        outdent indent | alignleft center alignright justify" />
+                                              font size style | color highlight | bullets numbering | 
+                                              outdent indent | alignleft center alignright justify" />
+                                    <!--
+                                    <pe:ckEditor id="descHtml" value="#{wikiMB.descripcionHtml}" width="100%"
+                                                 toolbar="[['Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo','SpellChecker'], ['Scayt'],
+                                                 ['Link','Unlink'],['Bold','Italic','Strike','-','RemoveFormat'],
+                                                 ['NumberedList','BulletedList','-','Outdent','Indent'],
+                                                 ['Styles','Format']]"/>
+                                                 -->
 
                                     <p:spacer/>
-                                    
+
                                     <h:outputText value="#{msgs.wk_lbl_detalle}"/>
                                     <p:fieldset>
                                         <p:commandButton value="#{msgs.wk_btn_seccion}" actionListener="#{wikiMB.toAddSection}" update=":secDialogForm:pgSec" oncomplete="PF('secDialog').show();" styleClass="ui-link Fs14"/>
@@ -229,7 +247,7 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
                         <p:dialog id="esecDlg" header="#{msgs.wk_lbl_pnlSeccione}" widgetVar="esecDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
                             <h:form id="esecDialogForm">
                                 <h:panelGrid id="pgEsec" columns="1">
@@ -262,16 +280,17 @@
                                         <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
                                     </p:selectOneMenu>
                                     <p:pickList value="#{wikiMB.pickList}" var="p" itemValue="#{p}" converter="converterPickListConocimiento" 
-                                                itemLabel="#{p.codigo} #{p.nombre} #{p.categoria} #{p.estado}" showSourceFilter="true" 
-                                                showTargetFilter="true" filterMatchMode="contains" styleClass="wk-picklist-list">
+                                                itemLabel="#{p.codigo} #{p.nombre} #{p.categoria} #{p.estado}" showSourceFilter="true" responsive="true"
+                                                showTargetFilter="true" filterMatchMode="contains" styleClass="wk-picklist-list" >
                                         <p:ajax event="transfer" listener="#{wikiMB.onTransfer}" update=":f:tabview"/>
                                         <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
                                         <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
 
                                         <p:column style="width: 60%;">
-                                            <h:outputText value="#{p.codigo}" rendered="#{not empty p.codigo}"/>
-                                            <h:outputText value=" - " rendered="#{not empty p.codigo}"/>
-                                            <h:outputText value="#{p.nombre}" />
+                                            <h:outputText class="fa fa-angle-double-right"/>
+                                            <p:spacer width="5"/>
+                                            <h:outputText id="cod" value="#{p.codigo}" title="#{p.nombre}" rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value="#{p.nombre}" rendered="#{empty p.codigo}"/>
                                         </p:column>
                                         <p:column style="width: 20%; text-align: center;">
                                             <h:outputText value="#{p.categoria}" />
@@ -280,6 +299,7 @@
                                             <h:outputText value="#{p.estado}" />
                                         </p:column>
                                     </p:pickList>
+                                    <p:commandButton value="Cancelar" onclick="PF('pickDialog').hide()" styleClass="ui-link Fs14"/>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>

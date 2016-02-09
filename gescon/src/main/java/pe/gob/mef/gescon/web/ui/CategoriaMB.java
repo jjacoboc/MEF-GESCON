@@ -471,6 +471,14 @@ public class CategoriaMB implements Serializable {
     public void toSave(ActionEvent event) {
         try {
             this.cleanAttributes();
+            this.setFlagbl(this.getSelectedCategoria().getNflagbl().equals(BigDecimal.ONE));
+            this.setFlagbp(this.getSelectedCategoria().getNflagbp().equals(BigDecimal.ONE));
+            this.setFlagct(this.getSelectedCategoria().getNflagct().equals(BigDecimal.ONE));
+            this.setFlagom(this.getSelectedCategoria().getNflagom().equals(BigDecimal.ONE));
+            this.setFlagpr(this.getSelectedCategoria().getNflagpr().equals(BigDecimal.ONE));
+            this.setFlagwiki(this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE));
+            this.setEspecialista(this.getSelectedCategoria().getNespecialista());
+            this.setModerador(this.getSelectedCategoria().getNmoderador());
             this.readImage(this.getSelectedCategoria());
         } catch (Exception e) {
             e.getMessage();

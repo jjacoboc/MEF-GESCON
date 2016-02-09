@@ -969,7 +969,12 @@ public class PreguntaMB implements Serializable {
             pregunta.setNactivo(BigDecimal.ONE);
             pregunta.setDfechacreacion(new Date());
             pregunta.setVusuariocreacion(user.getVlogin());
-            pregunta.setNsituacionid(BigDecimal.valueOf(Long.parseLong("1")));
+            if (this.getSelectedCategoria().getNflagbp().equals(BigDecimal.ONE)) {
+                pregunta.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
+            } else {
+                pregunta.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
+                pregunta.setDfechapublicacion(new Date());
+            }
             service.saveOrUpdate(pregunta);
             
             String ruta0 = this.path + pregunta.getNpreguntaid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";

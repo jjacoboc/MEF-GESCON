@@ -73,7 +73,8 @@
                                     
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="#{msgs.bl_lbl_fecha}"/>
-                                    <p:calendar id="fcese" locale="es" value="#{baseLegalMB.selectedBaseLegal.dfechavigencia}" size="8" pattern="dd/MM/yyyy" showOn="button" readonlyInput="true" showButtonPanel="true"/>
+                                    <p:calendar locale="es" value="#{baseLegalMB.selectedBaseLegal.dfechavigencia}" size="12"
+                                                pattern="dd/MM/yyyy" showOn="button" readonlyInput="true" navigator="true" showButtonPanel="true"/>
 
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="#{msgs.bl_lbl_ambito}"/>                                
@@ -124,9 +125,10 @@
                                                 </h:outputText>
                                             </p:column>
                                             <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
-                                                <h:outputText value="#{t.nestadoid}">
-                                                    <f:converter converterId="converterEstadoBaseLegal"/>
-                                                </h:outputText>
+                                                <p:selectOneMenu value="#{t.nestadoid}" style="width: 110px;" panelStyle="font-size: 10px;">
+                                                    <f:selectItem itemLabel="Seleccione" itemValue="0" />
+                                                    <f:selectItems value="#{listaSessionMB.listaEstadoBaseLegalVinculo}"/>
+                                                </p:selectOneMenu>
                                             </p:column>
                                         </p:dataTable>
                                     </h:panelGrid>

@@ -72,46 +72,46 @@
 
             <p:submenu label="Administración" icon="fa fa-wrench" rendered="#{loginMB.politicas[msgs.MENU_ADMINISTRACION]}">
                 <p:submenu label="Configuración" icon="fa fa-gear" rendered="#{loginMB.politicas[msgs.MENU_CONFIGURACION]}">
-                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Usuarios" icon="fa fa-users" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Usuarios" icon="fa fa-users" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                         <f:param name="page" value="/pages/usuarioexterno/lista"/>
                     </p:menuitem>
-                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Perfiles de Usuario" icon="fa fa-newspaper-o" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Perfiles de Usuario" icon="fa fa-newspaper-o" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                         <f:param name="page" value="/pages/perfil"/>
                     </p:menuitem>
-                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Politicas de Acceso" icon="fa fa-briefcase" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Politicas de Acceso" icon="fa fa-briefcase" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                         <f:param name="page" value="/pages/politica"/>
                     </p:menuitem>
-                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Parametros" icon="fa fa-sliders" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Parametros" icon="fa fa-sliders" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                         <f:param name="page" value="/pages/parametro"/>
                     </p:menuitem>
-                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Alertas" icon="fa fa-bullhorn" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Alertas" icon="fa fa-bullhorn" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                         <f:param name="page" value="/pages/alerta"/>
                     </p:menuitem>
-                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Categorias" icon="fa fa-tags" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Categorias" icon="fa fa-tags" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                         <f:param name="page" value="/pages/categoria"/>
                     </p:menuitem>
                 </p:submenu>
                 <p:submenu label="Reportes" icon="fa fa-file-text" >
-                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Usuarios" icon="fa fa-users">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Usuarios" icon="fa fa-users">
                         <f:param name="page" value="/pages/reporteUser"/>
                     </p:menuitem>
-                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Perfiles y Politicas" icon="fa fa-leanpub">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Perfiles y Politicas" icon="fa fa-leanpub">
                         <f:param name="page" value="/pages/reportePerfiles"/>
                     </p:menuitem>
-                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Estados" icon="fa fa-line-chart">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Estados" icon="fa fa-line-chart">
                         <f:param name="page" value="/pages/reporteConocimientos"/>
                     </p:menuitem>
-                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Calificación" icon="fa fa-check">
+                    <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Calificación" icon="fa fa-check">
                         <f:param name="page" value="/pages/reporteCalificaciones"/>
                     </p:menuitem>
                 </p:submenu>
-                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Tablas Maestras" icon="fa fa-table" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Tablas Maestras" icon="fa fa-table" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                     <f:param name="page" value="/pages/maestro"/>
                 </p:menuitem>
-                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Entidades" icon="fa fa-institution" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Entidades" icon="fa fa-institution" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                     <f:param name="page" value="/pages/entidad"/>
                 </p:menuitem>
-                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Rango" icon="fa fa-list" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="- Rango" icon="fa fa-list" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                     <f:param name="page" value="/pages/rango"/>
                 </p:menuitem>
 
@@ -146,7 +146,7 @@
                 <c:forEach items="#{administracionMB.listaCategoria}" var="c">
                     <p:submenu label="#{c.vnombre}">
                         <c:forEach items="#{c.children}" var="ch">
-                            <p:menuitem value="#{ch.vnombre}" ajax="false" action="#{administracionMB.onClickSubCategoriesFilter}" includeViewParams="true">
+                            <p:menuitem value="- #{ch.vnombre}" ajax="false" action="#{administracionMB.onClickSubCategoriesFilter}" includeViewParams="true">
                                 <f:param name="idparent" value="#{c.ncategoriaid}"/>
                                 <f:param name="idchild" value="#{ch.ncategoriaid}"/>
                             </p:menuitem>

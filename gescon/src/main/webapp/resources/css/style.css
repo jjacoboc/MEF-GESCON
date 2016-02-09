@@ -93,9 +93,9 @@ and open the template in the editor.
 .ui-growl-item-container {width: 169px !important;}
 
 .wk-picklist-list div ul {
-    font-size: 10px !important;
-    width: 500px !important;
-    height: 300px !important;
+    font-size: 12px !important;
+    width: 400px !important;
+    //height: 300px !important;
 }
 
 .wk-picklist-list div ul li {

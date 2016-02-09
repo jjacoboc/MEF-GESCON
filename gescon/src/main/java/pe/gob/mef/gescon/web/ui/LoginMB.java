@@ -61,9 +61,13 @@ public class LoginMB implements Serializable {
     private BigDecimal notificacionesRecibidas;
     private BigDecimal notificacionesAtendidas;
     private List<Consulta> listaNotificacionesAsignadas;
+    private List<Consulta> filteredListaNotificacionesAsignadas;
     private List<Consulta> listaNotificacionesRecibidas;
+    private List<Consulta> filteredListaNotificacionesRecibidas;
     private List<Consulta> listaNotificacionesAtendidas;
+    private List<Consulta> filteredListaNotificacionesAtendidas;
     private List<Consulta> listaNotificacionesAlerta;
+    private List<Consulta> filteredListaNotificacionesAlerta;
     private String alertaFlag;
     private Boolean claveCaducada;
     private String notificacion;
@@ -211,6 +215,14 @@ public class LoginMB implements Serializable {
         this.listaNotificacionesAsignadas = listaNotificacionesAsignadas;
     }
 
+    public List<Consulta> getFilteredListaNotificacionesAsignadas() {
+        return filteredListaNotificacionesAsignadas;
+    }
+
+    public void setFilteredListaNotificacionesAsignadas(List<Consulta> filteredListaNotificacionesAsignadas) {
+        this.filteredListaNotificacionesAsignadas = filteredListaNotificacionesAsignadas;
+    }
+
     public List<Consulta> getListaNotificacionesRecibidas() {
         return listaNotificacionesRecibidas;
     }
@@ -219,12 +231,28 @@ public class LoginMB implements Serializable {
         this.listaNotificacionesRecibidas = listaNotificacionesRecibidas;
     }
 
+    public List<Consulta> getFilteredListaNotificacionesRecibidas() {
+        return filteredListaNotificacionesRecibidas;
+    }
+
+    public void setFilteredListaNotificacionesRecibidas(List<Consulta> filteredListaNotificacionesRecibidas) {
+        this.filteredListaNotificacionesRecibidas = filteredListaNotificacionesRecibidas;
+    }
+
     public List<Consulta> getListaNotificacionesAtendidas() {
         return listaNotificacionesAtendidas;
     }
 
     public void setListaNotificacionesAtendidas(List<Consulta> listaNotificacionesAtendidas) {
         this.listaNotificacionesAtendidas = listaNotificacionesAtendidas;
+    }
+
+    public List<Consulta> getFilteredListaNotificacionesAtendidas() {
+        return filteredListaNotificacionesAtendidas;
+    }
+
+    public void setFilteredListaNotificacionesAtendidas(List<Consulta> filteredListaNotificacionesAtendidas) {
+        this.filteredListaNotificacionesAtendidas = filteredListaNotificacionesAtendidas;
     }
 
     /**
@@ -239,6 +267,14 @@ public class LoginMB implements Serializable {
      */
     public void setListaNotificacionesAlerta(List<Consulta> listaNotificacionesAlerta) {
         this.listaNotificacionesAlerta = listaNotificacionesAlerta;
+    }
+
+    public List<Consulta> getFilteredListaNotificacionesAlerta() {
+        return filteredListaNotificacionesAlerta;
+    }
+
+    public void setFilteredListaNotificacionesAlerta(List<Consulta> filteredListaNotificacionesAlerta) {
+        this.filteredListaNotificacionesAlerta = filteredListaNotificacionesAlerta;
     }
 
     /**

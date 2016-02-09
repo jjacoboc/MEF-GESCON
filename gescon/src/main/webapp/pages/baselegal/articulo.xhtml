@@ -54,6 +54,13 @@
                     </p:lightBox>
                 </h:panelGrid>
                 
+                <h:panelGrid columns="2">
+                    <h:outputText value="#{msgs.bl_lbl_fecha}" style="white-space: nowrap;"/>
+                    <h:outputText value="#{baseLegalMB.selectedBaseLegal.dfechavigencia}" >
+                        <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </h:panelGrid>
+                
                 <p:spacer/>
 
                 <h:outputText value="#{msgs.bl_lbl_ambito}" style="font-style: italic;"/>
