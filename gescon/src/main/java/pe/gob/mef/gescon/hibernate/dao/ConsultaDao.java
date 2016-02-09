@@ -16,4 +16,5 @@ public interface ConsultaDao {
     
     List<HashMap> getQueryFilter(HashMap filters);
     List<HashMap> getDestacadosByTipoConocimiento(HashMap filters);
+    List<HashMap<String,Object>> listarReporte(HashMap filters) throws Exception;
 }

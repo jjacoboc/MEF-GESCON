@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="555" pageHeight="802" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="dc4731a1-f0cd-4cb4-8454-297bdcc5548d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CONOCIMIENTO" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[select TC.vtitulo as TITULO, TC.Vdescripcion as DESCRIPCION from tconocimiento TC  where nconocimientoid in (select nconocimientovinc from TVINCULO where nconocimientoid=$P{CONOCIMIENTO} and NTIPOCONOCIMIENTOVINC in (3,4,5,6))
+union
+select VNUMERO as TITULO, VSUMILLA as DESCRIPCION from Tbaselegal where nbaselegalid in (select nconocimientovinc from TVINCULO where nconocimientoid=$P{CONOCIMIENTO} and NTIPOCONOCIMIENTOVINC=1)
+union
+select vasunto as TITULO, vdetalle as DESCRIPCION from tpregunta where npreguntaid in (select nconocimientovinc from TVINCULO where nconocimientoid=$P{CONOCIMIENTO} and NTIPOCONOCIMIENTOVINC=2)]]>
+	</queryString>
+	<field name="TITULO" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="109" y="10" width="100" height="20" uuid="23a6b4aa-c4b5-4ff5-a0e9-56af47b7990e"/>
+				<textFieldExpression><![CDATA[$F{TITULO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="244" y="10" width="100" height="20" uuid="f91dca3b-b79c-47d2-8aec-4898fb238516"/>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
