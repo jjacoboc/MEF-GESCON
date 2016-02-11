@@ -18,7 +18,14 @@
                                                       rendered="#{loginMB.politicas[msgs.REGISTRAR_USUARIO]}"/>
                                     <p:dataTable id="tbl" value="#{userMB.listaUser}" filteredValue="#{userMB.filteredListaUser}" paginator="true" rowHover="true"
                                                  var="row" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" paginatorPosition="top" 
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="usuarios" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 10%; text-align: center;" sortBy="#{row.vdni}" filterBy="#{row.vdni}" filterStyle="width: 80%; text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="#{msgs.us_lbl_columna01}"/></f:facet>
                                             <h:outputText value="#{row.vdni}"/>
@@ -45,7 +52,7 @@
                                                 <f:converter converterId="converterSiNo"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 10%;" priority="7">
+                                        <p:column style="text-align: center; width: 10%;" exportable="false" priority="7">
                                             <f:facet name="header"><h:outputText value="#{msgs.us_lbl_columna07}"/></f:facet>
                                             <p:commandLink ajax="false" action="#{userMB.toView}" styleClass="ui-link" title="ver usuario">
                                                 <h:outputText class="fa fa-search Fs16" />

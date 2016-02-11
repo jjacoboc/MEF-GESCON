@@ -23,7 +23,7 @@
                                     </h:panelGroup>
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_rango}"/>
+                                    <h:outputText value="#{msgs.bl_lbl_rango}" style="white-space: nowrap;"/>
                                     <h:panelGroup id="rangoNorma">
                                         <p:selectOneMenu value="#{baseLegalMB.selectedBaseLegal.ntiporangoid}" styleClass="Wid20" >
                                             <p:ajax event="change" listener="#{baseLegalMB.handleChangeValue}" update=":f:rangoNorma, :f:numeroNorma"/>
@@ -38,7 +38,7 @@
                                     </h:panelGroup>
                                     
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_numero}"/>
+                                    <h:outputText value="#{msgs.bl_lbl_numero}" style="white-space: nowrap;"/>
                                     <h:panelGroup id="numeroNorma">
                                         <p:inputText size="10" value="#{baseLegalMB.tipoNorma}" styleClass="Fs14" readonly="true"/>
                                         <h:outputText value=" - "/>
@@ -72,7 +72,7 @@
                                     </h:panelGrid>
                                     
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
-                                    <h:outputLabel value="#{msgs.bl_lbl_fecha}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_fecha}" style="white-space: nowrap;"/>
                                     <p:calendar locale="es" value="#{baseLegalMB.selectedBaseLegal.dfechavigencia}" size="12"
                                                 pattern="dd/MM/yyyy" showOn="button" readonlyInput="true" navigator="true" showButtonPanel="true"/>
 
@@ -162,9 +162,15 @@
                                                     update=":f:pgPostVinc, :pickDialogForm:pgPick"/>
                                             <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
                                             <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
+                                            <p:column>
+                                                <h:outputText class="fa fa-angle-double-right"/>
+                                                <p:spacer width="5"/>
+                                                <h:outputText value="#{p.vnumero}" title="#{p.vnombre}"/>
+                                            </p:column>
                                         </p:pickList>
                                         
                                     </h:panelGrid>
+                                    <p:commandButton value="Cancelar" onclick="PF('pickDialog').hide()" styleClass="ui-link Fs14"/>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>

@@ -54,17 +54,17 @@
                                             </tr>
                                         </table>
                                     </p:panel>
-                                    <p:panel header="Perfiles" styleClass="TexAlLeft" >
+                                    <p:panel header="Reportes" styleClass="TexAlLeft" >
                                         <table>
                                             <tr>
-                                                <ui:repeat value="#{administracionMB.listaPerfil}" var="per">
+                                                <ui:repeat value="#{administracionMB.listaReporte}" var="report">
                                                     <td>
                                                         <p:commandLink styleClass="ui-link" action="#{loginMB.redirect}" >
-                                                            <f:param name="page" value="/pages/perfil"/>
+                                                            <f:param name="page" value="#{report.page}"/>
                                                             <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
                                                                 <p:spacer/>
-                                                                <i class="#{per.imagen}" style="height: 32px; width: 32px;"></i>
-                                                                <h:outputText value="#{per.vdescripcion}" styleClass="Fs14 FontBold black"/>
+                                                                <i class="#{report.imagen}" style="height: 32px; width: 32px;"></i>
+                                                                <h:outputText value="#{report.nombre}" styleClass="Fs14 FontBold black"/>
                                                                 <p:spacer/>
                                                             </p:panelGrid>
                                                         </p:commandLink>

@@ -16,7 +16,14 @@
                                 <h:panelGrid columns="1">
                                     <p:dataTable id="tbl" value="#{alertaMB.listaAlerta}" filteredValue="#{alertaMB.filteredListaAlerta}" var="row" 
                                                  paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" paginatorPosition="top" rowHover="true"
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="alertas" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 20%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                             <h:outputText value="#{row.vnombre}" styleClass="Fleft"/>
@@ -39,7 +46,7 @@
                                             <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
                                             <h:outputText value="#{row.vfechacreacion}" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 8%;">
+                                        <p:column style="text-align: center; width: 8%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink actionListener="#{alertaMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar alerta">
                                                 <h:outputText class="fa fa-edit Fs16" />

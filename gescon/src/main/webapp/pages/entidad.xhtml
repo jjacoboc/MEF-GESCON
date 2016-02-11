@@ -18,7 +18,14 @@
                                     <p:commandButton  value="Nuevo" actionListener="#{entidadMB.toSave}" update=":newDialogForm:pgNew" oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" />
                                     <p:dataTable id="tbl" value="#{entidadMB.listaEntidad}" filteredValue="#{entidadMB.filteredListaEntidad}" var="row" 
                                                  paginator="true" paginatorPosition="top" rows="15" rowIndexVar="rowIndex" draggableColumns="true" rowHover="true" 
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="entidades" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 10%;" sortBy="#{row.vcodigoentidad}" filterBy="#{row.vcodigoentidad}" filterMatchMode="contains" filterStyle="width: 80%;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="CODIGO"/></f:facet>
                                             <h:outputText value="#{row.vcodigoentidad}"/>
@@ -45,7 +52,7 @@
                                             <f:facet name="header"><h:outputText value="FECHA MODIFICACIÓN"/></f:facet>
                                             <h:outputText value="#{row.vfechamodificacion   }" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 8%;">
+                                        <p:column style="text-align: center; width: 8%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink actionListener="#{entidadMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar entidad">
                                                 <h:outputText class="fa fa-edit Fs16" />

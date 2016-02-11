@@ -18,7 +18,14 @@
                                     <p:commandButton  value="Nuevo" ajax="false" action="#{contenidoMB.toSave}" styleClass="Fleft" icon="fa fa-plus white"
                                                       rendered="#{loginMB.politicas[msgs.REGISTRAR_CONTENIDO]}"/>
                                     <p:dataTable id="tbl" value="#{contenidoMB.listaContenido}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="contenidos" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column sortBy="#{row.vtitulo}" filterBy="#{row.vtitulo}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
                                             <f:facet name="header"><h:outputText value="TITULO" style="font-size: 11px;"/></f:facet>
                                             <h:outputText value="#{row.vtitulo}" />
@@ -33,7 +40,7 @@
                                                 <f:convertDateTime dateStyle="medium" type="both" locale="es" />
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 10%;">
+                                        <p:column style="text-align: center; width: 10%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink ajax="false" action="#{contenidoMB.toView}" styleClass="ui-link" title="ver contenido">
                                                 <h:outputText class="fa fa-search Fs16" />

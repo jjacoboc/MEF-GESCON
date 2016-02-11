@@ -17,7 +17,14 @@
                                     <p:commandButton value="Nuevo" ajax="false" action="#{preguntaMB.toSave}" styleClass="Fleft" icon="fa fa-plus white" 
                                                      rendered="#{loginMB.politicas[msgs.REGISTRAR_PREGUNTAS]}"/>
                                     <p:dataTable id="tbl" value="#{preguntaMB.listaPregunta}" var="row" paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="preguntas" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 120px;" sortBy="#{row.vasunto}" filterBy="#{row.vasunto}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="ASUNTO"/></f:facet>
                                             <p:commandLink id="grow" styleClass="ui-link Fs14 Fleft Unselectable" global="false">
@@ -43,7 +50,7 @@
                                                 <f:converter converterId="converterSituacion"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 60px;">
+                                        <p:column style="text-align: center; width: 60px;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink ajax="false" action="#{preguntaMB.toSee}"  styleClass="ui-link" title="Ver Pregunta">
                                                 <h:outputText class="fa fa-search Fs16" />

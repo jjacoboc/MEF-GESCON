@@ -18,7 +18,14 @@
                                                       rendered="#{loginMB.politicas[msgs.REGISTRAR_BUENAPRACTICA]}"/>
                                     <p:dataTable id="tbl" value="#{buenaPracticaMB.listaBuenaPractica}" filteredValue="#{buenaPracticaMB.filteredListaBuenaPractica}" 
                                                  var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true"
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="buenasPracticas" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 47%" priority="1">
                                             <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna01}"/></f:facet>
                                             <h:outputText value="#{row.vtitulo}"/>
@@ -41,7 +48,7 @@
                                                 <f:converter converterId="converterSituacion"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 10%;" priority="5">
+                                        <p:column style="text-align: center; width: 10%;" exportable="false" priority="5">
                                             <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna05}"/></f:facet>
                                             <p:commandLink ajax="false" action="#{buenaPracticaMB.toView}" styleClass="ui-link" title="ver buena practica">
                                                 <h:outputText class="fa fa-search Fs16" />

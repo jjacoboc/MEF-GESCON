@@ -18,9 +18,16 @@
                                     <p:commandButton  value="Nuevo" actionListener="#{perfilMB.toSave}" update=":newDialogForm:pgNew" 
                                                       oncomplete="PF('newDialog').show();" styleClass="Fleft" icon="fa fa-plus white" 
                                                       />
-                                    <p:dataTable id="tbl" value="#{perfilMB.listaPerfils}" filteredValue="#{perfilMB.filteredListaPerfils}"
-                                                 var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
+                                    <p:dataTable id="tbl" value="#{perfilMB.listaPerfils}" filteredValue="#{perfilMB.filteredListaPerfils}" var="row" 
+                                                 paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="perfiles" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 20%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                             <p:commandLink id="num" styleClass="ui-link Fs14 Unselectable" global="false">
@@ -45,7 +52,7 @@
                                             <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
                                             <h:outputText value="#{row.vfechacreacion}" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 9%;">
+                                        <p:column style="text-align: center; width: 9%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink actionListener="#{perfilMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar perfil">
                                                 <h:outputText class="fa fa-edit Fs16" />

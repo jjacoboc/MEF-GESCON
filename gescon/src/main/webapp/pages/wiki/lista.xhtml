@@ -18,7 +18,14 @@
                                                       rendered="#{loginMB.politicas[msgs.REGISTRAR_WIKI]}"/>
                                     <p:dataTable id="tbl" value="#{wikiMB.listaWiki}" filteredValue="#{wikiMB.filteredListaWiki}" paginator="true" rowHover="true"
                                                  var="row" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" paginatorPosition="top" 
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="wikis" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 47%" priority="1">
                                             <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna01}"/></f:facet>
                                             <h:outputText value="#{row.vtitulo}"/>
@@ -41,7 +48,7 @@
                                                 <f:converter converterId="converterSituacion"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 10%;" priority="5">
+                                        <p:column style="text-align: center; width: 10%;" exportable="false" priority="5">
                                             <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna05}"/></f:facet>
                                             <p:commandLink ajax="false" action="#{wikiMB.toView}" styleClass="ui-link" title="Ver Wiki">
                                                 <h:outputText class="fa fa-search Fs16" />

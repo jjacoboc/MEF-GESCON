@@ -102,6 +102,8 @@ and open the template in the editor.
     font-size: 12px !important;
 }
 
+.ui-picklist.ui-picklist-responsive .ui-picklist-list-wrapper {width: 45% !important;}
+
 .ui-outputlabel, table tbody tr td{color:#3B3D3F !important;}
 .ui-chkbox .ui-chkbox-label{color: #3B3D3F !important;}
 .ui-datatable table thead tr th{color:#3B3D3F !important;}

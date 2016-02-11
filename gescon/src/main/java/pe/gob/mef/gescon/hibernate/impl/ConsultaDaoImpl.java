@@ -153,7 +153,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(StringUtils.isNotBlank(order)) {
                 sql.append("ORDER BY ").append(order);
             } else {
-                sql.append("ORDER BY 6 ");
+                sql.append("ORDER BY 6 DESC ");
             }
 
             object = getHibernateTemplate().execute(

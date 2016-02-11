@@ -17,7 +17,14 @@
                                 <h:panelGrid columns="1">
                                     <p:dataTable id="tbl" value="#{politicaMB.listaPolitica}" filteredValue="#{politicaMB.filteredListaPolitica}" var="row"
                                                  paginator="true" rows="15" rowIndexVar="rowIndex" draggableColumns="true" paginatorPosition="top" rowHover="true"
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="politicas" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 20%;" sortBy="#{row.nmoduloid}" filterBy="#{row.nmoduloid}" filterOptions="#{listaSessionMB.filterModulos}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="1">
                                             <f:facet name="header"><h:outputText value="MÓDULO"/></f:facet>
                                             <h:outputText value="#{row.nmoduloid}">
@@ -45,7 +52,7 @@
                                             <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
                                             <h:outputText value="#{row.vfechacreacion}" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 10%;">
+                                        <p:column style="text-align: center; width: 10%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink actionListener="#{politicaMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar politica">
                                                 <h:outputText class="fa fa-edit Fs16" />

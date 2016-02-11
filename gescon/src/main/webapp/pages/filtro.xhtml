@@ -87,8 +87,8 @@
                     <p:ajax event="change" listener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb"/>
                 </p:selectManyCheckbox>
             </p:fieldset>
-            <p:fieldset>
-                <p:commandLink value="Formular Pregunta" ajax="false" action="/pages/pregunta/nuevo.xhtml" styleClass="ui-link" rendered="#{loginMB.politicas[msgs.REGISTRAR_PREGUNTAS]}" />
+            <p:fieldset rendered="#{loginMB.politicas[msgs.REGISTRAR_PREGUNTAS]}">
+                <p:commandLink value="Formular Pregunta" ajax="false" action="/pages/pregunta/nuevo.xhtml" styleClass="ui-link" />
             </p:fieldset>
             <p:fieldset>
                 <p:commandButton  value="Imprimir" action="#{consultaMB.reporte}" ajax="false"/>

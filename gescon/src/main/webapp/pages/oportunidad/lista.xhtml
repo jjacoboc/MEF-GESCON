@@ -18,7 +18,14 @@
                                                       rendered="#{loginMB.politicas[msgs.REGISTRAR_OPORTUNIDAD]}"/>
                                     <p:dataTable id="tbl" value="#{oportunidadMB.listaOportunidad}" filteredValue="#{oportunidadMB.filteredListaOportunidad}" 
                                                  var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true"
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="oprotunidadesMejora" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 47%" priority="1">
                                             <f:facet name="header"><h:outputText value="#{msgs.om_lbl_columna01}"/></f:facet>
                                             <h:outputText value="#{row.vtitulo}"/>
@@ -41,7 +48,7 @@
                                                 <f:converter converterId="converterSituacion"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 10%;" priority="5">
+                                        <p:column style="text-align: center; width: 10%;" exportable="false" priority="5">
                                             <f:facet name="header"><h:outputText value="#{msgs.om_lbl_columna05}"/></f:facet>
                                             <p:commandLink ajax="false" action="#{oportunidadMB.toView}" styleClass="ui-link" title="ver oportunidad de mejora">
                                                 <h:outputText class="fa fa-search Fs16" />

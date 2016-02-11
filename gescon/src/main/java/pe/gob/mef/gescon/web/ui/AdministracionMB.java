@@ -39,6 +39,7 @@ public class AdministracionMB implements Serializable{
     private List<Categoria> listaAllCategorias;
     private List<Categoria> listaCategoria;
     private List<Perfil> listaPerfil;
+    private List<Admin> listaReporte;
     private List<Consulta> listaDestacadosBL;
     private List<Consulta> listaDestacadosPR;
     private List<Consulta> listaDestacadosWK;
@@ -104,6 +105,14 @@ public class AdministracionMB implements Serializable{
      */
     public void setListaPerfil(List<Perfil> listaPerfil) {
         this.listaPerfil = listaPerfil;
+    }
+
+    public List<Admin> getListaReporte() {
+        return listaReporte;
+    }
+
+    public void setListaReporte(List<Admin> listaReporte) {
+        this.listaReporte = listaReporte;
     }
 
     public List<Consulta> getListaDestacadosBL() {
@@ -174,9 +183,24 @@ public class AdministracionMB implements Serializable{
             
             listaAdministracion = new ArrayList<Admin>();
             Admin admin = new Admin();
-            admin.setNombre("Alertas");
-            admin.setImagen("fa fa-bullhorn Fs26 black");
-            admin.setPage("/pages/alerta");
+            admin.setNombre("Categorías");
+            admin.setImagen("fa fa-tags Fs26 black");
+            admin.setPage("/pages/categoria");
+            listaAdministracion.add(admin);
+            admin = new Admin();
+            admin.setNombre("Usuarios");
+            admin.setImagen("fa fa-users Fs26 black");
+            admin.setPage("/pages/usuarioexterno/lista");
+            listaAdministracion.add(admin);
+            admin = new Admin();
+            admin.setNombre("Perfiles");
+            admin.setImagen("fa fa-newspaper-o Fs26 black");
+            admin.setPage("/pages/perfil");
+            listaAdministracion.add(admin);
+            admin = new Admin();
+            admin.setNombre("Políticas");
+            admin.setImagen("fa fa-briefcase Fs26 black");
+            admin.setPage("/pages/politica");
             listaAdministracion.add(admin);
             admin = new Admin();
             admin.setNombre("Parámetros");
@@ -184,16 +208,39 @@ public class AdministracionMB implements Serializable{
             admin.setPage("/pages/parametro");
             listaAdministracion.add(admin);
             admin = new Admin();
-            admin.setNombre("Tablas Maestras");
-            admin.setImagen("fa fa-table Fs26 black");
-            admin.setPage("/pages/maestro");
-            listaAdministracion.add(admin);
+            admin.setNombre("Alertas");
+            admin.setImagen("fa fa-bullhorn Fs26 black");
+            admin.setPage("/pages/alerta");
+            listaAdministracion.add(admin);            
+            admin = new Admin();
             
             CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setListaCategoria(catservice.getCategoriasPrimerNivel());
             for(Categoria c : this.getListaCategoria()) {
                 c.setChildren(catservice.getCategoriaHijos(c));
             }
+            
+            listaReporte = new ArrayList<Admin>();
+            Admin report = new Admin();
+            report.setNombre("Usuarios");
+            report.setImagen("fa fa-users Fs26 black");
+            report.setPage("/pages/reporteUser");
+            listaReporte.add(report);
+            report = new Admin();
+            report.setNombre("Perfiles y Políticas");
+            report.setImagen("fa fa-leanpub Fs26 black");
+            report.setPage("/pages/reportePerfiles");
+            listaReporte.add(report);
+            report = new Admin();
+            report.setNombre("Estados");
+            report.setImagen("fa fa-line-chart Fs26 black");
+            report.setPage("/pages/reporteConocimientos");
+            listaReporte.add(report);
+            report = new Admin();
+            report.setNombre("Calificación");
+            report.setImagen("fa fa-check Fs26 black");
+            report.setPage("/pages/reporteCalificaciones");
+            listaReporte.add(report);
             
             listaPerfil = new ArrayList<Perfil>();
             Perfil perfil = new Perfil();

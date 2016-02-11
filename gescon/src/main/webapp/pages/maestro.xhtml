@@ -16,7 +16,14 @@
                                 <h:panelGrid columns="1">
                                     <p:dataTable id="tbl" value="#{maestroMB.listaMaestro}" filteredValue="#{maestroMB.filteredListaMaestro}" var="row" rows="10"
                                                  paginator="true" paginatorPosition="top" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" rowHover="true" 
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="maestros" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 20%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                             <p:commandLink id="num" styleClass="ui-link Fs14 Unselectable" global="false">
@@ -41,7 +48,7 @@
                                             <f:facet name="header"><h:outputText value="FECHA MODIFICACIÓN"/></f:facet>
                                             <h:outputText value="#{row.vfechamodificacion   }" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 8%;">
+                                        <p:column style="text-align: center; width: 8%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink actionListener="#{maestroMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar maestro">
                                                 <h:outputText class="fa fa-edit Fs16" />
@@ -132,7 +139,14 @@
                                     <p:commandButton  value="Nuevo" actionListener="#{maestroMB.toSave}" update=":newdDialogForm:pgNewd" oncomplete="PF('newdDialog').show();" icon="fa fa-plus white" />
                                     <p:dataTable id="tbl" value="#{maestroMB.listaMaestroDetalle}" filteredValue="#{maestroMB.filteredListaMaestroDetalle}" var="row" 
                                                  paginator="true" rows="5" rowIndexVar="rowIndex" draggableColumns="true" reflow="true" paginatorPosition="top" rowHover="true"
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
                                                  rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
+                                        <f:facet name="{Exporters}">
+                                            <h:commandLink styleClass="Fright">
+                                                <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
+                                                <p:dataExporter type="xls" target="tbl" fileName="detalleMaestros" />
+                                            </h:commandLink>
+                                        </f:facet>
                                         <p:column style="width: 20%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;">
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                             <h:outputText value="#{row.vnombre}" styleClass="Fleft"/>
@@ -155,7 +169,7 @@
                                             <f:facet name="header"><h:outputText value="FECHA MODIFICACIÓN"/></f:facet>
                                             <h:outputText value="#{row.vfechamodificacion   }" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 8%;">
+                                        <p:column style="text-align: center; width: 8%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink actionListener="#{maestroMB.toUpdateDetail}" update=":editdDialogForm:pgEditd" oncomplete="PF('editdDialog').show();" styleClass="ui-link" title="editar detalle">
                                                 <h:outputText class="fa fa-edit Fs16" />

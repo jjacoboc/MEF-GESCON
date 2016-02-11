@@ -23,7 +23,7 @@
                                     </h:panelGroup>
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_rango}"/>
+                                    <h:outputText value="#{msgs.bl_lbl_rango}" style="white-space: nowrap;"/>
                                     <h:panelGroup id="rangoNorma">
                                         <p:selectOneMenu value="#{baseLegalMB.tiporangoId}" styleClass="Wid20" >
                                             <p:ajax event="change" listener="#{baseLegalMB.handleChangeValue}" update=":f:rangoNorma, :f:numeroNorma"/>
@@ -38,7 +38,7 @@
                                     </h:panelGroup>
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_numero}"/>
+                                    <h:outputText value="#{msgs.bl_lbl_numero}" style="white-space: nowrap;"/>
                                     <h:panelGroup id="numeroNorma">
                                         <p:inputText size="10" value="#{baseLegalMB.tipoNorma}" styleClass="Fs14" readonly="true"/>
                                         <h:outputText value=" - "/>
@@ -46,7 +46,7 @@
                                     </h:panelGroup>
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_nombre}"/>
+                                    <h:outputText value="#{msgs.bl_lbl_nombre}" style="white-space: nowrap;"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                         <p:inputTextarea value="#{baseLegalMB.sumilla}" rows="4" cols="100" styleClass="Fs14"
                                                          counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
@@ -74,7 +74,7 @@
                                     </h:panelGrid>
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_fecha}"/>
+                                    <h:outputText value="#{msgs.bl_lbl_fecha}" style="white-space: nowrap;"/>
                                     <p:calendar id="fcese" locale="es" value="#{baseLegalMB.fechaVigencia}" size="12" pattern="dd/MM/yyyy" 
                                                 showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" styleClass="Fs14"/>
 
@@ -102,7 +102,7 @@
                                         <h:outputText value="#{msgs.bl_lbl_notatema}" styleClass="Fs10"/>
                                         <p:watermark for="tema" value="#{msgs.bl_lbl_watermark}"/>
                                     </h:panelGrid>
-                                    
+
                                     <p:spacer/>
                                     <h:outputText value="#{msgs.bl_lbl_destacado}"/>
                                     <p:selectBooleanCheckbox value="#{baseLegalMB.chkDestacado}" />
@@ -113,7 +113,7 @@
                                 </h:panelGrid>
                                 <p:fieldset>
                                     <h:panelGrid id="pgNewVinc" columns="1" cellpadding="0" cellspacing="0">
-                                        <p:commandButton value="#{msgs.bl_btn_vinculo}" actionListener="#{baseLegalMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pgPick" styleClass="ui-link Fs14"/>
+                                        <p:commandButton value="#{msgs.bl_btn_vinculo}" actionListener="#{baseLegalMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pick" styleClass="ui-link Fs14"/>
                                         <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada." >
                                             <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
                                                 <h:outputText value="#{t.vnumero}"/>
@@ -146,18 +146,21 @@
                             </p:panel>
                         </h:form>
 
-                        <p:dialog id="pickDlg" header="#{msgs.bl_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                        <p:dialog id="pickDlg" header="#{msgs.bl_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" responsive="true" styleClass="Responsive" >
                             <h:form id="pickDialogForm">
-                                <h:panelGrid id="pgPick" columns="1">
-                                    <p:pickList value="#{baseLegalMB.pickList}" var="p" itemValue="#{p}" itemLabel="#{p.vnumero} - #{p.vnombre}"
-                                                converter="converterPickListBaseLegal" showSourceFilter="true" showTargetFilter="true" 
-                                                filterMatchMode="contains">
-                                        <p:ajax event="transfer" listener="#{baseLegalMB.onTransfer}" 
-                                                update=":f:pgNewVinc, :pickDialogForm:pgPick"/>
-                                        <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
-                                        <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
-                                    </p:pickList>
-                                </h:panelGrid>
+                                <p:pickList id="pick" value="#{baseLegalMB.pickList}" var="p" itemValue="#{p}" itemLabel="#{p.vnumero} - #{p.vnombre}"
+                                            converter="converterPickListBaseLegal" showSourceFilter="true" showTargetFilter="true" 
+                                            filterMatchMode="contains" responsive="true" styleClass="Responsive100">
+                                    <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
+                                    <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
+                                    <p:column style="white-space: nowrap;">
+                                        <h:outputText class="fa fa-angle-double-right"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{p.vnumero}" title="#{p.vnombre}"/>
+                                    </p:column>
+                                    <p:ajax event="transfer" listener="#{baseLegalMB.onTransfer}" update=":f:pgNewVinc, :pickDialogForm:pick"/>
+                                </p:pickList>
+                                <p:commandButton value="Cerrar" onclick="PF('pickDialog').hide()" styleClass="ui-link Fs14"/>
                             </h:form>
                         </p:dialog>
 
