@@ -29,6 +29,15 @@
                                         <p:spacer width="15"/>
                                         <h:outputText value="#{buenaPracticaMB.selectedCategoria.vnombre}" styleClass="Fs14"/>
                                     </h:panelGroup>
+                                    
+                                    <h:panelGrid columns="6" cellpadding="0" cellspacing="0">
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.bp_lbl_destacado}"/>
+                                        <p:spacer width="5"/>
+                                        <p:selectBooleanCheckbox value="#{buenaPracticaMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Las Buenas Prácticas destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
+                                    </h:panelGrid>
 
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -64,7 +73,7 @@
                                                         <p:commandLink value="editar" actionListener="#{buenaPracticaMB.toEditSection}" update=":esecDialogForm:pgEsec" oncomplete="PF('esecDialog').show();" styleClass="ui-link Fs12">
                                                             <f:param name="index" value="#{vs.index}"/>
                                                         </p:commandLink>
-                                                        <h:outputText value=" ]" styleClass="FontBold black"/>
+                                                        <h:outputText value="]" styleClass="FontBold black"/>
                                                     </td>
                                                 </tr>
                                                 <tr><td><h:outputText value="#{s.detalleHtml}" escape="false" styleClass="Fs14"/></td></tr>
@@ -83,10 +92,16 @@
                                             <p:tab title="Bases Legales">
                                                 <p:dataTable value="#{buenaPracticaMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
                                                              emptyMessage="Ninguna base legal vinculada." >
-                                                    <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
-                                                        <h:outputText value="#{p.codigo}"/>
+                                                    <p:column style="width: 25%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.codigo}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
-                                                    <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                                    <p:column style="width: 45%" headerText="#{msgs.bl_lbl_columna08}">
                                                         <h:outputText value="#{p.nombre}" />
                                                     </p:column>
                                                     <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
@@ -101,7 +116,13 @@
                                                 <p:dataTable value="#{buenaPracticaMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ningún contenido vinculado." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                                        <h:outputText value="#{p.nombre}"/>
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.nombre}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
@@ -118,7 +139,13 @@
                                                 <p:dataTable value="#{buenaPracticaMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna buena práctica vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                                        <h:outputText value="#{p.nombre}"/>
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.nombre}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
@@ -135,7 +162,13 @@
                                                 <p:dataTable value="#{buenaPracticaMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna oportunidad de mejora vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                                        <h:outputText value="#{p.nombre}"/>
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.nombre}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
@@ -152,7 +185,13 @@
                                                 <p:dataTable value="#{buenaPracticaMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ningún wiki vinculado." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                                        <h:outputText value="#{p.nombre}"/>
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.nombre}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
@@ -169,7 +208,13 @@
                                                 <p:dataTable value="#{buenaPracticaMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna respuesta vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
-                                                        <h:outputText value="#{p.nombre}"/>
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.nombre}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
@@ -275,7 +320,7 @@
                                             <h:outputText class="fa fa-angle-double-right"/>
                                             <p:spacer width="5"/>
                                             <h:outputText id="cod" value="#{p.codigo}" title="#{p.nombre}" rendered="#{not empty p.codigo}"/>
-                                            <h:outputText value="#{p.nombre}" rendered="#{empty p.codigo}"/>
+                                            <h:outputText value="#{p.nombre}" title="#{p.sumilla}" rendered="#{empty p.codigo}"/>
                                         </p:column>
                                         <p:column style="width: 20%; text-align: center;">
                                             <h:outputText value="#{p.categoria}" />
@@ -288,6 +333,53 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
+                        
+                        <p:dialog id="destDlg" header="#{msgs.bp_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
+                            <h:form id="destDialogForm">
+                                <h:panelGrid id="pgDest" columns="1">
+                                    <h:outputText value="#{msgs.bp_msg_destacado1}" styleClass="Fs14 FontBold red"/>
+                                    <h:outputText value="#{msgs.bp_msg_destacado2}" styleClass="Fs14 FontBold red"/>
+                                    <p:dataTable id="tbl" value="#{buenaPracticaMB.listaDestacados}" var="row" rowIndexVar="rowIndex" scrollable="true"
+                                                 scrollRows="5" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <p:column style="width: 50%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna01}"/></f:facet>
+                                            <p:commandLink id="num" styleClass="GesconLink Fs14 Unselectable" global="false">
+                                                <h:outputText value="#{row.nombre}"/>
+                                            </p:commandLink>
+                                            <p:tooltip id="toolTipGrow" for="num" value="#{row.sumilla}" showEffect="clip" hideEffect="explode" style="font-size: 12px; max-width: 400px;" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna02}"/></f:facet>
+                                            <h:outputText value="#{row.categoria}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna04}"/></f:facet>
+                                            <h:outputText value="#{row.estado}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna03}"/></f:facet>
+                                            <h:outputText value="#{row.fechaPublicacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <p:commandLink actionListener="#{buenaPracticaMB.toDeleteOutstanding}" oncomplete="PF('confirmDelDlg').show();" styleClass="GesconLink" title="eliminar base legal destacada">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:commandButton value="Cancelar" onclick="PF('destDialog').hide()" type="button" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.bp_msg_elidestacado}" header="#{msgs.bp_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
+                            <h:form id="confirmDelDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{buenaPracticaMB.deleteOutstanding}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
                     </f:view>
                 </div>
             </div>

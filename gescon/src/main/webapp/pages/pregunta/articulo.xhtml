@@ -40,7 +40,13 @@
                                 <p:dataTable value="#{preguntaMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
                                              emptyMessage="Ninguna respuesta vinculada." >
                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
-                                        <h:outputText value="#{p.nombre}"/>
+                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink">
+                                            <h:outputText value="#{p.nombre}"/>
+                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                            <f:param name="popup" value="false"/>
+                                            <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                                        </p:commandLink>
                                     </p:column>
                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                         <h:outputText value="#{p.sumilla}"/>
@@ -51,7 +57,13 @@
                                 <p:dataTable value="#{preguntaMB.listaTargetVinculosConocimiento}" var="p" scrollRows="5" scrollable="true" 
                                              emptyMessage="Ningun Conocimiento vinculado." >
                                     <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
-                                        <h:outputText value="#{p.nombre}"/>
+                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink">
+                                            <h:outputText value="#{p.nombre}"/>
+                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                            <f:param name="popup" value="false"/>
+                                            <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                                        </p:commandLink>
                                     </p:column>
                                     <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
                                         <h:outputText value="#{p.sumilla}" />
@@ -70,7 +82,7 @@
             </h:panelGrid>
         </p:panel>
         <h:panelGrid columns="1" cellpadding="0" cellspacing="0" width="100%">
-            <p:commandButton value="Regresar" ajax="false" action="#{consultaMB.back}"/>
+            
         </h:panelGrid>
     </h:form>
 </ui:composition>

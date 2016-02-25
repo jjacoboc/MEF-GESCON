@@ -52,35 +52,35 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 60px;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{preguntaMB.toSee}"  styleClass="ui-link" title="Ver Pregunta">
+                                            <p:commandLink ajax="false" action="#{preguntaMB.toSee}"  styleClass="GesconLink" title="Ver Pregunta">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{preguntaMB.toEdit}" styleClass="ui-link" title="actualizar Pregunta"
+                                            <p:commandLink ajax="false" action="#{preguntaMB.toEdit}" styleClass="GesconLink" title="actualizar Pregunta"
                                                            rendered="#{loginMB.politicas[msgs.EDITAR_PREGUNTAS]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{preguntaMB.toPost}" styleClass="ui-link" title="publicar Pregunta"
+                                            <p:commandLink ajax="false" action="#{preguntaMB.toPost}" styleClass="GesconLink" title="publicar Pregunta"
                                                            rendered="#{loginMB.politicas[msgs.PUBLICAR_PREGUNTAS] and row.dfechapublicacion eq null}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{preguntaMB.toHistorial}" styleClass="ui-link" title="Historial de Respuestas"
+                                            <p:commandLink ajax="false" action="#{preguntaMB.toHistorial}" styleClass="GesconLink" title="Historial de Respuestas"
                                                            rendered="#{loginMB.politicas[msgs.HISTORIAL_RESPUESTA]}">
                                                 <h:outputText class="fa fa-history Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{preguntaMB.setSelectedRow}" title="Activar Pregunta" styleClass="ui-link" oncomplete="PF('confirmActDlg').show();"
+                                            <p:commandLink actionListener="#{preguntaMB.setSelectedRow}" title="Activar Pregunta" styleClass="GesconLink" oncomplete="PF('confirmActDlg').show();"
                                                            rendered="#{loginMB.politicas[msgs.ACTIVAR_PREGUNTAS] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{preguntaMB.setSelectedRow}" title="Desactivar Pregunta" styleClass="ui-link" oncomplete="PF('confirmDesDlg').show();"
+                                            <p:commandLink actionListener="#{preguntaMB.setSelectedRow}" title="Desactivar Pregunta" styleClass="GesconLink" oncomplete="PF('confirmDesDlg').show();"
                                                            rendered="#{loginMB.politicas[msgs.DESACTIVAR_PREGUNTAS] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />

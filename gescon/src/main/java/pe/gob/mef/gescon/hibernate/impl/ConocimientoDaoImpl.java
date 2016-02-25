@@ -268,6 +268,35 @@ public class ConocimientoDaoImpl extends HibernateDaoSupport implements Conocimi
     }
     
     @Override
+    public List<HashMap> getConcimientosByVinculoBaseLegalId(final BigDecimal id) {
+        final StringBuilder sql = new StringBuilder();
+        Object object = null;
+        try {
+            sql.append("SELECT t.nconocimientoid AS ID ");
+            sql.append("FROM tconocimiento t ");
+            sql.append("INNER JOIN tvinculo x ");
+            sql.append("ON x.nconocimientoid = t.nconocimientoid ");
+            sql.append("AND x.nconocimientovinc = :IDCONOCIMIENTO ");
+            sql.append("AND x.ntipoconocimientovinc = :TIPO ");
+            object = getHibernateTemplate().execute(
+                    new HibernateCallback() {
+                        @Override
+                        public Object doInHibernate(Session session) throws HibernateException {
+                            Query query = session.createSQLQuery(sql.toString());
+                            query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+                            query.setParameter("IDCONOCIMIENTO", id);
+                            query.setParameter("TIPO", BigDecimal.ONE);
+                            return query.list();
+                        }
+                    });
+        } catch (DataAccessException e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return (List<HashMap>) object;
+    }
+    
+    @Override
     public Tconocimiento getBpracticaById(BigDecimal idtipo, BigDecimal id) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Tconocimiento.class);
         criteria.add(Restrictions.eq("ntipoconocimientoid", idtipo));

@@ -40,7 +40,7 @@
                 <h:outputText value="#{baseLegalMB.selectedBaseLegal.vnombre}" />
                 <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                     <p:lightBox>
-                        <h:outputLink value="#">
+                        <h:outputLink value="#" styleClass="GesconLink">
                             <h:panelGrid columns="2">
                                 <p:graphicImage library="images" name="pdf.png"/>
                                 <h:outputText id="fileName" value="#{baseLegalMB.selectedBaseLegal.archivo.vnombre}"/>
@@ -82,10 +82,16 @@
                 <p:fieldset legend="Vinculos Relacionados" toggleable="true">
                         <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" rowIndexVar="rowIndex"
                                      emptyMessage="Ninguna base legal vinculada." >
-                            <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
-                                <h:outputText value="#{t.vnumero}"/>
+                            <p:column style="width: 25%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                    <h:outputText value="#{t.vnumero}"/>
+                                    <f:param name="id" value="#{t.nbaselegalid}"/>
+                                    <f:param name="idTipo" value="1"/>
+                                    <f:param name="popup" value="false"/>
+                                    <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                                </h:commandLink>
                             </p:column>
-                            <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                            <p:column style="width: 45%" headerText="#{msgs.bl_lbl_columna08}">
                                 <h:outputText value="#{t.vnombre}"/>
                             </p:column>
                             <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
@@ -103,7 +109,7 @@
             </h:panelGrid>
         </p:panel>
         <h:panelGrid columns="1" cellpadding="0" cellspacing="0" width="100%">
-            <p:commandButton value="Regresar" ajax="false" action="#{consultaMB.back}"/>
+            
         </h:panelGrid>
     </h:form>
 

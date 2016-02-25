@@ -54,23 +54,23 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" exportable="false" priority="7">
                                             <f:facet name="header"><h:outputText value="#{msgs.us_lbl_columna07}"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{userMB.toView}" styleClass="ui-link" title="ver usuario">
+                                            <p:commandLink ajax="false" action="#{userMB.toView}" styleClass="GesconLink" title="ver usuario">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{userMB.toUpdate}" styleClass="ui-link" title="actualizar usuario"
+                                            <p:commandLink ajax="false" action="#{userMB.toUpdate}" styleClass="GesconLink" title="actualizar usuario"
                                                            rendered="#{loginMB.politicas[msgs.EDITAR_USUARIO]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{userMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar usuario" styleClass="ui-link" 
+                                            <p:commandLink actionListener="#{userMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar usuario" styleClass="GesconLink" 
                                                            rendered="#{loginMB.politicas[msgs.ACTIVAR_USUARIO] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{userMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar usuario" styleClass="ui-link" 
+                                            <p:commandLink actionListener="#{userMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar usuario" styleClass="GesconLink" 
                                                            rendered="#{loginMB.politicas[msgs.DESACTIVAR_USUARIO] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />

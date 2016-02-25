@@ -68,7 +68,7 @@ and open the template in the editor.
     background-color: #2E78D2 !important;
     background: #2E78D2 url(../resources/images/banner.png) !important;
 }
-
+/*
 .ui-commandlink{
     color: #3B3D3F !important;
     text-decoration: none;
@@ -88,6 +88,62 @@ and open the template in the editor.
 .ui-link:hover{
     color: #034DA2 !important;
 }
+*/
+
+a {
+    color: #27AAE1 !important;
+    text-decoration: underline !important;
+}
+
+.GesconLink{
+    color: #3B3D3F !important;
+    text-decoration: none !important;
+    margin-right: 0px;
+}
+
+.GesconLink:hover{
+    color: #034DA2 !important;
+}
+
+.TopbarLink{
+    color: white !important;
+    text-decoration: none !important;
+    margin-right: 0px;
+}
+
+.TopbarLink:hover{
+    color: #F6A770 !important;
+}
+
+.BoxbarLink{
+    color: #3B3D3F !important;
+    text-decoration: none !important;
+    margin-right: 0px;
+}
+
+.BoxbarLink:hover{
+    color: white !important;
+}
+
+.MenuLink a {
+    color: white !important;
+    text-decoration: none !important;
+    margin-right: 0px;
+}
+
+.MenuLink a:hover{
+    color: #F6A770 !important;
+}
+
+.MenuLink ul li a {
+    color: #3B3D3F !important;
+    text-decoration: none !important;
+    margin-right: 0px;
+}
+
+.MenuLink ul li a:hover{
+    color: white !important;
+}
 
 .ui-growl-item {width: 128px !important;}
 .ui-growl-item-container {width: 169px !important;}
@@ -102,10 +158,28 @@ and open the template in the editor.
     font-size: 12px !important;
 }
 
-.ui-picklist.ui-picklist-responsive .ui-picklist-list-wrapper {width: 45% !important;}
+.bl-picklist-list div ui-picklist-filter-container {
+    width: 150px !important;
+}
+
+.bl-picklist-list div ul {
+    font-size: 12px !important;
+    width: 300px !important;
+}
 
 .ui-outputlabel, table tbody tr td{color:#3B3D3F !important;}
 .ui-chkbox .ui-chkbox-label{color: #3B3D3F !important;}
 .ui-datatable table thead tr th{color:#3B3D3F !important;}
 .ui-datatable table tbody tr td{color:#3B3D3F !important;}
 .ui-fieldset-content{color:#3B3D3F !important;}
+
+@-webkit-keyframes 'blink' {
+    50% { background: #D0525D; }
+}
+.blink {
+    -webkit-animation-direction: normal;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: blink;
+    -webkit-animation-timing-function: linear;
+}

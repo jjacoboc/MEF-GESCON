@@ -50,29 +50,29 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" exportable="false" priority="5">
                                             <f:facet name="header"><h:outputText value="#{msgs.om_lbl_columna05}"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{oportunidadMB.toView}" styleClass="ui-link" title="ver oportunidad de mejora">
+                                            <p:commandLink ajax="false" action="#{oportunidadMB.toView}" styleClass="GesconLink" title="ver oportunidad de mejora">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{oportunidadMB.toEdit}" styleClass="ui-link" title="actualizar oportunidad de mejora"
+                                            <p:commandLink ajax="false" action="#{oportunidadMB.toEdit}" styleClass="GesconLink" title="actualizar oportunidad de mejora"
                                                            rendered="#{loginMB.politicas[msgs.EDITAR_OPORTUNIDAD]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;" rendered="#{loginMB.politicas[msgs.PUBLICAR_OPORTUNIDAD] and row.dfechapublicacion eq null}"/>
-                                            <p:commandLink ajax="false" action="#{oportunidadMB.toPost}" styleClass="ui-link" title="implementar oportunidad de mejora"
+                                            <p:commandLink ajax="false" action="#{oportunidadMB.toPost}" styleClass="GesconLink" title="implementar oportunidad de mejora"
                                                            rendered="#{loginMB.politicas[msgs.PUBLICAR_OPORTUNIDAD] and row.dfechapublicacion eq null}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{oportunidadMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar oportunidad de mejora" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{oportunidadMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar oportunidad de mejora" styleClass="GesconLink"
                                                            rendered="#{loginMB.politicas[msgs.ACTIVAR_OPORTUNIDAD] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{oportunidadMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar oportunidad de mejora" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{oportunidadMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar oportunidad de mejora" styleClass="GesconLink"
                                                            rendered="#{loginMB.politicas[msgs.DESACTIVAR_OPORTUNIDAD] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />

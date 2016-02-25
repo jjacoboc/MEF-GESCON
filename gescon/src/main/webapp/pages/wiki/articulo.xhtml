@@ -44,7 +44,7 @@
                 <p:fieldset legend="Indice" toggleable="true" rendered="#{not empty wikiMB.listaSeccion}">
                     <table>
                         <ui:repeat value="#{wikiMB.listaSeccion}" var="s">
-                            <tr><td><a href="#s#{s.norden}"><h:outputText value="#{s.norden}. #{s.vtitulo}" styleClass="Fs14 ui-link"/></a></td></tr>
+                            <tr><td><a href="#s#{s.norden}" class="GesconLink"><h:outputText value="#{s.norden}. #{s.vtitulo}" styleClass="Fs14"/></a></td></tr>
                         </ui:repeat>
                     </table>
                 </p:fieldset>
@@ -69,10 +69,16 @@
                             <p:tab title="Bases Legales">
                                 <p:dataTable value="#{wikiMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
                                              emptyMessage="Ninguna base legal vinculada." >
-                                    <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
-                                        <h:outputText value="#{p.codigo}"/>
+                                    <p:column style="width: 25%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                            <h:outputText value="#{p.codigo}"/>
+                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                            <f:param name="popup" value="false"/>
+                                            <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                                        </h:commandLink>
                                     </p:column>
-                                    <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                    <p:column style="width: 45%" headerText="#{msgs.bl_lbl_columna08}">
                                         <h:outputText value="#{p.nombre}" />
                                     </p:column>
                                     <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
@@ -87,7 +93,13 @@
                                 <p:dataTable value="#{wikiMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
                                              emptyMessage="Ningún contenido vinculado." >
                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                        <h:outputText value="#{p.nombre}"/>
+                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink">
+                                            <h:outputText value="#{p.nombre}"/>
+                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                            <f:param name="popup" value="false"/>
+                                            <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                                        </p:commandLink>
                                     </p:column>
                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                         <h:outputText value="#{p.sumilla}"/>
@@ -104,7 +116,13 @@
                                 <p:dataTable value="#{wikiMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
                                              emptyMessage="Ninguna buena práctica vinculada." >
                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                        <h:outputText value="#{p.nombre}"/>
+                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink">
+                                            <h:outputText value="#{p.nombre}"/>
+                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                            <f:param name="popup" value="false"/>
+                                            <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                                        </p:commandLink>
                                     </p:column>
                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                         <h:outputText value="#{p.sumilla}"/>
@@ -121,7 +139,13 @@
                                 <p:dataTable value="#{wikiMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
                                              emptyMessage="Ninguna oportunidad de mejora vinculada." >
                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                        <h:outputText value="#{p.nombre}"/>
+                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink">
+                                            <h:outputText value="#{p.nombre}"/>
+                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                            <f:param name="popup" value="false"/>
+                                            <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                                        </p:commandLink>
                                     </p:column>
                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                         <h:outputText value="#{p.sumilla}"/>
@@ -138,7 +162,13 @@
                                 <p:dataTable value="#{wikiMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
                                              emptyMessage="Ningún wiki vinculado." >
                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                        <h:outputText value="#{p.nombre}"/>
+                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink">
+                                            <h:outputText value="#{p.nombre}"/>
+                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                            <f:param name="popup" value="false"/>
+                                            <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                                        </p:commandLink>
                                     </p:column>
                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                         <h:outputText value="#{p.sumilla}"/>
@@ -155,7 +185,13 @@
                                 <p:dataTable value="#{wikiMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
                                              emptyMessage="Ninguna respuesta vinculada." >
                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
-                                        <h:outputText value="#{p.nombre}"/>
+                                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink">
+                                            <h:outputText value="#{p.nombre}"/>
+                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                            <f:param name="popup" value="false"/>
+                                            <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                                        </p:commandLink>
                                     </p:column>
                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                         <h:outputText value="#{p.sumilla}"/>
@@ -174,7 +210,7 @@
             </h:panelGrid>
         </p:panel>
         <h:panelGrid columns="1" cellpadding="0" cellspacing="0" width="100%">
-            <p:commandButton value="Regresar" ajax="false" action="#{consultaMB.back}"/>
+            
         </h:panelGrid>
     </h:form>
 </ui:composition>

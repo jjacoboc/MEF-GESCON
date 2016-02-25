@@ -50,29 +50,29 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" exportable="false" priority="5">
                                             <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna05}"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{buenaPracticaMB.toView}" styleClass="ui-link" title="ver buena practica">
+                                            <p:commandLink ajax="false" action="#{buenaPracticaMB.toView}" styleClass="GesconLink" title="ver buena practica">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{buenaPracticaMB.toEdit}" styleClass="ui-link" title="actualizar buena practica"
+                                            <p:commandLink ajax="false" action="#{buenaPracticaMB.toEdit}" styleClass="GesconLink" title="actualizar buena practica"
                                                            rendered="#{loginMB.politicas[msgs.EDITAR_BUENAPRACTICA]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;" rendered="#{loginMB.politicas[msgs.PUBLICAR_BUENAPRACTICA] and row.dfechapublicacion eq null}"/>
-                                            <p:commandLink ajax="false" action="#{buenaPracticaMB.toPost}" styleClass="ui-link" title="publicar buena practica"
+                                            <p:commandLink ajax="false" action="#{buenaPracticaMB.toPost}" styleClass="GesconLink" title="publicar buena practica"
                                                            rendered="#{loginMB.politicas[msgs.PUBLICAR_BUENAPRACTICA] and row.dfechapublicacion eq null}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{buenaPracticaMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar buena practica" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{buenaPracticaMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar buena practica" styleClass="GesconLink"
                                                            rendered="#{loginMB.politicas[msgs.ACTIVAR_BUENAPRACTICA] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{buenaPracticaMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar buena practica" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{buenaPracticaMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar buena practica" styleClass="GesconLink"
                                                            rendered="#{loginMB.politicas[msgs.DESACTIVAR_BUENAPRACTICA] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />

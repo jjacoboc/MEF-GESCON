@@ -42,6 +42,7 @@ public class Constante implements Serializable {
     public static String ESTADO_BASELEGAL_REGISTRADO = "1";
     public static String ESTADO_OPORTUNIDAD_MEJORA = "1";
     public static String ESTADO_BASELEGAL_PUBLICADO = "3";
+    public static String ESTADO_BASELEGAL_DEROGADA = "4";
     public static String ESTADO_BASELEGAL_CONCORDADO = "5";
     public static String ESTADO_BASELEGAL_MODIFICADA = "6";
     public static String SITUACION_POR_VERIFICAR = "1";
@@ -77,6 +78,13 @@ public class Constante implements Serializable {
     public static BigDecimal MAESTRO_RANGOS = new BigDecimal(2);
     public static BigDecimal MAESTRO_TIPODISCUSION = new BigDecimal(3);
     public static BigDecimal MAESTRO_PROFESIONES = new BigDecimal(4);
+    public static BigDecimal MAESTRO_TIPODOCUMENTOS = new BigDecimal(5);
+    public static BigDecimal MAESTRO_TIPOVIDEOS = new BigDecimal(6);
+    public static BigDecimal MAESTRO_TIPOAUDIOS = new BigDecimal(7);
+    public static BigDecimal MAESTRO_TIPOIMAGENES = new BigDecimal(8);
+    public static BigDecimal MAESTRO_TIPOARCHIVOS = new BigDecimal(9);
+    public static BigDecimal MAESTRO_TIPOLINKS = new BigDecimal(10);
+    public static BigDecimal MAESTRO_TIPOOTROSARCHIVOS = new BigDecimal(11);
     // Modulos del Sistema (Maestro Detalle)
     public static BigDecimal MODULO_ADMINISTRACION = new BigDecimal(1);
     public static BigDecimal MODULO_BASELEGAL = new BigDecimal(2);

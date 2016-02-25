@@ -1,7 +1,6 @@
 package pe.gob.mef.gescon.hibernate.domain;
 // Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -20,6 +19,8 @@ public class TarchivoConocimiento implements java.io.Serializable {
     private Date dfechacreacion;
     private String vusuariomodificacion;
     private Date dfechamodificacion;
+    private BigDecimal ntipoarchivo;
+    private String vcontenttype;
 
     public TarchivoConocimiento() {
     }
@@ -135,6 +136,22 @@ public class TarchivoConocimiento implements java.io.Serializable {
 
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
+    }
+
+    public BigDecimal getNtipoarchivo() {
+        return ntipoarchivo;
+    }
+
+    public void setNtipoarchivo(BigDecimal ntipoarchivo) {
+        this.ntipoarchivo = ntipoarchivo;
+    }
+
+    public String getVcontenttype() {
+        return vcontenttype;
+    }
+
+    public void setVcontenttype(String vcontenttype) {
+        this.vcontenttype = vcontenttype;
     }
 
 }

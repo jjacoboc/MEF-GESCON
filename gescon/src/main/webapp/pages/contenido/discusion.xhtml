@@ -61,7 +61,7 @@
                                                oncomplete="PF('edisDialog').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
                                     <f:param name="index" value="#{vs.index}"/>
                                 </p:commandLink>
-                                <h:outputText value=" ]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
+                                <h:outputText value="]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
                                 <h:outputText value="#{s.elapsedTime}" styleClass="Fs10 Fright" style="font-style: italic;"/>
                             </td>
                         </tr>
@@ -80,7 +80,7 @@
             <h:panelGroup rendered="#{loginMB.user ne null}">
                 <p:commandButton value="Registrar" actionListener="#{contenidoMB.saveOrUpdateDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl"/>
                 <p:spacer width="10"/>
-                <p:commandButton value="Regresar" ajax="false" action="#{consultaMB.back}"/>
+                
             </h:panelGroup>
             <p:commandButton value="Regresar" ajax="false" action="#{consultaMB.back}" rendered="#{loginMB.user eq null}"/>
         </h:panelGrid>

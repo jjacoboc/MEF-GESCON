@@ -67,6 +67,9 @@
     <property name="vmsjrespuesta" type="string">
       <column length="400" name="VMSJRESPUESTA"/>
     </property>
+    <property name="nflgvinculo" type="big_decimal">
+      <column name="NFLGVINCULO" not-null="true" precision="22" scale="0"/>
+    </property>
     <set fetch="select" inverse="true" lazy="true" name="thistorials" table="THISTORIAL">
       <key>
         <column name="NCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>

@@ -19,12 +19,12 @@
                                             <tr>
                                                 <ui:repeat value="#{administracionMB.listaAdministracion}" var="admin">
                                                     <td>
-                                                        <p:commandLink styleClass="ui-link" action="#{loginMB.redirect}" >
+                                                        <p:commandLink styleClass="GesconLink" action="#{loginMB.redirect}" >
                                                             <f:param name="page" value="#{admin.page}"/>
                                                             <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
                                                                 <p:spacer/>
                                                                 <i class="#{admin.imagen}" style="height: 32px; width: 32px;"></i>
-                                                                <h:outputText value="#{admin.nombre}" styleClass="Fs14 FontBold black"/>
+                                                                <h:outputText value="#{admin.nombre}" styleClass="Fs14 FontBold GesconLink"/>
                                                                 <p:spacer/>
                                                             </p:panelGrid>
                                                         </p:commandLink>
@@ -38,14 +38,14 @@
                                             <tr>
                                                 <ui:repeat value="#{administracionMB.listaCategoria}" var="cat">
                                                     <td>
-                                                        <p:commandLink styleClass="ui-link" action="#{administracionMB.onClickCategoriesFilter}" >
+                                                        <p:commandLink styleClass="GesconLink" action="#{administracionMB.onClickCategoriesFilter}" >
                                                             <f:param name="idparent" value="#{cat.ncategoriaid}"/>
                                                             <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
                                                                 <p:spacer/>
-                                                                <p:graphicImage cache="false" value="#{categoriaImages.image}" styleClass="black" style="height: 32px; width: 32px;">
+                                                                <p:graphicImage cache="false" value="#{categoriaImages.image}" styleClass="GesconLink" style="height: 32px; width: 32px;">
                                                                     <f:param name="id" value="#{cat.ncategoriaid}"/>
                                                                 </p:graphicImage>
-                                                                <h:outputText value="#{cat.vnombre}" styleClass="Fs14 FontBold black"/>
+                                                                <h:outputText value="#{cat.vnombre}" styleClass="Fs14 FontBold GesconLink"/>
                                                                 <p:spacer/>
                                                             </p:panelGrid>
                                                         </p:commandLink>
@@ -59,12 +59,12 @@
                                             <tr>
                                                 <ui:repeat value="#{administracionMB.listaReporte}" var="report">
                                                     <td>
-                                                        <p:commandLink styleClass="ui-link" action="#{loginMB.redirect}" >
+                                                        <p:commandLink styleClass="GesconLink" action="#{loginMB.redirect}" >
                                                             <f:param name="page" value="#{report.page}"/>
                                                             <p:panelGrid columns="1" layout="grid" style="text-align: center; height: 98px; width: 180px; padding: 0px;">
                                                                 <p:spacer/>
-                                                                <i class="#{report.imagen}" style="height: 32px; width: 32px;"></i>
-                                                                <h:outputText value="#{report.nombre}" styleClass="Fs14 FontBold black"/>
+                                                                <i class="#{report.imagen}" style="height: 32px; width: 32px;" ></i>
+                                                                <h:outputText value="#{report.nombre}" styleClass="Fs14 FontBold GesconLink"/>
                                                                 <p:spacer/>
                                                             </p:panelGrid>
                                                         </p:commandLink>

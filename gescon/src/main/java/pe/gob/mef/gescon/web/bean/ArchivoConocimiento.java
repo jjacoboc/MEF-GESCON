@@ -5,12 +5,12 @@
  */
 package pe.gob.mef.gescon.web.bean;
 
+import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import org.primefaces.model.StreamedContent;
-import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
-import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -28,6 +28,10 @@ public class ArchivoConocimiento implements Serializable {
     private Date dfechacreacion;
     private String vusuariomodificacion;
     private Date dfechamodificacion;
+    private BigDecimal ntipoarchivo;
+    private String vcontenttype;
+    private File file;
+    private UploadedFile uploadedFile;
     private StreamedContent content;
 
     public ArchivoConocimiento() {
@@ -124,6 +128,38 @@ public class ArchivoConocimiento implements Serializable {
 
     public void setDfechamodificacion(Date dfechamodificacion) {
         this.dfechamodificacion = dfechamodificacion;
+    }
+
+    public BigDecimal getNtipoarchivo() {
+        return ntipoarchivo;
+    }
+
+    public void setNtipoarchivo(BigDecimal ntipoarchivo) {
+        this.ntipoarchivo = ntipoarchivo;
+    }
+
+    public String getVcontenttype() {
+        return vcontenttype;
+    }
+
+    public void setVcontenttype(String vcontenttype) {
+        this.vcontenttype = vcontenttype;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    public UploadedFile getUploadedFile() {
+        return uploadedFile;
+    }
+
+    public void setUploadedFile(UploadedFile uploadedFile) {
+        this.uploadedFile = uploadedFile;
     }
 
     /**

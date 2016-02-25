@@ -26,9 +26,7 @@
                                         </f:facet>
                                         <p:column style="width: 20%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
-                                            <p:commandLink id="num" styleClass="ui-link Fs14 Unselectable" global="false">
-                                                <h:outputText value="#{row.vnombre}"/>
-                                            </p:commandLink>
+                                            <h:outputText value="#{row.vnombre}"/>
                                         </p:column>
                                         <p:column style="width: 28%" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="2">
                                             <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
@@ -50,22 +48,22 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 8%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink actionListener="#{maestroMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar maestro">
+                                            <p:commandLink actionListener="#{maestroMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="GesconLink" title="editar maestro">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}"/>
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{maestroMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar maestro" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
+                                            <p:commandLink actionListener="#{maestroMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar maestro" styleClass="GesconLink" rendered="#{row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}"/>
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{maestroMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar maestro" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
+                                            <p:commandLink actionListener="#{maestroMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar maestro" styleClass="GesconLink" rendered="#{row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}"/>
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
                                             <p:commandLink actionListener="#{maestroMB.getDetalles}" oncomplete="PF('detailDialog').show();" 
-                                                           update=":detailDialogForm:pgDetail" styleClass="ui-link" title="gestionar detalles">
+                                                           update=":detailDialogForm:pgDetail" styleClass="GesconLink" title="gestionar detalles">
                                                 <h:outputText class="fa fa-list-alt Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
@@ -133,7 +131,7 @@
                             </h:form>
                         </p:confirmDialog>
 
-                        <p:dialog id="detailDlg" header="Detalle Maestro" widgetVar="detailDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                        <p:dialog id="detailDlg" header="Detalle Maestro" widgetVar="detailDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%"> 
                             <h:form id="detailDialogForm">
                                 <h:panelGrid id="pgDetail" columns="1" width="100%">
                                     <p:commandButton  value="Nuevo" actionListener="#{maestroMB.toSave}" update=":newdDialogForm:pgNewd" oncomplete="PF('newdDialog').show();" icon="fa fa-plus white" />
@@ -171,16 +169,16 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 8%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink actionListener="#{maestroMB.toUpdateDetail}" update=":editdDialogForm:pgEditd" oncomplete="PF('editdDialog').show();" styleClass="ui-link" title="editar detalle">
+                                            <p:commandLink actionListener="#{maestroMB.toUpdateDetail}" update=":editdDialogForm:pgEditd" oncomplete="PF('editdDialog').show();" styleClass="GesconLink" title="editar detalle">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}"/>
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{maestroMB.setSelectedDetailRow}" oncomplete="PF('confirmActdDlg').show();" title="activar detalle" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
+                                            <p:commandLink actionListener="#{maestroMB.setSelectedDetailRow}" oncomplete="PF('confirmActdDlg').show();" title="activar detalle" styleClass="GesconLink" rendered="#{row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}"/>
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{maestroMB.setSelectedDetailRow}" oncomplete="PF('confirmDesdDlg').show();" title="desactivar detalle" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
+                                            <p:commandLink actionListener="#{maestroMB.setSelectedDetailRow}" oncomplete="PF('confirmDesdDlg').show();" title="desactivar detalle" styleClass="GesconLink" rendered="#{row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}"/>
                                             </p:commandLink>

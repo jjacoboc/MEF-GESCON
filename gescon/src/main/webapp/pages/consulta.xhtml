@@ -33,7 +33,7 @@
                                                 <h:outputText value="#{consultaMB.listaConsulta.size()} resultados para " rendered="#{not empty consultaMB.listaConsulta}" styleClass="Fs14" />
                                                 <h:outputText value="0 resultados para " rendered="#{empty consultaMB.listaConsulta}" styleClass="Fs14" />
                                                 <ui:repeat value="#{consultaMB.listaBreadCrumb}" var="b" rendered="#{not empty consultaMB.listaBreadCrumb}">
-                                                    <p:commandLink id="bcLink" actionListener="#{consultaMB.onClickBreadCrumb}" styleClass="ui-link"
+                                                    <p:commandLink id="bcLink" actionListener="#{consultaMB.onClickBreadCrumb}" styleClass="GesconLink"
                                                                    update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb" >
                                                         <h:outputText value="#{b.vnombre}" styleClass="Fs14 FontBold"/>
                                                         <f:param name="ncategoriaid" value="#{b.ncategoriaid}"/>
@@ -71,17 +71,26 @@
                                                 <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" mode="inline" chunkSize="10" scrollHeight="480" style="width: 100%" >
                                                     <h:panelGrid columns="1" width="100%">
                                                         <h:panelGrid columns="5" cellpadding="0" cellspacing="0">
-                                                            <h:outputText class="fa fa-file-text-o red Fs14" rendered="#{c.idTipoConocimiento eq 1}"/>
-                                                            <h:outputText class="fa fa-question red Fs14" rendered="#{c.idTipoConocimiento eq 2}"/>
-                                                            <h:outputText class="fa fa-puzzle-piece red Fs14" rendered="#{c.idTipoConocimiento eq 3}"/>
-                                                            <h:outputText class="fa fa-caret-square-o-right red Fs14" rendered="#{c.idTipoConocimiento eq 4}"/>
-                                                            <h:outputText class="fa fa-check-square-o red Fs14" rendered="#{c.idTipoConocimiento eq 5}"/>
-                                                            <h:outputText class="fa fa-signal red Fs14" rendered="#{c.idTipoConocimiento eq 6}"/>
+                                                            <h:outputText class="fa fa-file-text-o animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 1}"/>
+                                                            <h:outputText class="fa fa-question animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 2}"/>
+                                                            <h:outputText class="fa fa-puzzle-piece animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 3}"/>
+                                                            <h:outputText class="fa fa-caret-square-o-right animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 4}"/>
+                                                            <h:outputText class="fa fa-check-square-o animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 5}"/>
+                                                            <h:outputText class="fa fa-signal animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 6}"/>
                                                             <p:spacer width="5"/>
-                                                            <p:commandLink actionListener="#{consultaMB.view}" styleClass="ui-link" update=":viewprDialogForm:pgViewpr" >
-                                                                <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold "/>
+                                                            <p:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" update=":viewprDialogForm:pgViewpr" >
+                                                                <h:outputText id="blk" value="#{c.nombre}" styleClass="Fs14 FontBold blink" rendered="#{c.flgVinculo eq 1}"/>
+                                                                <pe:tooltip for="blk" showEffect="fadeIn" hideEffect="fadeIn" myPosition="left center" atPosition="right center">
+                                                                    <h:panelGrid columns="2">
+                                                                        <h:outputText class="fa fa-exclamation-triangle animated tada infinite red Fs16"/>
+                                                                        <h:outputText value="#{msgs.msgTooltipLinkDerogated}" styleClass="Fs12 red"/>
+                                                                    </h:panelGrid>
+                                                                </pe:tooltip>
+                                                                <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold" rendered="#{c.flgVinculo ne 1}"/>
                                                                 <f:param name="id" value="#{c.idconocimiento}"/>
                                                                 <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
+                                                                <f:param name="popup" value="false"/>
+                                                                <f:param name="tempPopup" value="false"/>
                                                             </p:commandLink>
                                                             <p:spacer width="15"/>
                                                             <p:rating value="#{c.calificacion}" readonly="true" />

@@ -45,51 +45,51 @@
                 <ul id="layout-topbar-menu">
                     <h:panelGroup rendered="#{loginMB.user ne null}">
                         <li>
-                            <a class="Animated05 CursPointer">
+                            <a class="Animated05 CursPointer TopbarLink">
                                 <h:panelGroup>
-                                    <h:outputText value="Bienvenido, " styleClass="white"/>
-                                    <h:outputText value="#{loginMB.user.vnombres}" styleClass="white" />
+                                    <h:outputText value="Bienvenido, " />
+                                    <h:outputText value="#{loginMB.user.vnombres}" />
                                     <p:spacer width="3"/>
-                                    <h:outputText value="#{loginMB.user.vapellidos}" styleClass="white"/>
+                                    <h:outputText value="#{loginMB.user.vapellidos}" />
                                     <p:spacer width="3"/>
-                                    <i class="fa fa-user white"></i>
-                                    <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile white"></i>
+                                    <i class="fa fa-user"></i>
+                                    <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i>
                                 </h:panelGroup>
                             </a>
                             <ul style="width:185px; margin-left:-10px;" class="Animated03 submenu">
-                                <li class="Animated05"><a href="#" class="ui-commandlink"><i class="fa fa-user Fs30 Fleft"></i> <span class="Fright Fs20 TexAlRight">#{loginMB.user.vnombres} #{loginMB.user.vapellidos}<span class="Fs10 DispBlock">#{loginMB.perfil.vnombre}</span></span></a></li>
-                                <li class="Animated05"><a href="#" class="ui-commandlink"><i class="fa fa-dashboard"></i> Mi Perfil</a></li>
-                                <li class="Animated05"><p:commandLink actionListener="#{loginMB.toUpdatePassword}" oncomplete="PF('claDialog').show();" update=":claDialogForm:pgCla" styleClass="Unselectable"><i class="fa fa-key"></i> Cambiar Contraseña</p:commandLink></li>
-                                <li class="Animated05"><p:commandLink actionListener="#{loginMB.logout}" oncomplete="logout();" styleClass="Unselectable"><i class="fa fa-sign-out"/> Cerrar Sesión </p:commandLink></li>
+                                <li class="Animated05"><a href="#" class="BoxbarLink"><i class="fa fa-user Fs30 Fleft"></i> <span class="Fright Fs20 TexAlRight">#{loginMB.user.vnombres} #{loginMB.user.vapellidos}<span class="Fs10 DispBlock">#{loginMB.perfil.vnombre}</span></span></a></li>
+                                <li class="Animated05"><a href="#" class="BoxbarLink"><i class="fa fa-dashboard"></i> Mi Perfil</a></li>
+                                <li class="Animated05"><p:commandLink actionListener="#{loginMB.toUpdatePassword}" oncomplete="PF('claDialog').show();" update=":claDialogForm:pgCla" styleClass="Unselectable BoxbarLink"><i class="fa fa-key"></i> Cambiar Contraseña</p:commandLink></li>
+                                <li class="Animated05"><p:commandLink actionListener="#{loginMB.logout}" oncomplete="logout();" styleClass="Unselectable BoxbarLink"><i class="fa fa-sign-out"/> Cerrar Sesión </p:commandLink></li>
                             </ul>
                         </li>
-                        <li class="fa fa-ellipsis-v menu-separator"></li>
+                        <li class="fa fa-ellipsis-v menu-separator" style="color: white !important"></li>
                         <li>
                             <h:panelGroup rendered="#{loginMB.notificaciones gt 0}">
-                                <a class="Animated05 CursPointer"><i class="fa fa-bell animated swing infinite red"></i> <h:outputText value="Bandeja de Notificaciones" styleClass="white" /> <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                                <a class="Animated05 CursPointer TopbarLink"><i class="fa fa-bell animated swing infinite red"></i> <h:outputText value="Bandeja de Notificaciones" /> <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
                             </h:panelGroup>
                             <h:panelGroup rendered="#{loginMB.notificaciones eq 0}">
-                                <a class="Animated05 CursPointer"><i class="fa fa-bell"></i><h:outputText value="Bandeja de Notificaciones" styleClass="white" /> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                                <a class="Animated05 CursPointer TopbarLink"><i class="fa fa-bell"></i><h:outputText value="Bandeja de Notificaciones" /> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
                             </h:panelGroup>
                             <ul style="width:200px; margin-left:0px;" class="Animated03 submenu">
                                 <li>
-                                    <p:commandLink styleClass="Animated05" actionListener="#{loginMB.loadAssignedPanel}" oncomplete="PF('asgDialog').show();" update=":asgDialogForm:pgAsg">
+                                    <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadAssignedPanel}" oncomplete="PF('asgDialog').show();" update=":asgDialogForm:pgAsg">
                                         <h:panelGroup rendered="#{loginMB.notificacionesAsignadas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
-                                        <h:panelGroup rendered="#{loginMB.notificacionesAsignadas gt 0}"><i class="fa fa-envelope Fs18 blue animated infinite rubberBand"></i></h:panelGroup>
+                                        <h:panelGroup rendered="#{loginMB.notificacionesAsignadas gt 0}"><i class="fa fa-envelope Fs18 red animated infinite rubberBand"></i></h:panelGroup>
                                         <span class="Fright Fs16 TexAlRight">Asignadas<span class="Fs10 DispBlock">#{loginMB.notificacionesAsignadas} por recibir</span></span>
                                     </p:commandLink>
                                 </li>
                                 <li>
-                                    <p:commandLink styleClass="Animated05" actionListener="#{loginMB.loadReceivedPanel}" oncomplete="PF('rcbDialog').show();" update=":rcbDialogForm:pgRcb">
+                                    <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadReceivedPanel}" oncomplete="PF('rcbDialog').show();" update=":rcbDialogForm:pgRcb">
                                         <h:panelGroup rendered="#{loginMB.notificacionesRecibidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
                                         <h:panelGroup rendered="#{loginMB.notificacionesRecibidas gt 0}"><i class="fa fa-envelope Fs18 blue animated infinite rubberBand"></i></h:panelGroup>
                                         <span class="Fright Fs16 TexAlRight">Recibidas<span class="Fs10 DispBlock">#{loginMB.notificacionesRecibidas} por atender</span></span>
                                     </p:commandLink>
                                 </li>
                                 <li>
-                                    <p:commandLink styleClass="Animated05" actionListener="#{loginMB.loadServedPanel}" oncomplete="PF('srvDialog').show();" update=":srvDialogForm:pgSrv">
+                                    <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadServedPanel}" oncomplete="PF('srvDialog').show();" update=":srvDialogForm:pgSrv">
                                         <h:panelGroup rendered="#{loginMB.notificacionesAtendidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
-                                        <h:panelGroup rendered="#{loginMB.notificacionesAtendidas gt 0}"><i class="fa fa-envelope Fs18 blue"></i></h:panelGroup>
+                                        <h:panelGroup rendered="#{loginMB.notificacionesAtendidas gt 0}"><i class="fa fa-envelope Fs18 green"></i></h:panelGroup>
                                         <span class="Fright Fs16 TexAlRight">Atendidas<span class="Fs10 DispBlock">#{loginMB.notificacionesAtendidas} atendidas</span></span>
                                     </p:commandLink>
                                 </li>
@@ -97,9 +97,9 @@
                         </li>                        
                     </h:panelGroup>
                     <h:panelGroup rendered="#{loginMB.user eq null}">
-                        <li class="Animated05"><p:link href="#" onclick="PF('iniDialog').show();" styleClass="Unselectable" style="color: white !important;"><i class="fa fa-sign-in"/> Iniciar Sesión</p:link></li>
+                        <li class="Animated05"><p:link href="#" onclick="PF('iniDialog').show();" styleClass="TopbarLink" ><i class="fa fa-sign-in"/> Iniciar Sesión</p:link></li>
                         <li class="fa fa-ellipsis-v menu-separator" style="color: white !important"></li>
-                        <li class="Animated05"><p:link href="#" styleClass="Unselectable" style="color: white !important;"><i class="fa fa-group"/> Quienes Somos</p:link></li>
+                        <li class="Animated05"><p:link href="#" styleClass="TopbarLink"><i class="fa fa-group"/> Quienes Somos</p:link></li>
                     </h:panelGroup>
                 </ul>
             </h:form>
@@ -124,7 +124,7 @@
                 </h:form>
             </p:dialog>
 
-            <p:dialog id="asgDlg" header="Bandeja de Asignados" widgetVar="asgDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" style="width: 80%;">
+            <p:dialog id="asgDlg" header="Bandeja de Asignados" widgetVar="asgDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" width="90%">
                 <h:form id="asgDialogForm">
                     <h:panelGrid id="pgAsg" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAsignadas}" filteredValue="#{loginMB.filteredListaNotificacionesAsignadas}" 
@@ -143,7 +143,7 @@
                                 <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
                                 <h:outputText value="#{row.categoria}" />
                             </p:column>
-                            <p:column style="width: 16%; text-align: center;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
+                            <p:column style="width: 18%; text-align: center;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
                                 <f:facet name="header"><h:outputText value="FECHA PUBLICACION"/></f:facet>
                                 <h:outputText value="#{row.fechaPublicacion}" >
                                     <f:convertDateTime dateStyle="medium" type="both" locale="es" />
@@ -153,20 +153,20 @@
                                 <f:facet name="header"><h:outputText value="ESTADO"/></f:facet>
                                 <h:outputText value="#{row.estado}" />
                             </p:column>
-                            <p:column style="width: 10%; text-align: center;">
+                            <p:column style="width: 8%; text-align: center;">
                                 <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                <p:commandLink ajax="false" action="#{pendienteMB.toEditPendiente(1)}" styleClass="ui-link" title="Ver Pendiente">
+                                <p:commandLink ajax="false" action="#{pendienteMB.toEditPendiente(1)}" styleClass="GesconLink" title="Ver Pendiente">
                                     <h:outputText class="fa fa-search Fs16" />
                                     <f:param name="index" value="#{rowIndex}" />
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:commandButton value="Cancelar" onclick="PF('asgDialog').hide()" styleClass="ui-link Fs14"/>
+                        <p:commandButton value="Cancelar" onclick="PF('asgDialog').hide()" styleClass="Fs14"/>
                     </h:panelGrid>
                 </h:form>
             </p:dialog>
 
-            <p:dialog id="rcbDlg" header="Bandeja de Recibidos" widgetVar="rcbDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" style="width: 80%;" >
+            <p:dialog id="rcbDlg" header="Bandeja de Recibidos" widgetVar="rcbDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" width="90%" >
                 <h:form id="rcbDialogForm">
                     <h:panelGrid id="pgRcb" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesRecibidas}" filteredValue="#{loginMB.filteredListaNotificacionesRecibidas}" 
@@ -185,7 +185,7 @@
                                 <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
                                 <h:outputText value="#{row.categoria}" />
                             </p:column>
-                            <p:column style="width: 16%; text-align: center;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
+                            <p:column style="width: 18%; text-align: center;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
                                 <f:facet name="header"><h:outputText value="FECHA PUBLICACION"/></f:facet>
                                 <h:outputText value="#{row.fechaPublicacion}" >
                                     <f:convertDateTime dateStyle="medium" type="both" locale="es" />
@@ -195,25 +195,25 @@
                                 <f:facet name="header"><h:outputText value="ESTADO"/></f:facet>
                                 <h:outputText value="#{row.estado}" />
                             </p:column>
-                            <p:column style="width: 10%; text-align: center;">
+                            <p:column style="width: 8%; text-align: center;">
                                 <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                <p:commandLink ajax="false" action="#{pendienteMB.toEditPendiente(2)}" styleClass="ui-link" title="Ver Pendiente">
+                                <p:commandLink ajax="false" action="#{pendienteMB.toEditPendiente(2)}" styleClass="GesconLink" title="Ver Pendiente">
                                     <h:outputText class="fa fa-search Fs16" />
                                     <f:param name="index" value="#{rowIndex}" />
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:commandButton value="Cancelar" onclick="PF('rcbDialog').hide()" styleClass="ui-link Fs14"/>
+                        <p:commandButton value="Cancelar" onclick="PF('rcbDialog').hide()" styleClass="Fs14"/>
                     </h:panelGrid>
                 </h:form>
             </p:dialog>
 
-            <p:dialog id="srvDlg" header="Bandeja de Atendidos" widgetVar="srvDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" style="width: 80%;" >
+            <p:dialog id="srvDlg" header="Bandeja de Atendidos" widgetVar="srvDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" width="90%" >
                 <h:form id="srvDialogForm">
                     <h:panelGrid id="pgSrv" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAtendidas}" filteredValue="#{loginMB.filteredListaNotificacionesAtendidas}" 
                                      var="row" paginator="true" rows="10" rowIndexVar="rowIndex" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                            <p:column style="width: 40%;" sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                            <p:column style="width: 38%;" sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
                                 <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                 <h:outputText value="#{row.codigo}" title="#{row.nombre}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
                                 <h:outputText value="#{row.nombre}" styleClass="Fleft" rendered="#{empty row.codigo}"/>
@@ -226,7 +226,7 @@
                                 <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
                                 <h:outputText value="#{row.categoria}" />
                             </p:column>
-                            <p:column style="width: 16%; text-align: center;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
+                            <p:column style="width: 18%; text-align: center;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
                                 <f:facet name="header"><h:outputText value="FECHA PUBLICACION"/></f:facet>
                                 <h:outputText value="#{row.fechaPublicacion}" >
                                     <f:convertDateTime dateStyle="medium" type="both" locale="es" />
@@ -237,12 +237,12 @@
                                 <h:outputText value="#{row.estado}" />
                             </p:column>
                         </p:dataTable>
-                        <p:commandButton value="Cancelar" onclick="PF('srvDialog').hide()" styleClass="ui-link Fs14"/>
+                        <p:commandButton value="Cancelar" onclick="PF('srvDialog').hide()" styleClass="Fs14"/>
                     </h:panelGrid>
                 </h:form>
             </p:dialog>
             
-            <p:dialog id="alertDlg" header="Bandeja de alerta" widgetVar="alertDialog" visible="#{loginMB.alertaFlag}"  modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" style="width: 80%;" >
+            <p:dialog id="alertDlg" header="Bandeja de alerta" widgetVar="alertDialog" visible="#{loginMB.alertaFlag}"  modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" width="90%" >
                 <h:form id="alertDialogForm">
                     <h:panelGrid id="pgAlert" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAlerta}" filteredValue="#{loginMB.filteredListaNotificacionesAlerta}" 
@@ -261,7 +261,7 @@
                                 <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
                                 <h:outputText value="#{row.categoria}" />
                             </p:column>
-                            <p:column style="width: 16%; text-align: center;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
+                            <p:column style="width: 18%; text-align: center;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
                                 <f:facet name="header"><h:outputText value="FECHA PUBLICACION"/></f:facet>
                                 <h:outputText value="#{row.fechaPublicacion}" >
                                     <f:convertDateTime dateStyle="medium" type="both" locale="es" />
@@ -271,20 +271,20 @@
                                 <f:facet name="header"><h:outputText value="ESTADO"/></f:facet>
                                 <h:outputText value="#{row.estado}" />
                             </p:column>
-                            <p:column style="width: 10%; text-align: center;">
+                            <p:column style="width: 8%; text-align: center;">
                                 <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                <p:commandLink ajax="false" action="#{pendienteMB.toEditPendiente(4)}" styleClass="ui-link" title="Ver Pendiente">
+                                <p:commandLink ajax="false" action="#{pendienteMB.toEditPendiente(4)}" styleClass="GesconLink" title="Ver Pendiente">
                                     <h:outputText class="fa fa-search Fs16" />
                                     <f:param name="index" value="#{rowIndex}" />
                                 </p:commandLink>
                             </p:column>
                         </p:dataTable>
-                        <p:commandButton value="Cancelar" onclick="PF('alertDialog').hide()" styleClass="ui-link Fs14"/>
+                        <p:commandButton value="Cancelar" onclick="PF('alertDialog').hide()" styleClass="Fs14"/>
                     </h:panelGrid>
                 </h:form>
             </p:dialog>
 
-            <p:dialog id="iniDlg" header="Iniciar Sesion" widgetVar="iniDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
+            <p:dialog id="iniDlg" header="Iniciar Sesión" widgetVar="iniDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" >
                 <h:form id="iniDialogForm">
                     <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
                     <h:panelGrid id="pgIni" columns="1" styleClass="TexAlCenter">
@@ -294,27 +294,27 @@
                         <p:inputText value="#{loginMB.login}" size="25" maxlength="25" styleClass="Fs14"/>
                         <p:password value="#{loginMB.pass}" size="25" styleClass="Fs14"/>
                         <p:spacer/>
-                        <p:commandButton value="Iniciar Sesion" action="#{loginMB.ingresar}" update=":iniDialogForm:growl, :claDialogForm:pgBtnsCla" oncomplete="manejarLogin(xhr, status, args)" />
+                        <p:commandButton value="Iniciar Sesión" action="#{loginMB.ingresar}" update=":iniDialogForm:growl, :claDialogForm:pgBtnsCla" oncomplete="manejarLogin(xhr, status, args)" />
                         <p:spacer/>
                         <p:row>
                             <p:column>
-                                <h:outputText value="Aún no tienes cuenta? "/> <p:commandLink value="Registrate" update=":regDialogForm:pgReg" oncomplete="PF('regDialog').show();" styleClass="ui-link Fs14 FontBold"/>
+                                <h:outputText value="Aún no tienes cuenta? " styleClass="Fs14"/> <p:commandLink value="Regístrate" update=":regDialogForm:pgReg" oncomplete="PF('regDialog').show();" styleClass="GesconLink Fs14 FontBold"/>
                             </p:column>
                         </p:row>
                         <p:row>
                             <p:column>
-                                <p:commandLink value="Olvide mi contraseña" styleClass="ui-link Fs14 FontBold"/>
+                                <p:commandLink value="Olvidé mi contraseña" styleClass="GesconLink Fs14 FontBold"/>
                             </p:column>
                         </p:row>
                         <p:separator />
                         <p:row>
                             <p:column>
-                                <h:outputText value="Ver las "/><p:commandLink value="Condiciones de Uso" styleClass="ui-link Fs14 FontBold"/><h:outputText value=" y las"/>
+                                <h:outputText value="Ver las " styleClass="Fs14"/><p:commandLink value="Condiciones de Uso" styleClass="GesconLink Fs14 FontBold"/><h:outputText value=" y las" styleClass="Fs14"/>
                             </p:column>
                         </p:row>
                         <p:row>
                             <p:column>
-                                <p:commandLink value="Politicas de Privacidad" styleClass="ui-link Fs14 FontBold"/> 
+                                <p:commandLink value="Politicas de Privacidad" styleClass="GesconLink Fs14 FontBold"/> 
                             </p:column>
                         </p:row>
                     </h:panelGrid>

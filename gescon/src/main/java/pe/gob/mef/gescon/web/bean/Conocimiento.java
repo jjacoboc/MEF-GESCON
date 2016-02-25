@@ -34,6 +34,7 @@ public class Conocimiento  implements Serializable {
     private Date dfechapublicacion;
     private String vmsjsolicita;
     private String vmsjrespuesta;
+    private BigDecimal nflgvinculo;
 
     public Conocimiento() {
     }
@@ -216,5 +217,13 @@ public class Conocimiento  implements Serializable {
      */
     public void setVmsjrespuesta(String vmsjrespuesta) {
         this.vmsjrespuesta = vmsjrespuesta;
+    }
+
+    public BigDecimal getNflgvinculo() {
+        return nflgvinculo;
+    }
+
+    public void setNflgvinculo(BigDecimal nflgvinculo) {
+        this.nflgvinculo = nflgvinculo;
     }
 }

@@ -15,28 +15,28 @@
             background-color: #000000 !important;
         }
     </style>
-        
+
     <h:form id="lmf">
         <ps:menu style="box-shadow: 3px 3px 5px #888888; background-color: #2E2E2E;">
             <f:facet name="options">
                 <p:commandButton id="advanceBtn" type="button" icon="fa fa-binoculars Fs18 white" title="búsqueda avanzada" styleClass="Fright btn-search" style="background-color: black !important" />
-                <p:overlayPanel id="imagePanel" for="advanceBtn" dismissable="false" dynamic="true" showEffect="fade" appendToBody="true" showCloseIcon="true">
+                <p:overlayPanel id="imagePanel" for="advanceBtn" showEffect="fade" appendToBody="true" showCloseIcon="true">
                     <h:panelGrid columns="2" width="100%" styleClass="TexAlLeft">
                         <h:outputText value="Palabras Claves:"/>
                         <p:inputText value="#{consultaMB.searchText}" styleClass="Fs14" style="width: 300px;"/>
-                        
+
                         <h:outputText value="Tipo de Contenido:"/>
                         <p:selectOneMenu value="#{consultaMB.tipoConocimiento}" styleClass="Wid60" >
                             <f:selectItem itemValue="" itemLabel="Seleccione"/>
                             <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
                         </p:selectOneMenu>
-                        
+
                         <h:outputText value="Categoría:"/>
                         <p:selectOneMenu value="#{consultaMB.categoria}" styleClass="Wid60" >
                             <f:selectItem itemValue="" itemLabel="Seleccione"/>
                             <f:selectItems value="#{listaSessionMB.listaCategoriaActiva}"/>
                         </p:selectOneMenu>
-                        
+
                         <h:outputText value="Fecha:"/>
                         <h:panelGrid columns="5" cellpadding="0" cellspacing="0" styleClass="panelcolumns2">
                             <p:calendar id="fromDate" locale="es" value="#{consultaMB.fechaInicio}" maxdate="#{consultaMB.fechaFin}" size="10" 
@@ -58,20 +58,20 @@
                 <p:inputText value="#{consultaMB.searchText}" placeholder="Buscar" styleClass="Fs14 Fright" style="width: 300px; background-color: #2E2E2E;;"/>
             </f:facet>
 
-            <p:menuitem icon="fa fa-home" ajax="false" action="#{loginMB.redirect}" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}">
+            <p:menuitem icon="fa fa-home white" ajax="false" action="#{loginMB.redirect}" styleClass="MenuLink" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid ne msgs.administrador}">
                 <f:param name="page" value="/index.xhtml"/>
             </p:menuitem>
-            <p:menuitem icon="fa fa-home" ajax="false" action="#{loginMB.redirect}" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid eq msgs.administrador}">
+            <p:menuitem icon="fa fa-home white" ajax="false" action="#{loginMB.redirect}" styleClass="MenuLink" rendered="#{loginMB.user ne null and loginMB.perfil.nperfilid eq msgs.administrador}">
                 <f:param name="page" value="/pages/indexAdmin.xhtml"/>
             </p:menuitem>
-            <p:menuitem icon="fa fa-home" ajax="false" action="#{loginMB.redirect}" rendered="#{loginMB.user eq null}">
+            <p:menuitem icon="fa fa-home white" ajax="false" action="#{loginMB.redirect}" styleClass="MenuLink" rendered="#{loginMB.user eq null}">
                 <f:param name="page" value="/index.xhtml"/>
             </p:menuitem>
 
-            <p:separator rendered="#{loginMB.politicas[msgs.MENU_ADMINISTRACION]}"/>
+            <p:separator rendered="#{loginMB.politicas[msgs.MENU_ADMINISTRACION]}" style="color: white !important;"/>
 
-            <p:submenu label="Administración" icon="fa fa-wrench" rendered="#{loginMB.politicas[msgs.MENU_ADMINISTRACION]}">
-                <p:submenu label="Configuración" icon="fa fa-gear" rendered="#{loginMB.politicas[msgs.MENU_CONFIGURACION]}">
+            <p:submenu label="Administración" icon="fa fa-wrench" styleClass="MenuLink" rendered="#{loginMB.politicas[msgs.MENU_ADMINISTRACION]}">
+                <p:submenu label="Configuración" icon="fa fa-gear" styleClass="SubMenuLink" rendered="#{loginMB.politicas[msgs.MENU_CONFIGURACION]}">
                     <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Categorias" icon="fa fa-tags" rendered="#{loginMB.perfil.nperfilid eq msgs.administrador}">
                         <f:param name="page" value="/pages/categoria"/>
                     </p:menuitem>
@@ -91,7 +91,7 @@
                         <f:param name="page" value="/pages/alerta"/>
                     </p:menuitem>
                 </p:submenu>
-                <p:submenu label="Reportes" icon="fa fa-file-text" >
+                <p:submenu label="Reportes" icon="fa fa-file-text" styleClass="SubMenuLink">
                     <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Usuarios" icon="fa fa-users">
                         <f:param name="page" value="/pages/reporteUser"/>
                     </p:menuitem>
@@ -116,10 +116,10 @@
                 </p:menuitem>
             </p:submenu>
 
-            <p:separator rendered="#{loginMB.politicas[msgs.MENU_MODULOS]}"/>
+            <p:separator rendered="#{loginMB.politicas[msgs.MENU_MODULOS]}" style="color: white !important"/>
 
-            <p:submenu label="Módulos" icon="fa fa-th-large" rendered="#{loginMB.politicas[msgs.MENU_MODULOS]}">
-                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Base Legal" icon="fa fa-file-text-o" rendered="#{loginMB.politicas[msgs.MODULO_BASELEGAL]}">
+            <p:submenu label="Módulos" icon="fa fa-th-large" styleClass="MenuLink" rendered="#{loginMB.politicas[msgs.MENU_MODULOS]}">
+                <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Base Legal" styleClass="SubMenuLink" icon="fa fa-file-text-o" rendered="#{loginMB.politicas[msgs.MODULO_BASELEGAL]}">
                     <f:param name="page" value="/pages/baselegal/lista"/>
                 </p:menuitem>
                 <p:menuitem ajax="false" action="#{loginMB.redirect}" value="Preguntas" icon="fa fa-question" rendered="#{loginMB.politicas[msgs.MODULO_PREGUNTAS]}">
@@ -139,13 +139,13 @@
                 </p:menuitem>
             </p:submenu>
 
-            <p:separator/>
+            <p:separator style="color: white !important"/>
 
-            <p:submenu label="Categorías" icon="fa fa-tags">
+            <p:submenu label="Categorías" icon="fa fa-tags" styleClass="MenuLink">
                 <c:forEach items="#{administracionMB.listaCategoria}" var="c">
-                    <p:submenu label="#{c.vnombre}">
+                    <p:submenu label="#{c.vnombre}" styleClass="SubMenuLink">
                         <c:forEach items="#{c.children}" var="ch">
-                            <p:menuitem value="- #{ch.vnombre}" ajax="false" action="#{administracionMB.onClickSubCategoriesFilter}" includeViewParams="true">
+                            <p:menuitem value="#{ch.vnombre}" ajax="false" action="#{administracionMB.onClickSubCategoriesFilter}" includeViewParams="true" styleClass="SubMenuLink">
                                 <f:param name="idparent" value="#{c.ncategoriaid}"/>
                                 <f:param name="idchild" value="#{ch.ncategoriaid}"/>
                             </p:menuitem>

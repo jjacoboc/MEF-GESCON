@@ -14,7 +14,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.hibernate.dao.AsignacionDao;
-import pe.gob.mef.gescon.hibernate.domain.Mtcategoria;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.Tasignacion;
 import pe.gob.mef.gescon.service.AsignacionService;
@@ -22,7 +21,6 @@ import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.User;
-import pe.gob.mef.gescon.web.bean.Categoria;
 
 /**
  *

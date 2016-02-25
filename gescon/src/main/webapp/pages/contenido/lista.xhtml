@@ -9,7 +9,7 @@
     <ui:define name="content">
         <div class="layout-portlets-box">
             <div class="Container100">
-                <div class="ContainerIndent TexAlCenter">
+                <div class="ContainerIndent">
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true"  />
@@ -27,7 +27,7 @@
                                             </h:commandLink>
                                         </f:facet>
                                         <p:column sortBy="#{row.vtitulo}" filterBy="#{row.vtitulo}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
-                                            <f:facet name="header"><h:outputText value="TITULO" style="font-size: 11px;"/></f:facet>
+                                            <f:facet name="header"><h:outputText value="TITULO"/></f:facet>
                                             <h:outputText value="#{row.vtitulo}" />
                                         </p:column>
                                         <p:column style="text-align: center;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains">
@@ -42,29 +42,29 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{contenidoMB.toView}" styleClass="ui-link" title="ver contenido">
+                                            <p:commandLink ajax="false" action="#{contenidoMB.toView}" styleClass="GesconLink" title="ver contenido">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{contenidoMB.toEdit}" styleClass="ui-link" title="actualizar contenido"
+                                            <p:commandLink ajax="false" action="#{contenidoMB.toEdit}" styleClass="GesconLink" title="actualizar contenido"
                                                            rendered="#{loginMB.politicas[msgs.EDITAR_CONTENIDO]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;" rendered="#{loginMB.politicas[msgs.PUBLICAR_CONTENIDO] and row.dfechapublicacion eq null}"/>
-                                            <p:commandLink ajax="false" action="#{contenidoMB.toPost}" styleClass="ui-link" title="publicar contenido"
+                                            <p:commandLink ajax="false" action="#{contenidoMB.toPost}" styleClass="GesconLink" title="publicar contenido"
                                                            rendered="#{loginMB.politicas[msgs.PUBLICAR_CONTENIDO] and row.dfechapublicacion eq null}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{contenidoMB.setSelectedRow}" title="activar contenido" styleClass="ui-link" oncomplete="PF('confirmActDlg').show();"
+                                            <p:commandLink actionListener="#{contenidoMB.setSelectedRow}" title="activar contenido" styleClass="GesconLink" oncomplete="PF('confirmActDlg').show();"
                                                            rendered="#{loginMB.politicas[msgs.ACTIVAR_CONTENIDO] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{contenidoMB.setSelectedRow}" title="desactivar contenido" styleClass="ui-link" oncomplete="PF('confirmDesDlg').show();"
+                                            <p:commandLink actionListener="#{contenidoMB.setSelectedRow}" title="desactivar contenido" styleClass="GesconLink" oncomplete="PF('confirmDesDlg').show();"
                                                            rendered="#{loginMB.politicas[msgs.DESACTIVAR_CONTENIDO] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />

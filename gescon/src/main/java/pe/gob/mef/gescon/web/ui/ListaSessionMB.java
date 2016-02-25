@@ -17,6 +17,7 @@ import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.EstadoBaseLegalService;
 import pe.gob.mef.gescon.service.MaestroDetalleService;
+import pe.gob.mef.gescon.service.MaestroService;
 import pe.gob.mef.gescon.service.RangoService;
 import pe.gob.mef.gescon.service.SituacionService;
 import pe.gob.mef.gescon.service.TipoConocimientoService;
@@ -47,6 +48,21 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaTipoDiscusionActivo;
     private List<SelectItem> listaProfesion;
     private List<SelectItem> listaProfesionActiva;
+    private List<SelectItem> listaTipoDocumentos;
+    private List<SelectItem> listaTipoDocumentosActivos;
+    private List<SelectItem> listaTipoVideos;
+    private List<SelectItem> listaTipoVideosActivos;
+    private List<SelectItem> listaTipoAudios;
+    private List<SelectItem> listaTipoAudiosActivos;
+    private List<SelectItem> listaTipoImagenes;
+    private List<SelectItem> listaTipoImagenesActivas;
+    private List<SelectItem> listaTipoArchivosTexto;
+    private List<SelectItem> listaTipoArchivosTextoActivos;
+    private List<SelectItem> listaTipoLinks;
+    private List<SelectItem> listaTipoLinksActivos;
+    private List<SelectItem> listaTipoOtrosArchivos;
+    private List<SelectItem> listaTipoOtrosArchivosActivos;
+    private List<SelectItem> listaMaestros;
     private List<SelectItem> filterEstado;
     private List<SelectItem> filterModulos;
     
@@ -302,6 +318,214 @@ public class ListaSessionMB implements Serializable{
 
     public void setListaProfesionActiva(List<SelectItem> listaProfesionActiva) {
         this.listaProfesionActiva = listaProfesionActiva;
+    }
+
+    public List<SelectItem> getListaTipoDocumentos() throws Exception {
+        if(listaTipoDocumentos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPODOCUMENTOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoDocumentos =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoDocumentos;
+    }
+
+    public void setListaTipoDocumentos(List<SelectItem> listaTipoDocumentos) {
+        this.listaTipoDocumentos = listaTipoDocumentos;
+    }
+
+    public List<SelectItem> getListaTipoDocumentosActivos() throws Exception {
+        if(listaTipoDocumentosActivos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPODOCUMENTOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoDocumentosActivos =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoDocumentosActivos;
+    }
+
+    public void setListaTipoDocumentosActivos(List<SelectItem> listaTipoDocumentosActivos) {
+        this.listaTipoDocumentosActivos = listaTipoDocumentosActivos;
+    }
+
+    public List<SelectItem> getListaTipoVideos() throws Exception {
+        if(listaTipoVideos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOVIDEOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoVideos =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoVideos;
+    }
+
+    public void setListaTipoVideos(List<SelectItem> listaTipoVideos) {
+        this.listaTipoVideos = listaTipoVideos;
+    }
+
+    public List<SelectItem> getListaTipoVideosActivos() throws Exception {
+        if(listaTipoVideosActivos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOVIDEOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoVideosActivos =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoVideosActivos;
+    }
+
+    public void setListaTipoVideosActivos(List<SelectItem> listaTipoVideosActivos) {
+        this.listaTipoVideosActivos = listaTipoVideosActivos;
+    }
+
+    public List<SelectItem> getListaTipoAudios() throws Exception {
+        if(listaTipoAudios == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOAUDIOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoAudios =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoAudios;
+    }
+
+    public void setListaTipoAudios(List<SelectItem> listaTipoAudios) {
+        this.listaTipoAudios = listaTipoAudios;
+    }
+
+    public List<SelectItem> getListaTipoAudiosActivos() throws Exception {
+        if(listaTipoAudiosActivos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOAUDIOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoAudiosActivos =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoAudiosActivos;
+    }
+
+    public void setListaTipoAudiosActivos(List<SelectItem> listaTipoAudiosActivos) {
+        this.listaTipoAudiosActivos = listaTipoAudiosActivos;
+    }
+
+    public List<SelectItem> getListaTipoImagenes() throws Exception {
+        if(listaTipoImagenes == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOIMAGENES);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoImagenes =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoImagenes;
+    }
+
+    public void setListaTipoImagenes(List<SelectItem> listaTipoImagenes) {
+        this.listaTipoImagenes = listaTipoImagenes;
+    }
+
+    public List<SelectItem> getListaTipoImagenesActivas() throws Exception {
+        if(listaTipoImagenesActivas == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOIMAGENES);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoImagenesActivas =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoImagenesActivas;
+    }
+
+    public void setListaTipoImagenesActivas(List<SelectItem> listaTipoImagenesActivas) {
+        this.listaTipoImagenesActivas = listaTipoImagenesActivas;
+    }
+
+    public List<SelectItem> getListaTipoArchivosTexto() throws Exception {
+        if(listaTipoArchivosTexto == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOARCHIVOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoArchivosTexto =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoArchivosTexto;
+    }
+
+    public void setListaTipoArchivosTexto(List<SelectItem> listaTipoArchivosTexto) {
+        this.listaTipoArchivosTexto = listaTipoArchivosTexto;
+    }
+
+    public List<SelectItem> getListaTipoArchivosTextoActivos() throws Exception {
+        if(listaTipoArchivosTextoActivos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOARCHIVOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoArchivosTextoActivos =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoArchivosTextoActivos;
+    }
+
+    public void setListaTipoArchivosTextoActivos(List<SelectItem> listaTipoArchivosTextoActivos) {
+        this.listaTipoArchivosTextoActivos = listaTipoArchivosTextoActivos;
+    }
+
+    public List<SelectItem> getListaTipoLinks() throws Exception {
+        if(listaTipoLinks == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOLINKS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoLinks =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoLinks;
+    }
+
+    public void setListaTipoLinks(List<SelectItem> listaTipoLinks) {
+        this.listaTipoLinks = listaTipoLinks;
+    }
+
+    public List<SelectItem> getListaTipoLinksActivos() throws Exception {
+        if(listaTipoLinksActivos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOLINKS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoLinksActivos =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoLinksActivos;
+    }
+
+    public void setListaTipoLinksActivos(List<SelectItem> listaTipoLinksActivos) {
+        this.listaTipoLinksActivos = listaTipoLinksActivos;
+    }
+
+    public List<SelectItem> getListaTipoOtrosArchivos() throws Exception {
+        if(listaTipoOtrosArchivos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOOTROSARCHIVOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoOtrosArchivos =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoOtrosArchivos;
+    }
+
+    public void setListaTipoOtrosArchivos(List<SelectItem> listaTipoOtrosArchivos) {
+        this.listaTipoOtrosArchivos = listaTipoOtrosArchivos;
+    }
+
+    public List<SelectItem> getListaTipoOtrosArchivosActivos() throws Exception {
+        if(listaTipoOtrosArchivosActivos == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_TIPOOTROSARCHIVOS);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaTipoOtrosArchivosActivos =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaTipoOtrosArchivosActivos;
+    }
+
+    public void setListaTipoOtrosArchivosActivos(List<SelectItem> listaTipoOtrosArchivosActivos) {
+        this.listaTipoOtrosArchivosActivos = listaTipoOtrosArchivosActivos;
+    }
+
+    public List<SelectItem> getListaMaestros() throws Exception {
+        if(listaMaestros == null){
+            MaestroService service = (MaestroService) ServiceFinder.findBean("MaestroService");
+            listaMaestros =  new Items(service.getMaestros(), null, "nmaestroid","vnombre").getItems();
+        }
+        return listaMaestros;
+    }
+
+    public void setListaMaestros(List<SelectItem> listaMaestros) {
+        this.listaMaestros = listaMaestros;
     }
 
     /**

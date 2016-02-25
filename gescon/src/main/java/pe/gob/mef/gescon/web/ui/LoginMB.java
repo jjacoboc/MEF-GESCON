@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.web.ui;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -393,6 +394,7 @@ public class LoginMB implements Serializable {
             if (event != null) {
                 AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
                 this.setListaNotificacionesAsignadas(asignacionService.getNotificationsAssignedPanelByUser(this.getUser()));
+                this.setFilteredListaNotificacionesAsignadas(new ArrayList());
             }
         } catch (Exception e) {
             e.getMessage();
@@ -405,6 +407,7 @@ public class LoginMB implements Serializable {
             if (event != null) {
                 AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
                 this.setListaNotificacionesRecibidas(asignacionService.getNotificationsReceivedPanelByUser(this.getUser()));
+                this.setFilteredListaNotificacionesRecibidas(new ArrayList());
             }
         } catch (Exception e) {
             e.getMessage();
@@ -417,6 +420,7 @@ public class LoginMB implements Serializable {
             if (event != null) {
                 AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
                 this.setListaNotificacionesAtendidas(asignacionService.getNotificationsServedPanelByUser(this.getUser()));
+                this.setFilteredListaNotificacionesAtendidas(new ArrayList());
             }
         } catch (Exception e) {
             e.getMessage();

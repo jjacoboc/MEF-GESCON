@@ -37,10 +37,10 @@
                                         </p:treeNode>
                                     </p:tree>
                                     <p:contextMenu id="ctx" for="cats" style="font-size: 10px; width: 200px;">
-                                        <p:menuitem value="Agregar Categoría" actionListener="#{categoriaMB.toSave}"  oncomplete="PF('newDialog').show();" update=":newDialogForm:pgNew" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" styleClass="ui-link" icon="fa fa-plus" />
-                                        <p:menuitem value="Editar Categoría" actionListener="#{categoriaMB.toUpdate}" oncomplete="PF('editDialog').show();" update=":editDialogForm:pgEdit" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" styleClass="ui-link" icon="fa fa-edit" />
-                                        <p:menuitem value="Activar Categoría" oncomplete="PF('confirmActDlg').show();" rendered="#{categoriaMB.selectedCategoria.nestado eq 0}" styleClass="ui-link" icon="fa fa-check"/>
-                                        <p:menuitem value="Desactivar Categoría" oncomplete="PF('confirmDesDlg').show();" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" styleClass="ui-link" icon="fa fa-close"/>
+                                        <p:menuitem value="Agregar Categoría" actionListener="#{categoriaMB.toSave}"  oncomplete="PF('newDialog').show();" update=":newDialogForm:pgNew" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}"  icon="fa fa-plus" />
+                                        <p:menuitem value="Editar Categoría" actionListener="#{categoriaMB.toUpdate}" oncomplete="PF('editDialog').show();" update=":editDialogForm:pgEdit" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" icon="fa fa-edit" />
+                                        <p:menuitem value="Activar Categoría" oncomplete="PF('confirmActDlg').show();" rendered="#{categoriaMB.selectedCategoria.nestado eq 0}" icon="fa fa-check"/>
+                                        <p:menuitem value="Desactivar Categoría" oncomplete="PF('confirmDesDlg').show();" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" icon="fa fa-close"/>
                                     </p:contextMenu>
                                 </h:panelGrid>
                             </p:panel>

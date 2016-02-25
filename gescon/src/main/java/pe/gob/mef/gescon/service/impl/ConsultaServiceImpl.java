@@ -43,6 +43,7 @@ public class ConsultaServiceImpl implements ConsultaService{
                     c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
                     c.setIdEstado((BigDecimal) map.get("IDESTADO"));
                     c.setEstado((String) map.get("ESTADO"));
+                    c.setFlgVinculo((BigDecimal) map.get("FLG"));
                     BigDecimal contador = (BigDecimal) map.get("CONTADOR");
                     BigDecimal suma = (BigDecimal) map.get("SUMA");
                     if(BigDecimal.ZERO.equals(contador)) {
@@ -93,6 +94,12 @@ public class ConsultaServiceImpl implements ConsultaService{
             e.printStackTrace();
         }
         return lista;
+    }
+    
+    @Override
+    public BigDecimal countDestacadosByTipoConocimiento(HashMap filters) {
+        ConsultaDao consultaDao = (ConsultaDao) ServiceFinder.findBean("ConsultaDao");
+        return consultaDao.countDestacadosByTipoConocimiento(filters);
     }
     
     @Override

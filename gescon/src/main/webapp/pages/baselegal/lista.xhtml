@@ -28,7 +28,7 @@
                                         </f:facet>
                                         <p:column style="width: 20%;" sortBy="#{row.vnumero}" filterBy="#{row.vnumero}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna01}"/></f:facet>
-                                            <p:commandLink id="num" styleClass="ui-link Fs14 Unselectable" global="false">
+                                            <p:commandLink id="num" styleClass="GesconLink Fs14 Unselectable" global="false">
                                                 <h:outputText value="#{row.vnumero}"/>
                                             </p:commandLink>
                                             <p:tooltip id="toolTipGrow" for="num" value="#{row.vnombre}" showEffect="clip" hideEffect="explode" style="font-size: 12px; max-width: 400px;" />
@@ -63,29 +63,29 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna06}"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{baseLegalMB.toView}" styleClass="ui-link" title="ver base legal">
+                                            <p:commandLink ajax="false" action="#{baseLegalMB.toView}" styleClass="GesconLink" title="ver base legal">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{baseLegalMB.toEdit}" styleClass="ui-link" title="actualizar base legal" 
+                                            <p:commandLink ajax="false" action="#{baseLegalMB.toEdit}" styleClass="GesconLink" title="actualizar base legal" 
                                                            rendered="#{loginMB.politicas[msgs.EDITAR_BASELEGAL]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;" rendered="#{loginMB.politicas[msgs.PUBLICAR_BASELEGAL] and row.dfechapublicacion eq null}"/>
-                                            <p:commandLink ajax="false" action="#{baseLegalMB.toPost}" styleClass="ui-link" title="publicar base legal" 
+                                            <p:commandLink ajax="false" action="#{baseLegalMB.toPost}" styleClass="GesconLink" title="publicar base legal" 
                                                            rendered="#{loginMB.politicas[msgs.PUBLICAR_BASELEGAL] and row.dfechapublicacion eq null}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{baseLegalMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar base legal" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{baseLegalMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar base legal" styleClass="GesconLink"
                                                            rendered="#{loginMB.politicas[msgs.ACTIVAR_BASELEGAL] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{baseLegalMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar base legal" styleClass="ui-link"
+                                            <p:commandLink actionListener="#{baseLegalMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar base legal" styleClass="GesconLink"
                                                            rendered="#{loginMB.politicas[msgs.DESACTIVAR_BASELEGAL] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />

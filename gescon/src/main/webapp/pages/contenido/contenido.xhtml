@@ -34,11 +34,11 @@
                                             </h:outputText>
                                         </p:column>
                                         <p:column style="text-align: center; width: 50px;">
-                                            <p:commandLink ajax="false" action="#{contenidoMB.toView}" styleClass="ui-link" title="ver contenido">
+                                            <p:commandLink ajax="false" action="#{contenidoMB.toView}" styleClass="GesconLink" title="ver contenido">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink ajax="false" action="#{contenidoMB.toEdit}" styleClass="ui-link" title="actualizar contenido"
+                                            <p:commandLink ajax="false" action="#{contenidoMB.toEdit}" styleClass="GesconLink" title="actualizar contenido"
                                                            rendered="#{loginMB.politicas[msgs.EDITAR_CONTENIDO]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />

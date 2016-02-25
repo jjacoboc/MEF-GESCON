@@ -14,17 +14,38 @@
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Registrar Contenido" styleClass="TexAlLeft">
                                 <h:panelGrid id="pgNew" columns="1" width="100%">
-                                    <h:outputText value="Categoria"/>
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="Categoría:"/>
+                                    </h:panelGroup>
                                     <h:panelGroup>
                                         <p:commandButton value="Selecciona Categoria" actionListener="#{contenidoMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
                                         <p:spacer width="15"/>
                                         <h:outputText value="#{contenidoMB.selectedCategoria.vnombre}" styleClass="Fs14"/>
                                     </h:panelGroup>
 
-                                    <h:outputLabel value="Titulo"/>
+                                    <h:panelGrid columns="6" cellpadding="0" cellspacing="0">
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.ct_lbl_destacado}"/>
+                                        <p:spacer width="5"/>
+                                        <p:selectBooleanCheckbox value="#{contenidoMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Los Contenidos destacados serán mostrados en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
+                                    </h:panelGrid>
+
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="Título:"/>
+                                    </h:panelGroup>
                                     <p:inputText size="50" value="#{contenidoMB.titulo}" style="text-transform: uppercase;" maxlength="100" /> 
 
-                                    <h:outputLabel value="Descripcion"/>
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="Descripción"/>
+                                    </h:panelGroup>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                         <p:inputTextarea value="#{contenidoMB.descripcion}" rows="4" cols="57" style="font-weight: normal;"
                                                          counter="displaydet" maxlength="400" counterTemplate="{0} caracteres restantes." />
@@ -33,31 +54,42 @@
 
                                     <p:spacer/>
 
-                                    <h:outputLabel value="Contenido"/>
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="Contenido:"/>
+                                    </h:panelGroup>
                                     <p:editor value="#{contenidoMB.contenidoHtml}"/>
                                 </h:panelGrid>
 
                                 <p:spacer/>
-                                <h:panelGrid id="pgNewVinc1" columns="1" cellpadding="0" cellspacing="0" width="100%">
-                                    <p:fieldset>
 
-                                        <p:commandButton style=" float:left;"  value="Agregar Archivos" styleClass="ui-link Fs14" oncomplete="PF('tpoconDialog').show();"/>
+                                <p:fieldset>
+                                    <h:panelGrid id="pgNewVinc1" columns="1" cellpadding="0" cellspacing="0" width="100%">
+                                        <p:commandButton value="Agregar Archivos" actionListener="#{contenidoMB.toUploadFile}" update=":tpoconDialogForm:pgTpoCon" oncomplete="PF('tpoconDialog').show();" styleClass="Fs14"/>
                                         <p:tabView>
-                                            <p:tab title="Arhivos Relacionados">
+                                            <p:tab title="Archivos Relacionados">
                                                 <p:dataTable id="tbl" value="#{contenidoMB.listaArchivos}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
                                                              paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
-                                                    <p:column style="text-align: center; width: 70px;" priority="2">
-                                                        <f:facet name="header"><h:outputText value="Nombre del Archivo"/></f:facet>
+                                                    <p:column style="width: 30%;">
+                                                        <f:facet name="header"><h:outputText value="Nombre"/></f:facet>
                                                         <h:outputText value="#{row.vnombre}"/>
                                                     </p:column>
-                                                    <p:column style="text-align: center; width: 70px;" priority="4">
-
-                                                        <f:facet name="header"><h:outputText value="Tipo de Archivo"/></f:facet>
-                                                        <p:lightBox>
+                                                    <p:column style="text-align: center; width: 30%;">
+                                                        <f:facet name="header"><h:outputText value="Tipo"/></f:facet>
+                                                        <h:outputText value="#{row.ntipoarchivo}">
+                                                            <f:converter converterId="converterMaestro"/>
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column style="text-align: center; width: 30%;">
+                                                        <f:facet name="header"><h:outputText value="Ruta"/></f:facet>
+                                                        <h:outputText value="#{row.vruta}"/>
+                                                    </p:column>
+                                                    <p:column style="text-align: center; width: 10%;">
+                                                        <f:facet name="header"><h:outputText value="Archivo"/></f:facet>
+                                                        <p:lightBox rendered="#{row.ntipoarchivo eq msgs.tipoDocumento and row.vcontenttype eq msgs.contentTypePdf}">
                                                             <h:outputLink value="#">
-                                                                <h:panelGrid columns="1">
-                                                                    <p:graphicImage library="images" name="pdf.png"/>
-                                                                </h:panelGrid>
+                                                                <p:graphicImage library="images" name="pdf.png" title="visualizar pdf"/>
                                                             </h:outputLink>
                                                             <f:facet name="inline">
                                                                 <p:media player="pdf" cache="false" value="#{contenidoMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
@@ -65,13 +97,90 @@
                                                                 </p:media>
                                                             </f:facet>
                                                         </p:lightBox>
+                                                        <h:panelGroup rendered="#{(row.ntipoarchivo eq msgs.tipoDocumento) and (row.vcontenttype ne msgs.contentTypePdf)}">
+                                                            <p:commandLink ajax="false" >
+                                                                <p:fileDownload value="#{row.content}" />
+                                                                <p:graphicImage library="images" name="word.png" title="descargar word" rendered="#{(row.vcontenttype eq msgs.contentTypeWord) or (row.vcontenttype eq msgs.contentTypeWordx)}"/>
+                                                                <p:graphicImage library="images" name="excel.png" title="descargar excel" rendered="#{(row.vcontenttype eq msgs.contentTypeExcel) or (row.vcontenttype eq msgs.contentTypeExcelx)}"/>
+                                                                <p:graphicImage library="images" name="ppt.png" title="descargar power point" rendered="#{(row.vcontenttype eq msgs.contentTypePowerPoint) or (row.vcontenttype eq msgs.contentTypePowerPointx)}"/>
+                                                            </p:commandLink>
+                                                        </h:panelGroup>
+                                                        <h:panelGroup rendered="#{row.ntipoarchivo eq msgs.tipoVideo}">
+                                                            <p:commandLink ajax="false" >
+                                                                <p:fileDownload value="#{row.content}" />
+                                                                <p:graphicImage library="images" name="video.png" title="ver video"/>
+                                                            </p:commandLink>
+                                                        </h:panelGroup>
+                                                        
+                                                        <h:panelGroup rendered="#{row.ntipoarchivo eq msgs.tipoImagen}">
+                                                            <p:graphicImage id="img1" library="images" name="File-Extension-Jpg.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeJpg}"/>
+                                                            <p:overlayPanel id="imgPanel1" for="img1" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                                            hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                                                <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
+                                                                    <f:param name="ruta" value="#{row.vruta}"/>
+                                                                    <f:param name="type" value="#{row.vcontenttype}"/>
+                                                                </p:graphicImage>
+                                                            </p:overlayPanel>
+                                                            <p:graphicImage id="img2" library="images" name="File-Extension-Png.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypePng}"/>
+                                                            <p:overlayPanel id="imgPanel2" for="img2" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                                            hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                                                <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
+                                                                    <f:param name="ruta" value="#{row.vruta}"/>
+                                                                    <f:param name="type" value="#{row.vcontenttype}"/>
+                                                                </p:graphicImage>
+                                                            </p:overlayPanel>
+                                                            <p:graphicImage id="img3" library="images" name="File-Extension-Tif.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeTiff}"/>
+                                                            <p:overlayPanel id="imgPanel3" for="img3" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                                            hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                                                <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
+                                                                    <f:param name="ruta" value="#{row.vruta}"/>
+                                                                    <f:param name="type" value="#{row.vcontenttype}"/>
+                                                                </p:graphicImage>
+                                                            </p:overlayPanel>
+                                                            <p:graphicImage id="img4" library="images" name="File-Extension-Bmp.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeBmp}"/>
+                                                            <p:overlayPanel id="imgPanel4" for="img4" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                                            hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                                                <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
+                                                                    <f:param name="ruta" value="#{row.vruta}"/>
+                                                                    <f:param name="type" value="#{row.vcontenttype}"/>
+                                                                </p:graphicImage>
+                                                            </p:overlayPanel>
+                                                            <p:graphicImage id="img5" library="images" name="File-Extension-Gif.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeGif}"/>
+                                                            <p:overlayPanel id="imgPanel5" for="img5" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                                            hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                                                <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
+                                                                    <f:param name="ruta" value="#{row.vruta}"/>
+                                                                    <f:param name="type" value="#{row.vcontenttype}"/>
+                                                                </p:graphicImage>
+                                                            </p:overlayPanel>
+                                                        </h:panelGroup>
+                                                        
+                                                        <h:panelGroup rendered="#{row.ntipoarchivo eq msgs.tipoArchivo}">
+                                                            <p:commandLink ajax="false" >
+                                                                <p:fileDownload value="#{row.content}" />
+                                                                <p:graphicImage library="images" name="File-Extension-Txt.png" title="visualizar archivo" width="24" height="24"/>
+                                                            </p:commandLink>
+                                                        </h:panelGroup>
+                                                        
+                                                        <p:lightBox iframe="true" rendered="#{row.ntipoarchivo eq msgs.tipoLink}">
+                                                            <h:outputLink value="#{row.vruta}">
+                                                                <p:graphicImage library="images" name="File-Extension-Lnk.png" title="visualizar pdf"/>
+                                                            </h:outputLink>
+                                                        </p:lightBox>
+                                                        
+                                                        <h:panelGroup rendered="#{row.ntipoarchivo eq msgs.tipoOtro}">
+                                                            <p:commandLink ajax="false" >
+                                                                <p:fileDownload value="#{row.content}" />
+                                                                <p:graphicImage library="images" name="File-Extension-Txt.png" title="visualizar archivo" width="24" height="24"/>
+                                                            </p:commandLink>
+                                                        </h:panelGroup>
                                                     </p:column>
                                                 </p:dataTable>
                                             </p:tab>
                                         </p:tabView>
+                                    </h:panelGrid>
+                                </p:fieldset>
 
-                                    </p:fieldset>
-                                </h:panelGrid>
                                 <p:spacer/>
 
                                 <p:fieldset>
@@ -81,10 +190,16 @@
                                             <p:tab title="Bases Legales">
                                                 <p:dataTable value="#{contenidoMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
                                                              emptyMessage="Ninguna base legal vinculada." >
-                                                    <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
-                                                        <h:outputText value="#{p.codigo}"/>
+                                                    <p:column style="width: 25%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.codigo}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
-                                                    <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                                    <p:column style="width: 45%" headerText="#{msgs.bl_lbl_columna08}">
                                                         <h:outputText value="#{p.nombre}" />
                                                     </p:column>
                                                     <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
@@ -99,7 +214,13 @@
                                                 <p:dataTable value="#{contenidoMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ningún contenido vinculado." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                                        <h:outputText value="#{p.nombre}"/>
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.nombre}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
@@ -116,7 +237,13 @@
                                                 <p:dataTable value="#{contenidoMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna buena práctica vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                                        <h:outputText value="#{p.nombre}"/>
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.nombre}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
@@ -133,7 +260,13 @@
                                                 <p:dataTable value="#{contenidoMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna oportunidad de mejora vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                                        <h:outputText value="#{p.nombre}"/>
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.nombre}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
@@ -150,7 +283,13 @@
                                                 <p:dataTable value="#{contenidoMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ningún wiki vinculado." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
-                                                        <h:outputText value="#{p.nombre}"/>
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.nombre}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
@@ -167,7 +306,13 @@
                                                 <p:dataTable value="#{contenidoMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
                                                              emptyMessage="Ninguna respuesta vinculada." >
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
-                                                        <h:outputText value="#{p.nombre}"/>
+                                                        <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                            <h:outputText value="#{p.nombre}"/>
+                                                            <f:param name="id" value="#{p.idconocimiento}"/>
+                                                            <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                            <f:param name="popup" value="true"/>
+                                                            <f:param name="tempPopup" value="true"/>
+                                                        </h:commandLink>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
@@ -184,8 +329,6 @@
                                     </h:panelGrid>
                                 </p:fieldset>
                                 <p:spacer/>
-
-
                                 <h:panelGrid columns="2" width="100%">
                                     <h:panelGroup>
                                         <p:commandButton value="Registrar" ajax="false" action="/pages/contenido/lista.xhtml" actionListener="#{contenidoMB.save}"/>
@@ -200,23 +343,116 @@
                         <p:dialog id="tpoconDlg" header="Agregar Contenidos" widgetVar="tpoconDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="tpoconDialogForm">
                                 <p:messages id="msgs" showSummary="true" showDetail="true" />
-                                <h:panelGrid id="pgTpoCon" columns="2" cellpadding="5" style="text-align: left;width: 100%">
-                                    <h:outputLabel value="Tipos de contenido"/>
-                                    <p:spacer/>
-                                    <p:selectOneRadio id="console" layout="grid" columns="1">
-                                        <f:selectItem itemLabel="Boletin" itemValue="0" />
-                                        <f:selectItem itemLabel="Blog" itemValue="1" />
-                                        <f:selectItem itemLabel="Manual" itemValue="2" />
-                                        <f:selectItem itemLabel="Video Tutorial" itemValue="3" />
-                                        <f:selectItem itemLabel="Articulo" itemValue="4" />
-                                        <f:selectItem itemLabel="Libro" itemValue="5" />
-                                        <f:selectItem itemLabel="Otros" itemValue="6" />
-                                    </p:selectOneRadio>
-                                    <p:spacer/>
-                                    <p:fileUpload value="#{contenidoMB.uploadFile}" skinSimple="true" update=":f:pgNewVinc1" fileUploadListener="#{contenidoMB.handleUploadFile}" 
-                                                  multiple="true" cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
+                                <h:panelGrid id="pgTpoCon" columns="1">
+                                    <h:outputText value="Tipo de Contenido:" styleClass="Fs14 FontBold"/>
+                                    <p:outputPanel id="customPanel" style="margin-bottom:10px">
+                                        <p:selectOneRadio value="#{contenidoMB.tipoContenido}" id="customRadio" layout="custom">
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo1}" itemValue="5" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo2}" itemValue="6" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo3}" itemValue="7" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo4}" itemValue="8" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo5}" itemValue="9" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo6}" itemValue="10" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo7}" itemValue="11" />
+                                        </p:selectOneRadio>
 
-                                    <p:commandButton  value="Cancelar" actionListener="#{contenidoMB.toCancel}" update=":f:growl"/>
+                                        <h:panelGrid columns="2">
+                                            <p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt1" value="#{msgs.ct_lbl_tipoArchivo1}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoDocumentos}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt2" value="#{msgs.ct_lbl_tipoArchivo2}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoVideos}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt3" for="customRadio" itemIndex="2" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt3" value="#{msgs.ct_lbl_tipoArchivo3}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoAudios}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt4" for="customRadio" itemIndex="3" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt4" value="#{msgs.ct_lbl_tipoArchivo4}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoImagenes}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt5" for="customRadio" itemIndex="4" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt5" value="#{msgs.ct_lbl_tipoArchivo5}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoArchivos}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt6" for="customRadio" itemIndex="5" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt6" value="#{msgs.ct_lbl_tipoArchivo6}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoLinks}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt7" for="customRadio" itemIndex="6" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt7" value="#{msgs.ct_lbl_tipoArchivo7}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoOtros}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </p:outputPanel>
+                                    <h:outputText value="Archivo:" styleClass="Fs14 FontBold"/>
+                                    <h:panelGrid id="pgFu" columns="1" cellspacing="0" cellpadding="0">
+                                        <p:fileUpload value="#{contenidoMB.uploadFile}" skinSimple="true" update=":tpoconDialogForm:pgFu" fileUploadListener="#{contenidoMB.handleUploadFile}" 
+                                                      multiple="true" cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
+                                        <h:outputText id="fileName" value="#{contenidoMB.uploadFile.fileName}" rendered="#{contenidoMB.uploadFile ne null}"/>
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                        <p:commandButton  value="Adjuntar" actionListener="#{contenidoMB.adjuntar}" oncomplete="PF('tpoconDialog').hide();" update=":f:pgNewVinc1, :f:growl"/>
+                                        <p:commandButton  value="Cancelar" onclick="PF('tpoconDialog').hide();"/>
+                                    </h:panelGrid>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
@@ -256,7 +492,7 @@
                                             <h:outputText class="fa fa-angle-double-right"/>
                                             <p:spacer width="5"/>
                                             <h:outputText id="cod" value="#{p.codigo}" title="#{p.nombre}" rendered="#{not empty p.codigo}"/>
-                                            <h:outputText value="#{p.nombre}" rendered="#{empty p.codigo}"/>
+                                            <h:outputText value="#{p.nombre}" title="#{p.sumilla}" rendered="#{empty p.codigo}"/>
                                         </p:column>
                                         <p:column style="width: 20%; text-align: center;">
                                             <h:outputText value="#{p.categoria}" />
@@ -270,6 +506,52 @@
                             </h:form>
                         </p:dialog>
 
+                        <p:dialog id="destDlg" header="#{msgs.ct_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
+                            <h:form id="destDialogForm">
+                                <h:panelGrid id="pgDest" columns="1">
+                                    <h:outputText value="#{msgs.ct_msg_destacado1}" styleClass="Fs14 FontBold red"/>
+                                    <h:outputText value="#{msgs.ct_msg_destacado2}" styleClass="Fs14 FontBold red"/>
+                                    <p:dataTable id="tbl" value="#{contenidoMB.listaDestacados}" var="row" rowIndexVar="rowIndex" scrollable="true"
+                                                 scrollRows="5" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <p:column style="width: 50%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna01}"/></f:facet>
+                                            <p:commandLink id="num" styleClass="GesconLink Fs14 Unselectable" global="false">
+                                                <h:outputText value="#{row.nombre}"/>
+                                            </p:commandLink>
+                                            <p:tooltip id="toolTipGrow" for="num" value="#{row.sumilla}" showEffect="clip" hideEffect="explode" style="font-size: 12px; max-width: 400px;" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna02}"/></f:facet>
+                                            <h:outputText value="#{row.categoria}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna04}"/></f:facet>
+                                            <h:outputText value="#{row.estado}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna03}"/></f:facet>
+                                            <h:outputText value="#{row.fechaPublicacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <p:commandLink actionListener="#{contenidoMB.toDeleteOutstanding}" oncomplete="PF('confirmDelDlg').show();" styleClass="GesconLink" title="eliminar base legal destacada">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:commandButton value="Cancelar" onclick="PF('destDialog').hide()" type="button" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.ct_msg_elidestacado}" header="#{msgs.ct_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
+                            <h:form id="confirmDelDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{contenidoMB.deleteOutstanding}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
                     </f:view>
                 </div>
             </div>

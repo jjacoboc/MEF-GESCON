@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -26,6 +26,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.PhaseId;
+import javax.faces.model.SelectItem;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +53,7 @@ import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
+import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.ContenidoService;
 import pe.gob.mef.gescon.service.DiscusionHistService;
 import pe.gob.mef.gescon.service.DiscusionSeccionHistService;
@@ -103,6 +105,7 @@ public class ContenidoMB implements Serializable {
     private String contenidoPlain;
     private TreeNode tree;
     private Categoria selectedCategoria;
+    private Boolean chkDestacado;
     private UploadedFile uploadFile;
     private StreamedContent content;
     private File file;
@@ -140,6 +143,16 @@ public class ContenidoMB implements Serializable {
     private BigDecimal calificacion;
     private String comentario;
     private String selectedSwitch;
+    private List<Consulta> listaDestacados;
+    private Consulta selectedDestacado;
+    private String tipoContenido;
+    private String tipoDocumentos;
+    private String tipoVideos;
+    private String tipoAudios;
+    private String tipoImagenes;
+    private String tipoArchivos;
+    private String tipoLinks;
+    private String tipoOtros;
 
     /**
      * Creates a new instance of ContenidoMB
@@ -299,6 +312,14 @@ public class ContenidoMB implements Serializable {
      */
     public void setSelectedCategoria(Categoria selectedCategoria) {
         this.selectedCategoria = selectedCategoria;
+    }
+
+    public Boolean getChkDestacado() {
+        return chkDestacado;
+    }
+
+    public void setChkDestacado(Boolean chkDestacado) {
+        this.chkDestacado = chkDestacado;
     }
 
     /**
@@ -723,16 +744,131 @@ public class ContenidoMB implements Serializable {
         this.selectedSwitch = selectedSwitch;
     }
 
+    public List<Consulta> getListaDestacados() {
+        return listaDestacados;
+    }
+
+    public void setListaDestacados(List<Consulta> listaDestacados) {
+        this.listaDestacados = listaDestacados;
+    }
+
+    public Consulta getSelectedDestacado() {
+        return selectedDestacado;
+    }
+
+    public void setSelectedDestacado(Consulta selectedDestacado) {
+        this.selectedDestacado = selectedDestacado;
+    }
+
+    public String getTipoContenido() {
+        return tipoContenido;
+    }
+
+    public void setTipoContenido(String tipoContenido) {
+        this.tipoContenido = tipoContenido;
+    }
+
+    public String getTipoDocumentos() {
+        return tipoDocumentos;
+    }
+
+    public void setTipoDocumentos(String tipoDocumentos) {
+        this.tipoDocumentos = tipoDocumentos;
+    }
+
+    public String getTipoVideos() {
+        return tipoVideos;
+    }
+
+    public void setTipoVideos(String tipoVideos) {
+        this.tipoVideos = tipoVideos;
+    }
+
+    public String getTipoAudios() {
+        return tipoAudios;
+    }
+
+    public void setTipoAudios(String tipoAudios) {
+        this.tipoAudios = tipoAudios;
+    }
+
+    public String getTipoImagenes() {
+        return tipoImagenes;
+    }
+
+    public void setTipoImagenes(String tipoImagenes) {
+        this.tipoImagenes = tipoImagenes;
+    }
+
+    public String getTipoArchivos() {
+        return tipoArchivos;
+    }
+
+    public void setTipoArchivos(String tipoArchivos) {
+        this.tipoArchivos = tipoArchivos;
+    }
+
+    public String getTipoLinks() {
+        return tipoLinks;
+    }
+
+    public void setTipoLinks(String tipoLinks) {
+        this.tipoLinks = tipoLinks;
+    }
+
+    public String getTipoOtros() {
+        return tipoOtros;
+    }
+
+    public void setTipoOtros(String tipoOtros) {
+        this.tipoOtros = tipoOtros;
+    }
+
     @PostConstruct
     public void init() {
         try {
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             this.setListaContenido(service.getContenidos());
+            this.setTipoDocumentos(StringUtils.EMPTY);
+            this.setTipoVideos(StringUtils.EMPTY);
+            this.setTipoAudios(StringUtils.EMPTY);
+            this.setTipoImagenes(StringUtils.EMPTY);
+            this.setTipoArchivos(StringUtils.EMPTY);
+            this.setTipoLinks(StringUtils.EMPTY);
+            this.setTipoOtros(StringUtils.EMPTY);
             this.setListaArchivos(new ArrayList<ArchivoConocimiento>());
             this.setListaSourceVinculos(new ArrayList<Consulta>());
             this.setListaTargetVinculos(new ArrayList<Consulta>());
             this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
-
+            ListaSessionMB listaSessionMB = (ListaSessionMB) JSFUtils.getSessionAttribute("listaSessionMB");
+            for(SelectItem s : listaSessionMB.getListaTipoDocumentosActivos()) {
+                this.setTipoDocumentos(this.getTipoDocumentos().concat(StringUtils.capitalize(StringUtils.lowerCase(s.getLabel())).concat(", ")));
+            }
+            for(SelectItem s : listaSessionMB.getListaTipoVideosActivos()) {
+                this.setTipoVideos(this.getTipoVideos().concat(StringUtils.capitalize(StringUtils.lowerCase(s.getLabel())).concat(", ")));
+            }
+            for(SelectItem s : listaSessionMB.getListaTipoAudiosActivos()) {
+                this.setTipoAudios(this.getTipoAudios().concat(StringUtils.capitalize(StringUtils.lowerCase(s.getLabel())).concat(", ")));
+            }
+            for(SelectItem s : listaSessionMB.getListaTipoImagenesActivas()) {
+                this.setTipoImagenes(this.getTipoImagenes().concat(StringUtils.capitalize(StringUtils.lowerCase(s.getLabel())).concat(", ")));
+            }
+            for(SelectItem s : listaSessionMB.getListaTipoArchivosTextoActivos()) {
+                this.setTipoArchivos(this.getTipoArchivos().concat(StringUtils.capitalize(StringUtils.lowerCase(s.getLabel())).concat(", ")));
+            }
+            for(SelectItem s : listaSessionMB.getListaTipoLinksActivos()) {
+                this.setTipoLinks(this.getTipoLinks().concat(StringUtils.capitalize(StringUtils.lowerCase(s.getLabel())).concat(", ")));
+            }
+            for(SelectItem s : listaSessionMB.getListaTipoOtrosArchivosActivos()) {
+                this.setTipoOtros(this.getTipoOtros().concat(StringUtils.capitalize(StringUtils.lowerCase(s.getLabel())).concat(", ")));
+            }
+            this.setTipoDocumentos(this.getTipoDocumentos().substring(0, this.getTipoDocumentos().lastIndexOf(",")));
+            this.setTipoVideos(this.getTipoVideos().substring(0, this.getTipoVideos().lastIndexOf(",")));
+            this.setTipoAudios(this.getTipoAudios().substring(0, this.getTipoAudios().lastIndexOf(",")));
+            this.setTipoImagenes(this.getTipoImagenes().substring(0, this.getTipoImagenes().lastIndexOf(",")));
+            this.setTipoArchivos(this.getTipoArchivos().substring(0, this.getTipoArchivos().lastIndexOf(",")));
+            this.setTipoLinks(this.getTipoLinks().substring(0, this.getTipoLinks().lastIndexOf(",")));
+            this.setTipoOtros(this.getTipoOtros().substring(0, this.getTipoOtros().lastIndexOf(",")));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -755,7 +891,10 @@ public class ContenidoMB implements Serializable {
             this.setListaTargetVinculosOM(new ArrayList());
             this.setListaTargetVinculosPR(new ArrayList());
             this.setListaTargetVinculosWK(new ArrayList());
+            this.setChkDestacado(true);
             this.setListaArchivos(new ArrayList());
+            this.setListaDestacados(new ArrayList<Consulta>());
+            this.setSelectedDestacado(null);
             this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
             Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
             if (iter.hasNext() == true) {
@@ -880,16 +1019,20 @@ public class ContenidoMB implements Serializable {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
             String fileName = JSFUtils.getRequestParameter("fileName");
-            if (fileName.isEmpty()) {
-                String fileNameS = (bundle.getString("pdftemppath")) + this.getUploadFile().getFileName();
-                FileInputStream fis = new FileInputStream(new File(fileNameS));
-                return new DefaultStreamedContent(fis, "application/pdf");
-            } else {
-                String fileNameS = (bundle.getString("path")) + fileName;
-                FileInputStream fis = new FileInputStream(new File(fileNameS));
-                return new DefaultStreamedContent(fis, "application/pdf");
+            FileInputStream fis = new FileInputStream(new File(fileName));
+            return new DefaultStreamedContent(fis, "application/pdf");
+        }
+    }
+    
+    public void toUploadFile(ActionEvent event) {
+        try {
+            if (event != null) {
+                this.setUploadFile(null);
+                this.setTipoContenido(StringUtils.EMPTY);
             }
-
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -897,9 +1040,7 @@ public class ContenidoMB implements Serializable {
         try {
             if (event != null) {
                 UploadedFile f = event.getFile();
-
                 if (f != null) {
-
                     this.setUploadFile(f);
                     ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
                     File direc = new File(bundle.getString("pdftemppath"));
@@ -909,17 +1050,82 @@ public class ContenidoMB implements Serializable {
                     fileOutStream.write(f.getContents());
                     fileOutStream.flush();
                     fileOutStream.close();
-                    this.content = new DefaultStreamedContent(f.getInputstream(), f.getContentType(), f.getFileName());
-
-                    ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
-                    archivoconocimiento.setVnombre(f.getFileName());
-                    this.listaArchivos.add(archivoconocimiento);
-
                 }
             }
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
+        }
+    }
+    
+    public void adjuntar(ActionEvent event) {
+        try {
+            if (event != null) {
+                if(StringUtils.isBlank(this.getTipoContenido())) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de contenido a adjuntar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+                
+                ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
+                String tipoVideo = bundle.getString("tipoVideo");
+                String pdftemppath = bundle.getString("pdftemppath");
+                String filename = this.getUploadFile().getFileName();
+                String contentType = this.getUploadFile().getContentType();
+                
+//                if(this.getTipoContenido().equals(tipoVideo)){
+//                    String ffmpeg = bundle.getString("ffmpeg");
+//                    String filenameFLV = filename.substring(0, filename.lastIndexOf(".")).concat(".flv");
+//                    FLVConverter FLVConverter = new FLVConverter(ffmpeg);
+//                    FLVConverter.convert(pdftemppath + filename, pdftemppath + filenameFLV, 420, 315, 5);
+//                    filename = filenameFLV;
+//                    contentType = bundle.getString("contentTypeFlash");
+//                    inputStream = new FileInputStream(new File(pdftemppath + filenameFLV));
+//                }
+                
+                ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
+                archivoconocimiento.setUploadedFile(this.getUploadFile());
+                archivoconocimiento.setVnombre(filename);
+                archivoconocimiento.setNtipoarchivo(BigDecimal.valueOf(Long.parseLong(this.getTipoContenido())));
+                archivoconocimiento.setVcontenttype(contentType);
+                archivoconocimiento.setVruta(pdftemppath + filename);
+                archivoconocimiento.setFile(new File(archivoconocimiento.getVruta()));
+                archivoconocimiento.setContent(new DefaultStreamedContent(new FileInputStream(archivoconocimiento.getFile()), contentType, filename));
+                this.getListaArchivos().add(archivoconocimiento);
+            }
+        } catch(Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void toDeleteOutstanding(ActionEvent event) {
+        try {
+            if(event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                this.setSelectedDestacado(this.getListaDestacados().get(index));
+            }
+        } catch(Exception e) {
+            e.getMessage();
+        }
+    }
+    
+    public void deleteOutstanding(ActionEvent event) {
+        try {
+            if(event != null) {
+                ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                Conocimiento conocimiento = service.getConocimientoById(this.getSelectedDestacado().getIdconocimiento());
+                if(conocimiento != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
+                    conocimiento.setNdestacado(BigDecimal.ZERO);
+                    conocimiento.setVusuariomodificacion(user.getVlogin());
+                    conocimiento.setDfechamodificacion(new Date());
+                    service.saveOrUpdate(conocimiento);
+                }
+            }
+        } catch(Exception e) {
+            e.getMessage();
         }
     }
 
@@ -935,36 +1141,58 @@ public class ContenidoMB implements Serializable {
 
     public void save(ActionEvent event) {
         try {
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.CONTENIDO);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
+            
             if (CollectionUtils.isEmpty(this.getListaContenido())) {
                 this.setListaContenido(Collections.EMPTY_LIST);
             }
-            BigDecimal idconocimiento;
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
-
-            Conocimiento conocimiento = new Conocimiento();
+            
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
-            idconocimiento = service.getNextPK();
-
-            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
-            conocimiento.setNconocimientoid(idconocimiento);
+            Conocimiento conocimiento = new Conocimiento();
+            conocimiento.setNconocimientoid(service.getNextPK());
             conocimiento.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-            if (this.getSelectedCategoria().getNflagbp().equals(BigDecimal.ONE)) {
-                conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
-            } else {
-                conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
-                conocimiento.setDfechapublicacion(new Date());
-            }
             conocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
             conocimiento.setVtitulo(this.getTitulo().trim());
+            conocimiento.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             conocimiento.setVdescripcion(this.getDescripcion().trim());
             if (this.getContenidoPlain().length() < 400) {
                 conocimiento.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
             } else {
                 conocimiento.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
             }
-
+            if (this.getSelectedCategoria().getNflagbp().equals(BigDecimal.ONE)) {
+                conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
+            } else {
+                conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
+                conocimiento.setDfechapublicacion(new Date());
+            }
+            if(contador > 0) {
+                conocimiento.setNflgvinculo(BigDecimal.ONE);
+            } else {
+                conocimiento.setNflgvinculo(BigDecimal.ZERO);
+            }
             String np0 = this.path.concat(conocimiento.getNconocimientoid().toString()).concat("/0/");
             conocimiento.setVruta(np0);
             conocimiento.setDfechacreacion(new Date());
@@ -972,6 +1200,7 @@ public class ContenidoMB implements Serializable {
             conocimiento.setNactivo(BigDecimal.ONE);
             service.saveOrUpdate(conocimiento);
 
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             GcmFileUtils.writeStringToFileServer(np0, "html.txt", this.getContenidoHtml());
             GcmFileUtils.writeStringToFileServer(np0, "plain.txt", this.getContenidoPlain());
 
@@ -1003,32 +1232,13 @@ public class ContenidoMB implements Serializable {
             GcmFileUtils.writeStringToFileServer(np1, "html.txt", this.getContenidoHtml());
             GcmFileUtils.writeStringToFileServer(np1, "plain.txt", this.getContenidoPlain());
 
-            listaTargetVinculos = new ArrayList<Consulta>();
-
-            if (this.getListaTargetVinculosBL() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
-            }
-            if (this.getListaTargetVinculosBP() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
-            }
-            if (this.getListaTargetVinculosCT() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
-            }
-            if (this.getListaTargetVinculosOM() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
-            }
-            if (this.getListaTargetVinculosPR() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
-            }
-            if (this.getListaTargetVinculosWK() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
-            }
+            this.setListaTargetVinculos(new ArrayList());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
 
             if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                 VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
@@ -1055,13 +1265,11 @@ public class ContenidoMB implements Serializable {
                     vinculoHist.setDfechacreacion(new Date());
                     vinculoHist.setVusuariocreacion(user.getVlogin());
                     vinculoHistService.saveOrUpdate(vinculoHist);
-
                 }
             }
 
             ArchivoConocimientoService aservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             for (ArchivoConocimiento v : this.getListaArchivos()) {
-
                 ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
                 archivoconocimiento.setNarchivoid(aservice.getNextPK());
                 archivoconocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
@@ -1088,16 +1296,10 @@ public class ContenidoMB implements Serializable {
             serviceasig.saveOrUpdate(asignacion);
 
             listaContenido = service.getContenidos();
-            //listaPregunta = service.getPreguntas();
-            //RequestContext.getCurrentInstance().execute("PF('newDialog').hide();");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    public void toCancel(ActionEvent event) {
-        RequestContext.getCurrentInstance().execute("PF('tpoconDialog').hide();");
     }
 
     public void toUpdate(ActionEvent event) {
@@ -1279,6 +1481,7 @@ public class ContenidoMB implements Serializable {
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()));
             ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             this.setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedContenido().getNconocimientoid()));
+            this.setChkDestacado(this.getSelectedContenido().getNdestacado().equals(BigDecimal.ONE));
             ContenidoService contenidoService = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid().toString());
@@ -1311,6 +1514,7 @@ public class ContenidoMB implements Serializable {
             this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedContenido().getVruta(), "html.txt"));
             ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             this.setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedContenido().getNconocimientoid()));
+            this.setChkDestacado(this.getSelectedContenido().getNdestacado().equals(BigDecimal.ONE));
             ContenidoService contenidoService = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid().toString());
@@ -1336,6 +1540,27 @@ public class ContenidoMB implements Serializable {
 
     public void edit(ActionEvent event) {
         try {
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.CONTENIDO);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
+            
             if (CollectionUtils.isEmpty(this.getListaContenido())) {
                 this.setListaContenido(Collections.EMPTY_LIST);
             }
@@ -1343,8 +1568,7 @@ public class ContenidoMB implements Serializable {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
 
-            ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
-            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
+            ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");            
             this.getSelectedContenido().setVtitulo(this.getSelectedContenido().getVtitulo().trim());
             this.getSelectedContenido().setVdescripcion(this.getSelectedContenido().getVdescripcion().trim());
             if (this.getContenidoPlain().length() < 400) {
@@ -1352,11 +1576,18 @@ public class ContenidoMB implements Serializable {
             } else {
                 this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
             }
+            if(contador > 0) {
+                this.getSelectedContenido().setNflgvinculo(BigDecimal.ONE);
+            } else {
+                this.getSelectedContenido().setNflgvinculo(BigDecimal.ZERO);
+            }
             this.getSelectedContenido().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            this.getSelectedContenido().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedContenido().setDfechamodificacion(new Date());
             this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
             service.saveOrUpdate(this.getSelectedContenido());
 
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "html.txt", this.getContenidoHtml());
             GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "plain.txt", this.getContenidoPlain());
 
@@ -1396,32 +1627,13 @@ public class ContenidoMB implements Serializable {
             GcmFileUtils.writeStringToFileServer(url, "html.txt", this.getContenidoHtml());
             GcmFileUtils.writeStringToFileServer(url, "plain.txt", this.getContenidoPlain());
 
-            listaTargetVinculos = new ArrayList<Consulta>();
-
-            if (this.getListaTargetVinculosBL() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
-            }
-            if (this.getListaTargetVinculosBP() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
-            }
-            if (this.getListaTargetVinculosCT() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
-            }
-            if (this.getListaTargetVinculosOM() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
-            }
-            if (this.getListaTargetVinculosPR() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
-            }
-            if (this.getListaTargetVinculosWK() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
-            }
+            this.setListaTargetVinculos(new ArrayList());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
 
             if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                 VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
@@ -1487,6 +1699,7 @@ public class ContenidoMB implements Serializable {
             this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedContenido().getVruta(), "html.txt"));
             ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             this.setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedContenido().getNconocimientoid()));
+            this.setChkDestacado(this.getSelectedContenido().getNdestacado().equals(BigDecimal.ONE));
             ContenidoService contenidoService = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid().toString());
@@ -1512,6 +1725,26 @@ public class ContenidoMB implements Serializable {
 
     public void post(ActionEvent event) {
         try {
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.CONTENIDO);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
             if (CollectionUtils.isEmpty(this.getListaContenido())) {
                 this.setListaContenido(Collections.EMPTY_LIST);
             }
@@ -1520,7 +1753,6 @@ public class ContenidoMB implements Serializable {
             User user = loginMB.getUser();
 
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
-            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             this.getSelectedContenido().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedContenido().setVtitulo(this.getSelectedContenido().getVtitulo().trim());
             this.getSelectedContenido().setVdescripcion(this.getSelectedContenido().getVdescripcion().trim());
@@ -1529,12 +1761,19 @@ public class ContenidoMB implements Serializable {
             } else {
                 this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
             }
+            if(contador > 0) {
+                this.getSelectedContenido().setNflgvinculo(BigDecimal.ONE);
+            } else {
+                this.getSelectedContenido().setNflgvinculo(BigDecimal.ZERO);
+            }
+            this.getSelectedContenido().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedContenido().setDfechamodificacion(new Date());
             this.getSelectedContenido().setDfechapublicacion(new Date());
             this.getSelectedContenido().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
             this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
             service.saveOrUpdate(this.getSelectedContenido());
 
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "html.txt", this.getContenidoHtml());
             GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "plain.txt", this.getContenidoPlain());
 
@@ -1573,33 +1812,15 @@ public class ContenidoMB implements Serializable {
 
             GcmFileUtils.writeStringToFileServer(url, "html.txt", this.getContenidoHtml());
             GcmFileUtils.writeStringToFileServer(url, "plain.txt", this.getContenidoPlain());
-            listaTargetVinculos = new ArrayList<Consulta>();
-
-            if (this.getListaTargetVinculosBL() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
-            }
-            if (this.getListaTargetVinculosBP() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
-            }
-            if (this.getListaTargetVinculosCT() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
-            }
-            if (this.getListaTargetVinculosOM() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
-            }
-            if (this.getListaTargetVinculosPR() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
-            }
-            if (this.getListaTargetVinculosWK() == null) {
-            } else {
-                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
-            }
-
+            
+            this.setListaTargetVinculos(new ArrayList());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            
             if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                 VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
                 VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");

@@ -34,6 +34,7 @@ public class Consulta implements Serializable, Comparable<Consulta> {
     private String usuario;
     private String usuarioNombre;
     private String elapsedTime;
+    private BigDecimal flgVinculo;
 
     public Consulta() {
     }
@@ -292,6 +293,14 @@ public class Consulta implements Serializable, Comparable<Consulta> {
      */
     public void setElapsedTime(String elapsedTime) {
         this.elapsedTime = elapsedTime;
+    }
+
+    public BigDecimal getFlgVinculo() {
+        return flgVinculo;
+    }
+
+    public void setFlgVinculo(BigDecimal flgVinculo) {
+        this.flgVinculo = flgVinculo;
     }
 
     @Override

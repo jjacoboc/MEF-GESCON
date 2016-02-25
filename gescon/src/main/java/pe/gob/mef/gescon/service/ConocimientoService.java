@@ -28,6 +28,7 @@ public interface ConocimientoService {
     void delete(Conocimiento conocimiento) throws Exception;
     List<Consulta> getConcimientosVinculados(HashMap filters);
     List<Consulta> getConcimientosDisponibles(HashMap filters);
+    List<Consulta> getConcimientosByVinculoBaseLegalId(BigDecimal id);
     Conocimiento getBpracticaById(BigDecimal tipo,BigDecimal id) throws Exception;
     List<Asignacion> obtenerBpracticaxAsig(BigDecimal bpracticaid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
     Conocimiento getOmejoraById(BigDecimal tipo,BigDecimal id) throws Exception;

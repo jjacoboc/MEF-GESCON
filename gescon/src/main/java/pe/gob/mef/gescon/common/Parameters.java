@@ -23,7 +23,7 @@ public class Parameters implements Serializable {
      * @return
      */
     public static String getMessages() {
-        return "pe.gob.mef.airhsp.messages";
+        return "pe.gob.mef.gescon.messages";
     }
 
     /**
@@ -32,7 +32,7 @@ public class Parameters implements Serializable {
      * @return
      */
     public static String getJDBC() {
-        return "pe.gob.mef.airhsp.jdbc";
+        return "pe.gob.mef.gescon.jdbc";
     }
 
     /**
@@ -41,7 +41,7 @@ public class Parameters implements Serializable {
      * @return
      */
     public static String getMail() {
-        return "pe.gob.mef.airhsp.mail";
+        return "pe.gob.mef.gescon.mail";
     }
 
     /**

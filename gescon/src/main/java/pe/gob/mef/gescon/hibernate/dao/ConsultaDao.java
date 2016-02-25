@@ -5,6 +5,7 @@
  */
 package pe.gob.mef.gescon.hibernate.dao;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,5 +17,6 @@ public interface ConsultaDao {
     
     List<HashMap> getQueryFilter(HashMap filters);
     List<HashMap> getDestacadosByTipoConocimiento(HashMap filters);
+    BigDecimal countDestacadosByTipoConocimiento(HashMap filters);
     List<HashMap<String,Object>> listarReporte(HashMap filters) throws Exception;
 }

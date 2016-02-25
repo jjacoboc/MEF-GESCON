@@ -951,7 +951,6 @@ public class PreguntaMB implements Serializable {
             if (CollectionUtils.isEmpty(this.getListaPregunta())) {
                 this.setListaPregunta(Collections.EMPTY_LIST);
             }
-            BigDecimal idpregunta;
             BigDecimal idperfil;
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -959,8 +958,7 @@ public class PreguntaMB implements Serializable {
 
             Pregunta pregunta = new Pregunta();
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            idpregunta = service.getNextPK();
-            pregunta.setNpreguntaid(idpregunta);
+            pregunta.setNpreguntaid(service.getNextPK());
             pregunta.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             pregunta.setVasunto(this.getAsunto().trim());
             pregunta.setVdetalle(this.getDetalle().trim());
@@ -985,7 +983,7 @@ public class PreguntaMB implements Serializable {
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             asignacion.setNasignacionid(serviceasig.getNextPK());
             asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
-            asignacion.setNconocimientoid(idpregunta);
+            asignacion.setNconocimientoid(pregunta.getNpreguntaid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             asignacion.setNusuarioid(categoriaService.getCategoriaById(pregunta.getNcategoriaid()).getNmoderador());
@@ -995,8 +993,7 @@ public class PreguntaMB implements Serializable {
             
             idperfil = service.obtenerPerfilxUsuario(user.getNusuarioid());
             
-            if(Integer.parseInt(idperfil.toString()) != Constante.USUARIOEXTERNO)
-            {
+            if(Integer.parseInt(idperfil.toString()) != Constante.USUARIOEXTERNO){
                 pagina="/pages/pregunta/lista?faces-redirect=true";
             }else{
                 pagina="/index?faces-redirect=true";
@@ -1465,12 +1462,83 @@ public class PreguntaMB implements Serializable {
     public String Publicar() throws Exception {
         String pagina = null;
         try {
+            
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user_savepreg = loginMB.getUser();
+
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            if (this.getSelectedCategoria() == null) {
+                this.getSelectedPregunta().setNcategoriaid(this.getSelectedPregunta().getNcategoriaid());
+            } else {
+                this.getSelectedPregunta().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            }
+            this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
+            this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
+            this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
+            this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta());
+            this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
+            this.getSelectedPregunta().setDfechamodificacion(new Date());
+            this.getSelectedPregunta().setVusuariomodificacion(user_savepreg.getVlogin());
             this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 6));
             this.getSelectedPregunta().setDfechapublicacion(new Date());
             service.saveOrUpdate(this.getSelectedPregunta());
 
-            pagina = "/pages/pregunta/lista.xhtml";
+            RespuestaHistService serviceresp = (RespuestaHistService) ServiceFinder.findBean("RespuestaHistService");
+            RespuestaHist respuestahist = new RespuestaHist();
+            respuestahist.setNhistorialid(serviceresp.getNextPK());
+            respuestahist.setNpreguntaid(this.getSelectedPregunta().getNpreguntaid());
+            respuestahist.setVrespuesta(this.getSelectedPregunta().getVrespuesta());
+            respuestahist.setVusuariocreacion(user_savepreg.getVlogin());
+            respuestahist.setDfechacreacion(new Date());
+            serviceresp.saveOrUpdate(respuestahist);
+            
+            String ruta0 = this.path + this.getSelectedPregunta().getNpreguntaid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
+
+            listaTargetVinculos = new ArrayList<Consulta>();
+
+            if (this.getListaTargetVinculosBL() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            }
+            if (this.getListaTargetVinculosBP() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            }
+            if (this.getListaTargetVinculosCT() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            }
+            if (this.getListaTargetVinculosOM() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            }
+            if (this.getListaTargetVinculosPR() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            }
+            if (this.getListaTargetVinculosWK() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            }
+
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                VinculoPreguntaService vinculopreguntaService = (VinculoPreguntaService) ServiceFinder.findBean("VinculoPreguntaService");
+                service.delete(this.getSelectedPregunta().getNpreguntaid());
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    VinculoPregunta vinculopregunta = new VinculoPregunta();
+                    vinculopregunta.setNvinculoid(vinculopreguntaService.getNextPK());
+                    vinculopregunta.setNpreguntaid(this.getSelectedPregunta().getNpreguntaid());
+                    vinculopregunta.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculopregunta.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculopregunta.setDfechacreacion(new Date());
+                    vinculopregunta.setVusuariocreacion(user_savepreg.getVlogin());
+                    vinculopreguntaService.saveOrUpdate(vinculopregunta);
+
+                }
+            }
+            pagina = "/pages/pregunta/lista?faces-redirect=true";
 
         } catch (Exception e) {
             log.error(e.getMessage());

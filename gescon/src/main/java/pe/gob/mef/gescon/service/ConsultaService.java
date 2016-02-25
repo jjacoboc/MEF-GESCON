@@ -5,6 +5,7 @@
  */
 package pe.gob.mef.gescon.service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import pe.gob.mef.gescon.web.bean.Consulta;
@@ -17,5 +18,6 @@ public interface ConsultaService {
     
     List<Consulta> getQueryFilter(HashMap filters);
     List<Consulta> getDestacadosByTipoConocimiento(HashMap filters);
+    BigDecimal countDestacadosByTipoConocimiento(HashMap filters);
     List<HashMap<String,Object>> listarReporte(HashMap filters);
 }

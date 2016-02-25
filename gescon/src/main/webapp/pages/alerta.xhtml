@@ -48,16 +48,16 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 8%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink actionListener="#{alertaMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar alerta">
+                                            <p:commandLink actionListener="#{alertaMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="GesconLink" title="editar alerta">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}"/>
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{alertaMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar alerta" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
+                                            <p:commandLink actionListener="#{alertaMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar alerta" styleClass="GesconLink" rendered="#{row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}"/>
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{alertaMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar alerta" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
+                                            <p:commandLink actionListener="#{alertaMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar alerta" styleClass="GesconLink" rendered="#{row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}"/>
                                             </p:commandLink>

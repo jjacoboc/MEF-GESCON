@@ -30,9 +30,7 @@
                                         </f:facet>
                                         <p:column style="width: 20%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
-                                            <p:commandLink id="num" styleClass="ui-link Fs14 Unselectable" global="false">
-                                                <h:outputText value="#{row.vnombre}"/>
-                                            </p:commandLink>
+                                            <h:outputText value="#{row.vnombre}"/>
                                         </p:column>
                                         <p:column style="width: 30%;" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="2">
                                             <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
@@ -54,21 +52,21 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 9%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink actionListener="#{perfilMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="ui-link" title="editar perfil">
+                                            <p:commandLink actionListener="#{perfilMB.toUpdate}" update=":editDialogForm:pgEdit" oncomplete="PF('editDialog').show();" styleClass="GesconLink" title="editar perfil">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{perfilMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar perfil" styleClass="ui-link" rendered="#{row.nactivo eq 0}">
+                                            <p:commandLink actionListener="#{perfilMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar perfil" styleClass="GesconLink" rendered="#{row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{perfilMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar perfil" styleClass="ui-link" rendered="#{row.nactivo eq 1}">
+                                            <p:commandLink actionListener="#{perfilMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar perfil" styleClass="GesconLink" rendered="#{row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{perfilMB.toAsig}" oncomplete="PF('asigDialog').show();" update=":asigDialogForm:pgAsig" styleClass="ui-link" title="asignar politicas">
+                                            <p:commandLink actionListener="#{perfilMB.toAsig}" oncomplete="PF('asigDialog').show();" update=":asigDialogForm:pgAsig" styleClass="GesconLink" title="asignar politicas">
                                                 <h:outputText class="fa fa-briefcase Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>

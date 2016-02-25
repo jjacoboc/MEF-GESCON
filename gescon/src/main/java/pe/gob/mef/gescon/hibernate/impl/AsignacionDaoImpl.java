@@ -276,7 +276,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
         sql.append("AND (ROUND(TO_DATE (TO_CHAR (SYSTIMESTAMP, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')  ");
         sql.append("- TO_DATE (TO_CHAR (dfechaasignacion, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')))  ");
-        sql.append(" > (select nvalor2 from mtalerta where nalertaid=1)  ");
+        sql.append(" > (select TO_NUMBER(vvalor) from mtparametro where nparametroid=(select nvalor2 from mtalerta where nalertaid=1))  ");
         sql.append("AND (t.dfechaasignacion is not null  and t.dfechaatencion is null) ");
         sql.append("UNION ");
         sql.append("SELECT a.npreguntaid AS ID, '' AS NUMERO, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, ");
@@ -290,7 +290,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
         sql.append("AND (ROUND(TO_DATE (TO_CHAR (SYSTIMESTAMP, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')  ");
         sql.append("- TO_DATE (TO_CHAR (dfechaasignacion, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')))  ");
-        sql.append(" > (select nvalor2 from mtalerta where nalertaid=1)  ");
+        sql.append(" > (select TO_NUMBER(vvalor) from mtparametro where nparametroid=(select nvalor2 from mtalerta where nalertaid=1))  ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
         sql.append("UNION ");
         sql.append("SELECT a.nconocimientoid AS ID, '' AS NUMERO, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
@@ -305,7 +305,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
         sql.append("AND (ROUND(TO_DATE (TO_CHAR (SYSTIMESTAMP, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')  ");
         sql.append("- TO_DATE (TO_CHAR (dfechaasignacion, 'YYYY-MON-DD HH24:MI:SS'),'YYYY-MON-DD HH24:MI:SS')))  ");
-        sql.append(" > (select nvalor2 from mtalerta where nalertaid=1)  ");
+        sql.append(" > (select TO_NUMBER(vvalor) from mtparametro where nparametroid=(select nvalor2 from mtalerta where nalertaid=1))  ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
 
         return (List<HashMap>) getHibernateTemplate().execute(

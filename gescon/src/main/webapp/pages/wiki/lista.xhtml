@@ -50,29 +50,29 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" exportable="false" priority="5">
                                             <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna05}"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{wikiMB.toView}" styleClass="ui-link" title="Ver Wiki">
+                                            <p:commandLink ajax="false" action="#{wikiMB.toView}" styleClass="GesconLink" title="Ver Wiki">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink ajax="false" action="#{wikiMB.toEdit}" styleClass="ui-link" title="Actualizar Wiki"
+                                            <p:commandLink ajax="false" action="#{wikiMB.toEdit}" styleClass="GesconLink" title="Actualizar Wiki"
                                                            rendered="#{loginMB.politicas[msgs.EDITAR_WIKI]}">
                                                 <h:outputText class="fa fa-edit Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;" rendered="#{loginMB.politicas[msgs.PUBLICAR_WIKI] and row.dfechapublicacion eq null}"/>
-                                            <p:commandLink ajax="false" action="#{wikiMB.toPost}" styleClass="ui-link" title="Publicar Wiki"
+                                            <p:commandLink ajax="false" action="#{wikiMB.toPost}" styleClass="GesconLink" title="Publicar Wiki"
                                                            rendered="#{loginMB.politicas[msgs.PUBLICAR_WIKI] and row.dfechapublicacion eq null}">
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{wikiMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="Activar Wiki" styleClass="ui-link" 
+                                            <p:commandLink actionListener="#{wikiMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="Activar Wiki" styleClass="GesconLink" 
                                                            rendered="#{loginMB.politicas[msgs.ACTIVAR_WIKI] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink actionListener="#{wikiMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="Desactivar Wiki" styleClass="ui-link" 
+                                            <p:commandLink actionListener="#{wikiMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="Desactivar Wiki" styleClass="GesconLink" 
                                                            rendered="#{loginMB.politicas[msgs.DESACTIVAR_WIKI] and row.nactivo eq 1}">
                                                 <h:outputText class="fa fa-close Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />

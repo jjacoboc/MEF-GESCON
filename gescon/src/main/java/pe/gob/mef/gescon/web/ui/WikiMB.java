@@ -38,6 +38,7 @@ import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
+import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.DiscusionHistService;
 import pe.gob.mef.gescon.service.DiscusionSeccionHistService;
 import pe.gob.mef.gescon.service.DiscusionSeccionService;
@@ -123,6 +124,8 @@ public class WikiMB implements Serializable {
     private BigDecimal calificacion;
     private String comentario;
     private String selectedSwitch;
+    private List<Consulta> listaDestacados;
+    private Consulta selectedDestacado;
 
     /**
      * Creates a new instance of WikiMB
@@ -506,6 +509,22 @@ public class WikiMB implements Serializable {
         this.selectedSwitch = selectedSwitch;
     }
 
+    public List<Consulta> getListaDestacados() {
+        return listaDestacados;
+    }
+
+    public void setListaDestacados(List<Consulta> listaDestacados) {
+        this.listaDestacados = listaDestacados;
+    }
+
+    public Consulta getSelectedDestacado() {
+        return selectedDestacado;
+    }
+
+    public void setSelectedDestacado(Consulta selectedDestacado) {
+        this.selectedDestacado = selectedDestacado;
+    }
+
     @PostConstruct
     public void init() {
         try {
@@ -555,6 +574,8 @@ public class WikiMB implements Serializable {
             this.setListaTargetVinculosOM(new ArrayList());
             this.setListaTargetVinculosPR(new ArrayList());
             this.setListaTargetVinculosWK(new ArrayList());
+            this.setListaDestacados(new ArrayList<Consulta>());
+            this.setSelectedDestacado(null);
             this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
             Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
             if (iter.hasNext() == true) {
@@ -1045,6 +1066,36 @@ public class WikiMB implements Serializable {
             e.printStackTrace();
         }
     }
+    
+    public void toDeleteOutstanding(ActionEvent event) {
+        try {
+            if(event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                this.setSelectedDestacado(this.getListaDestacados().get(index));
+            }
+        } catch(Exception e) {
+            e.getMessage();
+        }
+    }
+    
+    public void deleteOutstanding(ActionEvent event) {
+        try {
+            if(event != null) {
+                ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                Conocimiento conocimiento = service.getConocimientoById(this.getSelectedDestacado().getIdconocimiento());
+                if(conocimiento != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
+                    conocimiento.setNdestacado(BigDecimal.ZERO);
+                    conocimiento.setVusuariomodificacion(user.getVlogin());
+                    conocimiento.setDfechamodificacion(new Date());
+                    service.saveOrUpdate(conocimiento);
+                }
+            }
+        } catch(Exception e) {
+            e.getMessage();
+        }
+    }
 
     public String toSave() {
         try {
@@ -1073,15 +1124,37 @@ public class WikiMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            /* Validando si la cantidad de wikis destacados llegó al límite (10 max.).*/
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.WIKI);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
+            
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
-            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             Conocimiento wiki = new Conocimiento();
             wiki.setNtipoconocimientoid(Constante.WIKI);
             wiki.setNconocimientoid(conocimientoService.getNextPK());
             wiki.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             wiki.setVtitulo(StringUtils.upperCase(this.getNombre()));
+            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             if (this.getDescripcionPlain().length() < 400) {
                 wiki.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
@@ -1089,6 +1162,11 @@ public class WikiMB implements Serializable {
             }
             wiki.setNactivo(BigDecimal.ONE);
             wiki.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            if(contador > 0) {
+                wiki.setNflgvinculo(BigDecimal.ONE);
+            } else {
+                wiki.setNflgvinculo(BigDecimal.ZERO);
+            }
             if (this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE)) {
                 wiki.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
             } else {
@@ -1319,6 +1397,26 @@ public class WikiMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.WIKI);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
@@ -1329,6 +1427,11 @@ public class WikiMB implements Serializable {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 300)));
+            }
+            if(contador > 0) {
+                this.getSelectedWiki().setNflgvinculo(BigDecimal.ONE);
+            } else {
+                this.getSelectedWiki().setNflgvinculo(BigDecimal.ZERO);
             }
             this.getSelectedWiki().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedWiki().setDfechamodificacion(new Date());
@@ -1512,6 +1615,26 @@ public class WikiMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.WIKI);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
@@ -1522,6 +1645,11 @@ public class WikiMB implements Serializable {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 300)));
+            }
+            if(contador > 0) {
+                this.getSelectedWiki().setNflgvinculo(BigDecimal.ONE);
+            } else {
+                this.getSelectedWiki().setNflgvinculo(BigDecimal.ZERO);
             }
             this.getSelectedWiki().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedWiki().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));

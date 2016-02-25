@@ -38,6 +38,7 @@ import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
+import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.DiscusionHistService;
 import pe.gob.mef.gescon.service.DiscusionSeccionHistService;
 import pe.gob.mef.gescon.service.DiscusionSeccionService;
@@ -81,6 +82,7 @@ public class BuenaPracticaMB implements Serializable{
     private Conocimiento selectedBuenaPractica;
     private TreeNode tree;
     private Categoria selectedCategoria;
+    private Boolean chkDestacado;
     private String nombre;
     private String descripcionHtml;
     private String descripcionPlain;
@@ -122,6 +124,8 @@ public class BuenaPracticaMB implements Serializable{
     private BigDecimal calificacion;
     private String comentario;
     private String selectedSwitch;
+    private List<Consulta> listaDestacados;
+    private Consulta selectedDestacado;
     
     public BuenaPracticaMB() {
         
@@ -165,6 +169,14 @@ public class BuenaPracticaMB implements Serializable{
 
     public void setSelectedCategoria(Categoria selectedCategoria) {
         this.selectedCategoria = selectedCategoria;
+    }
+
+    public Boolean getChkDestacado() {
+        return chkDestacado;
+    }
+
+    public void setChkDestacado(Boolean chkDestacado) {
+        this.chkDestacado = chkDestacado;
     }
 
     public String getNombre() {
@@ -494,6 +506,22 @@ public class BuenaPracticaMB implements Serializable{
     public void setSelectedSwitch(String selectedSwitch) {
         this.selectedSwitch = selectedSwitch;
     }
+
+    public List<Consulta> getListaDestacados() {
+        return listaDestacados;
+    }
+
+    public void setListaDestacados(List<Consulta> listaDestacados) {
+        this.listaDestacados = listaDestacados;
+    }
+
+    public Consulta getSelectedDestacado() {
+        return selectedDestacado;
+    }
+
+    public void setSelectedDestacado(Consulta selectedDestacado) {
+        this.selectedDestacado = selectedDestacado;
+    }
     
     @PostConstruct
     public void init() {
@@ -534,6 +562,7 @@ public class BuenaPracticaMB implements Serializable{
             this.setSelectedSeccion(null);
             this.setTitulo(StringUtils.EMPTY);
             this.setDetalleHtml(StringUtils.EMPTY);
+            this.setChkDestacado(true);
             this.setListaSeccion(new ArrayList());
             this.setListaSourceVinculos(new ArrayList());
             this.setListaTargetVinculos(new ArrayList());
@@ -543,6 +572,8 @@ public class BuenaPracticaMB implements Serializable{
             this.setListaTargetVinculosOM(new ArrayList());
             this.setListaTargetVinculosPR(new ArrayList());
             this.setListaTargetVinculosWK(new ArrayList());
+            this.setListaDestacados(new ArrayList<Consulta>());
+            this.setSelectedDestacado(null);
             this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
             Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
             if (iter.hasNext() == true) {
@@ -1034,6 +1065,36 @@ public class BuenaPracticaMB implements Serializable{
         }
     }
     
+    public void toDeleteOutstanding(ActionEvent event) {
+        try {
+            if(event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                this.setSelectedDestacado(this.getListaDestacados().get(index));
+            }
+        } catch(Exception e) {
+            e.getMessage();
+        }
+    }
+    
+    public void deleteOutstanding(ActionEvent event) {
+        try {
+            if(event != null) {
+                ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("BaseLegalService");
+                Conocimiento conocimiento = service.getConocimientoById(this.getSelectedDestacado().getIdconocimiento());
+                if(conocimiento != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
+                    conocimiento.setNdestacado(BigDecimal.ZERO);
+                    conocimiento.setVusuariomodificacion(user.getVlogin());
+                    conocimiento.setDfechamodificacion(new Date());
+                    service.saveOrUpdate(conocimiento);
+                }
+            }
+        } catch(Exception e) {
+            e.getMessage();
+        }
+    }
+    
     public String toSave() {
         try {
             this.clearAll();
@@ -1066,7 +1127,27 @@ public class BuenaPracticaMB implements Serializable{
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.BUENAPRACTICA);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
+            
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
@@ -1074,13 +1155,18 @@ public class BuenaPracticaMB implements Serializable{
             conocimiento.setNtipoconocimientoid(Constante.BUENAPRACTICA);
             conocimiento.setNconocimientoid(conocimientoService.getNextPK());
             conocimiento.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            conocimiento.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             conocimiento.setVtitulo(StringUtils.upperCase(this.getNombre()));
             if(this.getDescripcionPlain().length() < 400) {
                 conocimiento.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 conocimiento.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
-            conocimiento.setNactivo(BigDecimal.ONE);
+            if(contador > 0) {
+                conocimiento.setNflgvinculo(BigDecimal.ONE);
+            } else {
+                conocimiento.setNflgvinculo(BigDecimal.ZERO);
+            }
             if (this.getSelectedCategoria().getNflagbp().equals(BigDecimal.ONE)) {
                 conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
             } else {
@@ -1089,6 +1175,7 @@ public class BuenaPracticaMB implements Serializable{
             }
             String np0 = this.path.concat(conocimiento.getNconocimientoid().toString()).concat("/0/");
             conocimiento.setVruta(np0);
+            conocimiento.setNactivo(BigDecimal.ONE);
             conocimiento.setDfechacreacion(new Date());
             conocimiento.setVusuariocreacion(user.getVlogin());
             conocimientoService.saveOrUpdate(conocimiento);
@@ -1227,6 +1314,7 @@ public class BuenaPracticaMB implements Serializable{
                     seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
                 }
             }
+            this.setChkDestacado(this.getSelectedBuenaPractica().getNdestacado().equals(BigDecimal.ONE));
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedBuenaPractica().getNconocimientoid().toString());
@@ -1270,6 +1358,7 @@ public class BuenaPracticaMB implements Serializable{
                     seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
                 }
             }
+            this.setChkDestacado(this.getSelectedBuenaPractica().getNdestacado().equals(BigDecimal.ONE));
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedBuenaPractica().getNconocimientoid().toString());
@@ -1316,22 +1405,48 @@ public class BuenaPracticaMB implements Serializable{
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.BUENAPRACTICA);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
+            
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             this.getSelectedBuenaPractica().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            this.getSelectedBuenaPractica().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBuenaPractica().setVtitulo(StringUtils.upperCase(this.getSelectedBuenaPractica().getVtitulo().trim()));
             if(this.getDescripcionPlain().length() < 400) {
                 this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
+            if(contador > 0) {
+                this.getSelectedBuenaPractica().setNflgvinculo(BigDecimal.ONE);
+            } else {
+                this.getSelectedBuenaPractica().setNflgvinculo(BigDecimal.ZERO);
+            }
             this.getSelectedBuenaPractica().setDfechamodificacion(new Date());
             this.getSelectedBuenaPractica().setVusuariomodificacion(user.getVlogin());
             conocimientoService.saveOrUpdate(this.getSelectedBuenaPractica());
 
-            
+            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             GcmFileUtils.writeStringToFileServer(this.getSelectedBuenaPractica().getVruta(), "html.txt", this.getDescripcionHtml());
             GcmFileUtils.writeStringToFileServer(this.getSelectedBuenaPractica().getVruta(), "plain.txt", this.getDescripcionPlain());
 
@@ -1467,6 +1582,7 @@ public class BuenaPracticaMB implements Serializable{
                     seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
                 }
             }
+            this.setChkDestacado(this.getSelectedBuenaPractica().getNdestacado().equals(BigDecimal.ONE));
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             HashMap map = new HashMap();
             map.put("nconocimientoid", this.getSelectedBuenaPractica().getNconocimientoid().toString());
@@ -1513,17 +1629,43 @@ public class BuenaPracticaMB implements Serializable{
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.BUENAPRACTICA);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
+            
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             this.getSelectedBuenaPractica().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+            this.getSelectedBuenaPractica().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBuenaPractica().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
             this.getSelectedBuenaPractica().setVtitulo(StringUtils.upperCase(this.getSelectedBuenaPractica().getVtitulo().trim()));
             if(this.getDescripcionPlain().length() < 400) {
                 this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+            }
+            if(contador > 0) {
+                this.getSelectedBuenaPractica().setNflgvinculo(BigDecimal.ONE);
+            } else {
+                this.getSelectedBuenaPractica().setNflgvinculo(BigDecimal.ZERO);
             }
             this.getSelectedBuenaPractica().setDfechapublicacion(new Date());
             this.getSelectedBuenaPractica().setDfechamodificacion(new Date());

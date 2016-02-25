@@ -1277,13 +1277,26 @@ public class PendienteMB implements Serializable {
             int user_actual = Integer.parseInt(mb.getUser().getNusuarioid().toString());
             int user_creacion;
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            
             if (caso == 1) {
-                mb.setSelectedNotification(mb.getListaNotificacionesAsignadas().get(index));
+                if(CollectionUtils.isEmpty(mb.getFilteredListaNotificacionesAsignadas())) {
+                    mb.setSelectedNotification(mb.getListaNotificacionesAsignadas().get(index));
+                } else {
+                    mb.setSelectedNotification(mb.getFilteredListaNotificacionesAsignadas().get(index));
+                }
             } else {
                 if (caso == 2) {
-                    mb.setSelectedNotification(mb.getListaNotificacionesRecibidas().get(index));
+                    if(CollectionUtils.isEmpty(mb.getFilteredListaNotificacionesRecibidas())) {
+                        mb.setSelectedNotification(mb.getListaNotificacionesRecibidas().get(index));
+                    } else {
+                        mb.setSelectedNotification(mb.getFilteredListaNotificacionesRecibidas().get(index));
+                    }
                 } else {
-                    mb.setSelectedNotification(mb.getListaNotificacionesAlerta().get(index));
+                    if(CollectionUtils.isEmpty(mb.getFilteredListaNotificacionesAlerta())) {
+                        mb.setSelectedNotification(mb.getListaNotificacionesAlerta().get(index));
+                    } else {
+                        mb.setSelectedNotification(mb.getFilteredListaNotificacionesAlerta().get(index));
+                    }
                 }
             }
 
@@ -3115,7 +3128,7 @@ public class PendienteMB implements Serializable {
                 asignacion.setNconocimientoid(this.getSelectedBaseLegal().getNbaselegalid());
                 asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
                 CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNmoderador());
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()).getNmoderador());
                 asignacion.setDfechaasignacion(new Date());
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
@@ -3906,7 +3919,7 @@ public class PendienteMB implements Serializable {
                 asignacion.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
                 asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
                 CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNmoderador());
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()).getNmoderador());
                 asignacion.setDfechaasignacion(new Date());
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
@@ -4567,7 +4580,7 @@ public class PendienteMB implements Serializable {
                 asignacion.setNconocimientoid(this.getSelectedWiki().getNconocimientoid());
                 asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
                 CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNmoderador());
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedWiki().getNcategoriaid()).getNmoderador());
                 asignacion.setDfechaasignacion(new Date());
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
@@ -4730,7 +4743,7 @@ public class PendienteMB implements Serializable {
                 asignacion.setNconocimientoid(this.getSelectedBpractica().getNconocimientoid());
                 asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
                 CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNmoderador());
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedBpractica().getNcategoriaid()).getNmoderador());
                 asignacion.setDfechaasignacion(new Date());
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
@@ -4896,7 +4909,7 @@ public class PendienteMB implements Serializable {
                 asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
                 asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
                 CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNmoderador());
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedOmejora().getNcategoriaid()).getNmoderador());
                 asignacion.setDfechaasignacion(new Date());
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);

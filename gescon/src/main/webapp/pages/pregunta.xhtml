@@ -44,11 +44,11 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 60px;">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
-                                            <p:commandLink ajax="false" action="#{preguntaMB.toSee}"  styleClass="ui-link" title="Ver Pregunta">
+                                            <p:commandLink ajax="false" action="#{preguntaMB.toSee}"  styleClass="GesconLink" title="Ver Pregunta">
                                                 <h:outputText class="fa fa-search Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:commandLink ajax="false" action="#{preguntaMB.toHistorial}" styleClass="ui-link" title="Historial de Respuestas">
+                                            <p:commandLink ajax="false" action="#{preguntaMB.toHistorial}" styleClass="GesconLink" title="Historial de Respuestas">
                                                 <h:outputText class="fa fa-history Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>

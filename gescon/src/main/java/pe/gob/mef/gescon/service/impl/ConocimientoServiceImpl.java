@@ -177,6 +177,25 @@ public class ConocimientoServiceImpl implements ConocimientoService {
         return lista;
     }
     
+    public List<Consulta> getConcimientosByVinculoBaseLegalId(BigDecimal id) {
+        List<Consulta> lista = new ArrayList<Consulta>();
+        try {
+            ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
+            List<HashMap> consulta = conocimientoDao.getConcimientosByVinculoBaseLegalId(id);
+            if(!CollectionUtils.isEmpty(consulta)) {
+                for(HashMap map : consulta) {
+                    Consulta c = new Consulta();
+                    c.setIdconocimiento((BigDecimal) map.get("ID"));
+                    lista.add(c);
+                }
+            }
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return lista;
+    }
+    
     @Override
     public Conocimiento getBpracticaById(BigDecimal tipo, BigDecimal id) throws Exception {
         ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");

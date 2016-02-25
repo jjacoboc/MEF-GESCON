@@ -38,6 +38,7 @@ import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
+import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.DiscusionHistService;
 import pe.gob.mef.gescon.service.DiscusionSeccionHistService;
 import pe.gob.mef.gescon.service.DiscusionSeccionService;
@@ -81,6 +82,7 @@ public class OportunidadMB implements Serializable {
     private Conocimiento selectedOportunidad;
     private TreeNode tree;
     private Categoria selectedCategoria;
+    private Boolean chkDestacado;
     private String nombre;
     private String descripcion;
     private String contenidoHtml;
@@ -125,6 +127,8 @@ public class OportunidadMB implements Serializable {
     private BigDecimal calificacion;
     private String comentario;
     private String selectedSwitch;
+    private List<Consulta> listaDestacados;
+    private Consulta selectedDestacado;
     
     /**
      * Creates a new instance of OportunidadMB
@@ -170,6 +174,14 @@ public class OportunidadMB implements Serializable {
 
     public void setSelectedCategoria(Categoria selectedCategoria) {
         this.selectedCategoria = selectedCategoria;
+    }
+
+    public Boolean getChkDestacado() {
+        return chkDestacado;
+    }
+
+    public void setChkDestacado(Boolean chkDestacado) {
+        this.chkDestacado = chkDestacado;
     }
 
     public String getNombre() {
@@ -523,6 +535,22 @@ public class OportunidadMB implements Serializable {
     public void setSelectedSwitch(String selectedSwitch) {
         this.selectedSwitch = selectedSwitch;
     }
+
+    public List<Consulta> getListaDestacados() {
+        return listaDestacados;
+    }
+
+    public void setListaDestacados(List<Consulta> listaDestacados) {
+        this.listaDestacados = listaDestacados;
+    }
+
+    public Consulta getSelectedDestacado() {
+        return selectedDestacado;
+    }
+
+    public void setSelectedDestacado(Consulta selectedDestacado) {
+        this.selectedDestacado = selectedDestacado;
+    }
     
     @PostConstruct
     public void init() {
@@ -569,6 +597,7 @@ public class OportunidadMB implements Serializable {
             this.setTitulo(StringUtils.EMPTY);
             this.setDetalleHtml(StringUtils.EMPTY);
             this.setDetallePlain(StringUtils.EMPTY);
+            this.setChkDestacado(true);
             this.setListaSourceVinculos(new ArrayList());
             this.setListaTargetVinculos(new ArrayList());
             this.setListaTargetVinculosBL(new ArrayList());
@@ -577,6 +606,8 @@ public class OportunidadMB implements Serializable {
             this.setListaTargetVinculosOM(new ArrayList());
             this.setListaTargetVinculosPR(new ArrayList());
             this.setListaTargetVinculosWK(new ArrayList());
+            this.setListaDestacados(new ArrayList<Consulta>());
+            this.setSelectedDestacado(null);
             this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
             Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
             if (iter.hasNext() == true) {
@@ -1068,6 +1099,36 @@ public class OportunidadMB implements Serializable {
         }
     }
     
+    public void toDeleteOutstanding(ActionEvent event) {
+        try {
+            if(event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                this.setSelectedDestacado(this.getListaDestacados().get(index));
+            }
+        } catch(Exception e) {
+            e.getMessage();
+        }
+    }
+    
+    public void deleteOutstanding(ActionEvent event) {
+        try {
+            if(event != null) {
+                ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+                Conocimiento conocimiento = service.getConocimientoById(this.getSelectedDestacado().getIdconocimiento());
+                if(conocimiento != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
+                    conocimiento.setNdestacado(BigDecimal.ZERO);
+                    conocimiento.setVusuariomodificacion(user.getVlogin());
+                    conocimiento.setDfechamodificacion(new Date());
+                    service.saveOrUpdate(conocimiento);
+                }
+            }
+        } catch(Exception e) {
+            e.getMessage();
+        }
+    }
+    
     public String toSave() {
         try {
             this.clearAll();
@@ -1100,6 +1161,26 @@ public class OportunidadMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
@@ -1116,8 +1197,14 @@ public class OportunidadMB implements Serializable {
                 conocimiento.setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
                 conocimiento.setDfechapublicacion(new Date());
             }
+            if(contador > 0) {
+                conocimiento.setNflgvinculo(BigDecimal.ONE);
+            } else {
+                conocimiento.setNflgvinculo(BigDecimal.ZERO);
+            }
             String np0 = this.path.concat(conocimiento.getNconocimientoid().toString()).concat("/0/");
             conocimiento.setVruta(np0);
+            conocimiento.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             conocimiento.setDfechacreacion(new Date());
             conocimiento.setVusuariocreacion(user.getVlogin());
             conocimientoService.saveOrUpdate(conocimiento);
@@ -1211,6 +1298,7 @@ public class OportunidadMB implements Serializable {
             }
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedOportunidad().getNcategoriaid()));
+            this.setChkDestacado(this.getSelectedOportunidad().getNdestacado().equals(BigDecimal.ONE));
             this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedOportunidad().getVruta(), "html.txt"));
             SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
             this.setListaSeccion(seccionService.getSeccionesByConocimiento(this.getSelectedOportunidad().getNconocimientoid()));
@@ -1253,6 +1341,7 @@ public class OportunidadMB implements Serializable {
             }
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedOportunidad().getNcategoriaid()));
+            this.setChkDestacado(this.getSelectedOportunidad().getNdestacado().equals(BigDecimal.ONE));
             this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedOportunidad().getVruta(), "html.txt"));
             SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
             this.setListaSeccion(seccionService.getSeccionesByConocimiento(this.getSelectedOportunidad().getNconocimientoid()));
@@ -1306,14 +1395,40 @@ public class OportunidadMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             this.getSelectedOportunidad().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedOportunidad().setVtitulo(StringUtils.upperCase(this.getSelectedOportunidad().getVtitulo()));
             this.getSelectedOportunidad().setVdescripcion(StringUtils.capitalize(this.getSelectedOportunidad().getVdescripcion()));
+            this.getSelectedOportunidad().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedOportunidad().setDfechamodificacion(new Date());
             this.getSelectedOportunidad().setVusuariomodificacion(user.getVlogin());
+            if(contador > 0) {
+                this.getSelectedOportunidad().setNflgvinculo(BigDecimal.ONE);
+            } else {
+                this.getSelectedOportunidad().setNflgvinculo(BigDecimal.ZERO);
+            }
             conocimientoService.saveOrUpdate(this.getSelectedOportunidad());
 
             this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
@@ -1445,6 +1560,7 @@ public class OportunidadMB implements Serializable {
             }
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedOportunidad().getNcategoriaid()));
+            this.setChkDestacado(this.getSelectedOportunidad().getNdestacado().equals(BigDecimal.ONE));
             this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedOportunidad().getVruta(), "html.txt"));
             SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
             this.setListaSeccion(seccionService.getSeccionesByConocimiento(this.getSelectedOportunidad().getNconocimientoid()));
@@ -1498,6 +1614,26 @@ public class OportunidadMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            if(this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if(cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            /* Validando si exiten vínculos de bases legales derogadas */
+            int contador = 0;
+            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for(Consulta c : this.getListaTargetVinculosBL()) {
+                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+                        contador++;
+                    }
+                }
+            }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
@@ -1506,8 +1642,14 @@ public class OportunidadMB implements Serializable {
             this.getSelectedOportunidad().setVdescripcion(StringUtils.capitalize(this.getSelectedOportunidad().getVdescripcion()));
             this.getSelectedOportunidad().setDfechapublicacion(new Date());
             this.getSelectedOportunidad().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
+            this.getSelectedOportunidad().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedOportunidad().setDfechamodificacion(new Date());
             this.getSelectedOportunidad().setVusuariomodificacion(user.getVlogin());
+            if(contador > 0) {
+                this.getSelectedOportunidad().setNflgvinculo(BigDecimal.ONE);
+            } else {
+                this.getSelectedOportunidad().setNflgvinculo(BigDecimal.ZERO);
+            }
             conocimientoService.saveOrUpdate(this.getSelectedOportunidad());
 
             this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
