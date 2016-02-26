@@ -103,9 +103,9 @@ public class Indexador {
             PreguntaService preguntaService = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             List<Pregunta> listaP = preguntaService.getPreguntasActivedPosted();
             if (!CollectionUtils.isEmpty(listaP)) {
-                String prgpath = bundle.getString("prgpath");
+                String prefix = bundle.getString("prprefix");
                 for (Pregunta p : listaP) {
-                    url = prgpath + p.getNpreguntaid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+                    url = filepath + prefix + p.getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
                     auth = new NtlmPasswordAuthentication(null, user, password);
                     dir = new SmbFile(url, auth);
                     file = new File(dir.getUncPath(), FILE_NAME);
@@ -134,9 +134,9 @@ public class Indexador {
             BaseLegalService baseLegalService = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             List<BaseLegal> listaB = baseLegalService.getBaselegalesActivedPosted();
             if (!CollectionUtils.isEmpty(listaB)) {
-                String pdfpath = bundle.getString("pdfpath");
+                String prefix = bundle.getString("blprefix");
                 for (BaseLegal b : listaB) {
-                    url = pdfpath + b.getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
+                    url = filepath + prefix + b.getNbaselegalid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
                     auth = new NtlmPasswordAuthentication(null, user, password);
                     dir = new SmbFile(url, auth);
                     file = new File(dir.getUncPath(), FILE_NAME);

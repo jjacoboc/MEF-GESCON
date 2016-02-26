@@ -10,7 +10,6 @@ import java.util.List;
 import pe.gob.mef.gescon.web.bean.Asignacion;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.User;
-import pe.gob.mef.gescon.web.bean.Categoria;
 
 /**
  *
