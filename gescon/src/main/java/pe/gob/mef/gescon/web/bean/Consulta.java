@@ -30,6 +30,9 @@ public class Consulta implements Serializable, Comparable<Consulta> {
     private BigDecimal idEstado;
     private String estado;
     private Date fechaPublicacion;
+    private Date fechaAsignacion;
+    private Date fechaRecepcion;
+    private Date fechaAtencion;
     private Integer calificacion;
     private String usuario;
     private String usuarioNombre;
@@ -214,6 +217,30 @@ public class Consulta implements Serializable, Comparable<Consulta> {
      */
     public void setFechaPublicacion(Date fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
+    }
+
+    public Date getFechaAsignacion() {
+        return fechaAsignacion;
+    }
+
+    public void setFechaAsignacion(Date fechaAsignacion) {
+        this.fechaAsignacion = fechaAsignacion;
+    }
+
+    public Date getFechaRecepcion() {
+        return fechaRecepcion;
+    }
+
+    public void setFechaRecepcion(Date fechaRecepcion) {
+        this.fechaRecepcion = fechaRecepcion;
+    }
+
+    public Date getFechaAtencion() {
+        return fechaAtencion;
+    }
+
+    public void setFechaAtencion(Date fechaAtencion) {
+        this.fechaAtencion = fechaAtencion;
     }
 
     public Integer getCalificacion() {

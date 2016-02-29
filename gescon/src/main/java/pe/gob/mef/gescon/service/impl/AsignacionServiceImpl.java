@@ -89,6 +89,7 @@ public class AsignacionServiceImpl implements AsignacionService {
                     c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
                     c.setIdEstado((BigDecimal) map.get("IDESTADO"));
                     c.setEstado((String) map.get("ESTADO"));
+                    c.setFechaAsignacion((Date) map.get("FECHAASIG"));
                     lista.add(c);
                 }
             }
@@ -121,6 +122,7 @@ public class AsignacionServiceImpl implements AsignacionService {
                     c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
                     c.setIdEstado((BigDecimal) map.get("IDESTADO"));
                     c.setEstado((String) map.get("ESTADO"));
+                    c.setFechaRecepcion((Date) map.get("FECHARECEP"));
                     lista.add(c);
                 }
             }
@@ -153,6 +155,7 @@ public class AsignacionServiceImpl implements AsignacionService {
                     c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
                     c.setIdEstado((BigDecimal) map.get("IDESTADO"));
                     c.setEstado((String) map.get("ESTADO"));
+                    c.setFechaAtencion((Date) map.get("FECHAATEN"));
                     lista.add(c);
                 }
             }

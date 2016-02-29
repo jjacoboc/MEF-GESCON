@@ -55,7 +55,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
     @Override
     public BigDecimal getNumberNotificationsByMtuser(Mtuser mtuser) throws Exception {
         final StringBuilder sql = new StringBuilder();
-        sql.append("SELECT COUNT(DISTINCT t.nconocimientoid) FROM TASIGNACION t ");
+        sql.append("SELECT COUNT(t.nconocimientoid) FROM TASIGNACION t ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
         sql.append("AND ((t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
         sql.append("OR (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is null) ");
@@ -74,7 +74,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
     @Override
     public BigDecimal getNumberNotificationsAssignedByMtuser(Mtuser mtuser) throws Exception {
         final StringBuilder sql = new StringBuilder();
-        sql.append("SELECT COUNT(DISTINCT t.nconocimientoid) FROM TASIGNACION t ");
+        sql.append("SELECT COUNT(t.nconocimientoid) FROM TASIGNACION t ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
 
@@ -91,7 +91,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
     @Override
     public BigDecimal getNumberNotificationsReceivedByMtuser(Mtuser mtuser) throws Exception {
         final StringBuilder sql = new StringBuilder();
-        sql.append("SELECT COUNT(DISTINCT t.nconocimientoid) FROM TASIGNACION t ");
+        sql.append("SELECT COUNT(t.nconocimientoid) FROM TASIGNACION t ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is null) ");
 
@@ -108,7 +108,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
     @Override
     public BigDecimal getNumberNotificationsServedByMtuser(Mtuser mtuser) throws Exception {
         final StringBuilder sql = new StringBuilder();
-        sql.append("SELECT COUNT(DISTINCT t.nconocimientoid) FROM TASIGNACION t ");
+        sql.append("SELECT COUNT(t.nconocimientoid) FROM TASIGNACION t ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is not null) ");
 
@@ -127,29 +127,30 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         final StringBuilder sql = new StringBuilder();
         sql.append("SELECT a.nbaselegalid AS ID, a.vnumero AS NUMERO, a.vnombre AS NOMBRE, a.vsumilla AS SUMILLA, ");
         sql.append("        a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
-        sql.append("        1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("        1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, ");
+        sql.append("        c.vnombre AS ESTADO, t.dfechaasignacion AS FECHAASIG ");
         sql.append("FROM TBASELEGAL a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
         sql.append("INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.nbaselegalid AND t.ntipoconocimientoid = 1 ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
-        sql.append("UNION ");
+        sql.append("UNION ALL ");
         sql.append("SELECT a.npreguntaid AS ID, '' AS NUMERO, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, ");
         sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
         sql.append("       2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
-        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO, t.dfechaasignacion AS FECHAASIG ");
         sql.append("FROM TPREGUNTA a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
         sql.append("INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.npreguntaid AND t.ntipoconocimientoid = 2 ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
-        sql.append("UNION ");
+        sql.append("UNION ALL ");
         sql.append("SELECT a.nconocimientoid AS ID, '' AS NUMERO, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
         sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
         sql.append("       a.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, d.vnombre AS TIPOCONOCIMIENTO, ");
-        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO, t.dfechaasignacion AS FECHAASIG ");
         sql.append("FROM TCONOCIMIENTO a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
         sql.append("INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
@@ -174,29 +175,30 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         final StringBuilder sql = new StringBuilder();
         sql.append("SELECT a.nbaselegalid AS ID, a.vnumero AS NUMERO, a.vnombre AS NOMBRE, a.vsumilla AS SUMILLA, ");
         sql.append("        a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
-        sql.append("        1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("        1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, ");
+        sql.append("        c.vnombre AS ESTADO, t.dfecharecepcion AS FECHARECEP ");
         sql.append("FROM TBASELEGAL a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
         sql.append("INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.nbaselegalid AND t.ntipoconocimientoid = 1 ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is null) ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
-        sql.append("UNION ");
+        sql.append("UNION ALL ");
         sql.append("SELECT a.npreguntaid AS ID, '' AS NUMERO, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, ");
         sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
         sql.append("       2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
-        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO, t.dfecharecepcion AS FECHARECEP ");
         sql.append("FROM TPREGUNTA a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
         sql.append("INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.npreguntaid AND t.ntipoconocimientoid = 2 ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is null) ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
-        sql.append("UNION ");
+        sql.append("UNION ALL ");
         sql.append("SELECT a.nconocimientoid AS ID, '' AS NUMERO, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
         sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
         sql.append("       a.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, d.vnombre AS TIPOCONOCIMIENTO, ");
-        sql.append("       a.nactivo AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("       a.nactivo AS IDESTADO, c.vnombre AS ESTADO, t.dfecharecepcion AS FECHARECEP ");
         sql.append("FROM TCONOCIMIENTO a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
         sql.append("INNER JOIN MTSITUACION c ON a.nactivo = c.nsituacionid ");
@@ -221,29 +223,30 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         final StringBuilder sql = new StringBuilder();
         sql.append("SELECT a.nbaselegalid AS ID, a.vnumero AS NUMERO, a.vnombre AS NOMBRE, a.vsumilla AS SUMILLA, ");
         sql.append("        a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
-        sql.append("        1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("        1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, ");
+        sql.append("        c.vnombre AS ESTADO, t.dfechaatencion AS FECHAATEN ");
         sql.append("FROM TBASELEGAL a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
         sql.append("INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.nbaselegalid AND t.ntipoconocimientoid = 1 ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is not null) ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
-        sql.append("UNION ");
+        sql.append("UNION ALL ");
         sql.append("SELECT a.npreguntaid AS ID, '' AS NUMERO, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, ");
         sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
         sql.append("       2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
-        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("       a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO, t.dfechaatencion AS FECHAATEN ");
         sql.append("FROM TPREGUNTA a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
         sql.append("INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.npreguntaid AND t.ntipoconocimientoid = 2 ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is not null) ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
-        sql.append("UNION ");
+        sql.append("UNION ALL ");
         sql.append("SELECT a.nconocimientoid AS ID, '' AS NUMERO, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
         sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
         sql.append("       a.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, d.vnombre AS TIPOCONOCIMIENTO, ");
-        sql.append("       a.nactivo AS IDESTADO, c.vnombre AS ESTADO ");
+        sql.append("       a.nactivo AS IDESTADO, c.vnombre AS ESTADO, t.dfechaatencion AS FECHAATEN ");
         sql.append("FROM TCONOCIMIENTO a ");
         sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
         sql.append("INNER JOIN MTSITUACION c ON a.nactivo = c.nsituacionid ");

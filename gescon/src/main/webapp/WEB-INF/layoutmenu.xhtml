@@ -19,41 +19,7 @@
     <h:form id="lmf">
         <ps:menu style="box-shadow: 3px 3px 5px #888888; background-color: #2E2E2E;">
             <f:facet name="options">
-                <p:commandButton id="advanceBtn" type="button" icon="fa fa-binoculars Fs18 white" title="búsqueda avanzada" styleClass="Fright btn-search" style="background-color: black !important" />
-                <p:overlayPanel id="imagePanel" for="advanceBtn" showEffect="fade" appendToBody="true" showCloseIcon="true">
-                    <h:panelGrid columns="2" width="100%" styleClass="TexAlLeft">
-                        <h:outputText value="Palabras Claves:"/>
-                        <p:inputText value="#{consultaMB.searchText}" styleClass="Fs14" style="width: 300px;"/>
-
-                        <h:outputText value="Tipo de Contenido:"/>
-                        <p:selectOneMenu value="#{consultaMB.tipoConocimiento}" styleClass="Wid60" >
-                            <f:selectItem itemValue="" itemLabel="Seleccione"/>
-                            <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
-                        </p:selectOneMenu>
-
-                        <h:outputText value="Categoría:"/>
-                        <p:selectOneMenu value="#{consultaMB.categoria}" styleClass="Wid60" >
-                            <f:selectItem itemValue="" itemLabel="Seleccione"/>
-                            <f:selectItems value="#{listaSessionMB.listaCategoriaActiva}"/>
-                        </p:selectOneMenu>
-
-                        <h:outputText value="Fecha:"/>
-                        <h:panelGrid columns="5" cellpadding="0" cellspacing="0" styleClass="panelcolumns2">
-                            <p:calendar id="fromDate" locale="es" value="#{consultaMB.fechaInicio}" maxdate="#{consultaMB.fechaFin}" size="10" 
-                                        pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
-                                <p:ajax event="dateSelect" update=":lmf:toDate"/>
-                            </p:calendar>
-                            <p:spacer width="5"/>
-                            <h:outputText value="al" />
-                            <p:spacer width="5"/>
-                            <p:calendar id="toDate" locale="es" value="#{consultaMB.fechaFin}" mindate="#{consultaMB.fechaInicio}" size="10" 
-                                        pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
-                                <p:ajax event="dateSelect" update=":lmf:fromDate"/>
-                            </p:calendar>
-                        </h:panelGrid>
-                        <p:commandButton ajax="true" value="Buscar" action="#{consultaMB.advanceSearch}" title="búsqueda"/>
-                    </h:panelGrid>
-                </p:overlayPanel>
+                <p:commandButton id="advanceBtn" type="button" icon="fa fa-binoculars Fs18 white" onclick="PF('advanceDialog').show();" title="búsqueda avanzada" styleClass="Fright btn-search" style="background-color: black !important" />
                 <p:commandButton action="#{consultaMB.search}" icon="fa fa-search Fs18 white" title="búsqueda" styleClass="Fright btn-search" />
                 <p:inputText value="#{consultaMB.searchText}" placeholder="Buscar" styleClass="Fs14 Fright" style="width: 300px; background-color: #2E2E2E;;"/>
             </f:facet>
@@ -155,5 +121,40 @@
             </p:submenu>
         </ps:menu>
     </h:form>
+    <p:dialog id="advanceDlg" widgetVar="advanceDialog" header="Búsqueda Avanzada" modal="true" showEffect="fade" appendTo="@(body)" closable="true" resizable="false" draggable="true" closeOnEscape="true" positionType="absolute">
+        <h:form id="asf">
+            <h:panelGrid columns="2" width="100%" styleClass="TexAlLeft">
+                <h:outputText value="Palabras Claves:"/>
+                <p:inputText value="#{consultaMB.searchText}" styleClass="Fs14" style="width: 300px;"/>
 
+                <h:outputText value="Tipo de Contenido:"/>
+                <p:selectOneMenu value="#{consultaMB.tipoConocimiento}" styleClass="Wid60" >
+                    <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                    <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
+                </p:selectOneMenu>
+
+                <h:outputText value="Categoría:"/>
+                <p:selectOneMenu value="#{consultaMB.categoria}" styleClass="Wid60" >
+                    <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                    <f:selectItems value="#{listaSessionMB.listaCategoriaActiva}"/>
+                </p:selectOneMenu>
+
+                <h:outputText value="Fecha:"/>
+                <h:panelGrid columns="5" cellpadding="0" cellspacing="0" styleClass="panelcolumns2">
+                    <p:calendar id="fromDate" locale="es" value="#{consultaMB.fechaInicio}" maxdate="#{consultaMB.fechaFin}" size="10" 
+                                pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
+                        <p:ajax event="dateSelect" update=":asf:toDate"/>
+                    </p:calendar>
+                    <p:spacer width="5"/>
+                    <h:outputText value="al" />
+                    <p:spacer width="5"/>
+                    <p:calendar id="toDate" locale="es" value="#{consultaMB.fechaFin}" mindate="#{consultaMB.fechaInicio}" size="10" 
+                                pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
+                        <p:ajax event="dateSelect" update=":asf:fromDate"/>
+                    </p:calendar>
+                </h:panelGrid>
+                <p:commandButton ajax="false" value="Buscar" action="#{consultaMB.advanceSearch}" title="búsqueda"/>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
 </ui:composition>

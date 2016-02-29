@@ -555,6 +555,10 @@ public class ConsultaMB implements Serializable {
     public String advanceSearch() {
         HashMap filter = new HashMap();
         try {
+            if(CollectionUtils.isEmpty(this.getListaCategoriaFiltro())) {
+                CategoriaService catservice = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                this.setListaCategoriaFiltro(catservice.getCategoriasActived());
+            }
             for(Categoria c : this.getListaCategoriaFiltro()) {
                 if(c.getNcategoriaid().toString().equals(this.getCategoria())) {
                     this.setSelectedCategoriaFiltro(c);
