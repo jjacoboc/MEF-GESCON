@@ -121,6 +121,9 @@ public class ConsultaServiceImpl implements ConsultaService{
                     map.put("TIPOCONOCIMIENTO", r.get("TIPOCONOCIMIENTO"));
                     map.put("IDESTADO", r.get("IDESTADO"));
                     map.put("ESTADO", r.get("ESTADO"));
+                    map.put("PROMEDIO", r.get("PROMEDIO"));
+                    map.put("USUARIOCREA", r.get("USUARIOCREA"));
+                    map.put("FECHACREA", r.get("FECHACREA"));
                     BigDecimal contador = (BigDecimal) r.get("CONTADOR");
                     BigDecimal suma = (BigDecimal) r.get("SUMA");
 

@@ -25,13 +25,16 @@
                                                 <p:dataExporter type="xls" target="tbl" fileName="parametros" />
                                             </h:commandLink>
                                         </f:facet>
-                                        <p:column style="width: 20%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
+                                        <p:column style="width: 35%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
-                                            <h:outputText value="#{row.vnombre}"/>
+                                            <h:outputLink id="nom" value="#" styleClass="Unselectable GesconLink">
+                                                <h:outputText value="#{row.vnombre}"/>
+                                            </h:outputLink >
+                                            <pe:tooltip for="nom" value="#{row.vdescripcion}" showEffect="fadeIn" hideEffect="fadeIn" myPosition="left center" atPosition="right center" />
                                         </p:column>
-                                        <p:column style="width: 30%" sortBy="#{row.vdescripcion}" filterBy="#{row.vdescripcion}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
-                                            <f:facet name="header"><h:outputText value="DESCRIPCION"/></f:facet>
-                                            <h:outputText value="#{row.vdescripcion}"/>
+                                        <p:column style="width: 15%;" sortBy="#{row.vvalor}" filterBy="#{row.vvalor}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="2">
+                                            <f:facet name="header"><h:outputText value="VALOR"/></f:facet>
+                                            <h:outputText value="#{row.vvalor}"/>
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%; " sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
                                             <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>

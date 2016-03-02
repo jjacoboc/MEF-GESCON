@@ -6,6 +6,7 @@
 package pe.gob.mef.gescon.web.ui;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -1131,7 +1133,10 @@ public class ConsultaMB implements Serializable {
                 pdfExporter.exportReport();
                 FacesContext.getCurrentInstance().responseComplete();
             }
-        } catch (Exception e) {
+        } catch (JRException e) {
+            e.getMessage();
+            e.printStackTrace();
+        } catch (IOException e) {
             e.getMessage();
             e.printStackTrace();
         }

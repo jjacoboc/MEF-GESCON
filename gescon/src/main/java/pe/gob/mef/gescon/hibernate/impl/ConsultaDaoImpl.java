@@ -310,11 +310,12 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
         try {
             sql.append("SELECT x.ID, x.NOMBRE, x.SUMILLA, x.IDCATEGORIA, x.CATEGORIA, x.FECHA, ");
             sql.append("       x.IDTIPOCONOCIMIENTO, x.TIPOCONOCIMIENTO, x.IDESTADO, x.ESTADO, x.SUMA, x.CONTADOR, ");
-            sql.append("       DECODE(x.CONTADOR,0,0,x.SUMA/x.CONTADOR) AS PROMEDIO ");
+            sql.append("       DECODE(x.CONTADOR,0,0,x.SUMA/x.CONTADOR) AS PROMEDIO, x.USUARIOCREA, x.FECHACREA ");
             sql.append("FROM (SELECT ");
             sql.append("            a.nbaselegalid AS ID, a.vnumero AS NOMBRE, a.vnombre AS SUMILLA, ");
             sql.append("            a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
             sql.append("            1 AS IDTIPOCONOCIMIENTO, 'Base Legal' AS TIPOCONOCIMIENTO, a.nestadoid AS IDESTADO, c.vnombre AS ESTADO, ");
+            sql.append("            a.vusuariocreacion AS USUARIOCREA, TO_CHAR(a.dfechacreacion,'dd/MM/yyyy') AS FECHACREA, ");
             sql.append("            NVL(SUM(e.ncalificacion),0) AS SUMA, NVL(COUNT(e.ncalificacion),0) AS CONTADOR ");
             sql.append("        FROM TBASELEGAL a ");
             sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
@@ -335,17 +336,18 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
                 sql.append("    AND a.nbaselegalid IN (").append(fCodesBL).append(") ");
             }
             sql.append("        GROUP BY a.nbaselegalid, a.vnumero, a.vnombre, a.ncategoriaid, b.vnombre, ");
-            sql.append("        a.dfechapublicacion, 1, 'Base Legal', a.nestadoid, c.vnombre ");
+            sql.append("        a.dfechapublicacion, 1, 'Base Legal', a.nestadoid, c.vnombre, a.vusuariocreacion, a.dfechacreacion ");
             sql.append("        ) x ");
             sql.append("WHERE 1 IN (").append(fType).append(") "); //BASE LEGAL
             sql.append("UNION ");
             sql.append("SELECT y.ID, y.NOMBRE, y.SUMILLA, y.IDCATEGORIA, y.CATEGORIA, y.FECHA, ");
             sql.append("       y.IDTIPOCONOCIMIENTO, y.TIPOCONOCIMIENTO, y.IDESTADO, y.ESTADO, y.SUMA, y.CONTADOR, ");
-            sql.append("       DECODE(y.CONTADOR,0,0,y.SUMA/y.CONTADOR) AS PROMEDIO ");
+            sql.append("       DECODE(y.CONTADOR,0,0,y.SUMA/y.CONTADOR) AS PROMEDIO, y.USUARIOCREA, y.FECHACREA ");
             sql.append("FROM (SELECT ");
             sql.append("            a.npreguntaid AS ID, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, a.ncategoriaid AS IDCATEGORIA, ");
             sql.append("            b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, 2 AS IDTIPOCONOCIMIENTO, ");
             sql.append("            'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO, ");
+            sql.append("            a.vusuariocreacion AS USUARIOCREA, TO_CHAR(a.dfechacreacion,'dd/MM/yyyy') AS FECHACREA, ");
             sql.append("            NVL(SUM(e.ncalificacion),0) AS SUMA, NVL(COUNT(e.ncalificacion),0) AS CONTADOR ");
             sql.append("        FROM TPREGUNTA a ");
             sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
@@ -366,19 +368,20 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
                 sql.append("    AND a.npreguntaid IN (").append(fCodesPR).append(") ");
             }
             sql.append("        GROUP BY a.npreguntaid, a.vasunto, a.vdetalle, a.ncategoriaid, b.vnombre, ");
-            sql.append("        a.dfechapublicacion, 2, 'Preguntas y Respuestas', a.nsituacionid, c.vnombre ");
+            sql.append("        a.dfechapublicacion, 2, 'Preguntas y Respuestas', a.nsituacionid, c.vnombre, a.vusuariocreacion, a.dfechacreacion ");
             sql.append("        ) y ");
             sql.append("WHERE 2 IN (").append(fType).append(") "); //PREGUNTAS Y RESPUESTAS
             sql.append("UNION ");
             sql.append("SELECT z.ID, z.NOMBRE, z.SUMILLA, z.IDCATEGORIA, z.CATEGORIA, z.FECHA, ");
             sql.append("       z.IDTIPOCONOCIMIENTO, z.TIPOCONOCIMIENTO, z.IDESTADO, z.ESTADO, z.SUMA, z.CONTADOR, ");
-            sql.append("       DECODE(z.CONTADOR,0,0,z.SUMA/z.CONTADOR) AS PROMEDIO ");
+            sql.append("       DECODE(z.CONTADOR,0,0,z.SUMA/z.CONTADOR) AS PROMEDIO, z.USUARIOCREA, z.FECHACREA ");
             sql.append("FROM (SELECT ");
             sql.append("            a.nconocimientoid AS ID, a.vtitulo AS NOMBRE, a.vdescripcion AS SUMILLA, ");
             sql.append("            a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
             sql.append("            a.ntpoconocimientoid AS IDTIPOCONOCIMIENTO, d.vnombre AS TIPOCONOCIMIENTO, ");
-            sql.append("            a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO, NVL(SUM(e.ncalificacion),0) AS SUMA, ");
-            sql.append("            NVL(COUNT(e.ncalificacion),0) AS CONTADOR ");
+            sql.append("            a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO, a.vusuariocreacion AS USUARIOCREA, ");
+            sql.append("            TO_CHAR(a.dfechacreacion,'dd/MM/yyyy') AS FECHACREA, ");
+            sql.append("            NVL(SUM(e.ncalificacion),0) AS SUMA, NVL(COUNT(e.ncalificacion),0) AS CONTADOR ");
             sql.append("        FROM TCONOCIMIENTO a ");
             sql.append("        INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
             sql.append("        INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
@@ -400,7 +403,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
                 sql.append("    AND a.nconocimientoid IN (").append(fCodesC).append(") ");
             }
             sql.append("        GROUP BY a.nconocimientoid, a.vtitulo, a.vdescripcion, a.ncategoriaid, b.vnombre, ");
-            sql.append("        a.dfechapublicacion, a.ntpoconocimientoid, d.vnombre, a.nsituacionid, c.vnombre ");
+            sql.append("        a.dfechapublicacion, a.ntpoconocimientoid, d.vnombre, a.nsituacionid, c.vnombre, a.vusuariocreacion, a.dfechacreacion ");
             sql.append("        ) z ");
             sql.append("WHERE (3 IN (").append(fType).append(") OR 4 IN (").append(fType).append(") OR 5 IN (").append(fType).append(") OR 6 IN (").append(fType).append(")) "); //WIKI            
             if(StringUtils.isNotBlank(order)) {

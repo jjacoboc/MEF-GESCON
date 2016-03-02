@@ -246,7 +246,7 @@ public class Indexador {
 //            SpanishAnalyzer analyzer = new SpanishAnalyzer(Version.LUCENE_5_4_0, stopWords.getS_stopWords());
             Set words = new HashSet(Arrays.asList(stopWords.getS_stopWords()));
             QueryParser queryParser = new QueryParser(FIELD_CONTENTS, new StandardAnalyzer(CharArraySet.copy(words)));
-            Query query = queryParser.parse(text);
+            Query query = queryParser.parse(text.trim());
             TopDocs topDocs = indexSearcher.search(query, 10);
             StringBuilder sbBL = new StringBuilder();
             StringBuilder sbPR = new StringBuilder();
@@ -267,12 +267,18 @@ public class Indexador {
             codesC = sbC.toString();
             if (StringUtils.isNotBlank(codesBL)) {
                 codesBL = codesBL.substring(1);
+            } else {
+                codesBL = BigDecimal.ZERO.toString();
             }
             if (StringUtils.isNotBlank(codesPR)) {
                 codesPR = codesPR.substring(1);
+            } else {
+                codesPR = BigDecimal.ZERO.toString();
             }
             if (StringUtils.isNotBlank(codesC)) {
                 codesC = codesC.substring(1);
+            } else {
+                codesC = BigDecimal.ZERO.toString();
             }
             map.put("codesBL", codesBL);
             map.put("codesPR", codesPR);
