@@ -68,7 +68,10 @@
       <column length="400" name="VMSJRESPUESTA"/>
     </property>
     <property name="nflgvinculo" type="big_decimal">
-      <column name="NFLGVINCULO" not-null="true" precision="22" scale="0"/>
+      <column name="NFLGVINCULO" precision="22" scale="0"/>
+    </property>
+    <property name="nanalisis" type="big_decimal">
+      <column name="NANALISIS" precision="22" scale="0"/>
     </property>
     <set fetch="select" inverse="true" lazy="true" name="thistorials" table="THISTORIAL">
       <key>

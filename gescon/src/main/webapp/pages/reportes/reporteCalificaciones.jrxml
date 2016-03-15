@@ -4,6 +4,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="P_IMAGEN" class="java.lang.String"/>
+	<parameter name="P_BANNER" class="java.lang.String"/>
 	<field name="NOMBRE" class="java.lang.String"/>
 	<field name="CATEGORIA" class="java.lang.String"/>
 	<field name="TIPOCONOCIMIENTO" class="java.lang.String"/>
@@ -39,11 +40,11 @@
 				<box>
 					<topPen lineWidth="3.0" lineColor="#F6A770"/>
 				</box>
-				<imageExpression><![CDATA["D:\\GitHub\\MEF-GESCON\\gescon\\src\\main\\webapp\\resources\\images\\banner.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{P_BANNER}]]></imageExpression>
 			</image>
 			<image scaleImage="RetainShape">
 				<reportElement x="10" y="5" width="117" height="32" uuid="0db24608-c62e-4ec7-a535-fea9cd0cc658"/>
-				<imageExpression><![CDATA["D:\\GitHub\\MEF-GESCON\\gescon\\src\\main\\webapp\\resources\\images\\logogescon2.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{P_IMAGEN}]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="720" y="23" width="32" height="10" forecolor="#FFFFFF" uuid="c849c21f-3eb6-4a2e-8925-2e05be3a14b8"/>

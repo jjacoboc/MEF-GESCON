@@ -1,6 +1,7 @@
 package pe.gob.mef.gescon.hibernate.domain;
 // Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -9,8 +10,8 @@ import java.util.Date;
 public class TuserPerfil implements java.io.Serializable {
 
     private TuserPerfilId id;
-    private Mtperfil mtperfil;
-    private Mtuser mtuser;
+    private BigDecimal nperfilid;
+    private BigDecimal nusuarioid;
     private String vusuariomodificacion;
     private String vusuariocreacion;
     private Date dfechacreacion;
@@ -21,14 +22,10 @@ public class TuserPerfil implements java.io.Serializable {
 
     public TuserPerfil(TuserPerfilId id, Mtperfil mtperfil, Mtuser mtuser) {
         this.id = id;
-        this.mtperfil = mtperfil;
-        this.mtuser = mtuser;
     }
 
-    public TuserPerfil(TuserPerfilId id, Mtperfil mtperfil, Mtuser mtuser, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion) {
+    public TuserPerfil(TuserPerfilId id, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, Date dfechamodificacion) {
         this.id = id;
-        this.mtperfil = mtperfil;
-        this.mtuser = mtuser;
         this.vusuariomodificacion = vusuariomodificacion;
         this.vusuariocreacion = vusuariocreacion;
         this.dfechacreacion = dfechacreacion;
@@ -43,20 +40,20 @@ public class TuserPerfil implements java.io.Serializable {
         this.id = id;
     }
 
-    public Mtperfil getMtperfil() {
-        return this.mtperfil;
+    public BigDecimal getNperfilid() {
+        return nperfilid;
     }
 
-    public void setMtperfil(Mtperfil mtperfil) {
-        this.mtperfil = mtperfil;
+    public void setNperfilid(BigDecimal nperfilid) {
+        this.nperfilid = nperfilid;
     }
 
-    public Mtuser getMtuser() {
-        return this.mtuser;
+    public BigDecimal getNusuarioid() {
+        return nusuarioid;
     }
 
-    public void setMtuser(Mtuser mtuser) {
-        this.mtuser = mtuser;
+    public void setNusuarioid(BigDecimal nusuarioid) {
+        this.nusuarioid = nusuarioid;
     }
 
     public String getVusuariomodificacion() {

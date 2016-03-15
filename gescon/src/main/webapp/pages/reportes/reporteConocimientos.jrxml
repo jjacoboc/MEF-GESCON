@@ -4,6 +4,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="P_IMAGEN" class="java.lang.String"/>
+	<parameter name="P_BANNER" class="java.lang.String"/>
 	<field name="NOMBRE" class="java.lang.String"/>
 	<field name="CATEGORIA" class="java.lang.String"/>
 	<field name="USUARIO_CREACION" class="java.lang.String"/>
@@ -38,7 +39,7 @@
 				<box>
 					<topPen lineWidth="3.0" lineColor="#F6A770"/>
 				</box>
-				<imageExpression><![CDATA["D:\\GitHub\\MEF-GESCON\\gescon\\src\\main\\webapp\\resources\\images\\banner.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{P_BANNER}]]></imageExpression>
 			</image>
 			<textField pattern="h:mm a">
 				<reportElement x="753" y="23" width="40" height="10" forecolor="#FFFFFF" uuid="306a3e40-049f-4380-9156-a1140f950bb2"/>
@@ -70,7 +71,7 @@
 			</staticText>
 			<image scaleImage="RetainShape">
 				<reportElement x="10" y="5" width="117" height="32" uuid="f61fdd42-239f-43e7-a601-eb927fdb31a8"/>
-				<imageExpression><![CDATA["D:\\GitHub\\MEF-GESCON\\gescon\\src\\main\\webapp\\resources\\images\\logogescon2.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{P_IMAGEN}]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="0" y="13" width="803" height="19" forecolor="#FFFFFF" uuid="a91c6b66-3fc5-47bf-9b8b-e7909f8d94d6"/>

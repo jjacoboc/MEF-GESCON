@@ -17,8 +17,9 @@ import pe.gob.mef.gescon.hibernate.domain.Mtuser;
  */
 public interface PerfilDao {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<Mtperfil> getMtperfils() throws Exception;
-    public List<HashMap> getMtperfilesByMtuser(final Mtuser mtuser) throws Exception;
-    public void saveOrUpdate(Mtperfil mtperfil) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<Mtperfil> getMtperfils() throws Exception;
+    List<Mtperfil> getMtperfilsActived() throws Exception;
+    List<HashMap> getMtperfilesByMtuser(final Mtuser mtuser) throws Exception;
+    void saveOrUpdate(Mtperfil mtperfil) throws Exception;
 }

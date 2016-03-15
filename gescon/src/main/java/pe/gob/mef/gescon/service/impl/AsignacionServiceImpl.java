@@ -90,6 +90,7 @@ public class AsignacionServiceImpl implements AsignacionService {
                     c.setIdEstado((BigDecimal) map.get("IDESTADO"));
                     c.setEstado((String) map.get("ESTADO"));
                     c.setFechaAsignacion((Date) map.get("FECHAASIG"));
+                    c.setSemaforo((BigDecimal) map.get("SEMAFORO"));
                     lista.add(c);
                 }
             }
@@ -123,6 +124,7 @@ public class AsignacionServiceImpl implements AsignacionService {
                     c.setIdEstado((BigDecimal) map.get("IDESTADO"));
                     c.setEstado((String) map.get("ESTADO"));
                     c.setFechaRecepcion((Date) map.get("FECHARECEP"));
+                    c.setSemaforo((BigDecimal) map.get("SEMAFORO"));
                     lista.add(c);
                 }
             }
@@ -188,6 +190,7 @@ public class AsignacionServiceImpl implements AsignacionService {
                     c.setTipoConocimiento((String) map.get("TIPOCONOCIMIENTO"));
                     c.setIdEstado((BigDecimal) map.get("IDESTADO"));
                     c.setEstado((String) map.get("ESTADO"));
+                    c.setSemaforo((BigDecimal) map.get("SEMAFORO"));
                     lista.add(c);
                 }
             }

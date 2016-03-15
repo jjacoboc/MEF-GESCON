@@ -18,9 +18,11 @@ import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.EstadoBaseLegalService;
 import pe.gob.mef.gescon.service.MaestroDetalleService;
 import pe.gob.mef.gescon.service.MaestroService;
+import pe.gob.mef.gescon.service.PerfilService;
 import pe.gob.mef.gescon.service.RangoService;
 import pe.gob.mef.gescon.service.SituacionService;
 import pe.gob.mef.gescon.service.TipoConocimientoService;
+import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Maestro;
 
@@ -46,6 +48,8 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaTipoConocimiento;
     private List<SelectItem> listaTipoDiscusion;
     private List<SelectItem> listaTipoDiscusionActivo;
+    private List<SelectItem> listaPerfil;
+    private List<SelectItem> listaPerfilActivo;
     private List<SelectItem> listaProfesion;
     private List<SelectItem> listaProfesionActiva;
     private List<SelectItem> listaTipoDocumentos;
@@ -63,6 +67,8 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaTipoOtrosArchivos;
     private List<SelectItem> listaTipoOtrosArchivosActivos;
     private List<SelectItem> listaMaestros;
+    private List<SelectItem> listaUsuarios;
+    private List<SelectItem> listaUsuariosActivos;
     private List<SelectItem> filterEstado;
     private List<SelectItem> filterModulos;
     
@@ -290,6 +296,30 @@ public class ListaSessionMB implements Serializable{
 
     public void setListaTipoDiscusionActivo(List<SelectItem> listaTipoDiscusionActivo) {
         this.listaTipoDiscusionActivo = listaTipoDiscusionActivo;
+    }
+
+    public List<SelectItem> getListaPerfil() throws Exception {
+        if(listaPerfil == null){
+            PerfilService perfilService = (PerfilService) ServiceFinder.findBean("PerfilService");
+            listaPerfil =  new Items(perfilService.getPerfils(), null, "nperfilid","vnombre").getItems();
+        }
+        return listaPerfil;
+    }
+
+    public void setListaPerfil(List<SelectItem> listaPerfil) {
+        this.listaPerfil = listaPerfil;
+    }
+
+    public List<SelectItem> getListaPerfilActivo() throws Exception {
+        if(listaPerfil == null){
+            PerfilService perfilService = (PerfilService) ServiceFinder.findBean("PerfilService");
+            listaPerfil =  new Items(perfilService.getPerfilsActived(), null, "nperfilid","vnombre").getItems();
+        }
+        return listaPerfilActivo;
+    }
+
+    public void setListaPerfilActivo(List<SelectItem> listaPerfilActivo) {
+        this.listaPerfilActivo = listaPerfilActivo;
     }
 
     public List<SelectItem> getListaProfesion() throws Exception {
@@ -526,6 +556,26 @@ public class ListaSessionMB implements Serializable{
 
     public void setListaMaestros(List<SelectItem> listaMaestros) {
         this.listaMaestros = listaMaestros;
+    }
+
+    public List<SelectItem> getListaUsuarios() throws Exception {
+        if(listaUsuarios == null){
+            UserService service = (UserService) ServiceFinder.findBean("UserService");
+            listaUsuarios =  new Items(service.getUsers(), null, "nusuarioid","vnombreCompleto").getItems();
+        }
+        return listaUsuarios;
+    }
+
+    public void setListaUsuarios(List<SelectItem> listaUsuarios) {
+        this.listaUsuarios = listaUsuarios;
+    }
+
+    public List<SelectItem> getListaUsuariosActivos() {
+        return listaUsuariosActivos;
+    }
+
+    public void setListaUsuariosActivos(List<SelectItem> listaUsuariosActivos) {
+        this.listaUsuariosActivos = listaUsuariosActivos;
     }
 
     /**

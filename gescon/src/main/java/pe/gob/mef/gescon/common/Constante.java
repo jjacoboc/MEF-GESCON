@@ -28,6 +28,7 @@ public class Constante implements Serializable {
     public static String STRING_DOUBLE_LINE = "--";
     public static String STRING_NINGUNO = "NINGUNO";
     public static String STRING_VACANTE = "VACANTE";
+    public static String FILE_CONTENT_TYPE_PDF = "application/pdf";
     public static String FILE_CONTENT_TYPE_XLS = "application/vnd.ms-excel";
     public static String FILE_CONTENT_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     public static String ROL_ADMINISTRADOR = "21";
@@ -65,6 +66,7 @@ public class Constante implements Serializable {
     public static String CALIFICACION3 = "4";
     public static String CALIFICACION4 = "5";
     public static String CALIFICACION5 = "6";
+    public static String CLAVE_DEFAULT = "7";
     
     // Tipo de Conocimiento
     public static BigDecimal BASELEGAL = new BigDecimal(1);

@@ -3159,9 +3159,9 @@ public class PendienteMB implements Serializable {
 
                     this.setUploadFile(f);
                     ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
-                    File direc = new File(bundle.getString("pdftemppath"));
+                    File direc = new File(bundle.getString("temppath"));
                     direc.mkdirs();
-                    this.setFile(new File(bundle.getString("pdftemppath"), f.getFileName()));
+                    this.setFile(new File(bundle.getString("temppath"), f.getFileName()));
                     FileOutputStream fileOutStream = new FileOutputStream(this.getFile());
                     fileOutStream.write(f.getContents());
                     fileOutStream.flush();
@@ -3198,11 +3198,11 @@ public class PendienteMB implements Serializable {
             if (direct.exists()) {
                 fileOutStream.write(FileUtils.readFileToByteArray(new File(bundle.getString("path") + "ct" + '/' + id + '/' + version_ant_i, archivoconocimiento.getVnombre())));
             } else {
-                fileOutStream.write(FileUtils.readFileToByteArray(new File(bundle.getString("pdftemppath"), archivoconocimiento.getVnombre())));
+                fileOutStream.write(FileUtils.readFileToByteArray(new File(bundle.getString("temppath"), archivoconocimiento.getVnombre())));
             }
             fileOutStream.flush();
             fileOutStream.close();
-            File temp = new File(bundle.getString("pdftemppath"), archivoconocimiento.getVnombre());
+            File temp = new File(bundle.getString("temppath"), archivoconocimiento.getVnombre());
             temp.delete();
             //}
 
@@ -6692,7 +6692,7 @@ public class PendienteMB implements Serializable {
             ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
             String fileName = JSFUtils.getRequestParameter("fileName");
             if (fileName.isEmpty()) {
-                String fileNameS = (bundle.getString("pdftemppath")) + this.getUploadFile().getFileName();
+                String fileNameS = (bundle.getString("temppath")) + this.getUploadFile().getFileName();
                 FileInputStream fis = new FileInputStream(new File(fileNameS));
                 return new DefaultStreamedContent(fis, "application/pdf");
             } else {

@@ -7,6 +7,7 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["D:\\GitHub\\MEF-GESCON\\gescon\\src\\main\\webapp\\pages\\reportes\\"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="P_BANNER" class="java.lang.String"/>
 	<field name="ID" class="java.math.BigDecimal"/>
 	<field name="NOMBRE" class="java.lang.String"/>
 	<field name="FECHA" class="java.util.Date"/>
@@ -46,11 +47,11 @@
 				<box>
 					<topPen lineWidth="3.0" lineColor="#F6A770"/>
 				</box>
-				<imageExpression><![CDATA["D:\\GitHub\\MEF-GESCON\\gescon\\src\\main\\webapp\\resources\\images\\banner.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{P_BANNER}]]></imageExpression>
 			</image>
 			<image scaleImage="RetainShape">
 				<reportElement x="10" y="5" width="117" height="32" uuid="edd843fe-e319-4cb9-af8a-7a598c222b42"/>
-				<imageExpression><![CDATA["D:\\GitHub\\MEF-GESCON\\gescon\\src\\main\\webapp\\resources\\images\\logogescon2.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{P_IMAGEN}]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="720" y="23" width="32" height="10" forecolor="#FFFFFF" uuid="e1f5b31e-5ce8-4bf8-a2e2-5a03ecdb0966"/>

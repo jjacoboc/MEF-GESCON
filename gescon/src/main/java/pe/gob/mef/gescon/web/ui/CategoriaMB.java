@@ -30,6 +30,7 @@ import jcifs.smb.SmbFile;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.util.IOUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -347,8 +348,8 @@ public class CategoriaMB implements Serializable {
             CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             createTree(service.getCategorias());
             UserService userService = (UserService) ServiceFinder.findBean("UserService");
-            this.setListaModerador(new Items(userService.getUsersInternal(), null, "nusuarioid","vnombreCompleto").getItems());
-            this.setListaEspecialista(new Items(userService.getUsersInternal(), null, "nusuarioid","vnombreCompleto").getItems());
+            this.setListaModerador(new Items(userService.getUsersInternal(), null, "nusuarioid", "vnombreCompleto").getItems());
+            this.setListaEspecialista(new Items(userService.getUsersInternal(), null, "nusuarioid", "vnombreCompleto").getItems());
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -489,29 +490,29 @@ public class CategoriaMB implements Serializable {
     public void save(ActionEvent event) {
         try {
             if (event != null) {
-                if(StringUtils.isBlank(this.getNombre())) {
+                if (StringUtils.isBlank(this.getNombre())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el nombre de la categoría a registrar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if(StringUtils.isBlank(this.getDescripcion())) {
+                if (StringUtils.isBlank(this.getDescripcion())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción de la categoría a registrar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if(this.getSelectedCategoria().getNnivel().intValue() < (int)3) {
-                    if(this.getModerador() == null) {
+                if (this.getSelectedCategoria().getNnivel().intValue() < (int) 3) {
+                    if (this.getModerador() == null) {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el moderador para la categoría a registrar.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
-                    if(this.getEspecialista()== null) {
+                    if (this.getEspecialista() == null) {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el especialista para la categoría a registrar.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
                 }
-                if(this.getContent() == null) {
+                if (this.getContent() == null) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la imagen de la categoría a registrar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
@@ -528,7 +529,7 @@ public class CategoriaMB implements Serializable {
                 categoria.setNflagom(this.isFlagom() ? BigDecimal.ONE : BigDecimal.ZERO);
                 categoria.setNflagpr(this.isFlagpr() ? BigDecimal.ONE : BigDecimal.ZERO);
                 categoria.setNflagwiki(this.isFlagwiki() ? BigDecimal.ONE : BigDecimal.ZERO);
-                if(this.getSelectedCategoria().getNnivel().intValue() < (int)3) {
+                if (this.getSelectedCategoria().getNnivel().intValue() < (int) 3) {
                     categoria.setNespecialista(this.getEspecialista());
                     categoria.setNmoderador(this.getModerador());
                 } else {
@@ -543,7 +544,7 @@ public class CategoriaMB implements Serializable {
                     categoria.setNcategoriasup(null);
                     categoria.setNnivel(BigDecimal.ONE);
                 }
-                if (this.getContent()!= null) {
+                if (this.getContent() != null) {
                     categoria.setVimagennombre(this.getContent().getName());
                     categoria.setVimagentype(this.getContent().getContentType());
                 }
@@ -586,29 +587,29 @@ public class CategoriaMB implements Serializable {
     public void update(ActionEvent event) {
         try {
             if (event != null) {
-                if(StringUtils.isBlank(this.getSelectedCategoria().getVnombre())) {
+                if (StringUtils.isBlank(this.getSelectedCategoria().getVnombre())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el nombre de la categoría a actualizar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if(StringUtils.isBlank(this.getSelectedCategoria().getVdescripcion())) {
+                if (StringUtils.isBlank(this.getSelectedCategoria().getVdescripcion())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción de la categoría a actualizar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if(this.getSelectedCategoria().getNnivel().intValue() < (int)3) {
-                    if(this.getModerador() == null) {
+                if (this.getSelectedCategoria().getNnivel().intValue() < (int) 3) {
+                    if (this.getModerador() == null) {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el moderador para la categoría a actualizar.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
-                    if(this.getEspecialista()== null) {
+                    if (this.getEspecialista() == null) {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el especialista para la categoría a actualizar.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
                         return;
                     }
                 }
-                if(this.getContent() == null) {
+                if (this.getContent() == null) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la imagen de la categoría a actualizar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
@@ -625,7 +626,7 @@ public class CategoriaMB implements Serializable {
                 this.getSelectedCategoria().setNflagwiki(this.isFlagwiki() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedCategoria().setDfechamodificacion(new Date());
                 this.getSelectedCategoria().setVusuariomodificacion(user.getVlogin());
-                if(this.getSelectedCategoria().getNnivel().intValue() < (int)3) {
+                if (this.getSelectedCategoria().getNnivel().intValue() < (int) 3) {
                     this.getSelectedCategoria().setNespecialista(this.getEspecialista());
                     this.getSelectedCategoria().setNmoderador(this.getModerador());
                 } else {
@@ -694,38 +695,52 @@ public class CategoriaMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void writeImage(Categoria categoria) {
+        String path;
         String filepath;
         String user;
         String password;
         String url;
+        String rute;
+        File file = null;
+        FileOutputStream fileOutStream = null;
         try {
-            if (this.getUploadFile() != null) {
-                ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
-                filepath = bundle.getString("filepath");
-                user = bundle.getString("user");
-                password = bundle.getString("password");
-                url = filepath + "category/" + categoria.getNcategoriaid().toString() + "/";
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+            path = bundle.getString("path");
+            filepath = bundle.getString("filepath");
+            user = bundle.getString("user");
+            password = bundle.getString("password");
+            url = filepath + "category/" + categoria.getNcategoriaid().toString() + "/";
+            rute = path + "category/" + categoria.getNcategoriaid().toString() + "/";
 
-                NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, user, password);
-                SmbFile dir = new SmbFile(url, auth);
-                if(!dir.exists()) {
-                    dir.mkdirs();
-                }
-                
-                File file = new File(dir.getUncPath(), this.getUploadFile().getFileName());
-                FileOutputStream fileOutStream = new FileOutputStream(file);
-                fileOutStream.write(this.getUploadFile().getContents());
-                fileOutStream.flush();
-                fileOutStream.close();
+            File f = new File(rute);
+            if (!f.exists()) {
+                f.mkdirs();
             }
+            NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, user, password);
+            SmbFile dir = new SmbFile(url, auth);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            if (this.getUploadFile() != null) {
+                file = new File(dir.getUncPath(), this.getUploadFile().getFileName());
+                fileOutStream = new FileOutputStream(file);
+                fileOutStream.write(this.getUploadFile().getContents());
+            } else if (this.getContent() != null) {
+                file = new File(dir.getUncPath(), this.getContent().getName());
+                fileOutStream = new FileOutputStream(file);
+                fileOutStream.write(IOUtils.toByteArray(this.getContent().getStream()));
+            }
+            fileOutStream.flush();
+            fileOutStream.close();
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
     }
-    
+
     public void readImage(Categoria categoria) {
         String filepath;
         String user;
@@ -741,7 +756,7 @@ public class CategoriaMB implements Serializable {
 
                 NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, user, password);
                 SmbFile dir = new SmbFile(url, auth);
-                
+
                 File file = new File(dir.getUncPath(), categoria.getVimagennombre());
                 FileInputStream fis = new FileInputStream(file);
                 this.content = new DefaultStreamedContent(fis, categoria.getVimagentype(), categoria.getVimagennombre());

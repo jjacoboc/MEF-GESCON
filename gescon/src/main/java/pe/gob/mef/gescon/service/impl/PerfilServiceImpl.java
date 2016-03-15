@@ -48,6 +48,19 @@ public class PerfilServiceImpl implements PerfilService{
     }
     
     @Override
+    public List<Perfil> getPerfilsActived() throws Exception {
+        List<Perfil> perfils = new ArrayList<Perfil>();
+        PerfilDao perfilDao = (PerfilDao) ServiceFinder.findBean("PerfilDao");
+        List<Mtperfil> lista = perfilDao.getMtperfilsActived();
+        for(Mtperfil mtperfil : lista) {
+            Perfil perfil = new Perfil();
+            BeanUtils.copyProperties(perfil, mtperfil);
+            perfils.add(perfil);
+        }
+        return perfils;
+    }
+    
+    @Override
     public List<Perfil> getPerfilesByUser(User user) throws Exception {
         List<Perfil> perfiles = new ArrayList<Perfil>();
         try {

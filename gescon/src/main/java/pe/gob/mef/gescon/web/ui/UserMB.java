@@ -5,12 +5,15 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -19,20 +22,29 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.ServletContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
-import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.CroppedImage;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Items;
+import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
+import pe.gob.mef.gescon.hibernate.domain.TuserPerfil;
+import pe.gob.mef.gescon.hibernate.domain.TuserPerfilId;
+import pe.gob.mef.gescon.service.ParametroService;
 import pe.gob.mef.gescon.service.PassService;
+import pe.gob.mef.gescon.service.PerfilService;
 import pe.gob.mef.gescon.service.UbigeoService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.JSFUtils;
+import pe.gob.mef.gescon.util.MailUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.Parametro;
 import pe.gob.mef.gescon.web.bean.Pass;
 import pe.gob.mef.gescon.web.bean.User;
 
@@ -46,6 +58,8 @@ public class UserMB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Log log = LogFactory.getLog(UserMB.class);
+    private String path;
+    private String temppath;
     private BigDecimal id;
     private String nombres;
     private String apellidos;
@@ -56,9 +70,11 @@ public class UserMB implements Serializable {
     private String dni;
     private String sexo;
     private String correo;
+    private List<SelectItem> listaPerfil;
     private List<SelectItem> listaDepartamento;
     private List<SelectItem> listaProvincia;
     private List<SelectItem> listaDistrito;
+    private String perfil;
     private String departamento;
     private String provincia;
     private String distrito;
@@ -73,11 +89,31 @@ public class UserMB implements Serializable {
     private List<User> listaUser;
     private List<User> filteredListaUser;
     private User selectedUser;
+    private String imagenTemporal;
+    private CroppedImage croppedImage;
+    private String photoFileName;
+    private String photoImage;
 
     /**
      * Creates a new instance of MaestroMB
      */
     public UserMB() {
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getTemppath() {
+        return temppath;
+    }
+
+    public void setTemppath(String temppath) {
+        this.temppath = temppath;
     }
 
     /**
@@ -166,6 +202,14 @@ public class UserMB implements Serializable {
         this.correo = correo;
     }
 
+    public List<SelectItem> getListaPerfil() {
+        return listaPerfil;
+    }
+
+    public void setListaPerfil(List<SelectItem> listaPerfil) {
+        this.listaPerfil = listaPerfil;
+    }
+
     public List<SelectItem> getListaDepartamento() {
         return listaDepartamento;
     }
@@ -188,6 +232,14 @@ public class UserMB implements Serializable {
 
     public void setListaDistrito(List<SelectItem> listaDistrito) {
         this.listaDistrito = listaDistrito;
+    }
+
+    public String getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(String perfil) {
+        this.perfil = perfil;
     }
 
     /**
@@ -416,13 +468,51 @@ public class UserMB implements Serializable {
         this.selectedUser = selectedUser;
     }
 
+    public String getImagenTemporal() {
+        return imagenTemporal;
+    }
+
+    public void setImagenTemporal(String imagenTemporal) {
+        this.imagenTemporal = imagenTemporal;
+    }
+
+    public CroppedImage getCroppedImage() {
+        return croppedImage;
+    }
+
+    public void setCroppedImage(CroppedImage croppedImage) {
+        this.croppedImage = croppedImage;
+    }
+
+    public String getPhotoFileName() {
+        return photoFileName;
+    }
+
+    public void setPhotoFileName(String photoFileName) {
+        this.photoFileName = photoFileName;
+    }
+
+    public String getPhotoImage() {
+        return photoImage;
+    }
+
+    public void setPhotoImage(String photoImage) {
+        this.photoImage = photoImage;
+    }
+
     @PostConstruct
     public void init() {
         try {
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+            this.setPath(bundle.getString("usrpath"));
+            this.setTemppath(bundle.getString("temppath"));
+            this.setPhotoFileName("photo.jpg");
             UserService userService = (UserService) ServiceFinder.findBean("UserService");
             this.setListaUser(userService.getUsers());
             UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
             listaDepartamento = new Items(ubigeoService.getDepartamentos(), null, "vcoddep", "vdescdep").getItems();
+            PerfilService perfilService = (PerfilService) ServiceFinder.findBean("PerfilService");
+            listaPerfil = new Items(perfilService.getPerfilsActived(), null, "nperfilid", "vnombre").getItems();
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -499,6 +589,7 @@ public class UserMB implements Serializable {
         this.setCorreo(StringUtils.EMPTY);
         this.setListaProvincia(new ArrayList());
         this.setListaDistrito(new ArrayList());
+        this.setPerfil(StringUtils.EMPTY);
         this.setDepartamento(StringUtils.EMPTY);
         this.setProvincia(StringUtils.EMPTY);
         this.setDistrito(StringUtils.EMPTY);
@@ -513,6 +604,7 @@ public class UserMB implements Serializable {
     public void toSave(ActionEvent event) {
         try {
             this.cleanAttributes();
+            this.setImagenTemporal(StringUtils.EMPTY);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -522,11 +614,23 @@ public class UserMB implements Serializable {
     public String toSave() {
         try {
             this.cleanAttributes();
+            this.setPhotoImage(StringUtils.EMPTY);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
         return "/pages/usuarioexterno/registro?faces-redirect=true";
+    }
+    
+    public String toSaveUser() {
+        try {
+            this.cleanAttributes();
+            this.setPhotoImage(StringUtils.EMPTY);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return "/pages/usuarioexterno/registroExterno?faces-redirect=true";
     }
 
     public void save(ActionEvent event) {
@@ -543,21 +647,6 @@ public class UserMB implements Serializable {
             }
             if (StringUtils.isBlank(this.getApellidos())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el apellido del usuario a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (StringUtils.isBlank(this.getClave())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la clave del usuario a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (StringUtils.isBlank(this.getConfirmaClave())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Confirme la clave del usuario a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (!this.getClave().equals(this.getConfirmaClave())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "La confirmación debe ser igual a la clave ingresada.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
@@ -624,6 +713,9 @@ public class UserMB implements Serializable {
             user.setDfechacreacion(new Date());
             user.setVusuariocreacion(this.getLogin());
             service.saveOrUpdate(user);
+            
+            ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
+            Parametro passDefault = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.CLAVE_DEFAULT)));
 
             TpassId tpassid = new TpassId();
             PassService passservice = (PassService) ServiceFinder.findBean("PassService");
@@ -631,12 +723,36 @@ public class UserMB implements Serializable {
             tpassid.setNusuarioid(user.getNusuarioid());
             Pass pass = new Pass();
             pass.setId(tpassid);
-            pass.setVclave(this.getClave());
+            pass.setVclave(passDefault.getVvalor());
             pass.setDfechacreacion(new Date());
             pass.setVusuariocreacion(this.getLogin());
             passservice.saveOrUpdate(pass);
-            RequestContext.getCurrentInstance().execute("PF('iniDialog').hide();");
-            RequestContext.getCurrentInstance().execute("PF('regDialog').hide();");
+            
+            if(this.getCroppedImage() != null) {
+                String pathImage = this.path + File.separator + user.getNusuarioid() + File.separator;
+                this.saveFile(pathImage, this.photoFileName, croppedImage.getBytes());
+            }
+            
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
+            String usuarioexterno = bundle.getString("usuarioexterno");
+            
+            TuserPerfilId tuserPerfilId = new TuserPerfilId();
+            tuserPerfilId.setNusuarioid(user.getNusuarioid());
+            tuserPerfilId.setNperfilid(BigDecimal.valueOf(Long.parseLong(usuarioexterno)));
+            TuserPerfil tuserPerfil = new TuserPerfil();
+            tuserPerfil.setId(tuserPerfilId);
+            tuserPerfil.setNperfilid(tuserPerfilId.getNperfilid());
+            tuserPerfil.setNusuarioid(tuserPerfilId.getNusuarioid());
+            tuserPerfil.setDfechacreacion(new Date());
+            tuserPerfil.setVusuariocreacion(this.getLogin());
+            service.asignProfileToUser(tuserPerfil);
+            
+            try {
+                MailUtils.sendMail(user.getVcorreo(), "GESCON MEF - Usuario Creado", getSaveBodyMail(user.getVlogin(), pass.getVclave()));
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
+            } catch(Exception e){
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -666,18 +782,8 @@ public class UserMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (StringUtils.isBlank(this.getClave())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la clave del usuario a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (StringUtils.isBlank(this.getConfirmaClave())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Confirme la clave del usuario a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (!this.getClave().equals(this.getConfirmaClave())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "La confirmación debe ser igual a la clave ingresada.");
+            if (StringUtils.isBlank(this.getPerfil())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el perfil del usuario a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
@@ -747,21 +853,46 @@ public class UserMB implements Serializable {
             user.setVusuariocreacion(usuario.getVlogin());
             userService.saveOrUpdate(user);
 
+            ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
+            Parametro passDefault = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.CLAVE_DEFAULT)));
+            
             TpassId tpassid = new TpassId();
             PassService passservice = (PassService) ServiceFinder.findBean("PassService");
             tpassid.setNpassid(passservice.getNextPK());
             tpassid.setNusuarioid(user.getNusuarioid());
             Pass pass = new Pass();
             pass.setId(tpassid);
-            pass.setVclave(this.getClave());
+            pass.setVclave(passDefault.getVvalor());
             pass.setDfechacreacion(new Date());
             pass.setVusuariocreacion(usuario.getVlogin());
             passservice.saveOrUpdate(pass);
 
+            if(this.getCroppedImage() != null) {
+                String pathImage = this.path + File.separator + user.getNusuarioid() + File.separator;
+                this.saveFile(pathImage, this.photoFileName, croppedImage.getBytes());
+            }
+            
+            TuserPerfilId tuserPerfilId = new TuserPerfilId();
+            tuserPerfilId.setNusuarioid(user.getNusuarioid());
+            tuserPerfilId.setNperfilid(BigDecimal.valueOf(Long.parseLong(this.getPerfil())));
+            TuserPerfil tuserPerfil = new TuserPerfil();
+            tuserPerfil.setId(tuserPerfilId);
+            tuserPerfil.setNperfilid(tuserPerfilId.getNperfilid());
+            tuserPerfil.setNusuarioid(tuserPerfilId.getNusuarioid());
+            tuserPerfil.setDfechacreacion(new Date());
+            tuserPerfil.setVusuariocreacion(this.getLogin());
+            userService.asignProfileToUser(tuserPerfil);
+            
             this.setListaUser(userService.getUsers());
-            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/usuarioexterno/lista.xhtml");
+            try {
+                MailUtils.sendMail(user.getVcorreo(), "GESCON MEF - Usuario Creado", getSaveBodyMail(user.getVlogin(), pass.getVclave()));
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/usuarioexterno/lista.xhtml");
+            } catch(Exception e){
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/usuarioexterno/lista.xhtml");
+            }
+            
         } catch (Exception e) {
-            log.error(e.getMessage());
+            e.getMessage();
             e.printStackTrace();
         }
     }
@@ -774,11 +905,14 @@ public class UserMB implements Serializable {
             } else {
                 this.setSelectedUser(this.getListaUser().get(index));
             }
+            UserService userService = (UserService) ServiceFinder.findBean("UserService");
+            this.setPerfil(userService.getPerfilByUser(this.getSelectedUser().getNusuarioid()).toString());
+            this.setPhotoImage(getPhotoUser());
             UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
             listaProvincia = new Items(ubigeoService.getProvinciasPorDepartamento(this.getSelectedUser().getVdpto()), null, "vcodprov", "vdescprov").getItems();
             listaDistrito = new Items(ubigeoService.getDistritosPorProvincia(this.getSelectedUser().getVdpto(), this.getSelectedUser().getVprov()), null, "vcoddist", "vdescdist").getItems();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            e.getMessage();
             e.printStackTrace();
         }
         return "/pages/usuarioexterno/editar?faces-redirect=true";
@@ -832,49 +966,77 @@ public class UserMB implements Serializable {
 
     public void update(ActionEvent event) {
         try {
-            if (StringUtils.isBlank(this.getNombres())) {
+            if (StringUtils.isBlank(this.getSelectedUser().getVnombres())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el nombre del usuario a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (StringUtils.isBlank(this.getApellidos())) {
+            if (StringUtils.isBlank(this.getSelectedUser().getVapellidos())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el apellido del usuario a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (this.getFechaNacimiento() == null) {
+            if (StringUtils.isBlank(this.getPerfil())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el perfil del usuario a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getSelectedUser().getDfechanacimiento() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la fecha de nacimiento del usuario a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (StringUtils.isBlank(this.getCorreo())) {
+            if (StringUtils.isBlank(this.getSelectedUser().getVcorreo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el correo electrónico del usuario a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (StringUtils.isBlank(this.getDepartamento())) {
+            if (StringUtils.isBlank(this.getSelectedUser().getVdpto())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el departamento del lugar de residencia.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (StringUtils.isBlank(this.getProvincia())) {
+            if (StringUtils.isBlank(this.getSelectedUser().getVprov())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la provincia del lugar de residencia.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (StringUtils.isBlank(this.getDistrito())) {
+            if (StringUtils.isBlank(this.getSelectedUser().getVdist())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el distrito del lugar de residencia.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
             this.getSelectedUser().setVnombres(StringUtils.capitalize(this.getSelectedUser().getVnombres()));
             this.getSelectedUser().setVapellidos(StringUtils.capitalize(this.getSelectedUser().getVapellidos()));
+            this.getSelectedUser().setDfechamodificacion(new Date());
+            this.getSelectedUser().setVusuariomodificacion(user.getVlogin());
             UserService service = (UserService) ServiceFinder.findBean("UserService");
             service.saveOrUpdate(this.getSelectedUser());
+            
+            if(this.getCroppedImage() != null) {
+                String pathImage = this.path + File.separator + this.getSelectedUser().getNusuarioid() + File.separator;
+                this.saveFile(pathImage, this.photoFileName, croppedImage.getBytes());
+            }
+            
+            service.deletePerfilByUser(this.getSelectedUser().getNusuarioid());
+            
+            TuserPerfilId tuserPerfilId = new TuserPerfilId();
+            tuserPerfilId.setNusuarioid(this.getSelectedUser().getNusuarioid());
+            tuserPerfilId.setNperfilid(BigDecimal.valueOf(Long.parseLong(this.getPerfil())));
+            TuserPerfil tuserPerfil = new TuserPerfil();
+            tuserPerfil.setId(tuserPerfilId);
+            tuserPerfil.setNperfilid(tuserPerfilId.getNperfilid());
+            tuserPerfil.setNusuarioid(tuserPerfilId.getNusuarioid());
+            tuserPerfil.setDfechacreacion(new Date());
+            tuserPerfil.setVusuariocreacion(user.getVlogin());
+            service.asignProfileToUser(tuserPerfil);
+            
             this.setListaUser(service.getUsers());
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/usuarioexterno/lista.xhtml");
         } catch (Exception e) {
-            log.error(e.getMessage());
+            e.getMessage();
             e.printStackTrace();
         }
     }
@@ -887,6 +1049,9 @@ public class UserMB implements Serializable {
             } else {
                 this.setSelectedUser(this.getListaUser().get(index));
             }
+            UserService userService = (UserService) ServiceFinder.findBean("UserService");
+            this.setPerfil(userService.getPerfilByUser(this.getSelectedUser().getNusuarioid()).toString());
+            this.setPhotoImage(getPhotoUser());
             UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
             listaProvincia = new Items(ubigeoService.getProvinciasPorDepartamento(this.getSelectedUser().getVdpto()), null, "vcodprov", "vdescprov").getItems();
             listaDistrito = new Items(ubigeoService.getDistritosPorProvincia(this.getSelectedUser().getVdpto(), this.getSelectedUser().getVprov()), null, "vcoddist", "vdescdist").getItems();
@@ -895,5 +1060,121 @@ public class UserMB implements Serializable {
             e.printStackTrace();
         }
         return "/pages/usuarioexterno/ver?faces-redirect=true";
+    }
+    
+    public void toCrop(ActionEvent event){
+        try {
+            this.setImagenTemporal(StringUtils.EMPTY);
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void handleFileUpload(FileUploadEvent event) {
+        try {
+            byte[] img = event.getFile().getContents();
+            this.imagenTemporal = File.separator + "resources" + File.separator + "images" + File.separator + event.getFile().getFileName();
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ServletContext scontext = (ServletContext) facesContext.getExternalContext().getContext();
+            String archivo = scontext.getRealPath("") + this.imagenTemporal;
+            this.imagenTemporal = this.imagenTemporal.replace("\\", "/");
+            FileOutputStream fos = new FileOutputStream(archivo);
+            fos.write(img);
+            fos.flush();
+            fos.close();
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void crop() {
+        if (croppedImage == null) {
+            return;
+        }
+        String newFileName = this.temppath + this.photoFileName;
+        this.setPhotoImage(newFileName);
+        this.saveFile(this.temppath, this.photoFileName, croppedImage.getBytes());
+    }
+    
+    public String getPhotoUser() {
+        String pathImage = this.path + File.separator + this.getSelectedUser().getNusuarioid() + File.separator;
+        String newFileName = pathImage + this.photoFileName;
+        File f = new File(newFileName);
+        if(!f.exists()) {
+            newFileName = StringUtils.EMPTY;
+        }
+        return newFileName;
+    }
+
+    public void saveFile(String path, String name, byte[] bytes) {
+        try {
+            File direc = new File(path);
+            direc.mkdirs();
+            File file = new File(path, name);
+            FileOutputStream fileOutStream = new FileOutputStream(file);
+            fileOutStream.write(bytes);
+            fileOutStream.flush();
+            fileOutStream.close();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void resetPassword(ActionEvent event) {
+        try {
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
+            Parametro passDefault = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.CLAVE_DEFAULT)));
+            PassService passService = (PassService) ServiceFinder.findBean("PassService");
+            Pass password = passService.getPassByUser(this.getSelectedUser());
+            password.setVclave(passDefault.getVvalor());
+            password.setDfechamodificacion(new Date());
+            password.setVusuariomodificacion(user.getVlogin());
+            passService.saveOrUpdate(password);            
+            MailUtils.sendMail(this.getSelectedUser().getVcorreo(), "GESCON MEF - Reseteo de Contraseña", getResetPasswordBodyMail(passDefault.getVvalor()));
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Contraseña reseteada. Se notificó al usuario via email.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public String getResetPasswordBodyMail(String clave) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            sb.append("<span>Estimado Usuario:</span><br/>");
+            sb.append("<span>Su contraseña ha sido reseteada por el administrador del servicio.</span><br/>");
+            sb.append("<span>Por favor, ingrese con la contraseña <span style=\"font-weight: bold;\">").append(clave).append("</span> en su siguiente inicio de sesión.</span><br/><br/>");
+            sb.append("<span>Gracias,</span><br/>");
+            sb.append("<span>GESCON</span><br/>");
+            sb.append("<span>OGTI - MEF</span><br/>");
+        } catch(Exception e) {
+            e.getMessage();
+        }
+            
+        return sb.toString();
+    }
+    
+    public String getSaveBodyMail(String usuario, String clave) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            sb.append("<span>Estimado Usuario:</span><br/>");
+            sb.append("<span>Gracias por registrase en el Sistema de Gestión del Conocimiento del Ministerio de Economía y Finanzas (GESCON - MEF).</span><br/>");
+            sb.append("<span>Sus credenciales para el inicio de sesión son las siguientes:</span><br/>");
+            sb.append("<span>Usuario: ").append("<span style=\"font-weight: bold;\">").append(usuario).append("</span></span><br/>");
+            sb.append("<span>Contraseña: ").append("<span style=\"font-weight: bold;\">").append(clave).append("</span></span><br/><br/>");
+            sb.append("<span>Gracias,</span><br/>");
+            sb.append("<span>GESCON</span><br/>");
+            sb.append("<span>OGTI - MEF</span><br/>");
+        } catch(Exception e) {
+            e.getMessage();
+        }
+            
+        return sb.toString();
     }
 }

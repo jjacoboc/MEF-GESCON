@@ -55,12 +55,27 @@
 
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="#{msgs.bl_lbl_archivo}"/>
-                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:lightBox>
+                                    <h:panelGrid id="pgFu" columns="1" cellspacing="0" cellpadding="0">
+                                        <p:fileUpload value="#{baseLegalMB.uploadFile}" skinSimple="true" update=":f:pgFu" fileUploadListener="#{baseLegalMB.handleUploadFile}" 
+                                                      cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
+                                        <p:lightBox rendered="#{baseLegalMB.uploadFile ne null}">
+                                            <h:outputLink value="#">
+                                                <h:panelGrid columns="2">
+                                                    <p:graphicImage library="images" name="pdf.png"/>
+                                                    <h:outputText value="#{baseLegalMB.uploadFile.fileName}"/>
+                                                </h:panelGrid>
+                                            </h:outputLink>
+                                            <f:facet name="inline">
+                                                <p:media player="pdf" cache="false" value="#{baseLegalMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
+                                                    <f:param name="fileName" value="#{msgs.temppath}#{baseLegalMB.uploadFile.fileName}"/>
+                                                </p:media>
+                                            </f:facet>
+                                        </p:lightBox>
+                                        <p:lightBox rendered="#{baseLegalMB.uploadFile eq null}">
                                             <h:outputLink value="#" styleClass="GesconLink">
                                                 <h:panelGrid columns="2">
                                                     <p:graphicImage library="images" name="pdf.png"/>
-                                                    <h:outputText id="fileName" value="#{baseLegalMB.selectedBaseLegal.archivo.vnombre}"/>
+                                                    <h:outputText value="#{baseLegalMB.selectedBaseLegal.archivo.vnombre}"/>
                                                 </h:panelGrid>
                                             </h:outputLink>
                                             <f:facet name="inline">
@@ -93,7 +108,7 @@
                                         <h:outputText id="counter"/>
                                     </h:panelGrid>
 
-                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <p:spacer/>
                                     <h:outputLabel value="#{msgs.bl_lbl_tema}"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                         <p:inputText id="tema" size="50" value="#{baseLegalMB.selectedBaseLegal.vtema}" maxlength="50"/>
@@ -104,10 +119,10 @@
                                     <p:spacer/>
                                     <h:outputText value="#{msgs.bl_lbl_destacado}"/>
                                     <p:selectBooleanCheckbox value="#{baseLegalMB.chkDestacado}" />
-
-                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
-                                    <h:outputLabel value="#{msgs.bl_lbl_vinculo}"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="1">
                                     <p:spacer/>
+                                    <h:outputText value="#{msgs.bl_lbl_vinculo}"/>
                                 </h:panelGrid>
                                 <p:fieldset>
                                     <h:panelGrid id="pgPostVinc" columns="1" cellpadding="0" cellspacing="0">

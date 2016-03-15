@@ -17,10 +17,9 @@ import pe.gob.mef.gescon.web.bean.Conocimiento;
  */
 public interface ArchivoConocimientoService {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<ArchivoConocimiento> getArchivosByConocimiento(BigDecimal nconocimientoid) throws Exception;
-    public ArchivoConocimiento getLastArchivoByConocimiento(Conocimiento conocimiento) throws Exception;
-    public void saveOrUpdate(ArchivoConocimiento archivoconocimiento) throws Exception;
-    
-    
+    BigDecimal getNextPK() throws Exception;
+    List<ArchivoConocimiento> getArchivosByConocimiento(BigDecimal nconocimientoid) throws Exception;
+    ArchivoConocimiento getLastArchivoByConocimiento(Conocimiento conocimiento) throws Exception;
+    void saveOrUpdate(ArchivoConocimiento archivoconocimiento) throws Exception;
+    void delete(BigDecimal idarchivo) throws Exception;
 }

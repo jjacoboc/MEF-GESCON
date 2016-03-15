@@ -268,17 +268,17 @@ public class Indexador {
             if (StringUtils.isNotBlank(codesBL)) {
                 codesBL = codesBL.substring(1);
             } else {
-                codesBL = BigDecimal.ZERO.toString();
+                codesBL = null;
             }
             if (StringUtils.isNotBlank(codesPR)) {
                 codesPR = codesPR.substring(1);
             } else {
-                codesPR = BigDecimal.ZERO.toString();
+                codesPR = null;
             }
             if (StringUtils.isNotBlank(codesC)) {
                 codesC = codesC.substring(1);
             } else {
-                codesC = BigDecimal.ZERO.toString();
+                codesC = null;
             }
             map.put("codesBL", codesBL);
             map.put("codesPR", codesPR);

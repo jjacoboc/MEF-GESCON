@@ -67,7 +67,7 @@
                                             </h:outputLink>
                                             <f:facet name="inline">
                                                 <p:media player="pdf" cache="false" value="#{baseLegalMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
-                                                    <f:param name="fileName" value="#{msgs.pdftemppath}#{baseLegalMB.uploadFile.fileName}"/>
+                                                    <f:param name="fileName" value="#{msgs.temppath}#{baseLegalMB.uploadFile.fileName}"/>
                                                 </p:media>
                                             </f:facet>
                                         </p:lightBox>
@@ -87,7 +87,7 @@
                                         <p:selectBooleanCheckbox value="#{baseLegalMB.chkMancomunidades}" itemLabel="Mancomunidades" />
                                     </h:panelGrid>
 
-                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                    <p:spacer/>
                                     <h:outputText value="#{msgs.bl_lbl_sumilla}"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                         <p:inputTextarea value="#{baseLegalMB.comentario}" rows="4" cols="100" styleClass="Fs14"
@@ -95,7 +95,7 @@
                                         <h:outputText id="counter"/>
                                     </h:panelGrid>
 
-                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                    <p:spacer/>
                                     <h:outputText value="#{msgs.bl_lbl_tema}"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                         <p:inputText id="tema" size="50" value="#{baseLegalMB.tema}" styleClass="Fs14" maxlength="50"/>
@@ -106,10 +106,10 @@
                                     <p:spacer/>
                                     <h:outputText value="#{msgs.bl_lbl_destacado}"/>
                                     <p:selectBooleanCheckbox value="#{baseLegalMB.chkDestacado}" />
-
-                                    <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputText value="#{msgs.bl_lbl_vinculo}"/>
+                                </h:panelGrid>
+                                <h:panelGrid columns="1">
                                     <p:spacer/>
+                                    <h:outputText value="#{msgs.bl_lbl_vinculo}"/>
                                 </h:panelGrid>
                                 <p:fieldset>
                                     <h:panelGrid id="pgNewVinc" columns="1" cellpadding="0" cellspacing="0">
@@ -147,7 +147,7 @@
                                         <p:spacer width="10"/>
                                         <p:commandButton value="Regresar" ajax="false" action="/pages/baselegal/lista.xhtml"/>
                                     </h:panelGroup>
-                                    <h:outputText value="#{msgs.bl_lbl_notapie}" style="font-size: 9px;float: right;"/>
+                                    <h:outputText value="#{msgs.bl_lbl_notapie}" style="font-size: 11px;float: right;"/>
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>

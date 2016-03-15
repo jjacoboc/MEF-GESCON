@@ -12,12 +12,12 @@
                 <column name="NUSUARIOID" precision="22" scale="0" />
             </key-property>
         </composite-id>
-        <many-to-one name="mtperfil" class="pe.gob.mef.gescon.hibernate.domain.Mtperfil" update="false" insert="false" fetch="select">
-            <column name="NPERFILID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
-        <many-to-one name="mtuser" class="pe.gob.mef.gescon.hibernate.domain.Mtuser" update="false" insert="false" fetch="select">
-            <column name="NUSUARIOID" precision="22" scale="0" not-null="true" />
-        </many-to-one>
+        <property name="nperfilid" type="big_decimal" insert="false" update="false">
+            <column name="NPERFILID" precision="22" scale="0" />
+        </property>
+        <property name="nusuarioid" type="big_decimal" insert="false" update="false">
+            <column name="NUSUARIOID" precision="22" scale="0" />
+        </property>
         <property name="vusuariomodificacion" type="string">
             <column name="VUSUARIOMODIFICACION" length="25" />
         </property>

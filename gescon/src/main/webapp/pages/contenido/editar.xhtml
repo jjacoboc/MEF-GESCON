@@ -56,23 +56,30 @@
 
                                 <p:fieldset>
                                     <h:panelGrid id="pgNewVinc1" columns="1" cellpadding="0" cellspacing="0" width="100%">
-                                        <p:commandButton style=" float:left;"  value="Agregar Archivos" styleClass="ui-link Fs14" oncomplete="PF('tpoconDialog').show();"/>
+                                        <p:commandButton value="Agregar Archivos" actionListener="#{contenidoMB.toUploadFile}" update=":tpoconDialogForm:pgTpoCon" oncomplete="PF('tpoconDialog').show();" styleClass="Fs14"/>
                                         <p:tabView>
-                                            <p:tab title="Arhivos Relacionados">
+                                            <p:tab title="Archivos Relacionados">
                                                 <p:dataTable id="tbl" value="#{contenidoMB.listaArchivos}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" draggableColumns="true" reflow="true"
                                                              paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}">
-                                                    <p:column style="text-align: center; width: 70px;" priority="2">
-                                                        <f:facet name="header"><h:outputText value="Nombre del Archivo"/></f:facet>
+                                                    <p:column style="width: 30%;">
+                                                        <f:facet name="header"><h:outputText value="Nombre"/></f:facet>
                                                         <h:outputText value="#{row.vnombre}"/>
                                                     </p:column>
-                                                    <p:column style="text-align: center; width: 70px;" priority="4">
-
-                                                        <f:facet name="header"><h:outputText value="Tipo de Archivo"/></f:facet>
-                                                        <p:lightBox>
+                                                    <p:column style="text-align: center; width: 20%;">
+                                                        <f:facet name="header"><h:outputText value="Tipo"/></f:facet>
+                                                        <h:outputText value="#{row.ntipoarchivo}">
+                                                            <f:converter converterId="converterMaestro"/>
+                                                        </h:outputText>
+                                                    </p:column>
+                                                    <p:column style="text-align: center; width: 30%;">
+                                                        <f:facet name="header"><h:outputText value="Ruta"/></f:facet>
+                                                        <h:outputText value="#{row.vruta}"/>
+                                                    </p:column>
+                                                    <p:column style="text-align: center; width: 10%;">
+                                                        <f:facet name="header"><h:outputText value="Archivo"/></f:facet>
+                                                        <p:lightBox rendered="#{row.ntipoarchivo eq msgs.tipoDocumento and row.vcontenttype eq msgs.contentTypePdf}">
                                                             <h:outputLink value="#">
-                                                                <h:panelGrid columns="1">
-                                                                    <p:graphicImage library="images" name="pdf.png"/>
-                                                                </h:panelGrid>
+                                                                <p:graphicImage library="images" name="pdf.png" title="visualizar pdf"/>
                                                             </h:outputLink>
                                                             <f:facet name="inline">
                                                                 <p:media player="pdf" cache="false" value="#{contenidoMB.pdf}" width="#{msgs.pdfwidth}" height="#{msgs.pdfheight}">
@@ -80,6 +87,89 @@
                                                                 </p:media>
                                                             </f:facet>
                                                         </p:lightBox>
+                                                        <h:panelGroup rendered="#{(row.ntipoarchivo eq msgs.tipoDocumento) and (row.vcontenttype ne msgs.contentTypePdf)}">
+                                                            <p:commandLink ajax="false" >
+                                                                <p:fileDownload value="#{row.content}" />
+                                                                <p:graphicImage library="images" name="word.png" title="descargar word" rendered="#{(row.vcontenttype eq msgs.contentTypeWord) or (row.vcontenttype eq msgs.contentTypeWordx)}"/>
+                                                                <p:graphicImage library="images" name="excel.png" title="descargar excel" rendered="#{(row.vcontenttype eq msgs.contentTypeExcel) or (row.vcontenttype eq msgs.contentTypeExcelx)}"/>
+                                                                <p:graphicImage library="images" name="ppt.png" title="descargar power point" rendered="#{(row.vcontenttype eq msgs.contentTypePowerPoint) or (row.vcontenttype eq msgs.contentTypePowerPointx)}"/>
+                                                            </p:commandLink>
+                                                        </h:panelGroup>
+                                                        <h:panelGroup rendered="#{row.ntipoarchivo eq msgs.tipoVideo}">
+                                                            <p:commandLink ajax="false" >
+                                                                <p:fileDownload value="#{row.content}" />
+                                                                <p:graphicImage library="images" name="video.png" title="ver video"/>
+                                                            </p:commandLink>
+                                                        </h:panelGroup>
+                                                        
+                                                        <h:panelGroup rendered="#{row.ntipoarchivo eq msgs.tipoImagen}">
+                                                            <p:graphicImage id="img1" library="images" name="File-Extension-Jpg.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeJpg}"/>
+                                                            <p:overlayPanel id="imgPanel1" for="img1" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                                            hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                                                <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
+                                                                    <f:param name="ruta" value="#{row.vruta}"/>
+                                                                    <f:param name="type" value="#{row.vcontenttype}"/>
+                                                                </p:graphicImage>
+                                                            </p:overlayPanel>
+                                                            <p:graphicImage id="img2" library="images" name="File-Extension-Png.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypePng}"/>
+                                                            <p:overlayPanel id="imgPanel2" for="img2" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                                            hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                                                <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
+                                                                    <f:param name="ruta" value="#{row.vruta}"/>
+                                                                    <f:param name="type" value="#{row.vcontenttype}"/>
+                                                                </p:graphicImage>
+                                                            </p:overlayPanel>
+                                                            <p:graphicImage id="img3" library="images" name="File-Extension-Tif.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeTiff}"/>
+                                                            <p:overlayPanel id="imgPanel3" for="img3" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                                            hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                                                <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
+                                                                    <f:param name="ruta" value="#{row.vruta}"/>
+                                                                    <f:param name="type" value="#{row.vcontenttype}"/>
+                                                                </p:graphicImage>
+                                                            </p:overlayPanel>
+                                                            <p:graphicImage id="img4" library="images" name="File-Extension-Bmp.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeBmp}"/>
+                                                            <p:overlayPanel id="imgPanel4" for="img4" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                                            hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                                                <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
+                                                                    <f:param name="ruta" value="#{row.vruta}"/>
+                                                                    <f:param name="type" value="#{row.vcontenttype}"/>
+                                                                </p:graphicImage>
+                                                            </p:overlayPanel>
+                                                            <p:graphicImage id="img5" library="images" name="File-Extension-Gif.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeGif}"/>
+                                                            <p:overlayPanel id="imgPanel5" for="img5" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                                            hideEvent="mousedown" dismissable="false" showCloseIcon="true">
+                                                                <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
+                                                                    <f:param name="ruta" value="#{row.vruta}"/>
+                                                                    <f:param name="type" value="#{row.vcontenttype}"/>
+                                                                </p:graphicImage>
+                                                            </p:overlayPanel>
+                                                        </h:panelGroup>
+                                                        
+                                                        <h:panelGroup rendered="#{row.ntipoarchivo eq msgs.tipoArchivo}">
+                                                            <p:commandLink ajax="false" >
+                                                                <p:fileDownload value="#{row.content}" />
+                                                                <p:graphicImage library="images" name="File-Extension-Txt.png" title="visualizar archivo" width="24" height="24"/>
+                                                            </p:commandLink>
+                                                        </h:panelGroup>
+                                                        
+                                                        <p:lightBox iframe="true" rendered="#{row.ntipoarchivo eq msgs.tipoLink}">
+                                                            <h:outputLink value="#{row.vruta}">
+                                                                <p:graphicImage library="images" name="File-Extension-Lnk.png" title="visualizar pdf"/>
+                                                            </h:outputLink>
+                                                        </p:lightBox>
+                                                        
+                                                        <h:panelGroup rendered="#{row.ntipoarchivo eq msgs.tipoOtro}">
+                                                            <p:commandLink ajax="false" >
+                                                                <p:fileDownload value="#{row.content}" />
+                                                                <p:graphicImage library="images" name="File-Extension-Txt.png" title="visualizar archivo" width="24" height="24"/>
+                                                            </p:commandLink>
+                                                        </h:panelGroup>
+                                                    </p:column>
+                                                    <p:column style="text-align: center; width: 10%;">
+                                                        <p:commandLink actionListener="#{contenidoMB.setSelectedFile}" title="eliminar archivo" styleClass="GesconLink" oncomplete="PF('confirmDlg').show();">
+                                                            <h:outputText class="fa fa-close Fs16" />
+                                                            <f:param name="index" value="#{rowIndex}" />
+                                                        </p:commandLink>
                                                     </p:column>
                                                 </p:dataTable>
                                             </p:tab>
@@ -251,23 +341,116 @@
                         <p:dialog id="tpoconDlg" header="Agregar Contenidos" widgetVar="tpoconDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="tpoconDialogForm">
                                 <p:messages id="msgs" showSummary="true" showDetail="true" />
-                                <h:panelGrid id="pgTpoCon" columns="2" cellpadding="5" style="text-align: left;width: 100%">
-                                    <h:outputLabel value="Tipos de contenido"/>
-                                    <p:spacer/>
-                                    <p:selectOneRadio id="console" layout="grid" columns="1">
-                                        <f:selectItem itemLabel="Boletin" itemValue="0" />
-                                        <f:selectItem itemLabel="Blog" itemValue="1" />
-                                        <f:selectItem itemLabel="Manual" itemValue="2" />
-                                        <f:selectItem itemLabel="Video Tutorial" itemValue="3" />
-                                        <f:selectItem itemLabel="Articulo" itemValue="4" />
-                                        <f:selectItem itemLabel="Libro" itemValue="5" />
-                                        <f:selectItem itemLabel="Otros" itemValue="6" />
-                                    </p:selectOneRadio>
-                                    <p:spacer/>
-                                    <p:fileUpload value="#{contenidoMB.uploadFile}" skinSimple="true" update=":f:pgNewVinc1" fileUploadListener="#{contenidoMB.handleUploadFile}" 
-                                                  multiple="true" cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
+                                <h:panelGrid id="pgTpoCon" columns="1">
+                                    <h:outputText value="Tipo de Contenido:" styleClass="Fs14 FontBold"/>
+                                    <p:outputPanel id="customPanel" style="margin-bottom:10px">
+                                        <p:selectOneRadio value="#{contenidoMB.tipoContenido}" id="customRadio" layout="custom">
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo1}" itemValue="5" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo2}" itemValue="6" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo3}" itemValue="7" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo4}" itemValue="8" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo5}" itemValue="9" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo6}" itemValue="10" />
+                                            <f:selectItem itemLabel="#{msgs.ct_lbl_tipoArchivo7}" itemValue="11" />
+                                        </p:selectOneRadio>
 
-                                    <p:commandButton  value="Cancelar" actionListener="#{contenidoMB.toCancel}" update=":f:growl"/>
+                                        <h:panelGrid columns="2">
+                                            <p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt1" value="#{msgs.ct_lbl_tipoArchivo1}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoDocumentos}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt2" value="#{msgs.ct_lbl_tipoArchivo2}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoVideos}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt3" for="customRadio" itemIndex="2" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt3" value="#{msgs.ct_lbl_tipoArchivo3}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoAudios}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt4" for="customRadio" itemIndex="3" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt4" value="#{msgs.ct_lbl_tipoArchivo4}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoImagenes}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt5" for="customRadio" itemIndex="4" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt5" value="#{msgs.ct_lbl_tipoArchivo5}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoArchivos}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt6" for="customRadio" itemIndex="5" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt6" value="#{msgs.ct_lbl_tipoArchivo6}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoLinks}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+
+                                            <p:radioButton id="opt7" for="customRadio" itemIndex="6" />
+                                            <h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+                                                <h:panelGroup>
+                                                    <h:outputText class="fa fa-angle-double-right Fs10 FontBold"/>
+                                                    <h:outputLabel for="opt7" value="#{msgs.ct_lbl_tipoArchivo7}" styleClass="Fs14 FontBold"/>
+                                                </h:panelGroup>
+                                                <h:panelGroup>
+                                                    <p:spacer width="20" height="5"/>
+                                                    <h:outputText value="Ejemplo: #{contenidoMB.tipoOtros}" styleClass="Fs12" style="font-style: italic;"/>
+                                                </h:panelGroup>
+                                            </h:panelGrid>
+                                        </h:panelGrid>
+                                    </p:outputPanel>
+                                    <h:outputText value="Archivo:" styleClass="Fs14 FontBold"/>
+                                    <h:panelGrid id="pgFu" columns="1" cellspacing="0" cellpadding="0">
+                                        <p:fileUpload value="#{contenidoMB.uploadFile}" skinSimple="true" update=":tpoconDialogForm:pgFu" fileUploadListener="#{contenidoMB.handleUploadFile}" 
+                                                      multiple="true" cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..." />
+                                        <h:outputText id="fileName" value="#{contenidoMB.uploadFile.fileName}" rendered="#{contenidoMB.uploadFile ne null}"/>
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                        <p:commandButton  value="Adjuntar" actionListener="#{contenidoMB.adjuntar}" oncomplete="PF('tpoconDialog').hide();" update=":f:pgNewVinc1, :f:growl"/>
+                                        <p:commandButton  value="Cancelar" onclick="PF('tpoconDialog').hide();"/>
+                                    </h:panelGrid>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
@@ -365,6 +548,13 @@
                             <h:form id="confirmDelDlgForm">
                                 <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{contenidoMB.deleteOutstanding}"/>
                                 <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.ct_msg_eliarchivo}" header="#{msgs.ct_lbl_pnlEliArchivo}" widgetVar="confirmDlg" style="font-size: 10px;">
+                            <h:form id="confirmDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDlg').hide()" update=":f:pgNewVinc1, :f:growl" actionListener="#{contenidoMB.deleteFile()}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDlg').hide()" type="button" />
                             </h:form>
                         </p:confirmDialog>
                     </f:view>

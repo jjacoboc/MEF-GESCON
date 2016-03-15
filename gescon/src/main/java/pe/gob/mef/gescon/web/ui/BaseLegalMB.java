@@ -560,7 +560,7 @@ public class BaseLegalMB implements Serializable {
     public void init() {
         try {
             ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
-            this.temppath = bundle.getString("pdftemppath");
+            this.temppath = bundle.getString("temppath");
             this.path = bundle.getString("pdfpath");
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaBaseLegal(service.getBaselegales());
@@ -672,21 +672,22 @@ public class BaseLegalMB implements Serializable {
             if (event != null) {
                 UploadedFile f = event.getFile();
                 if (f != null) {
-//                    String contentType = f.getContentType();
-//                    if(Constante.FILE_CONTENT_TYPE_XLS.equals(contentType)
-//                            || Constante.FILE_CONTENT_TYPE_XLSX.equals(contentType)) {
-                    this.setUploadFile(f);
-                    File direc = new File(this.temppath);
-                    direc.mkdirs();
-                    this.setFile(new File(this.temppath, f.getFileName()));
-                    FileOutputStream fileOutStream = new FileOutputStream(this.getFile());
-                    fileOutStream.write(f.getContents());
-                    fileOutStream.flush();
-                    fileOutStream.close();
-                    this.setContent(new DefaultStreamedContent(f.getInputstream(), "application/pdf", f.getFileName()));
-//                    } else {
-//                        this.setFile(null);
-//                    }
+                    String contentType = f.getContentType();
+                    if(Constante.FILE_CONTENT_TYPE_PDF.equals(contentType)) {
+                        this.setUploadFile(f);
+                        File direc = new File(this.temppath);
+                        direc.mkdirs();
+                        this.setFile(new File(this.temppath, f.getFileName()));
+                        FileOutputStream fileOutStream = new FileOutputStream(this.getFile());
+                        fileOutStream.write(f.getContents());
+                        fileOutStream.flush();
+                        fileOutStream.close();
+                        this.setContent(new DefaultStreamedContent(f.getInputstream(), contentType, f.getFileName()));
+                    } else {
+                        this.setFile(null);
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "El archivo debe de ser un PDF.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -822,6 +823,51 @@ public class BaseLegalMB implements Serializable {
             if (CollectionUtils.isEmpty(this.getListaBaseLegal())) {
                 this.setListaBaseLegal(new ArrayList());
             }
+            if (this.getSelectedCategoria() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getTiporangoId() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de rango de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getRangoId() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de rango de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getTipoNorma())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el tipo de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getNumeroNorma())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el número de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSumilla())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la sumilla de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getUploadFile() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe cargar el archivo PDF de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getFechaVigencia() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la fecha de publicación en el diario \"EL PERUANO\".");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (!this.getChkGobNacional() && !this.getChkGobRegional()&& !this.getChkGobLocal()&& !this.getChkMancomunidades()) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione al menos un ámbito para la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }            
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -860,7 +906,8 @@ public class BaseLegalMB implements Serializable {
             service.saveOrUpdate(base);
 
             String ruta0 = this.pathBL + base.getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
-            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", base.getVnombre());
+            String txt0 = base.getVnombre();
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", txt0);
 
             BaseLegalHistorialService serviceHistorial = (BaseLegalHistorialService) ServiceFinder.findBean("BaseLegalHistorialService");
             BaselegalHist baseHist = new BaselegalHist();
@@ -887,7 +934,8 @@ public class BaseLegalMB implements Serializable {
             serviceHistorial.saveOrUpdate(baseHist);
 
             String ruta1 = this.pathBL + base.getNbaselegalid().toString() + "\\" + BigDecimal.ONE.toString() + "\\";
-            GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", baseHist.getVnombre());
+            String txt1 = baseHist.getVnombre();
+            GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", txt1);
 
             Tbaselegal tbaselegal = new Tbaselegal();
             BeanUtils.copyProperties(tbaselegal, base);
@@ -1151,6 +1199,8 @@ public class BaseLegalMB implements Serializable {
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
             this.setFilteredListaBaseLegal(new ArrayList());
+            this.setUploadFile(null);
+            this.setFile(null);
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -1160,6 +1210,51 @@ public class BaseLegalMB implements Serializable {
 
     public void edit(ActionEvent event) {
         try {
+            if (this.getSelectedCategoria() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getSelectedBaseLegal().getNtiporangoid() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de rango de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getSelectedBaseLegal().getNrangoid() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de rango de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getTipoNorma())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el tipo de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getNumeroNorma())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el número de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSelectedBaseLegal().getVnombre())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la sumilla de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getUploadFile() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe cargar el archivo PDF de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getSelectedBaseLegal().getDfechavigencia() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la fecha de publicación en el diario \"EL PERUANO\".");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (!this.getChkGobNacional() && !this.getChkGobRegional()&& !this.getChkGobLocal()&& !this.getChkMancomunidades()) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione al menos un ámbito para la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -1228,9 +1323,11 @@ public class BaseLegalMB implements Serializable {
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
 
             String ruta0 = this.pathBL + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
-            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", this.getSelectedBaseLegal().getVnombre());
+            String txt0 = this.getSelectedBaseLegal().getVnombre();
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", txt0);
             String ruta1 = this.pathBL + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
-            GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", baseHist.getVnombre());
+            String txt1 = baseHist.getVnombre();
+            GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", txt1);
 
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
             Archivo archivo = aservice.getArchivoByBaseLegal(this.getSelectedBaseLegal());
@@ -1467,6 +1564,51 @@ public class BaseLegalMB implements Serializable {
 
     public void post(ActionEvent event) {
         try {
+            if (this.getSelectedCategoria() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getSelectedBaseLegal().getNtiporangoid() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de rango de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getSelectedBaseLegal().getNrangoid() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de rango de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getTipoNorma())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el tipo de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getNumeroNorma())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el número de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSelectedBaseLegal().getVnombre())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la sumilla de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getUploadFile() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe cargar el archivo PDF de la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (this.getSelectedBaseLegal().getDfechavigencia() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la fecha de publicación en el diario \"EL PERUANO\".");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (!this.getChkGobNacional() && !this.getChkGobRegional()&& !this.getChkGobLocal()&& !this.getChkMancomunidades()) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione al menos un ámbito para la base legal a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -1538,9 +1680,11 @@ public class BaseLegalMB implements Serializable {
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
 
             String ruta0 = this.pathBL + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
-            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", this.getSelectedBaseLegal().getVnombre());
+            String txt0 = this.getSelectedBaseLegal().getVnombre();
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", txt0);
             String ruta1 = this.pathBL + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
-            GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", baseHist.getVnombre());
+            String txt1 = baseHist.getVnombre();
+            GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", txt1);
 
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
             Archivo archivo = aservice.getArchivoByBaseLegal(this.getSelectedBaseLegal());
@@ -1883,12 +2027,12 @@ public class BaseLegalMB implements Serializable {
     public void addCalificacion(ActionEvent event) {
         try {
             if (this.getCalificacion() == null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion al wiki.");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion a la base legal.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
             if (StringUtils.isBlank(this.getComentarioCalificacion())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario al wiki.");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario a la base legal.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
@@ -1932,12 +2076,12 @@ public class BaseLegalMB implements Serializable {
     public void editCalificacion(ActionEvent event) {
         try {
             if (this.getSelectedCalificacion().getNcalificacion() == null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion al wiki.");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la calificacion a la base legal.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
             if (StringUtils.isBlank(this.getSelectedCalificacion().getVcomentario())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario al wiki.");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese un comentario a la base legal.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }

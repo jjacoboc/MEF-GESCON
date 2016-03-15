@@ -25,24 +25,84 @@
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Administración de Categorías">
-                                <h:panelGrid columns="1">
-                                    <h:outputText value="Categorias:" styleClass="Underline FontBold"/>
-                                    <p:tree id="cats" value="#{categoriaMB.tree}" var="node" animate="true" cache="true" highlight="true"
-                                            selectionMode="single" selection="#{categoriaMB.selectedNode}" style="width: 100%;border: 0;">
-                                        <p:ajax event="select" listener="#{categoriaMB.onNodeSelect}" update=":f:ctx" />
-                                        <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
-                                            <h:outputText id="nod" value="#{node.vnombre}" rendered="#{node.nestado eq 1}"/>
-                                            <h:outputText value="#{node.vnombre}" style="text-decoration: line-through;" rendered="#{node.nestado eq 0}"/>
-                                            <pe:tooltip for="nod" value="#{node.vdescripcion}" showEffect="fadeIn" hideEffect="fadeIn" myPosition="left center" atPosition="right center" />
-                                        </p:treeNode>
-                                    </p:tree>
-                                    <p:contextMenu id="ctx" for="cats" style="font-size: 10px; width: 200px;">
-                                        <p:menuitem value="Agregar Categoría" actionListener="#{categoriaMB.toSave}"  oncomplete="PF('newDialog').show();" update=":newDialogForm:pgNew" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}"  icon="fa fa-plus" />
-                                        <p:menuitem value="Editar Categoría" actionListener="#{categoriaMB.toUpdate}" oncomplete="PF('editDialog').show();" update=":editDialogForm:pgEdit" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" icon="fa fa-edit" />
-                                        <p:menuitem value="Activar Categoría" oncomplete="PF('confirmActDlg').show();" rendered="#{categoriaMB.selectedCategoria.nestado eq 0}" icon="fa fa-check"/>
-                                        <p:menuitem value="Desactivar Categoría" oncomplete="PF('confirmDesDlg').show();" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" icon="fa fa-close"/>
-                                    </p:contextMenu>
-                                </h:panelGrid>
+                                <p:tabView id="tabview">
+                                    <p:tab title="Árbol">
+                                        <h:panelGrid columns="1">
+                                            <h:outputText value="Categorias:" styleClass="Underline FontBold"/>
+                                            <p:tree id="cats" value="#{categoriaMB.tree}" var="node" animate="true" cache="true" highlight="true"
+                                                    selectionMode="single" selection="#{categoriaMB.selectedNode}" style="width: 100%;border: 0;">
+                                                <p:ajax event="select" listener="#{categoriaMB.onNodeSelect}" update=":f:tabview:ctx" />
+                                                <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
+                                                    <h:outputText id="nod" value="#{node.vnombre}" rendered="#{node.nestado eq 1}"/>
+                                                    <h:outputText value="#{node.vnombre}" style="text-decoration: line-through;" rendered="#{node.nestado eq 0}"/>
+                                                    <pe:tooltip for="nod" value="#{node.vdescripcion}" showEffect="fadeIn" hideEffect="fadeIn" myPosition="left center" atPosition="right center" />
+                                                </p:treeNode>
+                                            </p:tree>
+                                            <p:contextMenu id="ctx" for="cats" style="font-size: 10px; width: 200px;">
+                                                <p:menuitem value="Agregar Categoría" actionListener="#{categoriaMB.toSave}"  oncomplete="PF('newDialog').show();" update=":newDialogForm:pgNew" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}"  icon="fa fa-plus" />
+                                                <p:menuitem value="Editar Categoría" actionListener="#{categoriaMB.toUpdate}" oncomplete="PF('editDialog').show();" update=":editDialogForm:pgEdit" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" icon="fa fa-edit" />
+                                                <p:menuitem value="Activar Categoría" oncomplete="PF('confirmActDlg').show();" rendered="#{categoriaMB.selectedCategoria.nestado eq 0}" icon="fa fa-check"/>
+                                                <p:menuitem value="Desactivar Categoría" oncomplete="PF('confirmDesDlg').show();" rendered="#{categoriaMB.selectedCategoria.nestado eq 1}" icon="fa fa-close"/>
+                                            </p:contextMenu>
+                                        </h:panelGrid>
+                                    </p:tab>
+                                    <p:tab title="Tabla">
+                                        <p:treeTable value="#{categoriaMB.tree}" var="cat" >
+                                            <p:column headerText="NOMBRE" style="width: 24%;">
+                                                <h:outputLink id="nom" value="#" styleClass="Unselectable GesconLink">
+                                                    <h:outputText value="#{cat.vnombre}" styleClass="Fs12" />
+                                                </h:outputLink>
+                                                <pe:tooltip for="nom" value="#{cat.vdescripcion}" showEffect="fadeIn" hideEffect="fadeIn" myPosition="left center" atPosition="right center" />
+                                            </p:column>
+                                            <p:column headerText="ESPECIALISTA" style="width: 20%;">
+                                                <h:outputText value="#{cat.nespecialista}" styleClass="Fs12">
+                                                    <f:converter converterId="converterUser"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="MODERADOR" style="width: 20%;">
+                                                <h:outputText value="#{cat.nmoderador}" styleClass="Fs12">
+                                                    <f:converter converterId="converterUser"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="WK" style="text-align: center; width: 5%;">
+                                                <h:outputText value="#{cat.nflagwiki}" styleClass="Fs12">
+                                                    <f:converter converterId="converterSiNo"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="BL" style="text-align: center; width: 5%;">
+                                                <h:outputText value="#{cat.nflagbl}" styleClass="Fs12">
+                                                    <f:converter converterId="converterSiNo"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="PR" style="text-align: center; width: 5%;">
+                                                <h:outputText value="#{cat.nflagpr}" styleClass="Fs12">
+                                                    <f:converter converterId="converterSiNo"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="CT" style="text-align: center; width: 5%;">
+                                                <h:outputText value="#{cat.nflagct}" styleClass="Fs12">
+                                                    <f:converter converterId="converterSiNo"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="BP" style="text-align: center; width: 5%;">
+                                                <h:outputText value="#{cat.nflagbp}" styleClass="Fs12">
+                                                    <f:converter converterId="converterSiNo"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="OM" style="text-align: center; width: 5%;">
+                                                <h:outputText value="#{cat.nflagom}" styleClass="Fs12">
+                                                    <f:converter converterId="converterSiNo"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="ACTIVO" style="text-align: center; width: 6%;">
+                                                <h:outputText value="#{cat.nestado}" styleClass="Fs12">
+                                                    <f:converter converterId="converterSiNo"/>
+                                                </h:outputText>
+                                            </p:column>
+                                        </p:treeTable>
+                                    </p:tab>
+                                </p:tabView>
+
                             </p:panel>
                         </h:form>
 
@@ -107,7 +167,7 @@
                                         <h:outputText value="Nota: La imagen debe tener un tamaño no mayor a 20KB y una dimensión de 32x32." styleClass="Fs10"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
-                                <p:commandButton value="Registrar" actionListener="#{categoriaMB.save}" update=":f:growl, :f:cats"/>
+                                <p:commandButton value="Registrar" actionListener="#{categoriaMB.save}" update=":f:growl, :f:tabview:cats"/>
                             </h:form>
                         </p:dialog>
 
@@ -125,21 +185,21 @@
                                                          counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
-                                    
-                                    <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
-                                    <h:outputText value="Moderador:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
+
+                                    <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}"/>
+                                    <h:outputText value="Moderador:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}"/>
                                     <p:selectOneMenu value="#{categoriaMB.moderador}" panelStyle="width:180px" effect="fade" 
                                                      style="width:160px" filter="true" filterMatchMode="startsWith"
-                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
+                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}">
                                         <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                         <f:selectItems value="#{categoriaMB.listaModerador}" />
                                     </p:selectOneMenu>
 
-                                    <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
-                                    <h:outputText value="Especialista:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
+                                    <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}"/>
+                                    <h:outputText value="Especialista:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}"/>
                                     <p:selectOneMenu value="#{categoriaMB.especialista}" panelStyle="width:180px" effect="fade" 
                                                      style="width:160px" filter="true" filterMatchMode="startsWith"
-                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
+                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}">
                                         <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                         <f:selectItems value="#{categoriaMB.listaEspecialista}" />
                                     </p:selectOneMenu>
@@ -172,20 +232,20 @@
                                         <h:outputText value="Nota: La imagen debe tener un tamaño no mayor a 100KB y una dimensión de 128x128." styleClass="Fs10"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
-                                <p:commandButton value="Actualizar" actionListener="#{categoriaMB.update}" update=":f:growl, :f:cats"/>
+                                <p:commandButton value="Actualizar" actionListener="#{categoriaMB.update}" update=":f:growl, :f:tabview:cats"/>
                             </h:form>
                         </p:dialog>
 
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a activar la categoría. Desea Continuar?" header="ACTIVAR CATEGORÍA" widgetVar="confirmActDlg" >
                             <h:form id="confirmActDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:cats, :f:growl" actionListener="#{categoriaMB.activar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" update=":f:tabview:cats, :f:growl" actionListener="#{categoriaMB.activar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>
 
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a desactivar la categoría. Desea Continuar?" header="DESACTIVAR CATEGORÍA" widgetVar="confirmDesDlg" >
                             <h:form id="confirmDesDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:cats, :f:growl" actionListener="#{categoriaMB.desactivar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmDesDlg').hide()" update=":f:tabview:cats, :f:growl" actionListener="#{categoriaMB.desactivar}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmDesDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>

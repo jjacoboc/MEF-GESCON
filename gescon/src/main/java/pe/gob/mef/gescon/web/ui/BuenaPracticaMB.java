@@ -1151,6 +1151,7 @@ public class BuenaPracticaMB implements Serializable{
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             Conocimiento conocimiento = new Conocimiento();
             conocimiento.setNtipoconocimientoid(Constante.BUENAPRACTICA);
             conocimiento.setNconocimientoid(conocimientoService.getNextPK());
@@ -1180,7 +1181,6 @@ public class BuenaPracticaMB implements Serializable{
             conocimiento.setVusuariocreacion(user.getVlogin());
             conocimientoService.saveOrUpdate(conocimiento);
 
-            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             GcmFileUtils.writeStringToFileServer(np0, "html.txt", this.getDescripcionHtml());
             GcmFileUtils.writeStringToFileServer(np0, "plain.txt", this.getDescripcionPlain());
 
@@ -1429,6 +1429,7 @@ public class BuenaPracticaMB implements Serializable{
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             this.getSelectedBuenaPractica().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedBuenaPractica().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBuenaPractica().setVtitulo(StringUtils.upperCase(this.getSelectedBuenaPractica().getVtitulo().trim()));
@@ -1446,7 +1447,6 @@ public class BuenaPracticaMB implements Serializable{
             this.getSelectedBuenaPractica().setVusuariomodificacion(user.getVlogin());
             conocimientoService.saveOrUpdate(this.getSelectedBuenaPractica());
 
-            this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             GcmFileUtils.writeStringToFileServer(this.getSelectedBuenaPractica().getVruta(), "html.txt", this.getDescripcionHtml());
             GcmFileUtils.writeStringToFileServer(this.getSelectedBuenaPractica().getVruta(), "plain.txt", this.getDescripcionPlain());
 
@@ -1671,7 +1671,6 @@ public class BuenaPracticaMB implements Serializable{
             this.getSelectedBuenaPractica().setDfechamodificacion(new Date());
             this.getSelectedBuenaPractica().setVusuariomodificacion(user.getVlogin());
             conocimientoService.saveOrUpdate(this.getSelectedBuenaPractica());
-
             
             GcmFileUtils.writeStringToFileServer(this.getSelectedBuenaPractica().getVruta(), "html.txt", this.getDescripcionHtml());
             GcmFileUtils.writeStringToFileServer(this.getSelectedBuenaPractica().getVruta(), "plain.txt", this.getDescripcionPlain());

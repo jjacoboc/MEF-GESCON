@@ -14,6 +14,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
@@ -50,6 +51,13 @@ public class PerfilDaoImpl extends HibernateDaoSupport implements PerfilDao {
     @Override
     public List<Mtperfil> getMtperfils() throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtperfil.class);
+        return (List<Mtperfil>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
+    public List<Mtperfil> getMtperfilsActived() throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Mtperfil.class);
+        criteria.add(Restrictions.eq("nactivo", BigDecimal.ONE));
         return (List<Mtperfil>) getHibernateTemplate().findByCriteria(criteria);
     }
     

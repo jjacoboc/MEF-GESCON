@@ -126,6 +126,7 @@ public class ContenidoMB implements Serializable {
     private List<Consulta> listaSourceVinculosCT;
     private List<Consulta> listaTargetVinculosCT;
     private List<ArchivoConocimiento> listaArchivos;
+    private ArchivoConocimiento selectedArchivo;
     private Discusion selectedDiscusion;
     private List<DiscusionSeccion> listaDiscusionSeccion;
     private DiscusionSeccion selectedDiscusionSeccion;
@@ -602,6 +603,14 @@ public class ContenidoMB implements Serializable {
         this.listaArchivos = listaArchivos;
     }
 
+    public ArchivoConocimiento getSelectedArchivo() {
+        return selectedArchivo;
+    }
+
+    public void setSelectedArchivo(ArchivoConocimiento selectedArchivo) {
+        this.selectedArchivo = selectedArchivo;
+    }
+
     public Discusion getSelectedDiscusion() {
         return selectedDiscusion;
     }
@@ -1043,9 +1052,9 @@ public class ContenidoMB implements Serializable {
                 if (f != null) {
                     this.setUploadFile(f);
                     ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
-                    File direc = new File(bundle.getString("pdftemppath"));
+                    File direc = new File(bundle.getString("temppath"));
                     direc.mkdirs();
-                    this.setFile(new File(bundle.getString("pdftemppath"), f.getFileName()));
+                    this.setFile(new File(bundle.getString("temppath"), f.getFileName()));
                     FileOutputStream fileOutStream = new FileOutputStream(this.getFile());
                     fileOutStream.write(f.getContents());
                     fileOutStream.flush();
@@ -1069,7 +1078,7 @@ public class ContenidoMB implements Serializable {
                 
                 ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
                 String tipoVideo = bundle.getString("tipoVideo");
-                String pdftemppath = bundle.getString("pdftemppath");
+                String temppath = bundle.getString("temppath");
                 String filename = this.getUploadFile().getFileName();
                 String contentType = this.getUploadFile().getContentType();
                 
@@ -1077,10 +1086,10 @@ public class ContenidoMB implements Serializable {
 //                    String ffmpeg = bundle.getString("ffmpeg");
 //                    String filenameFLV = filename.substring(0, filename.lastIndexOf(".")).concat(".flv");
 //                    FLVConverter FLVConverter = new FLVConverter(ffmpeg);
-//                    FLVConverter.convert(pdftemppath + filename, pdftemppath + filenameFLV, 420, 315, 5);
+//                    FLVConverter.convert(temppath + filename, temppath + filenameFLV, 420, 315, 5);
 //                    filename = filenameFLV;
 //                    contentType = bundle.getString("contentTypeFlash");
-//                    inputStream = new FileInputStream(new File(pdftemppath + filenameFLV));
+//                    inputStream = new FileInputStream(new File(temppath + filenameFLV));
 //                }
                 
                 ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
@@ -1088,7 +1097,7 @@ public class ContenidoMB implements Serializable {
                 archivoconocimiento.setVnombre(filename);
                 archivoconocimiento.setNtipoarchivo(BigDecimal.valueOf(Long.parseLong(this.getTipoContenido())));
                 archivoconocimiento.setVcontenttype(contentType);
-                archivoconocimiento.setVruta(pdftemppath + filename);
+                archivoconocimiento.setVruta(temppath + filename);
                 archivoconocimiento.setFile(new File(archivoconocimiento.getVruta()));
                 archivoconocimiento.setContent(new DefaultStreamedContent(new FileInputStream(archivoconocimiento.getFile()), contentType, filename));
                 this.getListaArchivos().add(archivoconocimiento);
@@ -1169,6 +1178,7 @@ public class ContenidoMB implements Serializable {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             Conocimiento conocimiento = new Conocimiento();
             conocimiento.setNconocimientoid(service.getNextPK());
@@ -1200,7 +1210,6 @@ public class ContenidoMB implements Serializable {
             conocimiento.setNactivo(BigDecimal.ONE);
             service.saveOrUpdate(conocimiento);
 
-            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             GcmFileUtils.writeStringToFileServer(np0, "html.txt", this.getContenidoHtml());
             GcmFileUtils.writeStringToFileServer(np0, "plain.txt", this.getContenidoPlain());
 
@@ -1407,15 +1416,38 @@ public class ContenidoMB implements Serializable {
             if (direct.exists()) {
                 fileOutStream.write(FileUtils.readFileToByteArray(new File(bundle.getString("path") + "ct" + '/' + id + '/' + version_ant_i, archivoconocimiento.getVnombre())));
             } else {
-                fileOutStream.write(FileUtils.readFileToByteArray(new File(bundle.getString("pdftemppath"), archivoconocimiento.getVnombre())));
+                fileOutStream.write(FileUtils.readFileToByteArray(new File(bundle.getString("temppath"), archivoconocimiento.getVnombre())));
             }
             fileOutStream.flush();
             fileOutStream.close();
-            File temp = new File(bundle.getString("pdftemppath"), archivoconocimiento.getVnombre());
+            File temp = new File(bundle.getString("temppath"), archivoconocimiento.getVnombre());
             temp.delete();
-            //}
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             log.error(e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void deleteFile() {
+        try {
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+            File temp = new File(bundle.getString("temppath"), this.getSelectedArchivo().getVnombre());
+            if(temp.exists())   temp.delete();
+            if(this.getSelectedArchivo().getNconocimientoid() != null) {
+                String id = this.getSelectedArchivo().getNconocimientoid().toString();
+                File dir = new File(bundle.getString("path") + "ct" + '/' + id + "/0/" + this.getSelectedArchivo().getVnombre());
+                if(dir.exists())    dir.delete();
+            }
+            if(this.getSelectedArchivo().getNarchivoid() != null) {
+                ArchivoConocimientoService aservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
+                aservice.delete(this.getSelectedArchivo().getNarchivoid());
+            }
+            this.getListaArchivos().remove(this.getSelectedArchivo());
+        } catch(Exception e) {
+            e.getMessage();
             e.printStackTrace();
         }
     }
@@ -1568,6 +1600,7 @@ public class ContenidoMB implements Serializable {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
 
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");            
             this.getSelectedContenido().setVtitulo(this.getSelectedContenido().getVtitulo().trim());
             this.getSelectedContenido().setVdescripcion(this.getSelectedContenido().getVdescripcion().trim());
@@ -1587,7 +1620,6 @@ public class ContenidoMB implements Serializable {
             this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
             service.saveOrUpdate(this.getSelectedContenido());
 
-            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "html.txt", this.getContenidoHtml());
             GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "plain.txt", this.getContenidoPlain());
 
@@ -1753,6 +1785,7 @@ public class ContenidoMB implements Serializable {
             User user = loginMB.getUser();
 
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             this.getSelectedContenido().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedContenido().setVtitulo(this.getSelectedContenido().getVtitulo().trim());
             this.getSelectedContenido().setVdescripcion(this.getSelectedContenido().getVdescripcion().trim());
@@ -1773,7 +1806,6 @@ public class ContenidoMB implements Serializable {
             this.getSelectedContenido().setVusuariomodificacion(user.getVlogin());
             service.saveOrUpdate(this.getSelectedContenido());
 
-            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "html.txt", this.getContenidoHtml());
             GcmFileUtils.writeStringToFileServer(this.getSelectedContenido().getVruta(), "plain.txt", this.getContenidoPlain());
 
@@ -1923,6 +1955,18 @@ public class ContenidoMB implements Serializable {
 
                 this.setSelectedContenido(this.getListaContenido().get(index));
 
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void setSelectedFile(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                this.setSelectedArchivo(this.getListaArchivos().get(index));
             }
         } catch (Exception e) {
             log.error(e.getMessage());

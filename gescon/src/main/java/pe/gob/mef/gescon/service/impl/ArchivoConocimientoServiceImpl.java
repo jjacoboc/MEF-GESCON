@@ -11,17 +11,11 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.ArchivoConocimientoDao;
-import pe.gob.mef.gescon.hibernate.dao.ArchivoDao;
-import pe.gob.mef.gescon.hibernate.domain.Tarchivo;
 import pe.gob.mef.gescon.hibernate.domain.TarchivoConocimiento;
-import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 import pe.gob.mef.gescon.service.ArchivoConocimientoService;
-import pe.gob.mef.gescon.service.ArchivoService;
 import pe.gob.mef.gescon.util.ServiceFinder;
-import pe.gob.mef.gescon.web.bean.Archivo;
 import pe.gob.mef.gescon.web.bean.ArchivoConocimiento;
-import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 
 /**
@@ -73,6 +67,10 @@ public class ArchivoConocimientoServiceImpl implements ArchivoConocimientoServic
         archivoconocimientoDao.saveOrUpdate(tarchivoconocimiento);
     }
 
-    
+    @Override
+    public void delete(BigDecimal idarchivo) throws Exception {
+        ArchivoConocimientoDao archivoconocimientoDao = (ArchivoConocimientoDao) ServiceFinder.findBean("ArchivoConocimientoDao");
+        archivoconocimientoDao.delete(idarchivo);
+    }
     
 }

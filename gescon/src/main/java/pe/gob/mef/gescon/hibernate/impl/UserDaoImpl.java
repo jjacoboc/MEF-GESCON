@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.UserDao;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
+import pe.gob.mef.gescon.hibernate.domain.TuserPerfil;
 
 /**
  *
@@ -96,5 +97,34 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao{
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtuser.class);
         criteria.add(Restrictions.eq("nusuarioid", nusuarioid));
         return (Mtuser) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
+    }
+    
+    @Override
+    @Transactional(readOnly = false)
+    public void asignProfileToUser(TuserPerfil tuserPerfil) throws Exception {
+        getHibernateTemplate().saveOrUpdate(tuserPerfil);
+    }
+    
+    @Override
+    public TuserPerfil getPerfilByUser(BigDecimal idusuario) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(TuserPerfil.class);
+        criteria.add(Restrictions.eq("nusuarioid", idusuario));
+        return (TuserPerfil) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
+    }
+    
+    @Override
+    @Transactional(readOnly = false)
+    public void deletePerfilByUser(final BigDecimal idusuario) throws Exception {
+        getHibernateTemplate().execute(
+                new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws HibernateException {
+                        StringBuilder sql = new StringBuilder();
+                        sql.append("DELETE FROM TUSER_PERFIL WHERE NUSUARIOID = ");
+                        sql.append(idusuario.toString());
+                        Query query = session.createSQLQuery(sql.toString());
+                        return query.executeUpdate();
+                    }
+                });
     }
 }

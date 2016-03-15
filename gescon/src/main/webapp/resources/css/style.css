@@ -12,6 +12,14 @@ and open the template in the editor.
     background: #F2DEDE !important;
 }
 
+.semaforoRojo {
+    background: #D0525D !important;
+}
+
+.semaforoAmbar {
+    background: #F6A770 !important;
+}
+
 .ui-datalist {
     border: none;
 }

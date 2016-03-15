@@ -25,9 +25,10 @@
     <div id="layout-topbar" class="topbar-background">
         <div id="layout-topbar-indent">
             <h:form id="headerForm">
-                <p:notificationBar position="top" effect="slide" widgetVar="bar">
+                <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                <p:notificationBar id="notBar" position="top" effect="slide" widgetVar="bar">
                     <h:panelGrid columns="1" width="95%">
-                        <h:outputText value="#{msgs.notificacion}" styleClass="Fs16 white" />
+                        <h:outputText value="#{loginMB.notificacion}" styleClass="Fs16 white" />
                         <p:commandLink value="[X] Cerrar" onclick="PF('bar').hide()" styleClass="Fs12 Fright white" style="color: white !important;"/>
                     </h:panelGrid>
                 </p:notificationBar>
@@ -63,38 +64,40 @@
                                 <li class="Animated05"><p:commandLink actionListener="#{loginMB.logout}" oncomplete="logout();" styleClass="Unselectable BoxbarLink"><i class="fa fa-sign-out"/> Cerrar Sesión </p:commandLink></li>
                             </ul>
                         </li>
-                        <li class="fa fa-ellipsis-v menu-separator" style="color: white !important"></li>
-                        <li>
-                            <h:panelGroup rendered="#{loginMB.notificaciones gt 0}">
-                                <a class="Animated05 CursPointer TopbarLink"><i class="fa fa-bell animated swing infinite red"></i> <h:outputText value="Bandeja de Notificaciones" /> <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
-                            </h:panelGroup>
-                            <h:panelGroup rendered="#{loginMB.notificaciones eq 0}">
-                                <a class="Animated05 CursPointer TopbarLink"><i class="fa fa-bell"></i><h:outputText value="Bandeja de Notificaciones" /> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
-                            </h:panelGroup>
-                            <ul style="width:200px; margin-left:0px;" class="Animated03 submenu">
-                                <li>
-                                    <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadAssignedPanel}" oncomplete="PF('asgDialog').show();" update=":asgDialogForm:pgAsg">
-                                        <h:panelGroup rendered="#{loginMB.notificacionesAsignadas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
-                                        <h:panelGroup rendered="#{loginMB.notificacionesAsignadas gt 0}"><i class="fa fa-envelope Fs18 red animated infinite rubberBand"></i></h:panelGroup>
-                                        <span class="Fright Fs16 TexAlRight">Asignadas<span class="Fs10 DispBlock">#{loginMB.notificacionesAsignadas} por recibir</span></span>
-                                    </p:commandLink>
-                                </li>
-                                <li>
-                                    <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadReceivedPanel}" oncomplete="PF('rcbDialog').show();" update=":rcbDialogForm:pgRcb">
-                                        <h:panelGroup rendered="#{loginMB.notificacionesRecibidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
-                                        <h:panelGroup rendered="#{loginMB.notificacionesRecibidas gt 0}"><i class="fa fa-envelope Fs18 blue animated infinite rubberBand"></i></h:panelGroup>
-                                        <span class="Fright Fs16 TexAlRight">Recibidas<span class="Fs10 DispBlock">#{loginMB.notificacionesRecibidas} por atender</span></span>
-                                    </p:commandLink>
-                                </li>
-                                <li>
-                                    <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadServedPanel}" oncomplete="PF('srvDialog').show();" update=":srvDialogForm:pgSrv">
-                                        <h:panelGroup rendered="#{loginMB.notificacionesAtendidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
-                                        <h:panelGroup rendered="#{loginMB.notificacionesAtendidas gt 0}"><i class="fa fa-envelope Fs18 green"></i></h:panelGroup>
-                                        <span class="Fright Fs16 TexAlRight">Atendidas<span class="Fs10 DispBlock">#{loginMB.notificacionesAtendidas} atendidas</span></span>
-                                    </p:commandLink>
-                                </li>
-                            </ul>
-                        </li>                        
+                        <h:panelGroup rendered="#{loginMB.perfil ne null and loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
+                            <li class="fa fa-ellipsis-v menu-separator" style="color: white !important"></li>
+                            <li>
+                                <h:panelGroup rendered="#{loginMB.notificaciones gt 0}">
+                                    <a class="Animated05 CursPointer TopbarLink"><i class="fa fa-bell animated swing infinite red"></i><p:spacer width="5"/><h:outputText value="Bandeja de Notificaciones" /> <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                                </h:panelGroup>
+                                <h:panelGroup rendered="#{loginMB.notificaciones eq 0}">
+                                    <a class="Animated05 CursPointer TopbarLink"><i class="fa fa-bell"></i><p:spacer width="5"/><h:outputText value="Bandeja de Notificaciones" /> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                                </h:panelGroup>
+                                <ul style="width:200px; margin-left:0px;" class="Animated03 submenu">
+                                    <li>
+                                        <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadAssignedPanel}" oncomplete="PF('asgDialog').show();" update=":asgDialogForm:pgAsg">
+                                            <h:panelGroup rendered="#{loginMB.notificacionesAsignadas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
+                                            <h:panelGroup rendered="#{loginMB.notificacionesAsignadas gt 0}"><i class="fa fa-envelope Fs18 red animated infinite rubberBand"></i></h:panelGroup>
+                                            <span class="Fright Fs16 TexAlRight">Asignadas<span class="Fs10 DispBlock">#{loginMB.notificacionesAsignadas} por recibir</span></span>
+                                        </p:commandLink>
+                                    </li>
+                                    <li>
+                                        <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadReceivedPanel}" oncomplete="PF('rcbDialog').show();" update=":rcbDialogForm:pgRcb">
+                                            <h:panelGroup rendered="#{loginMB.notificacionesRecibidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
+                                            <h:panelGroup rendered="#{loginMB.notificacionesRecibidas gt 0}"><i class="fa fa-envelope Fs18 blue animated infinite rubberBand"></i></h:panelGroup>
+                                            <span class="Fright Fs16 TexAlRight">Recibidas<span class="Fs10 DispBlock">#{loginMB.notificacionesRecibidas} por atender</span></span>
+                                        </p:commandLink>
+                                    </li>
+                                    <li>
+                                        <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadServedPanel}" oncomplete="PF('srvDialog').show();" update=":srvDialogForm:pgSrv">
+                                            <h:panelGroup rendered="#{loginMB.notificacionesAtendidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
+                                            <h:panelGroup rendered="#{loginMB.notificacionesAtendidas gt 0}"><i class="fa fa-envelope Fs18 green"></i></h:panelGroup>
+                                            <span class="Fright Fs16 TexAlRight">Atendidas<span class="Fs10 DispBlock">#{loginMB.notificacionesAtendidas} atendidas</span></span>
+                                        </p:commandLink>
+                                    </li>
+                                </ul>
+                            </li>
+                        </h:panelGroup>
                     </h:panelGroup>
                     <h:panelGroup rendered="#{loginMB.user eq null}">
                         <li class="Animated05"><p:link href="#" onclick="PF('iniDialog').show();" styleClass="TopbarLink" ><i class="fa fa-sign-in"/> Iniciar Sesión</p:link></li>
@@ -103,23 +106,23 @@
                     </h:panelGroup>
                 </ul>
             </h:form>
-            
+
             <p:dialog id="claDlg" header="Cambio de Contraseña" widgetVar="claDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="false" >
                 <h:form id="claDialogForm">
                     <h:panelGrid id="pgCla" columns="2" >
                         <h:outputText value="Contraseña Actual:" class="FontBold"/>
                         <p:password value="#{loginMB.pass}" size="25" styleClass="Fs14"/>
-                        
+
                         <h:outputText value="Nueva Contraseña:" class="FontBold"/>
                         <p:password value="#{loginMB.newpass}" size="25" feedback="true" promptLabel="Por favor, ingrese una contraseña" 
                                     goodLabel="Bien" strongLabel="Fuerte" weakLabel="Débil" styleClass="Fs14"/>
-                        
+
                         <h:outputText value="Confirmar Nueva Contraseña:" class="FontBold"/>
                         <p:password value="#{loginMB.confirmpass}" size="25" styleClass="Fs14"/>
                     </h:panelGrid>
                     <h:panelGrid id="pgBtnsCla" columns="2" >
-                        <p:commandButton value="Cambiar Contraseña" actionListener="#{loginMB.updatePassword}" oncomplete="logout();" styleClass="Fs14 FontBold"/>
-                        <p:commandButton value="Cancelar" onclick="PF('claDialog').hide()" styleClass="Fs14 FontBold" rendered="#{!loginMB.claveCaducada}"/>
+                        <p:commandButton value="Cambiar Contraseña" actionListener="#{loginMB.updatePassword}" update=":headerForm:growl" styleClass="Fs14 FontBold"/>
+                        <p:commandButton value="Cancelar" onclick="PF('claDialog').hide()" styleClass="Fs14 FontBold" rendered="#{!loginMB.claveCaducada and !loginMB.claveDefault}"/>
                     </h:panelGrid>
                 </h:form>
             </p:dialog>
@@ -129,7 +132,8 @@
                     <h:panelGrid id="pgAsg" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAsignadas}" filteredValue="#{loginMB.filteredListaNotificacionesAsignadas}" 
                                      var="row" paginator="true" rows="10" rowIndexVar="rowIndex" paginatorPosition="top" selectionMode="single" 
-                                     selection="#{loginMB.selectedNotification}" rowKey="#{row.idconocimiento}" emptyMessage="Ningún registro encontrado." >
+                                     selection="#{loginMB.selectedNotification}" rowKey="#{row.idconocimiento}" emptyMessage="Ningún registro encontrado." 
+                                     rowStyleClass="#{row.semaforo eq '1' ? 'semaforoAmbar' : row.semaforo eq '2' ? 'semaforoRojo' : null}">
                             <p:column style="width: 30%;" sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
                                 <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                 <h:outputText value="#{row.codigo}" title="#{row.nombre}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
@@ -171,7 +175,8 @@
                     <h:panelGrid id="pgRcb" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesRecibidas}" filteredValue="#{loginMB.filteredListaNotificacionesRecibidas}" 
                                      var="row" paginator="true" rows="10" rowIndexVar="rowIndex" paginatorPosition="top" selectionMode="single" 
-                                     selection="#{loginMB.selectedNotification}" rowKey="#{row.id}" emptyMessage="Ningún registro encontrado.">
+                                     selection="#{loginMB.selectedNotification}" rowKey="#{row.id}" emptyMessage="Ningún registro encontrado."
+                                     rowStyleClass="#{row.semaforo eq '1' ? 'semaforoAmbar' : row.semaforo eq '2' ? 'semaforoRojo' : null}">
                             <p:column style="width: 30%;" sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
                                 <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                 <h:outputText value="#{row.codigo}" title="#{row.nombre}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
@@ -241,16 +246,17 @@
                     </h:panelGrid>
                 </h:form>
             </p:dialog>
-            
+
             <p:dialog id="alertDlg" header="Bandeja de alerta" widgetVar="alertDialog" visible="#{loginMB.alertaFlag}"  modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" width="90%" >
                 <h:form id="alertDialogForm">
                     <h:panelGrid id="pgAlert" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAlerta}" filteredValue="#{loginMB.filteredListaNotificacionesAlerta}" 
                                      var="row" paginator="true" rows="10" rowIndexVar="rowIndex" paginatorPosition="top" selectionMode="single" 
-                                     selection="#{loginMB.selectedNotification}" rowKey="#{row.idconocimiento}" emptyMessage="Ningún registro encontrado.">
+                                     selection="#{loginMB.selectedNotification}" rowKey="#{row.idconocimiento}" emptyMessage="Ningún registro encontrado."
+                                     rowStyleClass="#{row.semaforo eq '1' ? 'semaforoAmbar' : row.semaforo eq '2' ? 'semaforoRojo' : null}">
                             <p:column style="width: 30%;" sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
                                 <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
-                                <h:outputText value="#{row.codigo} #{row.nombre}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
+                                <h:outputText value="#{row.codigo}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
                                 <h:outputText value="#{row.nombre}" styleClass="Fleft" rendered="#{empty row.codigo}"/>
                             </p:column>
                             <p:column style="width: 18%;" sortBy="#{row.tipoConocimiento}" filterBy="#{row.tipoConocimiento}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
@@ -294,11 +300,11 @@
                         <p:inputText value="#{loginMB.login}" size="25" maxlength="25" styleClass="Fs14"/>
                         <p:password value="#{loginMB.pass}" size="25" styleClass="Fs14"/>
                         <p:spacer/>
-                        <p:commandButton value="Iniciar Sesión" action="#{loginMB.ingresar}" update=":iniDialogForm:growl, :claDialogForm:pgBtnsCla" oncomplete="manejarLogin(xhr, status, args)" />
+                        <p:commandButton value="Iniciar Sesión" action="#{loginMB.ingresar}" update=":iniDialogForm:growl, :claDialogForm:pgBtnsCla, :headerForm:notBar" oncomplete="manejarLogin(xhr, status, args)" />
                         <p:spacer/>
                         <p:row>
                             <p:column>
-                                <h:outputText value="Aún no tienes cuenta? " styleClass="Fs14"/> <p:commandLink value="Regístrate" update=":regDialogForm:pgReg" oncomplete="PF('regDialog').show();" styleClass="GesconLink Fs14 FontBold"/>
+                                <h:outputText value="Aún no tienes cuenta? " styleClass="Fs14"/> <p:commandLink value="Regístrate" action="#{userMB.toSaveUser}" styleClass="GesconLink Fs14 FontBold"/>
                             </p:column>
                         </p:row>
                         <p:row>

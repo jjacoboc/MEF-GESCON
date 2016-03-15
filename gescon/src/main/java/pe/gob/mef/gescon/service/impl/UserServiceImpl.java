@@ -12,6 +12,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.UserDao;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
+import pe.gob.mef.gescon.hibernate.domain.TuserPerfil;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.User;
@@ -112,4 +113,22 @@ public class UserServiceImpl implements UserService{
          return user;
     }
     
+    @Override
+    public void asignProfileToUser(TuserPerfil userperfil) throws Exception {
+        UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
+        userDao.asignProfileToUser(userperfil);
+    }
+    
+    @Override
+    public BigDecimal getPerfilByUser(BigDecimal nusuarioid) throws Exception {
+        UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
+        TuserPerfil tuserPerfil = userDao.getPerfilByUser(nusuarioid);
+        return tuserPerfil.getNperfilid();
+    }
+    
+    @Override
+    public void deletePerfilByUser(BigDecimal idusuario) throws Exception {
+        UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
+        userDao.deletePerfilByUser(idusuario);
+    }
 }

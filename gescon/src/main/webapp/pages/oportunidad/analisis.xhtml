@@ -1,0 +1,244 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <f:view>
+                        <style>
+                            .ui-fieldset .ui-fieldset-legend {
+                                padding-top: 4px;
+                                padding-bottom:  4px;
+                                padding-left:  5px;
+                                padding-right:  5px;
+                                font-size: 14px;
+                            }
+                        </style>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="#{oportunidadMB.selectedOportunidad.vtitulo}" styleClass="TexAlLeft">
+                                <h:panelGrid id="pgView" columns="1" width="100%">
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.om_lbl_categoria}" styleClass="Fs12" style="font-style: italic;"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{oportunidadMB.selectedCategoria.vnombre}," styleClass="Fs12" style="font-style: italic;"/>
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="#{msgs.om_lbl_fecha}" styleClass="Fs12" style="font-style: italic;"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{oportunidadMB.selectedOportunidad.dfechapublicacion}" styleClass="Fs12" style="font-style: italic;">
+                                            <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                        </h:outputText>
+                                    </h:panelGroup>
+                                    
+                                    <p:spacer/>
+                                    <h:outputText value="#{oportunidadMB.selectedOportunidad.vdescripcion}" styleClass="Fs14"/>
+                                    <h:outputText value="#{oportunidadMB.contenidoHtml}" escape="false" styleClass="Fs14"/>
+                                    
+                                    <p:fieldset legend="Indice" toggleable="true" rendered="#{not empty oportunidadMB.listaSeccion}">
+                                        <table>
+                                            <ui:repeat value="#{oportunidadMB.listaSeccion}" var="s">
+                                                <tr><td><a href="#s#{s.norden}" class="GesconLink"><h:outputText value="#{s.norden}. #{s.vtitulo}" styleClass="Fs14"/></a></td></tr>
+                                            </ui:repeat>
+                                        </table>
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Secciones" toggleable="true" rendered="#{not empty oportunidadMB.listaSeccion}">
+                                        <table>
+                                            <ui:repeat value="#{oportunidadMB.listaSeccion}" var="s" varStatus="vs">
+                                                <tr id="s#{s.norden}">
+                                                    <td style="border-bottom: gray solid 1px;">
+                                                        <h:outputText value="Paso #{vs.index + 1}: #{s.vtitulo}" styleClass="Fs14 FontBold black"/>
+                                                    </td>
+                                                </tr>
+                                                <tr><td><h:outputText value="#{s.detalleHtml}" escape="false" styleClass="Fs14"/></td></tr>
+                                                <tr><td><p:spacer/></td></tr>
+                                            </ui:repeat>
+                                        </table>
+                                    </p:fieldset>
+
+                                    <p:fieldset legend="Vinculos Relacionados" toggleable="true">
+                                        <h:panelGrid id="pgViewVinc" columns="1" cellpadding="0" cellspacing="0" width="100%">
+                                            <p:tabView id="tabview">
+                                                <p:tab title="Bases Legales">
+                                                    <p:dataTable value="#{oportunidadMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
+                                                                 emptyMessage="Ninguna base legal vinculada." >
+                                                        <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                                            <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                                <h:outputText value="#{p.codigo}"/>
+                                                                <f:param name="id" value="#{p.idconocimiento}"/>
+                                                                <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                                <f:param name="popup" value="true"/>
+                                                                <f:param name="tempPopup" value="true"/>
+                                                            </h:commandLink>
+                                                        </p:column>
+                                                        <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                                            <h:outputText value="#{p.nombre}" />
+                                                        </p:column>
+                                                        <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                            <h:outputText value="#{p.categoria}" />
+                                                        </p:column>
+                                                        <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                            <h:outputText value="#{p.estado}" />
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                </p:tab>
+                                                <p:tab title="Contenidos">
+                                                    <p:dataTable value="#{oportunidadMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
+                                                                 emptyMessage="Ningún contenido vinculado." >
+                                                        <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                            <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                                <h:outputText value="#{p.nombre}"/>
+                                                                <f:param name="id" value="#{p.idconocimiento}"/>
+                                                                <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                                <f:param name="popup" value="true"/>
+                                                                <f:param name="tempPopup" value="true"/>
+                                                            </h:commandLink>
+                                                        </p:column>
+                                                        <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                            <h:outputText value="#{p.sumilla}"/>
+                                                        </p:column>
+                                                        <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                            <h:outputText value="#{p.categoria}" />
+                                                        </p:column>
+                                                        <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                            <h:outputText value="#{p.estado}" />
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                </p:tab>
+                                                <p:tab title="Buenas Prácticas">
+                                                    <p:dataTable value="#{oportunidadMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
+                                                                 emptyMessage="Ninguna buena práctica vinculada." >
+                                                        <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                            <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                                <h:outputText value="#{p.nombre}"/>
+                                                                <f:param name="id" value="#{p.idconocimiento}"/>
+                                                                <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                                <f:param name="popup" value="true"/>
+                                                                <f:param name="tempPopup" value="true"/>
+                                                            </h:commandLink>
+                                                        </p:column>
+                                                        <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                            <h:outputText value="#{p.sumilla}"/>
+                                                        </p:column>
+                                                        <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                            <h:outputText value="#{p.categoria}" />
+                                                        </p:column>
+                                                        <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                            <h:outputText value="#{p.estado}" />
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                </p:tab>
+                                                <p:tab title="Oportunidades de Mejora">
+                                                    <p:dataTable value="#{oportunidadMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
+                                                                 emptyMessage="Ninguna oportunidad de mejora vinculada." >
+                                                        <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                            <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                                <h:outputText value="#{p.nombre}"/>
+                                                                <f:param name="id" value="#{p.idconocimiento}"/>
+                                                                <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                                <f:param name="popup" value="true"/>
+                                                                <f:param name="tempPopup" value="true"/>
+                                                            </h:commandLink>
+                                                        </p:column>
+                                                        <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                            <h:outputText value="#{p.sumilla}"/>
+                                                        </p:column>
+                                                        <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                            <h:outputText value="#{p.categoria}" />
+                                                        </p:column>
+                                                        <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                            <h:outputText value="#{p.estado}" />
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                </p:tab>
+                                                <p:tab title="Wikis">
+                                                    <p:dataTable value="#{oportunidadMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
+                                                                 emptyMessage="Ningún wiki vinculado." >
+                                                        <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                            <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                                <h:outputText value="#{p.nombre}"/>
+                                                                <f:param name="id" value="#{p.idconocimiento}"/>
+                                                                <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                                <f:param name="popup" value="true"/>
+                                                                <f:param name="tempPopup" value="true"/>
+                                                            </h:commandLink>
+                                                        </p:column>
+                                                        <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                            <h:outputText value="#{p.sumilla}"/>
+                                                        </p:column>
+                                                        <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                            <h:outputText value="#{p.categoria}" />
+                                                        </p:column>
+                                                        <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                            <h:outputText value="#{p.estado}" />
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                </p:tab>
+                                                <p:tab title="Preguntas">
+                                                    <p:dataTable value="#{oportunidadMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
+                                                                 emptyMessage="Ninguna respuesta vinculada." >
+                                                        <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
+                                                            <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                                                <h:outputText value="#{p.nombre}"/>
+                                                                <f:param name="id" value="#{p.idconocimiento}"/>
+                                                                <f:param name="idTipo" value="#{p.idTipoConocimiento}"/>
+                                                                <f:param name="popup" value="true"/>
+                                                                <f:param name="tempPopup" value="true"/>
+                                                            </h:commandLink>
+                                                        </p:column>
+                                                        <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                            <h:outputText value="#{p.sumilla}"/>
+                                                        </p:column>
+                                                        <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                            <h:outputText value="#{p.categoria}" />
+                                                        </p:column>
+                                                        <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                            <h:outputText value="#{p.estado}" />
+                                                        </p:column>
+                                                    </p:dataTable>
+                                                </p:tab>
+                                            </p:tabView>
+                                        </h:panelGrid>
+                                    </p:fieldset>
+                                </h:panelGrid>
+                                <h:panelGrid columns="1" width="100%">
+                                    <p:commandButton value="Regresar" ajax="false" action="/pages/oportunidad/lista.xhtml"/>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+                        
+                        <p:dialog id="anaDlg" widgetVar="anaDialog" header="Análisis" closable="false" resizable="false" appendTo="@(body)" visible="true">
+                            <h:form id="anaForm">
+                                <h:panelGrid id="pgAna" columns="2">
+                                    <h:outputText value="Análisis:"/>
+                                    <p:selectOneMenu value="#{oportunidadMB.analisis}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                        <f:selectItem itemLabel="Seleccione" itemValue="" />
+                                        <f:selectItem itemLabel="Aprobado" itemValue="1" />
+                                        <f:selectItem itemLabel="Rechazado" itemValue="2" />
+                                        <p:ajax event="change" update=":anaForm:pgAna"/>
+                                    </p:selectOneMenu>
+                                    
+                                    <h:outputText value="Días:" rendered="#{oportunidadMB.analisis eq 1}"/>
+                                    <p:spinner id="basic" value="#{oportunidadMB.dias}" min="1" suffix=" días" rendered="#{oportunidadMB.analisis eq 1}" />
+                                    
+                                    <h:outputText value="Motivo:" rendered="#{oportunidadMB.analisis eq 2}"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0" rendered="#{oportunidadMB.analisis eq 2}">
+                                        <p:inputTextarea value="#{oportunidadMB.motivo}" rows="5" cols="50" styleClass="Fs14"
+                                                         counter="display" maxlength="500" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+                                    <p:commandButton value="Registrar Análisis" actionListener="#{oportunidadMB.saveAnalysis}" update=":f:growl" styleClass="ui-link Fs14"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

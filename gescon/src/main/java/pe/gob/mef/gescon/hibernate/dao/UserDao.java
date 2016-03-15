@@ -8,6 +8,7 @@ package pe.gob.mef.gescon.hibernate.dao;
 import java.math.BigDecimal;
 import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
+import pe.gob.mef.gescon.hibernate.domain.TuserPerfil;
 
 /**
  *
@@ -23,4 +24,7 @@ public interface UserDao {
     Mtuser getMtuserByDNI(String dni) throws Exception;
     Mtuser getMtuserByLogin(String login) throws Exception;
     Mtuser getMtuserById(BigDecimal nusuarioid) throws Exception;
+    void asignProfileToUser(TuserPerfil tuserPerfil) throws Exception;
+    TuserPerfil getPerfilByUser(BigDecimal idusuario) throws Exception;
+    void deletePerfilByUser(final BigDecimal idusuario) throws Exception;
 }

@@ -65,6 +65,12 @@
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
+                                            <p:commandLink actionListener="#{userMB.setSelectedRow}" oncomplete="PF('confirmResDlg').show();" title="resetear contraseña" styleClass="GesconLink" 
+                                                           rendered="#{loginMB.politicas[msgs.RESETEAR_CLAVE]}">
+                                                <h:outputText class="fa fa-refresh Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                            <p:spacer width="5px;"/>
                                             <p:commandLink actionListener="#{userMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar usuario" styleClass="GesconLink" 
                                                            rendered="#{loginMB.politicas[msgs.ACTIVAR_USUARIO] and row.nactivo eq 0}">
                                                 <h:outputText class="fa fa-check Fs16" />
@@ -80,6 +86,13 @@
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.us_msg_reset}" header="#{msgs.us_lbl_pnlReset}" widgetVar="confirmResDlg" style="font-size: 10px;">
+                            <h:form id="confirmResDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmResDlg').hide()" update=":f:tbl, :f:growl" actionListener="#{userMB.resetPassword}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmResDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
                         
                         <p:confirmDialog appendTo="@(body)" message="#{msgs.us_msg_activar}" header="#{msgs.us_lbl_pnlActivar}" widgetVar="confirmActDlg" style="font-size: 10px;">
                             <h:form id="confirmActDlgForm">

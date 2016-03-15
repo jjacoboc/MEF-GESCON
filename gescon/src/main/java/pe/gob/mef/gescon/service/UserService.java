@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import pe.gob.mef.gescon.hibernate.domain.TuserPerfil;
 import pe.gob.mef.gescon.web.bean.User;
 
 /**
@@ -23,4 +24,7 @@ public interface UserService {
     User getUserByDNI(String dni) throws Exception;
     User getUserByLogin(String login) throws Exception;
     User getMtuserById(BigDecimal nusuarioid) throws Exception;
+    void asignProfileToUser(TuserPerfil userperfil) throws Exception;
+    BigDecimal getPerfilByUser(BigDecimal nusuarioid) throws Exception;
+    void deletePerfilByUser(BigDecimal idusuario) throws Exception;
 }

@@ -13,56 +13,57 @@
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-                            <p:panel header="#{msgs.us_lbl_pnlEdit}" styleClass="TexAlLeft">
+                            <p:panel header="#{msgs.us_lbl_pnlNew}">
                                 <h:panelGrid columns="1" styleClass="Wid100">
+                                    <h:outputText value="Accede a todos los servicios del portal con solo un nombre y contraseña" styleClass="Fs16 FontBold"/>
                                     <p:fieldset legend="Información General">
                                         <h:panelGrid columns="2" styleClass="Wid100 panelcolumns">
                                             <h:panelGrid columns="3">
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
                                                 <h:outputLabel value="El Usuario Labora en el MEF? "/>
-                                                <h:outputText value="#{userMB.selectedUser.nuserinterno}">
-                                                    <f:converter converterId="converterSiNo"/>
-                                                </h:outputText>
+                                                <p:selectOneRadio id="console9" value="#{userMB.trabajaMef}">
+                                                    <f:selectItem itemLabel="SI" itemValue="1" />
+                                                    <f:selectItem itemLabel="NO" itemValue="0" />
+                                                </p:selectOneRadio>
 
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
                                                 <h:outputText value="DNI: "/>
-                                                <h:outputText value="#{userMB.selectedUser.vdni}"/>
+                                                <p:inputMask value="#{userMB.dni}" maxlength="8" mask="9?9999999" />
 
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
                                                 <h:outputText value="Nombres: "/>
-                                                <h:outputText value="#{userMB.selectedUser.vnombres}"/>
+                                                <p:inputText size="50" value="#{userMB.nombres}"  maxlength="100" />
 
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
                                                 <h:outputText value="Apellidos: "/>
-                                                <h:outputText value="#{userMB.selectedUser.vapellidos}"/>
+                                                <p:inputText size="50" value="#{userMB.apellidos}"  maxlength="100" />
 
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
                                                 <h:outputText value="Nombre de Usuario: "/>
-                                                <h:outputText value="#{userMB.selectedUser.vlogin}"/>
-                                                
-                                                <h:outputText value="#{msgs.icon_asterisk}"/>
-                                                <h:outputText value="Perfil de Usuario: "/>
-                                                <h:outputText value="#{userMB.perfil}">
-                                                    <f:converter converterId="converterPerfil"/>
-                                                </h:outputText>
+                                                <p:inputText value="#{userMB.login}" size="25"  maxlength="25" style="text-transform: lowercase;"/>
 
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
                                                 <h:outputText value="Fecha de Nacimiento: "/>
-                                                <h:outputText value="#{userMB.selectedUser.vfechanacimiento}"/>
+                                                <p:calendar locale="es" value="#{userMB.fechaNacimiento}" size="12" pattern="dd/MM/yyyy" 
+                                                            showOn="button" readonlyInput="true" showButtonPanel="true" navigator="true" styleClass="Fs14"/>
 
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
                                                 <h:outputText value="Sexo: "/>
-                                                <h:outputText value="#{userMB.selectedUser.vsexo}"/>
+                                                <p:selectOneMenu id="console4" value="#{userMB.sexo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                                    <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                                    <f:selectItem itemLabel="Femenino" itemValue="F" />
+                                                </p:selectOneMenu>
 
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
                                                 <h:outputText value="Correo: "/>
-                                                <h:outputText value="#{userMB.selectedUser.vcorreo}"/>
+                                                <p:inputText size="50" value="#{userMB.correo}"  maxlength="100" />
                                             </h:panelGrid>
                                             <h:panelGrid id="pgCrop" columns="1" styleClass="TexAlCenter" style="border: 1px solid #000;">
                                                 <p:graphicImage id="cropped" cache="false" value="#{usuarioImage.image}" width="128px" height="160px" rendered="#{not empty userMB.photoImage}">
                                                     <f:param name="ruta" value="#{userMB.photoImage}"/>
                                                 </p:graphicImage>
                                                 <p:graphicImage id="blank" value="#{FacesContext.getCurrentInstance().getExternalContext()}/resources/images/blank-avatar.png" width="128px" height="160px" rendered="#{empty userMB.photoImage}"/>
+                                                <p:commandLink value="subir foto" actionListener="#{userMB.toCrop}" oncomplete="PF('cropDialog').show()" update=":cropDialogForm:pgCrop" styleClass="Fs14 FontBold"/>
                                             </h:panelGrid>
                                         </h:panelGrid>
                                     </p:fieldset>
@@ -71,7 +72,7 @@
                                         <h:panelGrid columns="3">
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Departamento: "/>
-                                            <p:selectOneMenu id="dep" value="#{userMB.selectedUser.vdpto}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                            <p:selectOneMenu id="dep" value="#{userMB.departamento}" filter="true" panelStyle="Wid100" styleClass="Wid100">
                                                 <p:ajax event="change" listener="#{userMB.handleDepartamentoChangeValue}" update=":f:prov, :f:dist"/>
                                                 <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                                 <f:selectItems value="#{userMB.listaDepartamento}"/>
@@ -79,7 +80,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Provincia: "/>
-                                            <p:selectOneMenu id="prov" value="#{userMB.selectedUser.vprov}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                            <p:selectOneMenu id="prov" value="#{userMB.provincia}" filter="true" panelStyle="Wid100" styleClass="Wid100">
                                                 <p:ajax event="change" listener="#{userMB.handleProvinciaChangeValue}" update=":f:dist"/>
                                                 <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                                 <f:selectItems value="#{userMB.listaProvincia}"/>
@@ -87,7 +88,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Distrito: "/>
-                                            <p:selectOneMenu id="dist" value="#{userMB.selectedUser.vdist}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                            <p:selectOneMenu id="dist" value="#{userMB.distrito}" filter="true" panelStyle="Wid100" styleClass="Wid100">
                                                 <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                                 <f:selectItems value="#{userMB.listaDistrito}"/>
                                             </p:selectOneMenu>
@@ -98,14 +99,14 @@
                                         <h:panelGrid columns="3">
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Profesion: "/>
-                                            <p:selectOneMenu value="#{userMB.selectedUser.vprofesion}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                            <p:selectOneMenu value="#{userMB.profesion}" filter="true" panelStyle="Wid100" styleClass="Wid100">
                                                 <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                                 <f:selectItems value="#{listaSessionMB.listaProfesionActiva}"/>
                                             </p:selectOneMenu>
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Entidad: "/>
-                                            <p:selectOneMenu id="console10" value="#{userMB.selectedUser.ventidad}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console10" value="#{userMB.entidad}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Entidad 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Entidad 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Entidad 3" itemValue="3" />
@@ -116,7 +117,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Cargo: "/>
-                                            <p:selectOneMenu id="console11" value="#{userMB.selectedUser.vcargo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console11" value="#{userMB.cargo}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Cargo 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Cargo 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Cargo 3" itemValue="3" />
@@ -127,7 +128,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Pliego: "/>
-                                            <p:selectOneMenu id="console12" value="#{userMB.selectedUser.vpliego}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console12" value="#{userMB.pliego}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Pliego 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Pliego 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Pliego 3" itemValue="3" />
@@ -138,7 +139,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Area: "/>
-                                            <p:selectOneMenu id="console13" value="#{userMB.selectedUser.varea}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console13" value="#{userMB.area}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Area 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Area 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Area 3" itemValue="3" />
@@ -149,7 +150,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Sector: "/>
-                                            <p:selectOneMenu id="console14" value="#{userMB.selectedUser.vsector}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console14" value="#{userMB.sector}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Sector 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Sector 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Sector 3" itemValue="3" />
@@ -160,7 +161,7 @@
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Gobierno: "/>
-                                            <p:selectOneMenu id="console15" value="#{userMB.selectedUser.vgobierno}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
+                                            <p:selectOneMenu id="console15" value="#{userMB.gobierno}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px; width:100px">
                                                 <f:selectItem itemLabel="Gobierno 1" itemValue="1" />
                                                 <f:selectItem itemLabel="Gobierno 2" itemValue="2" />
                                                 <f:selectItem itemLabel="Gobierno 3" itemValue="3" />
@@ -170,12 +171,28 @@
                                             </p:selectOneMenu>
                                         </h:panelGrid>
                                     </p:fieldset>
-                                    <h:panelGrid columns="1" width="100%">
-                                        <p:commandButton value="Cancelar" ajax="false" action="/pages/usuarioexterno/lista.xhtml"/>
+                                    <h:panelGrid columns="2" width="100%">
+                                        <h:panelGroup>
+                                            <p:commandButton value="Registrar" actionListener="#{userMB.save}" update=":f:growl"/>
+                                            <p:spacer width="10"/>
+                                            <p:commandButton value="Cancelar" ajax="false" action="/index.xhtml"/>
+                                        </h:panelGroup>
+                                        <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
                                     </h:panelGrid>
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
+
+                        <p:dialog id="cropDlg" header="Subir Foto" widgetVar="cropDialog" appendTo="@(body)" closable="true" draggable="true" 
+                                  fitViewport="true" resizable="true" showEffect="fade" hideEffect="fade">
+                            <h:form id="cropDialogForm">
+                                <h:panelGrid id="pgCrop" columns="1">
+                                    <p:fileUpload fileUploadListener="#{userMB.handleFileUpload}" mode="advanced" dragDropSupport="true" update=":cropDialogForm:pgCrop"/>
+                                    <p:imageCropper value="#{userMB.croppedImage}" image="#{userMB.imagenTemporal}" initialCoords="225,75,300,125" />
+                                    <p:commandButton value="Crop" action="#{userMB.crop}" update=":f:pgCrop" icon="ui-icon-scissors"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
                     </f:view>
                 </div>
             </div>

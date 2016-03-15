@@ -50,6 +50,7 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
         final String fCodesBL = (String) filters.get("fCodesBL");
         final String fCodesPR = (String) filters.get("fCodesPR");
         final String fCodesC = (String) filters.get("fCodesC");
+        final String fText = (String) filters.get("fText");
         final String order = (String) filters.get("order");
         SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_SHORT);
         final StringBuilder sql = new StringBuilder();
@@ -81,6 +82,9 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             if(StringUtils.isNotBlank(fCodesBL)) {
                 sql.append("    AND a.nbaselegalid IN (").append(fCodesBL).append(") ");
             }
+            if(StringUtils.isNotBlank(fText)){
+                sql.append("    AND a.vnumero LIKE '%").append(fText).append("%' ");
+            }
             sql.append("        GROUP BY a.nbaselegalid, a.vnumero, a.vnombre, a.ncategoriaid, b.vnombre, ");
             sql.append("        a.dfechapublicacion, 1, 'Base Legal', a.nestadoid, c.vnombre, 0 ");
             sql.append("        ) x ");
@@ -111,6 +115,9 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             }
             if(StringUtils.isNotBlank(fCodesPR)) {
                 sql.append("    AND a.npreguntaid IN (").append(fCodesPR).append(") ");
+            }
+            if(StringUtils.isNotBlank(fText)){
+                sql.append("    AND a.vasunto LIKE '%").append(fText).append("%' ");
             }
             sql.append("        GROUP BY a.npreguntaid, a.vasunto, a.vdetalle, a.ncategoriaid, b.vnombre, ");
             sql.append("        a.dfechapublicacion, 2, 'Preguntas y Respuestas', a.nsituacionid, c.vnombre, 0 ");
@@ -145,6 +152,9 @@ public class ConsultaDaoImpl extends HibernateDaoSupport implements ConsultaDao{
             }
             if(StringUtils.isNotBlank(fCodesC)) {
                 sql.append("    AND a.nconocimientoid IN (").append(fCodesC).append(") ");
+            }
+            if(StringUtils.isNotBlank(fText)){
+                sql.append("    AND a.vtitulo LIKE '%").append(fText).append("%' ");
             }
             sql.append("        GROUP BY a.nconocimientoid, a.vtitulo, a.vdescripcion, a.ncategoriaid, b.vnombre, ");
             sql.append("        a.dfechapublicacion, a.ntpoconocimientoid, d.vnombre, a.nsituacionid, c.vnombre, a.nflgvinculo ");

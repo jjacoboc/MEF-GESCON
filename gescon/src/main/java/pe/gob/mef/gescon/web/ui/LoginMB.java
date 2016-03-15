@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ResourceBundle;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -23,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.primefaces.context.RequestContext;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
 import pe.gob.mef.gescon.service.AsignacionService;
@@ -71,6 +74,7 @@ public class LoginMB implements Serializable {
     private List<Consulta> filteredListaNotificacionesAlerta;
     private String alertaFlag;
     private Boolean claveCaducada;
+    private Boolean claveDefault;
     private String notificacion;
     private Consulta selectedNotification;
 
@@ -78,8 +82,6 @@ public class LoginMB implements Serializable {
      * Creates a new instance of LoginMB
      */
     public LoginMB() {
-        this.alertaFlag = "false";
-        this.claveCaducada = false;
     }
 
     /**
@@ -300,6 +302,14 @@ public class LoginMB implements Serializable {
         this.claveCaducada = claveCaducada;
     }
 
+    public Boolean getClaveDefault() {
+        return claveDefault;
+    }
+
+    public void setClaveDefault(Boolean claveDefault) {
+        this.claveDefault = claveDefault;
+    }
+
     public String getNotificacion() {
         return notificacion;
     }
@@ -315,6 +325,18 @@ public class LoginMB implements Serializable {
     public void setSelectedNotification(Consulta selectedNotification) {
         this.selectedNotification = selectedNotification;
     }
+    
+    @PostConstruct
+    public void init() {
+        try {
+            this.alertaFlag = "false";
+            this.claveCaducada = false;
+            this.claveDefault = false;
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
 
     public String ingresar() {
         String page = StringUtils.EMPTY;
@@ -327,9 +349,24 @@ public class LoginMB implements Serializable {
                     Pass pas = passService.getPassByUser(usuario);
                     if (pas != null && this.getPass().equals(pas.getVclave())) {
                         ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
-                        Parametro parametro = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.DIAS_CADUCIDAD_CLAVE)));
+                        Parametro passDefault = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.CLAVE_DEFAULT)));
+                        if(pas.getVclave().equals(passDefault.getVvalor())) {
+                            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
+                            this.setNotificacion(bundle.getString("notificacion1"));
+                            this.setClaveDefault(true);
+                            this.setPass(StringUtils.EMPTY);
+                            this.setNewpass(StringUtils.EMPTY);
+                            this.setConfirmpass(StringUtils.EMPTY);
+                            RequestContext.getCurrentInstance().execute("PF('iniDialog').hide();");
+                            RequestContext.getCurrentInstance().execute("PF('bar').show();");
+                            RequestContext.getCurrentInstance().execute("PF('claDialog').show();");
+                            return StringUtils.EMPTY;
+                        }
+                        Parametro caducidad = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.DIAS_CADUCIDAD_CLAVE)));
                         long dias = DateUtils.getDifferenceDays(pas.getDfechacreacion(), new Date());
-                        if(dias > Long.parseLong(parametro.getVvalor())) {
+                        if(dias > Long.parseLong(caducidad.getVvalor())) {
+                            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
+                            this.setNotificacion(bundle.getString("notificacion2"));
                             this.setClaveCaducada(true);
                             this.setPass(StringUtils.EMPTY);
                             this.setNewpass(StringUtils.EMPTY);
@@ -454,41 +491,50 @@ public class LoginMB implements Serializable {
             if (StringUtils.isNotBlank(this.getPass())) {
                 if (this.getPass().equals(pas.getVclave())) {
                     if (StringUtils.isNotBlank(this.getNewpass())) {
-                        if (StringUtils.isNotBlank(this.getConfirmpass())) {
-                            if (this.getNewpass().equals(this.getConfirmpass())) {
-                                TpassId id = new TpassId();
-                                id.setNpassid(passService.getNextPK());
-                                id.setNusuarioid(usuario.getNusuarioid());
-                                Mtuser mtuser = new Mtuser();
-                                BeanUtils.copyProperties(usuario, mtuser);
-                                Pass password = new Pass();
-                                password.setId(id);
-                                password.setVclave(this.getNewpass());
-                                password.setVusuariocreacion(usuario.getVlogin());
-                                password.setDfechacreacion(new Date());
-                                passService.saveOrUpdate(password);
-                                this.logout();
+                        if(!this.getNewpass().equals(pas.getVclave())) {
+                            if (StringUtils.isNotBlank(this.getConfirmpass())) {
+                                if (this.getNewpass().equals(this.getConfirmpass())) {
+                                    TpassId id = new TpassId();
+                                    id.setNpassid(passService.getNextPK());
+                                    id.setNusuarioid(usuario.getNusuarioid());
+                                    Pass password = new Pass();
+                                    password.setId(id);
+                                    password.setVclave(this.getNewpass());
+                                    password.setVusuariocreacion(usuario.getVlogin());
+                                    password.setDfechacreacion(new Date());
+                                    passService.saveOrUpdate(password);
+                                    this.logout();
+                                    RequestContext.getCurrentInstance().execute("logout();");
+                                } else {
+                                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La nueva contraseña ingresada no coincide con la confirmación.");
+                                    FacesContext.getCurrentInstance().addMessage(null, message);
+                                    return;
+                                }
                             } else {
-                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La nueva contraseña ingresada no coincide con la confirmación.");
+                                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Confirme la nueva contraseña.");
                                 FacesContext.getCurrentInstance().addMessage(null, message);
+                                return;
                             }
                         } else {
-                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Confirme la nueva contraseña.");
+                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La nueva contraseña debe ser diferente a la actual.");
                             FacesContext.getCurrentInstance().addMessage(null, message);
+                            return;
                         }
                     } else {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Ingrese la nueva contraseña.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
                     }
                 } else {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La contraseña ingresada es incorrecta.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
                 }
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Ingrese la contraseña ingresada actual.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
             }
-
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

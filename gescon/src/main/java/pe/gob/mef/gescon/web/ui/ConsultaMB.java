@@ -477,10 +477,12 @@ public class ConsultaMB implements Serializable {
                 filter.put("fCodesBL", (String) map.get("codesBL"));
                 filter.put("fCodesPR", (String) map.get("codesPR"));
                 filter.put("fCodesC", (String) map.get("codesC"));
+                filter.put("fText", this.getSearchText().trim());
             } else {
                 filter.remove("fCodesBL");
                 filter.remove("fCodesPR");
                 filter.remove("fCodesC");
+                filter.remove("fText");
             }
             filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
@@ -503,10 +505,12 @@ public class ConsultaMB implements Serializable {
                 filter.put("fCodesBL", (String) map.get("codesBL"));
                 filter.put("fCodesPR", (String) map.get("codesPR"));
                 filter.put("fCodesC", (String) map.get("codesC"));
+                filter.put("fText", this.getSearchText().trim());
             } else {
                 filter.remove("fCodesBL");
                 filter.remove("fCodesPR");
                 filter.remove("fCodesC");
+                filter.remove("fText");
             }
             filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
@@ -529,10 +533,12 @@ public class ConsultaMB implements Serializable {
                 filter.put("fCodesBL", (String) map.get("codesBL"));
                 filter.put("fCodesPR", (String) map.get("codesPR"));
                 filter.put("fCodesC", (String) map.get("codesC"));
+                filter.put("fText", this.getSearchText().trim());
             } else {
                 filter.remove("fCodesBL");
                 filter.remove("fCodesPR");
                 filter.remove("fCodesC");
+                filter.remove("fText");
             }
             filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
@@ -580,10 +586,12 @@ public class ConsultaMB implements Serializable {
                 filter.put("fCodesBL", (String) map.get("codesBL"));
                 filter.put("fCodesPR", (String) map.get("codesPR"));
                 filter.put("fCodesC", (String) map.get("codesC"));
+                filter.put("fText", this.getSearchText().trim());
             } else {
                 filter.remove("fCodesBL");
                 filter.remove("fCodesPR");
                 filter.remove("fCodesC");
+                filter.remove("fText");
             }
             filter.put("order", this.getOrdenpor());
             ConsultaService service = (ConsultaService) ServiceFinder.findBean("ConsultaService");
@@ -1112,9 +1120,10 @@ public class ConsultaMB implements Serializable {
 
             
             archivo = new File(JSFUtils.getServletContext().getRealPath("/pages/reportes/reporteConsulta.jasper"));
-            String rutaImagen = JSFUtils.getServletContext().getRealPath("/resources/images/logo-minef.jpg");
+            String rutaImagen = JSFUtils.getServletContext().getRealPath("/resources/images/logogescon2.png");
+            String rutaBanner = JSFUtils.getServletContext().getRealPath("/resources/images/banner.png");
             parametrosJasper.put("P_IMAGEN", rutaImagen);
-            //archivo = new File(JSFUtils.getServletContext().getRealPath("/reportes/reportePAP.jrxml"));
+            parametrosJasper.put("P_BANNER", rutaBanner);
             List<HashMap<String, Object>> listaDatos = listaDatosReporte;
             JRDataSource fuenteDatos = new JRBeanCollectionDataSource(listaDatos);
             JasperReport reporteJasper = (JasperReport) JRLoader.loadObjectFromFile(archivo.getPath());

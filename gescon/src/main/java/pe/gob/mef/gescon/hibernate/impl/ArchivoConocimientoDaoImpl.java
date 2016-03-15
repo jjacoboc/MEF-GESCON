@@ -23,10 +23,7 @@ import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.ArchivoConocimientoDao;
-import pe.gob.mef.gescon.hibernate.dao.ArchivoDao;
-import pe.gob.mef.gescon.hibernate.domain.Tarchivo;
 import pe.gob.mef.gescon.hibernate.domain.TarchivoConocimiento;
-import pe.gob.mef.gescon.hibernate.domain.Tbaselegal;
 import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
 
 /**
@@ -82,4 +79,19 @@ public class ArchivoConocimientoDaoImpl extends HibernateDaoSupport implements A
         getHibernateTemplate().saveOrUpdate(tarchivoconocimiento);
     }
     
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(final BigDecimal idarchivo) throws Exception {
+        getHibernateTemplate().execute(
+                new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws HibernateException {
+                        StringBuilder sql = new StringBuilder();
+                        sql.append("DELETE FROM TARCHIVO_CONOCIMIENTO WHERE NARCHIVOID = ");
+                        sql.append(idarchivo.toString());
+                        Query query = session.createSQLQuery(sql.toString());
+                        return query.executeUpdate();
+                    }
+                });
+    }
 }

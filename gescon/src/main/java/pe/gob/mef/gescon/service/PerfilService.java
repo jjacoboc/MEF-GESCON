@@ -15,9 +15,9 @@ import pe.gob.mef.gescon.web.bean.User;
  * @author SOPORTE
  */
 public interface PerfilService {
-    public BigDecimal getNextPK() throws Exception;
-    public List<Perfil> getPerfils() throws Exception;
-    public List<Perfil> getPerfilesByUser(User user) throws Exception;
-    public void saveOrUpdate(Perfil perfil) throws Exception;
-    
+    BigDecimal getNextPK() throws Exception;
+    List<Perfil> getPerfils() throws Exception;
+    List<Perfil> getPerfilsActived() throws Exception;
+    List<Perfil> getPerfilesByUser(User user) throws Exception;
+    void saveOrUpdate(Perfil perfil) throws Exception;
 }

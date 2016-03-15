@@ -17,8 +17,9 @@ import pe.gob.mef.gescon.hibernate.domain.Tconocimiento;
  */
 public interface ArchivoConocimientoDao {
     
-    public BigDecimal getNextPK() throws Exception;
-    public List<TarchivoConocimiento> getTarchivosByTconocimiento(BigDecimal nconocimientoid) throws Exception;
-    public TarchivoConocimiento getLastTarchivoByTconocimiento(Tconocimiento tconocimiento) throws Exception;
-    public void saveOrUpdate(TarchivoConocimiento tarchivoconocimiento) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    List<TarchivoConocimiento> getTarchivosByTconocimiento(BigDecimal nconocimientoid) throws Exception;
+    TarchivoConocimiento getLastTarchivoByTconocimiento(Tconocimiento tconocimiento) throws Exception;
+    void saveOrUpdate(TarchivoConocimiento tarchivoconocimiento) throws Exception;
+    void delete(final BigDecimal idarchivo) throws Exception;
 }

@@ -129,6 +129,9 @@ public class OportunidadMB implements Serializable {
     private String selectedSwitch;
     private List<Consulta> listaDestacados;
     private Consulta selectedDestacado;
+    private BigDecimal analisis;
+    private int dias;
+    private String motivo;
     
     /**
      * Creates a new instance of OportunidadMB
@@ -550,6 +553,30 @@ public class OportunidadMB implements Serializable {
 
     public void setSelectedDestacado(Consulta selectedDestacado) {
         this.selectedDestacado = selectedDestacado;
+    }
+
+    public BigDecimal getAnalisis() {
+        return analisis;
+    }
+
+    public void setAnalisis(BigDecimal analisis) {
+        this.analisis = analisis;
+    }
+
+    public int getDias() {
+        return dias;
+    }
+
+    public void setDias(int dias) {
+        this.dias = dias;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
     }
     
     @PostConstruct
@@ -1234,6 +1261,7 @@ public class OportunidadMB implements Serializable {
             GcmFileUtils.writeStringToFileServer(np1, "html.txt", this.getContenidoHtml());
             GcmFileUtils.writeStringToFileServer(np1, "plain.txt", this.getContenidoPlain());
             
+            this.setListaTargetVinculos(new ArrayList());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
@@ -2048,6 +2076,86 @@ public class OportunidadMB implements Serializable {
                     c.setUsuarioNombre(u.getVnombres() + " " + u.getVapellidos());
                 }
             }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public String toAnalysis() {
+        try {
+            this.clearAll();
+            int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+            if(!CollectionUtils.isEmpty(this.getFilteredListaOportunidad())) {
+                this.setSelectedOportunidad(this.getFilteredListaOportunidad().get(index));
+            } else {
+                this.setSelectedOportunidad(this.getListaOportunidad().get(index));
+            }
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedOportunidad().getNcategoriaid()));
+            this.setChkDestacado(this.getSelectedOportunidad().getNdestacado().equals(BigDecimal.ONE));
+            this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedOportunidad().getVruta(), "html.txt"));
+            SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
+            this.setListaSeccion(seccionService.getSeccionesByConocimiento(this.getSelectedOportunidad().getNconocimientoid()));
+            if (CollectionUtils.isNotEmpty(this.getListaSeccion())) {
+                for (Seccion seccion : this.getListaSeccion()) {
+                    seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccion.getVruta(), "html.txt"));
+                }
+            }
+            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            HashMap map = new HashMap();
+            map.put("nconocimientoid", this.getSelectedOportunidad().getNconocimientoid().toString());
+            map.put("flag", true);
+            map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+            this.setListaTargetVinculosBL(conocimientoService.getConcimientosVinculados(map));
+            map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+            this.setListaTargetVinculosPR(conocimientoService.getConcimientosVinculados(map));
+            map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+            this.setListaTargetVinculosBP(conocimientoService.getConcimientosVinculados(map));
+            map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+            this.setListaTargetVinculosCT(conocimientoService.getConcimientosVinculados(map));
+            map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+            this.setListaTargetVinculosOM(conocimientoService.getConcimientosVinculados(map));
+            map.put("ntipoconocimientoid", Constante.WIKI.toString());
+            this.setListaTargetVinculosWK(conocimientoService.getConcimientosVinculados(map));
+            RequestContext.getCurrentInstance().execute("PF('anaDialog').show();");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return "/pages/oportunidad/analisis?faces-redirect=true";
+    }
+    
+    public void saveAnalysis(ActionEvent event) {
+        try {
+            if(this.getAnalisis() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el análisis correspondiente a la oportunidad de mejora.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            } else if(this.getAnalisis().equals(BigDecimal.ONE)) {
+                if(this.getDias() < 1){
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese los días de implementación.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+            } else {
+                if(StringUtils.isBlank(this.getMotivo())){
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el motivo del rechazo.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            this.getSelectedOportunidad().setNanalisis(this.getAnalisis());
+            this.getSelectedOportunidad().setNdias(BigDecimal.valueOf(this.getDias()));
+            this.getSelectedOportunidad().setVobservacion(this.getMotivo());
+            this.getSelectedOportunidad().setDfechamodificacion(new Date());
+            this.getSelectedOportunidad().setVusuariomodificacion(user.getVlogin());
+            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            conocimientoService.saveOrUpdate(this.getSelectedOportunidad());
+            this.setListaOportunidad(conocimientoService.getConocimientosByType(Constante.OPORTUNIDADMEJORA));
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/oportunidad/lista.xhtml");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

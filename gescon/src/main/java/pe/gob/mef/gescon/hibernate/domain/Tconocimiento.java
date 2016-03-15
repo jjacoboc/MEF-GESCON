@@ -33,6 +33,7 @@ public class Tconocimiento implements java.io.Serializable {
     private String vmsjsolicita;
     private String vmsjrespuesta;
     private BigDecimal nflgvinculo;
+    private BigDecimal nanalisis;
     private Set thistorials = new HashSet(0);
     private Set timplementacions = new HashSet(0);
 
@@ -43,7 +44,7 @@ public class Tconocimiento implements java.io.Serializable {
         this.nconocimientoid = nconocimientoid;
     }
 
-    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vruta, String vnumero, String vtema, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Date dfechapublicacion, String vmsjsolicita, String vmsjrespuesta, BigDecimal nflgvinculo, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
+    public Tconocimiento(BigDecimal nconocimientoid, BigDecimal ncategoriaid, BigDecimal nsituacionid, BigDecimal ntipoconocimientoid, String vdescripcion, String vtitulo, String vusuariomodificacion, String vusuariocreacion, Date dfechacreacion, String vruta, String vnumero, String vtema, String vcontenido, BigDecimal ndias, String vobservacion, Date dfechamodificacion, BigDecimal ndestacado, Date dfechapublicacion, String vmsjsolicita, String vmsjrespuesta, BigDecimal nflgvinculo, BigDecimal nanalisis, Set tvinculos, Set tobservacions, Set thistorials, Set timplementacions, Set tdiscusions, Set tseccions, Set tcalificacions) {
         this.nconocimientoid = nconocimientoid;
         this.ncategoriaid = ncategoriaid;
         this.nsituacionid = nsituacionid;
@@ -65,6 +66,7 @@ public class Tconocimiento implements java.io.Serializable {
         this.vmsjsolicita = vmsjsolicita;
         this.vmsjrespuesta = vmsjrespuesta;
         this.nflgvinculo = nflgvinculo;
+        this.nanalisis = nanalisis;
         this.thistorials = thistorials;
         this.timplementacions = timplementacions;
     }
@@ -255,6 +257,14 @@ public class Tconocimiento implements java.io.Serializable {
 
     public void setNflgvinculo(BigDecimal nflgvinculo) {
         this.nflgvinculo = nflgvinculo;
+    }
+
+    public BigDecimal getNanalisis() {
+        return nanalisis;
+    }
+
+    public void setNanalisis(BigDecimal nanalisis) {
+        this.nanalisis = nanalisis;
     }
 
     public Set getThistorials() {

@@ -26,18 +26,26 @@
                                                 <p:dataExporter type="xls" target="tbl" fileName="contenidos" />
                                             </h:commandLink>
                                         </f:facet>
-                                        <p:column sortBy="#{row.vtitulo}" filterBy="#{row.vtitulo}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;">
-                                            <f:facet name="header"><h:outputText value="TITULO"/></f:facet>
-                                            <h:outputText value="#{row.vtitulo}" />
+                                        <p:column style="width: 47%" priority="1">
+                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna01}"/></f:facet>
+                                            <h:outputText value="#{row.vtitulo}"/>
                                         </p:column>
-                                        <p:column style="text-align: center;" sortBy="#{row.vusuariocreacion}" filterBy="#{row.vusuariocreacion}" filterMatchMode="contains">
-                                            <f:facet name="header"><h:outputText value="USUARIO CREACION"/></f:facet>
-                                            <h:outputText value="#{row.vusuariocreacion}" />
+                                        <p:column style="text-align: center; width: 18%" priority="2">
+                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna02}"/></f:facet>
+                                            <h:outputText value="#{row.ncategoriaid}">
+                                                <f:converter converterId="converterCategoria"/>
+                                            </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains">
-                                            <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
-                                            <h:outputText value="#{row.dfechacreacion}" >
-                                                <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                        <p:column style="text-align: center; width: 15%;" priority="3">
+                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna03}"/></f:facet>
+                                            <h:outputText value="#{row.dfechapublicacion}">
+                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" />
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;" priority="4">
+                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna04}"/></f:facet>
+                                            <h:outputText value="#{row.nsituacionid}">
+                                                <f:converter converterId="converterSituacion"/>
                                             </h:outputText>
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" exportable="false">
