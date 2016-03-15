@@ -1240,11 +1240,6 @@ public class BaseLegalMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (this.getUploadFile() == null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe cargar el archivo PDF de la base legal a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
             if (this.getSelectedBaseLegal().getDfechavigencia() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la fecha de publicación en el diario \"EL PERUANO\".");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -1591,11 +1586,6 @@ public class BaseLegalMB implements Serializable {
             }
             if (StringUtils.isBlank(this.getSelectedBaseLegal().getVnombre())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la sumilla de la base legal a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (this.getUploadFile() == null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe cargar el archivo PDF de la base legal a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }

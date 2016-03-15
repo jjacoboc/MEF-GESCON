@@ -621,7 +621,7 @@ public class UserMB implements Serializable {
         }
         return "/pages/usuarioexterno/registro?faces-redirect=true";
     }
-    
+
     public String toSaveUser() {
         try {
             this.cleanAttributes();
@@ -713,7 +713,7 @@ public class UserMB implements Serializable {
             user.setDfechacreacion(new Date());
             user.setVusuariocreacion(this.getLogin());
             service.saveOrUpdate(user);
-            
+
             ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
             Parametro passDefault = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.CLAVE_DEFAULT)));
 
@@ -727,15 +727,15 @@ public class UserMB implements Serializable {
             pass.setDfechacreacion(new Date());
             pass.setVusuariocreacion(this.getLogin());
             passservice.saveOrUpdate(pass);
-            
-            if(this.getCroppedImage() != null) {
+
+            if (this.getCroppedImage() != null) {
                 String pathImage = this.path + File.separator + user.getNusuarioid() + File.separator;
                 this.saveFile(pathImage, this.photoFileName, croppedImage.getBytes());
             }
-            
+
             ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
             String usuarioexterno = bundle.getString("usuarioexterno");
-            
+
             TuserPerfilId tuserPerfilId = new TuserPerfilId();
             tuserPerfilId.setNusuarioid(user.getNusuarioid());
             tuserPerfilId.setNperfilid(BigDecimal.valueOf(Long.parseLong(usuarioexterno)));
@@ -746,11 +746,11 @@ public class UserMB implements Serializable {
             tuserPerfil.setDfechacreacion(new Date());
             tuserPerfil.setVusuariocreacion(this.getLogin());
             service.asignProfileToUser(tuserPerfil);
-            
+
             try {
                 MailUtils.sendMail(user.getVcorreo(), "GESCON MEF - Usuario Creado", getSaveBodyMail(user.getVlogin(), pass.getVclave()));
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
-            } catch(Exception e){
+            } catch (Exception e) {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
         } catch (Exception e) {
@@ -855,7 +855,7 @@ public class UserMB implements Serializable {
 
             ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
             Parametro passDefault = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.CLAVE_DEFAULT)));
-            
+
             TpassId tpassid = new TpassId();
             PassService passservice = (PassService) ServiceFinder.findBean("PassService");
             tpassid.setNpassid(passservice.getNextPK());
@@ -867,11 +867,11 @@ public class UserMB implements Serializable {
             pass.setVusuariocreacion(usuario.getVlogin());
             passservice.saveOrUpdate(pass);
 
-            if(this.getCroppedImage() != null) {
+            if (this.getCroppedImage() != null) {
                 String pathImage = this.path + File.separator + user.getNusuarioid() + File.separator;
                 this.saveFile(pathImage, this.photoFileName, croppedImage.getBytes());
             }
-            
+
             TuserPerfilId tuserPerfilId = new TuserPerfilId();
             tuserPerfilId.setNusuarioid(user.getNusuarioid());
             tuserPerfilId.setNperfilid(BigDecimal.valueOf(Long.parseLong(this.getPerfil())));
@@ -882,15 +882,15 @@ public class UserMB implements Serializable {
             tuserPerfil.setDfechacreacion(new Date());
             tuserPerfil.setVusuariocreacion(this.getLogin());
             userService.asignProfileToUser(tuserPerfil);
-            
+
             this.setListaUser(userService.getUsers());
             try {
                 MailUtils.sendMail(user.getVcorreo(), "GESCON MEF - Usuario Creado", getSaveBodyMail(user.getVlogin(), pass.getVclave()));
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/usuarioexterno/lista.xhtml");
-            } catch(Exception e){
+            } catch (Exception e) {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/usuarioexterno/lista.xhtml");
             }
-            
+
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -1014,14 +1014,14 @@ public class UserMB implements Serializable {
             this.getSelectedUser().setVusuariomodificacion(user.getVlogin());
             UserService service = (UserService) ServiceFinder.findBean("UserService");
             service.saveOrUpdate(this.getSelectedUser());
-            
-            if(this.getCroppedImage() != null) {
+
+            if (this.getCroppedImage() != null) {
                 String pathImage = this.path + File.separator + this.getSelectedUser().getNusuarioid() + File.separator;
                 this.saveFile(pathImage, this.photoFileName, croppedImage.getBytes());
             }
-            
+
             service.deletePerfilByUser(this.getSelectedUser().getNusuarioid());
-            
+
             TuserPerfilId tuserPerfilId = new TuserPerfilId();
             tuserPerfilId.setNusuarioid(this.getSelectedUser().getNusuarioid());
             tuserPerfilId.setNperfilid(BigDecimal.valueOf(Long.parseLong(this.getPerfil())));
@@ -1032,7 +1032,7 @@ public class UserMB implements Serializable {
             tuserPerfil.setDfechacreacion(new Date());
             tuserPerfil.setVusuariocreacion(user.getVlogin());
             service.asignProfileToUser(tuserPerfil);
-            
+
             this.setListaUser(service.getUsers());
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/usuarioexterno/lista.xhtml");
         } catch (Exception e) {
@@ -1061,16 +1061,16 @@ public class UserMB implements Serializable {
         }
         return "/pages/usuarioexterno/ver?faces-redirect=true";
     }
-    
-    public void toCrop(ActionEvent event){
+
+    public void toCrop(ActionEvent event) {
         try {
             this.setImagenTemporal(StringUtils.EMPTY);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public void handleFileUpload(FileUploadEvent event) {
         try {
             byte[] img = event.getFile().getContents();
@@ -1083,7 +1083,7 @@ public class UserMB implements Serializable {
             fos.write(img);
             fos.flush();
             fos.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
@@ -1097,12 +1097,12 @@ public class UserMB implements Serializable {
         this.setPhotoImage(newFileName);
         this.saveFile(this.temppath, this.photoFileName, croppedImage.getBytes());
     }
-    
+
     public String getPhotoUser() {
         String pathImage = this.path + File.separator + this.getSelectedUser().getNusuarioid() + File.separator;
         String newFileName = pathImage + this.photoFileName;
         File f = new File(newFileName);
-        if(!f.exists()) {
+        if (!f.exists()) {
             newFileName = StringUtils.EMPTY;
         }
         return newFileName;
@@ -1122,7 +1122,7 @@ public class UserMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void resetPassword(ActionEvent event) {
         try {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -1134,7 +1134,7 @@ public class UserMB implements Serializable {
             password.setVclave(passDefault.getVvalor());
             password.setDfechamodificacion(new Date());
             password.setVusuariomodificacion(user.getVlogin());
-            passService.saveOrUpdate(password);            
+            passService.saveOrUpdate(password);
             MailUtils.sendMail(this.getSelectedUser().getVcorreo(), "GESCON MEF - Reseteo de Contraseña", getResetPasswordBodyMail(passDefault.getVvalor()));
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Contraseña reseteada. Se notificó al usuario via email.");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -1143,38 +1143,89 @@ public class UserMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public String getResetPasswordBodyMail(String clave) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder body = new StringBuilder();
         try {
-            sb.append("<span>Estimado Usuario:</span><br/>");
-            sb.append("<span>Su contraseña ha sido reseteada por el administrador del servicio.</span><br/>");
-            sb.append("<span>Por favor, ingrese con la contraseña <span style=\"font-weight: bold;\">").append(clave).append("</span> en su siguiente inicio de sesión.</span><br/><br/>");
-            sb.append("<span>Gracias,</span><br/>");
-            sb.append("<span>GESCON</span><br/>");
-            sb.append("<span>OGTI - MEF</span><br/>");
-        } catch(Exception e) {
+            body.append("<table>");
+            body.append("<tr>");
+            body.append("<td>");
+            body.append("<img src='cid:banner'>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 30px; font-weight: bold; height: 50px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("Actualiza tu Contraseña");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 12px; height: 40px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("Estimado usuario, por motivos de seguridad le solicitamos, por favor, actualice su contraseña.");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 14px; height: 40px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("Actual clave de acceso es <span style='font-weight: bold; font-style: italic; color: #2E77D2;'>").append(clave).append("</span>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 12px; height: 40px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("Haz clic en el link de abajo para poder actualizar tu contraseña; en GESCON cuidamos tu privacidad. Gracias. ");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr>");
+            body.append("<td style='text-align:center;vertical-align:top;'>");
+            body.append("<a href='http://192.168.1.11:8180/gescon/'><img src='cid:boton'></a>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("</table>");
+        } catch (Exception e) {
             e.getMessage();
         }
-            
-        return sb.toString();
+
+        return body.toString();
     }
-    
+
     public String getSaveBodyMail(String usuario, String clave) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder body = new StringBuilder();
         try {
-            sb.append("<span>Estimado Usuario:</span><br/>");
-            sb.append("<span>Gracias por registrase en el Sistema de Gestión del Conocimiento del Ministerio de Economía y Finanzas (GESCON - MEF).</span><br/>");
-            sb.append("<span>Sus credenciales para el inicio de sesión son las siguientes:</span><br/>");
-            sb.append("<span>Usuario: ").append("<span style=\"font-weight: bold;\">").append(usuario).append("</span></span><br/>");
-            sb.append("<span>Contraseña: ").append("<span style=\"font-weight: bold;\">").append(clave).append("</span></span><br/><br/>");
-            sb.append("<span>Gracias,</span><br/>");
-            sb.append("<span>GESCON</span><br/>");
-            sb.append("<span>OGTI - MEF</span><br/>");
-        } catch(Exception e) {
+            body.append("<table>");
+            body.append("<tr>");
+            body.append("<td>");
+            body.append("<img src='cid:banner'>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 30px; font-weight: bold; height: 50px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("¡ Te damos la bienvenida !");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 12px; height: 40px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("GESCON es una plataforma interactiva que te permite trasmitir y generar conocimientos, y habilidades de manera sistemática y eficiente. Te invitamos a participar de esta solución tecnológica; incorpora ideas, pregunta, genera contenidos, crea wikis y buenas prácticas.");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 14px; height: 40px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("Tu nuevo usuario es <span style='font-weight: bold; font-style: italic; color: #2E77D2;'>").append(usuario).append("</span> ");
+            body.append("y tu clave de acceso es <span style='font-weight: bold; font-style: italic; color: #2E77D2;'>").append(clave).append("</span>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 12px; height: 40px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("Gracias por ser parte de GESCON. Ahora puedes buscar y crear conocimiento que te permitirá obtener una ventaja competitiva en el ámbito laboral.");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr>");
+            body.append("<td style='text-align:center;vertical-align:top;'>");
+            body.append("<a href='http://192.168.1.11:8180/gescon/'><img src='cid:boton'></a>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("</table>");
+        } catch (Exception e) {
             e.getMessage();
         }
-            
-        return sb.toString();
+
+        return body.toString();
     }
 }
