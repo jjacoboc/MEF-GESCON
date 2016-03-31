@@ -15,6 +15,15 @@
             <div class="Container100">
                 <div class="ContainerIndent TexAlCenter">
                     <f:view>
+                        <ui:include src="../froala.xhtml"/>
+                        <!-- Initialize the editor. -->
+                        <script>
+                            $(function() {
+                                $('#descHtml').froalaEditor({
+                                    language: 'es'
+                                });
+                            });
+                        </script>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="#{msgs.bp_lbl_pnlEdit}" styleClass="TexAlLeft">
@@ -55,10 +64,8 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.bp_lbl_descripcion}"/>
                                     </h:panelGroup>
-                                    <p:editor id="descHtml" value="#{buenaPracticaMB.descripcionHtml}" 
-                                              controls="bold italic underline strikethrough subscript superscript | 
-                                                        font size style | color highlight | bullets numbering | 
-                                                        outdent indent | alignleft center alignright justify"/>
+                                    <textarea id="descHtml" name="descHtml">#{buenaPracticaMB.descripcionHtml}</textarea>
+                                    <p:spacer/>
                                     
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -94,7 +101,8 @@
                                         <p:tabView id="tabview">
                                             <p:tab title="Bases Legales">
                                                 <p:dataTable value="#{buenaPracticaMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
-                                                             emptyMessage="Ninguna base legal vinculada." >
+                                                             emptyMessage="Ninguna base legal vinculada." 
+                                                             rowStyleClass="#{p.idEstado eq '4' ? 'blink' : null}">
                                                     <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
                                                         <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
                                                             <h:outputText value="#{p.codigo}"/>

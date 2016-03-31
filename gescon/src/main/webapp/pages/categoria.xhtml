@@ -10,17 +10,6 @@
         <div class="layout-portlets-box">
             <div class="Container100">
                 <div class="ContainerIndent">
-                    <style type="text/css">
-                        .ui-selectonemenu-list,
-                        .ui-selectonemenu-panel {
-                            max-height:150px !important;
-                            overflow: scroll;
-                        }
-                        .ui-selectonemenu-items-wrapper {
-                            height:100% !important;
-                            overflow: scroll;
-                        }
-                    </style>
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
@@ -108,7 +97,7 @@
 
                         <p:dialog id="newDlg" header="Nueva Categoría" widgetVar="newDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
                             <h:form id="newDialogForm">
-                                <h:panelGrid id="pgNew" columns="3" style="text-align: left;width: 100%">
+                                <h:panelGrid id="pgNew" columns="3" style="width: 100%">
                                     <h:outputText value="*"/>
                                     <h:outputText value="Nombre:"/>
                                     <p:inputText size="50" value="#{categoriaMB.nombre}" maxlength="100" styleClass="Fs14"/> 
@@ -123,18 +112,16 @@
 
                                     <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
                                     <h:outputText value="Moderador:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
-                                    <p:selectOneMenu value="#{categoriaMB.moderador}" panelStyle="width:180px" effect="fade" 
-                                                     style="width:160px" filter="true" filterMatchMode="startsWith"
-                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
+                                    <p:selectOneMenu value="#{categoriaMB.moderador}" styleClass="Wid60" panelStyle="Wid60" filter="true" 
+                                                     filterMatchMode="startsWith" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
                                         <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                         <f:selectItems value="#{categoriaMB.listaModerador}" />
                                     </p:selectOneMenu>
 
                                     <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
                                     <h:outputText value="Especialista:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}"/>
-                                    <p:selectOneMenu value="#{categoriaMB.especialista}" panelStyle="width:180px" effect="fade" 
-                                                     style="width:160px" filter="true" filterMatchMode="startsWith"
-                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
+                                    <p:selectOneMenu value="#{categoriaMB.especialista}" styleClass="Wid60" panelStyle="Wid60" filter="true" 
+                                                     filterMatchMode="startsWith" rendered="#{categoriaMB.selectedCategoria.nnivel lt 3}">
                                         <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                         <f:selectItems value="#{categoriaMB.listaEspecialista}"/>
                                     </p:selectOneMenu>
@@ -188,18 +175,16 @@
 
                                     <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}"/>
                                     <h:outputText value="Moderador:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}"/>
-                                    <p:selectOneMenu value="#{categoriaMB.moderador}" panelStyle="width:180px" effect="fade" 
-                                                     style="width:160px" filter="true" filterMatchMode="startsWith"
-                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}">
+                                    <p:selectOneMenu value="#{categoriaMB.moderador}" styleClass="Wid60" panelStyle="Wid60" filter="true" 
+                                                     filterMatchMode="startsWith" rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}">
                                         <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                         <f:selectItems value="#{categoriaMB.listaModerador}" />
                                     </p:selectOneMenu>
 
                                     <h:outputText value="*" rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}"/>
                                     <h:outputText value="Especialista:" rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}"/>
-                                    <p:selectOneMenu value="#{categoriaMB.especialista}" panelStyle="width:180px" effect="fade" 
-                                                     style="width:160px" filter="true" filterMatchMode="startsWith"
-                                                     rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}">
+                                    <p:selectOneMenu value="#{categoriaMB.especialista}" styleClass="Wid60" panelStyle="Wid60" filter="true" 
+                                                     filterMatchMode="startsWith" rendered="#{categoriaMB.selectedCategoria.nnivel lt 4}">
                                         <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                         <f:selectItems value="#{categoriaMB.listaEspecialista}" />
                                     </p:selectOneMenu>

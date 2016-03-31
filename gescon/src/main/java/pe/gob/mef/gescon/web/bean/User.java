@@ -42,6 +42,7 @@ public class User implements Serializable {
     private String vgobierno;
     private BigDecimal nuserinterno;
     private BigDecimal nactivo;
+    private BigDecimal nperfilid;
     private String vnombreCompleto;
     private String vfechanacimiento;
     private String vfechacreacion;
@@ -377,6 +378,14 @@ public class User implements Serializable {
         this.nactivo = nactivo;
     }
 
+    public BigDecimal getNperfilid() {
+        return nperfilid;
+    }
+
+    public void setNperfilid(BigDecimal nperfilid) {
+        this.nperfilid = nperfilid;
+    }
+
     public String getVnombreCompleto() {
         this.vnombreCompleto = this.vnombres + " " + this.vapellidos;
         return vnombreCompleto;
@@ -400,7 +409,7 @@ public class User implements Serializable {
 
     public String getVfechacreacion() {
         if(dfechacreacion != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_MEDIUM);
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_SHORT);
             vfechacreacion = sdf.format(dfechacreacion);
         }
         return vfechacreacion;
@@ -412,7 +421,7 @@ public class User implements Serializable {
 
     public String getVfechamodificacion() {
         if(dfechamodificacion != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_MEDIUM);
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_SHORT);
             vfechamodificacion = sdf.format(dfechamodificacion);
         }
         return vfechamodificacion;

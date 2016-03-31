@@ -21,6 +21,7 @@ public interface UserDao {
     List<Mtuser> getMtusers() throws Exception;
     List<Mtuser> getMtusersInternal() throws Exception;
     List<Mtuser> getMtusersExternal() throws Exception;
+    List<Mtuser> getMtuserByPerfil(BigDecimal perfil) throws Exception;
     Mtuser getMtuserByDNI(String dni) throws Exception;
     Mtuser getMtuserByLogin(String login) throws Exception;
     Mtuser getMtuserById(BigDecimal nusuarioid) throws Exception;

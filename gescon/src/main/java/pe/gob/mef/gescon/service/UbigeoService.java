@@ -6,7 +6,7 @@
 package pe.gob.mef.gescon.service;
 
 import java.util.List;
-import pe.gob.mef.gescon.web.ui.Ubigeo;
+import pe.gob.mef.gescon.web.bean.Ubigeo;
 
 /**
  *

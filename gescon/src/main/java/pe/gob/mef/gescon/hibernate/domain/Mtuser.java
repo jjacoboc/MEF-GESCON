@@ -35,6 +35,7 @@ public class Mtuser implements java.io.Serializable {
     private String vgobierno;
     private String vsector;
     private BigDecimal nuserinterno;
+    private BigDecimal nperfilid;
     private Set tcategoriaUsers = new HashSet(0);
     private Set tuserPerfils = new HashSet(0);
     private Set tpasses = new HashSet(0);
@@ -266,6 +267,14 @@ public class Mtuser implements java.io.Serializable {
 
     public void setNuserinterno(BigDecimal nuserinterno) {
         this.nuserinterno = nuserinterno;
+    }
+
+    public BigDecimal getNperfilid() {
+        return nperfilid;
+    }
+
+    public void setNperfilid(BigDecimal nperfilid) {
+        this.nperfilid = nperfilid;
     }
 
     public Set getTcategoriaUsers() {

@@ -78,19 +78,19 @@
                                 <p:spacer width="10"/>
                                 <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic;"/>
                             </h:panelGrid>
-                            <p:spacer width="10" rendered="#{loginMB.user ne null}"/>
-                            <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
+                            <p:spacer width="10" />
+                            <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.politicas[msgs.EDITAR_COMENTARIO] or loginMB.login eq c.vusuariocreacion}"/>
                             <p:commandLink value="editar" actionListener="#{baseLegalMB.toEditCalificacion}" update=":tabview:ecalDialogForm:pgEcal" 
-                                           oncomplete="PF('ecalDialog').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
+                                           oncomplete="PF('ecalDialog').show();" styleClass="ui-link Fs12" rendered="#{loginMB.politicas[msgs.EDITAR_COMENTARIO] or loginMB.login eq c.vusuariocreacion}">
                                 <f:param name="index" value="#{rowIndex}"/>
                             </p:commandLink>
-                            <h:outputText value="]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
-                            <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
+                            <h:outputText value="]" styleClass="FontBold black" rendered="#{loginMB.politicas[msgs.EDITAR_COMENTARIO] or loginMB.login eq c.vusuariocreacion}"/>
+                            <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.politicas[msgs.ELIMINAR_COMENTARIO] or loginMB.login eq c.vusuariocreacion}"/>
                             <p:commandLink value="eliminar" actionListener="#{baseLegalMB.toDeleteCalificacion}" update=":tabview:ecalDialogForm:pgEcal" 
-                                           oncomplete="PF('confirmDlg').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
+                                           oncomplete="PF('confirmDlg').show();" styleClass="ui-link Fs12" rendered="#{loginMB.politicas[msgs.ELIMINAR_COMENTARIO] or loginMB.login eq c.vusuariocreacion}">
                                 <f:param name="index" value="#{rowIndex}"/>
                             </p:commandLink>
-                            <h:outputText value="]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
+                            <h:outputText value="]" styleClass="FontBold black" rendered="#{loginMB.politicas[msgs.ELIMINAR_COMENTARIO] or loginMB.login eq c.vusuariocreacion}"/>
                         </h:panelGrid>
                         <h:panelGrid columns="11" cellpadding="0" cellspacing="0">
                             <h:outputText value="Por" styleClass="Fs12" />

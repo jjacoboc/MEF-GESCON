@@ -348,8 +348,8 @@ public class CategoriaMB implements Serializable {
             CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             createTree(service.getCategorias());
             UserService userService = (UserService) ServiceFinder.findBean("UserService");
-            this.setListaModerador(new Items(userService.getUsersInternal(), null, "nusuarioid", "vnombreCompleto").getItems());
-            this.setListaEspecialista(new Items(userService.getUsersInternal(), null, "nusuarioid", "vnombreCompleto").getItems());
+            this.setListaModerador(new Items(userService.getUsersByPerfil(BigDecimal.valueOf(Constante.MODERADOR)), null, "nusuarioid", "vnombreCompleto").getItems());
+            this.setListaEspecialista(new Items(userService.getUsersByPerfil(BigDecimal.valueOf(Constante.ESPECIALISTA)), null, "nusuarioid", "vnombreCompleto").getItems());
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

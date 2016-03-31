@@ -66,10 +66,7 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.om_lbl_contenido}"/>
                                     </h:panelGroup>
-                                    <p:editor id="descHtml" value="#{oportunidadMB.contenidoHtml}" 
-                                              controls="bold italic underline strikethrough subscript superscript | 
-                                                        font size style | color highlight | bullets numbering | 
-                                                        outdent indent | alignleft center alignright justify"/>
+                                    <textarea id="descHtml" name="descHtml">#{oportunidadMB.contenidoHtml}</textarea>
                                     
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -104,7 +101,8 @@
                                         <p:tabView id="tabview">
                                             <p:tab title="Bases Legales">
                                                 <p:dataTable value="#{oportunidadMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
-                                                             emptyMessage="Ninguna base legal vinculada." >
+                                                             emptyMessage="Ninguna base legal vinculada." 
+                                                             rowStyleClass="#{p.idEstado eq '4' ? 'blink' : null}">
                                                     <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
                                                         <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
                                                             <h:outputText value="#{p.codigo}"/>

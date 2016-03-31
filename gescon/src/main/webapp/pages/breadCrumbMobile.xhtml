@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:form id="fb1">
+        <h:panelGrid id="pgBreadCrumb" columns="1" cellpadding="0" cellspacing="0" style="width: 100%">
+            <h:panelGroup>
+                <h:outputText value="#{consultaMB.listaConsulta.size()} resultados para " rendered="#{not empty consultaMB.listaConsulta}" styleClass="Fs14" />
+                <h:outputText value="0 resultados para " rendered="#{empty consultaMB.listaConsulta}" styleClass="Fs14" />
+                <ui:repeat value="#{consultaMB.listaBreadCrumb}" var="b" rendered="#{not empty consultaMB.listaBreadCrumb}">
+                    <p:commandLink id="bcLink" actionListener="#{consultaMB.onClickBreadCrumb}" styleClass="GesconLink"
+                                   update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb, :fm1:pgFiltro, :f1:pgConsulta, :fb1:pgBreadCrumb">
+                        <h:outputText value="#{b.vnombre}" styleClass="Fs14 FontBold"/>
+                        <f:param name="ncategoriaid" value="#{b.ncategoriaid}"/>
+                    </p:commandLink>
+                    <h:outputText class="fa fa-fw fa-chevron-right"/>
+                </ui:repeat>
+            </h:panelGroup>
+        </h:panelGrid>
+    </h:form>
+</html>

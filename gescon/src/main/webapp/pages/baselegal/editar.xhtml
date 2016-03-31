@@ -127,7 +127,8 @@
                                 <p:fieldset>
                                     <h:panelGrid id="pgEditVinc" columns="1" cellpadding="0" cellspacing="0">
                                         <p:commandButton value="#{msgs.bl_btn_vinculo}" actionListener="#{baseLegalMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pgPick" styleClass="ui-link Fs14"/>
-                                        <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada.">
+                                        <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada."
+                                                     rowStyleClass="#{t.nestadoid eq '4' ? 'blink' : null}">
                                             <p:column style="width: 25%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
                                                 <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
                                                     <h:outputText value="#{t.vnumero}"/>

@@ -22,6 +22,14 @@ import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.jsoup.Jsoup;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
@@ -624,7 +632,7 @@ public class OportunidadMB implements Serializable {
             this.setTitulo(StringUtils.EMPTY);
             this.setDetalleHtml(StringUtils.EMPTY);
             this.setDetallePlain(StringUtils.EMPTY);
-            this.setChkDestacado(true);
+            this.setChkDestacado(false);
             this.setListaSourceVinculos(new ArrayList());
             this.setListaTargetVinculos(new ArrayList());
             this.setListaTargetVinculosBL(new ArrayList());
@@ -1149,6 +1157,10 @@ public class OportunidadMB implements Serializable {
                     conocimiento.setVusuariomodificacion(user.getVlogin());
                     conocimiento.setDfechamodificacion(new Date());
                     service.saveOrUpdate(conocimiento);
+                    ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                    HashMap filter = new HashMap();
+                    filter.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA);                
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                 }
             }
         } catch(Exception e) {
@@ -1423,7 +1435,7 @@ public class OportunidadMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(this.getChkDestacado()) {
+            if(this.getSelectedOportunidad().getNdestacado().equals(BigDecimal.ZERO) && this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
                 filter.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA);
@@ -1642,7 +1654,7 @@ public class OportunidadMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(this.getChkDestacado()) {
+            if(this.getSelectedOportunidad().getNdestacado().equals(BigDecimal.ZERO) && this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
                 filter.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA);
@@ -1802,9 +1814,12 @@ public class OportunidadMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedOportunidad()!= null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     this.getSelectedOportunidad().setNactivo(BigDecimal.ONE);
                     this.getSelectedOportunidad().setDfechamodificacion(new Date());
+                    this.getSelectedOportunidad().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedOportunidad());
                     this.setListaOportunidad(service.getConocimientosByType(Constante.OPORTUNIDADMEJORA));
                 } else {
@@ -1822,9 +1837,13 @@ public class OportunidadMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedOportunidad() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     this.getSelectedOportunidad().setNactivo(BigDecimal.ZERO);
+                    this.getSelectedOportunidad().setNdestacado(BigDecimal.ZERO);
                     this.getSelectedOportunidad().setDfechamodificacion(new Date());
+                    this.getSelectedOportunidad().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedOportunidad());
                     this.setListaOportunidad(service.getConocimientosByType(Constante.OPORTUNIDADMEJORA));
                 } else {
@@ -2159,6 +2178,64 @@ public class OportunidadMB implements Serializable {
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
+        }
+    }
+    
+    public void postProcessXLS(Object document) {
+        HSSFWorkbook wb = (HSSFWorkbook) document;
+        HSSFSheet sheet = wb.getSheetAt(0);
+
+        //Para los datos
+        HSSFCellStyle centerStyle = wb.createCellStyle();
+        centerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        
+        HSSFCellStyle centerGrayStyle = wb.createCellStyle();
+        centerGrayStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        centerGrayStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+        centerGrayStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        
+        HSSFCellStyle grayBG = wb.createCellStyle();
+        grayBG.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+        grayBG.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        int i = 1;
+        for(Conocimiento c : this.getListaOportunidad()) {
+            HSSFRow row = sheet.getRow(i);
+            for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
+                HSSFCell cell = row.getCell(j);
+                if(i % 2 == 0 ) {
+                    if(j > 0) {
+                        cell.setCellStyle(centerGrayStyle);
+                    } else {
+                        cell.setCellStyle(grayBG);
+                        cell.setCellValue(c.getVtitulo());
+                    }
+                } else {
+                    if(j > 0) {
+                        cell.setCellStyle(centerStyle);
+                    } else {
+                        cell.setCellValue(c.getVtitulo());
+                    }
+                }
+            }
+            i++;
+        }
+        
+        // Para la cabecera
+        HSSFRow header = sheet.getRow(0);
+        HSSFCellStyle headerStyle = wb.createCellStyle();
+        HSSFFont font = wb.createFont();
+        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setFont(font);
+        
+        for (int j = 0; j < header.getPhysicalNumberOfCells(); j++) {
+            HSSFCell cell = header.getCell(j);
+            cell.setCellStyle(headerStyle);
+            sheet.autoSizeColumn(j);
         }
     }
 }

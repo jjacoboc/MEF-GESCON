@@ -64,40 +64,38 @@
                                 <li class="Animated05"><p:commandLink actionListener="#{loginMB.logout}" oncomplete="logout();" styleClass="Unselectable BoxbarLink"><i class="fa fa-sign-out"/> Cerrar Sesión </p:commandLink></li>
                             </ul>
                         </li>
-                        <h:panelGroup rendered="#{loginMB.perfil ne null and loginMB.perfil.nperfilid ne msgs.usuarioexterno and loginMB.perfil.nperfilid ne msgs.usuariointerno}">
-                            <li class="fa fa-ellipsis-v menu-separator" style="color: white !important"></li>
-                            <li>
-                                <h:panelGroup rendered="#{loginMB.notificaciones gt 0}">
-                                    <a class="Animated05 CursPointer TopbarLink"><i class="fa fa-bell animated swing infinite red"></i><p:spacer width="5"/><h:outputText value="Bandeja de Notificaciones" /> <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
-                                </h:panelGroup>
-                                <h:panelGroup rendered="#{loginMB.notificaciones eq 0}">
-                                    <a class="Animated05 CursPointer TopbarLink"><i class="fa fa-bell"></i><p:spacer width="5"/><h:outputText value="Bandeja de Notificaciones" /> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
-                                </h:panelGroup>
-                                <ul style="width:200px; margin-left:0px;" class="Animated03 submenu">
-                                    <li>
-                                        <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadAssignedPanel}" oncomplete="PF('asgDialog').show();" update=":asgDialogForm:pgAsg">
-                                            <h:panelGroup rendered="#{loginMB.notificacionesAsignadas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
-                                            <h:panelGroup rendered="#{loginMB.notificacionesAsignadas gt 0}"><i class="fa fa-envelope Fs18 red animated infinite rubberBand"></i></h:panelGroup>
-                                            <span class="Fright Fs16 TexAlRight">Asignadas<span class="Fs10 DispBlock">#{loginMB.notificacionesAsignadas} por recibir</span></span>
-                                        </p:commandLink>
-                                    </li>
-                                    <li>
-                                        <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadReceivedPanel}" oncomplete="PF('rcbDialog').show();" update=":rcbDialogForm:pgRcb">
-                                            <h:panelGroup rendered="#{loginMB.notificacionesRecibidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
-                                            <h:panelGroup rendered="#{loginMB.notificacionesRecibidas gt 0}"><i class="fa fa-envelope Fs18 blue animated infinite rubberBand"></i></h:panelGroup>
-                                            <span class="Fright Fs16 TexAlRight">Recibidas<span class="Fs10 DispBlock">#{loginMB.notificacionesRecibidas} por atender</span></span>
-                                        </p:commandLink>
-                                    </li>
-                                    <li>
-                                        <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadServedPanel}" oncomplete="PF('srvDialog').show();" update=":srvDialogForm:pgSrv">
-                                            <h:panelGroup rendered="#{loginMB.notificacionesAtendidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
-                                            <h:panelGroup rendered="#{loginMB.notificacionesAtendidas gt 0}"><i class="fa fa-envelope Fs18 green"></i></h:panelGroup>
-                                            <span class="Fright Fs16 TexAlRight">Atendidas<span class="Fs10 DispBlock">#{loginMB.notificacionesAtendidas} atendidas</span></span>
-                                        </p:commandLink>
-                                    </li>
-                                </ul>
-                            </li>
-                        </h:panelGroup>
+                        <li class="fa fa-ellipsis-v menu-separator" style="color: white !important"></li>
+                        <li>
+                            <h:panelGroup rendered="#{loginMB.notificaciones gt 0}">
+                                <a class="Animated05 CursPointer TopbarLink"><i class="fa fa-bell animated swing infinite red"></i><p:spacer width="5"/><h:outputText value="Bandeja de Notificaciones" /> <span class="notification-bubble BordRad3 animated rubberBand">#{loginMB.notificaciones}</span> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                            </h:panelGroup>
+                            <h:panelGroup rendered="#{loginMB.notificaciones eq 0}">
+                                <a class="Animated05 CursPointer TopbarLink"><i class="fa fa-bell"></i><p:spacer width="5"/><h:outputText value="Bandeja de Notificaciones" /> <i class="fa fa-chevron-down Fs14 Fright ShowOnMobile"></i></a>
+                            </h:panelGroup>
+                            <ul style="width:200px; margin-left:0px;" class="Animated03 submenu">
+                                <li>
+                                    <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadAssignedPanel}" oncomplete="PF('asgDialog').show();" update=":asgDialogForm:pgAsg">
+                                        <h:panelGroup rendered="#{loginMB.notificacionesAsignadas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
+                                        <h:panelGroup rendered="#{loginMB.notificacionesAsignadas gt 0}"><i class="fa fa-envelope Fs18 red animated infinite rubberBand"></i></h:panelGroup>
+                                        <span class="Fright Fs16 TexAlRight">Asignadas<span class="Fs10 DispBlock">#{loginMB.notificacionesAsignadas} por recibir</span></span>
+                                    </p:commandLink>
+                                </li>
+                                <li>
+                                    <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadReceivedPanel}" oncomplete="PF('rcbDialog').show();" update=":rcbDialogForm:pgRcb">
+                                        <h:panelGroup rendered="#{loginMB.notificacionesRecibidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
+                                        <h:panelGroup rendered="#{loginMB.notificacionesRecibidas gt 0}"><i class="fa fa-envelope Fs18 blue animated infinite rubberBand"></i></h:panelGroup>
+                                        <span class="Fright Fs16 TexAlRight">Recibidas<span class="Fs10 DispBlock">#{loginMB.notificacionesRecibidas} por atender</span></span>
+                                    </p:commandLink>
+                                </li>
+                                <li>
+                                    <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadServedPanel}" oncomplete="PF('srvDialog').show();" update=":srvDialogForm:pgSrv">
+                                        <h:panelGroup rendered="#{loginMB.notificacionesAtendidas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
+                                        <h:panelGroup rendered="#{loginMB.notificacionesAtendidas gt 0}"><i class="fa fa-envelope Fs18 green"></i></h:panelGroup>
+                                        <span class="Fright Fs16 TexAlRight">Atendidas<span class="Fs10 DispBlock">#{loginMB.notificacionesAtendidas} atendidas</span></span>
+                                    </p:commandLink>
+                                </li>
+                            </ul>
+                        </li>
                     </h:panelGroup>
                     <h:panelGroup rendered="#{loginMB.user eq null}">
                         <li class="Animated05"><p:link href="#" onclick="PF('iniDialog').show();" styleClass="TopbarLink" ><i class="fa fa-sign-in"/> Iniciar Sesión</p:link></li>
@@ -150,7 +148,7 @@
                             <p:column style="width: 18%; text-align: center;" sortBy="#{row.fechaAsignacion}" filterBy="#{row.fechaAsignacion}" filterMatchMode="contains">
                                 <f:facet name="header"><h:outputText value="FECHA ASIGNACIÓN"/></f:facet>
                                 <h:outputText value="#{row.fechaAsignacion}" >
-                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" pattern="dd/MM/yyyy HH:mm:ss" />
                                 </h:outputText>
                             </p:column>
                             <p:column style="width: 10%; text-align: center;" sortBy="#{row.estado}" filterBy="#{row.estado}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
@@ -193,7 +191,7 @@
                             <p:column style="width: 18%; text-align: center;" sortBy="#{row.fechaRecepcion}" filterBy="#{row.fechaRecepcion}" filterMatchMode="contains">
                                 <f:facet name="header"><h:outputText value="FECHA RECEPCIÓN"/></f:facet>
                                 <h:outputText value="#{row.fechaRecepcion}" >
-                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" pattern="dd/MM/yyyy HH:mm:ss"/>
                                 </h:outputText>
                             </p:column>
                             <p:column style="width: 10%; text-align: center;" sortBy="#{row.estado}" filterBy="#{row.estado}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
@@ -234,7 +232,7 @@
                             <p:column style="width: 18%; text-align: center;" sortBy="#{row.fechaAtencion}" filterBy="#{row.fechaAtencion}" filterMatchMode="contains">
                                 <f:facet name="header"><h:outputText value="FECHA ATENCIÓN"/></f:facet>
                                 <h:outputText value="#{row.fechaAtencion}" >
-                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" pattern="dd/MM/yyyy HH:mm:ss"/>
                                 </h:outputText>
                             </p:column>
                             <p:column style="width: 10%; text-align: center;" sortBy="#{row.estado}" filterBy="#{row.estado}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
@@ -270,7 +268,7 @@
                             <p:column style="width: 18%; text-align: center;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
                                 <f:facet name="header"><h:outputText value="FECHA PUBLICACION"/></f:facet>
                                 <h:outputText value="#{row.fechaPublicacion}" >
-                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" />
+                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" pattern="dd/MM/yyyy HH:mm:ss"/>
                                 </h:outputText>
                             </p:column>
                             <p:column style="width: 10%; text-align: center;" sortBy="#{row.estado}" filterBy="#{row.estado}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">

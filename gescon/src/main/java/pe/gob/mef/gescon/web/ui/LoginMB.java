@@ -18,7 +18,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +25,6 @@ import org.primefaces.context.RequestContext;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Parameters;
-import pe.gob.mef.gescon.hibernate.domain.Mtuser;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.ParametroService;
@@ -325,14 +323,14 @@ public class LoginMB implements Serializable {
     public void setSelectedNotification(Consulta selectedNotification) {
         this.selectedNotification = selectedNotification;
     }
-    
+
     @PostConstruct
     public void init() {
         try {
             this.alertaFlag = "false";
             this.claveCaducada = false;
             this.claveDefault = false;
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
@@ -350,7 +348,7 @@ public class LoginMB implements Serializable {
                     if (pas != null && this.getPass().equals(pas.getVclave())) {
                         ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
                         Parametro passDefault = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.CLAVE_DEFAULT)));
-                        if(pas.getVclave().equals(passDefault.getVvalor())) {
+                        if (pas.getVclave().equals(passDefault.getVvalor())) {
                             ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
                             this.setNotificacion(bundle.getString("notificacion1"));
                             this.setClaveDefault(true);
@@ -364,7 +362,7 @@ public class LoginMB implements Serializable {
                         }
                         Parametro caducidad = parametroService.getParametroById(BigDecimal.valueOf(Long.parseLong(Constante.DIAS_CADUCIDAD_CLAVE)));
                         long dias = DateUtils.getDifferenceDays(pas.getDfechacreacion(), new Date());
-                        if(dias > Long.parseLong(caducidad.getVvalor())) {
+                        if (dias > Long.parseLong(caducidad.getVvalor())) {
                             ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
                             this.setNotificacion(bundle.getString("notificacion2"));
                             this.setClaveCaducada(true);
@@ -464,7 +462,7 @@ public class LoginMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
     public void toUpdatePassword(ActionEvent event) {
         try {
             this.setPass(StringUtils.EMPTY);
@@ -481,7 +479,7 @@ public class LoginMB implements Serializable {
         Pass pas;
         try {
             PassService passService = (PassService) ServiceFinder.findBean("PassService");
-            if(this.getUser() != null) {
+            if (this.getUser() != null) {
                 usuario = this.getUser();
             } else {
                 UserService service = (UserService) ServiceFinder.findBean("UserService");
@@ -491,7 +489,7 @@ public class LoginMB implements Serializable {
             if (StringUtils.isNotBlank(this.getPass())) {
                 if (this.getPass().equals(pas.getVclave())) {
                     if (StringUtils.isNotBlank(this.getNewpass())) {
-                        if(!this.getNewpass().equals(pas.getVclave())) {
+                        if (!this.getNewpass().equals(pas.getVclave())) {
                             if (StringUtils.isNotBlank(this.getConfirmpass())) {
                                 if (this.getNewpass().equals(this.getConfirmpass())) {
                                     TpassId id = new TpassId();
@@ -540,21 +538,37 @@ public class LoginMB implements Serializable {
             e.printStackTrace();
         }
     }
-    
+
+    public void refreshNotifications() {
+        try {
+            AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.setNotificaciones(asignacionService.getNumberNotificationsByUser(this.getUser()));
+            this.setNotificacionesAsignadas(asignacionService.getNumberNotificationsAssignedByUser(this.getUser()));
+            this.setNotificacionesRecibidas(asignacionService.getNumberNotificationsReceivedByUser(this.getUser()));
+            this.setNotificacionesAtendidas(asignacionService.getNumberNotificationsServedByUser(this.getUser()));
+            this.setListaNotificacionesAlerta(asignacionService.getNotificationsAlertPanelByMtuser(this.getUser()));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
     public String redirect() {
         String page = null;
         try {
             page = (String) JSFUtils.getRequestParameter("page");
             JSFUtils.getSession().removeAttribute("administracionMB");
             JSFUtils.getSession().removeAttribute("baseLegalMB");
+            JSFUtils.getSession().removeAttribute("buenaPracticaMB");
             JSFUtils.getSession().removeAttribute("categoriaMB");
             JSFUtils.getSession().removeAttribute("consultaMB");
-            JSFUtils.getSession().removeAttribute("listaSessionMB");
-            JSFUtils.getSession().removeAttribute("wikiMB");
-            JSFUtils.getSession().removeAttribute("buenaPracticaMB");
-            JSFUtils.getSession().removeAttribute("oportunidadMB");
-            JSFUtils.getSession().removeAttribute("preguntaMB");
             JSFUtils.getSession().removeAttribute("contenidoMB");
+            JSFUtils.getSession().removeAttribute("listaSessionMB");
+            JSFUtils.getSession().removeAttribute("oportunidadMB");
+            JSFUtils.getSession().removeAttribute("pendienteMB");
+            JSFUtils.getSession().removeAttribute("preguntaMB");
+            JSFUtils.getSession().removeAttribute("userMB");
+            JSFUtils.getSession().removeAttribute("wikiMB");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

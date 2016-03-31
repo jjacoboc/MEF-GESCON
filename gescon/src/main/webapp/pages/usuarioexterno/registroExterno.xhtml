@@ -187,9 +187,10 @@
                                   fitViewport="true" resizable="true" showEffect="fade" hideEffect="fade">
                             <h:form id="cropDialogForm">
                                 <h:panelGrid id="pgCrop" columns="1">
-                                    <p:fileUpload fileUploadListener="#{userMB.handleFileUpload}" mode="advanced" dragDropSupport="true" update=":cropDialogForm:pgCrop"/>
+                                    <p:fileUpload fileUploadListener="#{userMB.handleFileUpload}" mode="advanced" dragDropSupport="true" update=":cropDialogForm:pgCrop"
+                                                  cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..."/>
                                     <p:imageCropper value="#{userMB.croppedImage}" image="#{userMB.imagenTemporal}" initialCoords="225,75,300,125" />
-                                    <p:commandButton value="Crop" action="#{userMB.crop}" update=":f:pgCrop" icon="ui-icon-scissors"/>
+                                    <p:commandButton value="Cortar" action="#{userMB.crop}" update=":f:pgCrop" icon="fa fa-cut white"/>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>

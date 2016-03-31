@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <style>
+
+    </style>
+    <h:form id="f">
+        <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />                                    
+        <h:panelGrid id="pgConsulta" columns="1" width="100%">
+            <p:dataScroller value="#{consultaMB.listaConsulta}" var="c" mode="inline" chunkSize="10" scrollHeight="480" style="width: 100%" >
+                <h:panelGrid columns="1" width="100%">
+                    <h:panelGrid columns="5" cellpadding="0" cellspacing="0">
+                        <h:outputText class="fa fa-file-text-o animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 1}"/>
+                        <h:outputText class="fa fa-question animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 2}"/>
+                        <h:outputText class="fa fa-puzzle-piece animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 3}"/>
+                        <h:outputText class="fa fa-caret-square-o-right animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 4}"/>
+                        <h:outputText class="fa fa-check-square-o animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 5}"/>
+                        <h:outputText class="fa fa-signal animated fadeInDownBig red Fs14" rendered="#{c.idTipoConocimiento eq 6}"/>
+                        <p:spacer width="5"/>
+                        <p:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" update=":viewprDialogForm:pgViewpr" >
+                            <h:outputText id="blk" value="#{c.nombre}" styleClass="Fs14 FontBold blink" rendered="#{c.flgVinculo eq 1}"/>
+                            <pe:tooltip for="blk" showEffect="fadeIn" hideEffect="fadeIn" myPosition="left center" atPosition="right center">
+                                <h:panelGrid columns="2">
+                                    <h:outputText class="fa fa-exclamation-triangle animated tada infinite red Fs16"/>
+                                    <h:outputText value="#{msgs.msgTooltipLinkDerogated}" styleClass="Fs12 red"/>
+                                </h:panelGrid>
+                            </pe:tooltip>
+                            <h:outputText value="#{c.nombre}" styleClass="Fs14 FontBold" rendered="#{c.flgVinculo ne 1}"/>
+                            <f:param name="id" value="#{c.idconocimiento}"/>
+                            <f:param name="idTipo" value="#{c.idTipoConocimiento}"/>
+                            <f:param name="popup" value="false"/>
+                            <f:param name="tempPopup" value="false"/>
+                        </p:commandLink>
+                        <p:spacer width="15"/>
+                        <p:rating value="#{c.calificacion}" readonly="true" />
+                    </h:panelGrid>
+                    <h:panelGrid columns="2">
+                        <p:spacer width="8"/>
+                        <h:outputText value="#{c.sumilla}" styleClass="Fs12 " />
+                    </h:panelGrid>
+                    <h:panelGrid columns="14">
+                        <p:spacer width="8"/>
+                        <h:outputText value="Categoría:" styleClass="Fs12" style="white-space: nowrap;"/>
+                        <h:outputText value="#{c.categoria}" styleClass="FontBold Fs12" style="font-style: italic; white-space: nowrap;"/>
+                        <p:spacer width="15"/>
+                        <h:outputText value="Tipo:" styleClass="Fs12" style="white-space: nowrap;"/>
+                        <h:outputText value="#{c.tipoConocimiento}" styleClass="FontBold Fs12" style="font-style: italic; white-space: nowrap;"/>
+                        <p:spacer width="15"/>
+                        <h:outputText value="Fecha:" styleClass="Fs12" style="white-space: nowrap;"/>
+                        <h:outputText value="#{c.fechaPublicacion}" styleClass="FontBold Fs12" style="font-style: italic; white-space: nowrap;">
+                            <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy" />
+                        </h:outputText>
+                        <p:spacer width="15"/>
+                        <h:outputText value="Estado:" styleClass="Fs12" style="white-space: nowrap;"/>
+                        <h:outputText value="#{c.estado}" styleClass="FontBold Fs12" style="font-style: italic; white-space: nowrap;"/>
+                        <p:spacer width="15"/>
+                        <h:outputText value="#{c.elapsedTime}" styleClass="Fs12" style="font-style: italic; white-space: nowrap;"/>
+                    </h:panelGrid>
+                </h:panelGrid>
+                <h:outputText value="Ningún registro encontrado." rendered="#{empty consultaMB.listaConsulta}"/>
+            </p:dataScroller>                                                
+        </h:panelGrid>
+    </h:form>
+</html>

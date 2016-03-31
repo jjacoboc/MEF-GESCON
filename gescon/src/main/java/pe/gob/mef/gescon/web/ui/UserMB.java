@@ -577,6 +577,7 @@ public class UserMB implements Serializable {
     }
 
     public void cleanAttributes() {
+        this.setTrabajaMef(BigDecimal.ONE.toString());
         this.setId(BigDecimal.ZERO);
         this.setDni(StringUtils.EMPTY);
         this.setNombres(StringUtils.EMPTY);
@@ -688,6 +689,9 @@ public class UserMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
+            String usuarioexterno = bundle.getString("usuarioexterno");
+            
             user = new User();
             user.setNusuarioid(service.getNextPK());
             user.setVnombres(StringUtils.capitalize(this.getNombres()));
@@ -709,6 +713,7 @@ public class UserMB implements Serializable {
             user.setVgobierno(this.getGobierno());
             user.setNestado(BigDecimal.ONE);
             user.setNactivo(BigDecimal.ONE);
+            user.setNperfilid(BigDecimal.valueOf(Long.parseLong(usuarioexterno)));
             user.setNuserinterno(BigDecimal.ZERO);
             user.setDfechacreacion(new Date());
             user.setVusuariocreacion(this.getLogin());
@@ -732,9 +737,6 @@ public class UserMB implements Serializable {
                 String pathImage = this.path + File.separator + user.getNusuarioid() + File.separator;
                 this.saveFile(pathImage, this.photoFileName, croppedImage.getBytes());
             }
-
-            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
-            String usuarioexterno = bundle.getString("usuarioexterno");
 
             TuserPerfilId tuserPerfilId = new TuserPerfilId();
             tuserPerfilId.setNusuarioid(user.getNusuarioid());
@@ -825,6 +827,9 @@ public class UserMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
+            String usuarioexterno = bundle.getString("usuarioexterno");
+            
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User usuario = loginMB.getUser();
             user = new User();
@@ -849,6 +854,11 @@ public class UserMB implements Serializable {
             user.setNestado(BigDecimal.ONE);
             user.setNactivo(BigDecimal.ONE);
             user.setNuserinterno(BigDecimal.valueOf(Long.parseLong(this.getTrabajaMef())));
+            if(this.getTrabajaMef().equals(BigDecimal.ONE.toString())) {
+                user.setNperfilid(BigDecimal.valueOf(Long.parseLong(this.getPerfil())));
+            } else {
+                user.setNperfilid(BigDecimal.valueOf(Long.parseLong(usuarioexterno)));
+            }
             user.setDfechacreacion(new Date());
             user.setVusuariocreacion(usuario.getVlogin());
             userService.saveOrUpdate(user);
@@ -1010,6 +1020,7 @@ public class UserMB implements Serializable {
             User user = loginMB.getUser();
             this.getSelectedUser().setVnombres(StringUtils.capitalize(this.getSelectedUser().getVnombres()));
             this.getSelectedUser().setVapellidos(StringUtils.capitalize(this.getSelectedUser().getVapellidos()));
+            this.getSelectedUser().setNperfilid(BigDecimal.valueOf(Long.parseLong(this.getPerfil())));
             this.getSelectedUser().setDfechamodificacion(new Date());
             this.getSelectedUser().setVusuariomodificacion(user.getVlogin());
             UserService service = (UserService) ServiceFinder.findBean("UserService");

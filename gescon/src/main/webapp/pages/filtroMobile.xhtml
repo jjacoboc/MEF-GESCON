@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <style>
+        .ui-fieldset .ui-fieldset-legend {
+            padding-top: 4px;
+            padding-bottom:  4px;
+            padding-left:  5px;
+            padding-right:  5px;
+            font-size: 14px;
+        }
+        .ui-selectmanycheckbox tbody tr td label{
+            font-size: 12px;
+            color: #3B3D3F;
+        }
+        .ui-selectmanycheckbox tbody tr td{
+            vertical-align: middle;
+        }
+        .ui-inputfield {
+            padding-top: 2px !important;
+            padding-bottom:  4px !important;
+            padding-left:  4px !important;
+            padding-right:  2px !important;
+            font-size: 14px;
+            vertical-align: middle;
+            color: #3B3D3F;
+        }
+        .ui-button .ui-button-text {
+            padding-top: 2px !important;
+            padding-bottom:  2px !important;
+            padding-left:  2px !important;
+            padding-right:  2px !important;
+            vertical-align: middle;
+        }
+        .ui-button span {
+            font-size: 14px;
+            vertical-align: middle;
+        }
+        .ui-datalist {
+            border-style: none;
+        }
+        .ui-panelgrid .ui-panelgrid-cell {
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+        }
+
+        .ui-panelgrid, .ui-panelgrid tbody tr td {
+            border: none !important;
+        }
+
+        
+    </style>
+    <h:form id="fm1">
+        <h:panelGrid id="pgFiltro" columns="1">
+            <h:outputText value="Filtrar por" styleClass="FontBold Fs14" />
+            <p:fieldset legend="Sub Categorías">
+                <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none"
+                            itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro eq null}" emptyMessage="No hay más sub categorías">
+                    <h:panelGrid columns="1" cellpadding="0" cellspacing="0" rendered="#{cat.nnivel eq 1}">
+                        <p:commandLink actionListener="#{consultaMB.onClickSubCategoriesFilter}" styleClass="GesconLink" update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb, :fm1:pgFiltro, :f1:pgConsulta, :fb1:pgBreadCrumb" >
+                            <f:param name="rowIndex" value="#{rowIndex}"/>
+                            <h:outputText class="fa fa-angle-double-right"/>
+                            <p:spacer width="5"/>
+                            <h:outputText value="#{cat.vnombre}" styleClass="Fs12"/>
+                        </p:commandLink>
+                    </h:panelGrid>
+                </p:dataList>
+                <p:dataList value="#{consultaMB.listaCategoriaFiltro}" var="cat" rowIndexVar="rowIndex" type="none" 
+                            itemType="none" rendered="#{consultaMB.selectedCategoriaFiltro ne null}" emptyMessage="No hay más sub categorías">
+                    <h:panelGrid columns="1" cellpadding="0" cellspacing="0" 
+                                 rendered="#{(cat.nnivel eq (consultaMB.selectedCategoriaFiltro.nnivel + 1) and cat.ncategoriasup eq consultaMB.selectedCategoriaFiltro.ncategoriaid)}">
+                        <p:commandLink id="fcLink" actionListener="#{consultaMB.onClickSubCategoriesFilter}" styleClass="GesconLink" update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb, :fm1:pgFiltro, :f1:pgConsulta, :fb1:pgBreadCrumb" >
+                            <f:param name="rowIndex" value="#{rowIndex}"/>
+                            <h:outputText class="fa fa-angle-double-right"/>
+                            <p:spacer width="5"/>
+                            <h:outputText value="#{cat.vnombre}" styleClass="Fs12"/>
+                        </p:commandLink>
+                    </h:panelGrid>
+                </p:dataList>
+            </p:fieldset>
+            <p:fieldset legend="Rango" styleClass="fieldset-consulta">
+                <h:panelGrid columns="4" styleClass="panelcolumns2">
+                    <p:calendar id="fromDate" locale="es" value="#{consultaMB.fechaInicio}" maxdate="#{consultaMB.fechaFin}" size="10" 
+                                pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
+                        <p:ajax event="dateSelect" update=":fm1:toDate"/>
+                    </p:calendar>
+                    <h:outputText value="al" />
+                    <p:calendar id="toDate" locale="es" value="#{consultaMB.fechaFin}" mindate="#{consultaMB.fechaInicio}" size="10" 
+                                pattern="dd/MM/yyyy" showButtonPanel="true" navigator="true">
+                        <p:ajax event="dateSelect" update=":fm1:fromDate"/>
+                    </p:calendar>
+                    <p:commandButton icon="fa fa-chevron-right white" actionListener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb, :fm1:pgFiltro, :f1:pgConsulta, :fb1:pgBreadCrumb"/>
+                </h:panelGrid>
+            </p:fieldset>
+            <p:fieldset legend="Tipo de Contenido">
+                <p:selectManyCheckbox id="grid" value="#{consultaMB.selectedTipoConocimiento}" layout="grid" columns="1" style="font-size: 12px;" >
+                    <f:selectItems value="#{consultaMB.listaTipoConocimientoFiltro}" var="tc" itemLabel="#{tc.vnombre}" itemValue="#{tc.ntpoconocimientoid}" />
+                    <p:ajax event="change" listener="#{consultaMB.filtrar}" update=":fm:pgFiltro, :f:pgConsulta, :fb:pgBreadCrumb, :fm1:pgFiltro, :f1:pgConsulta, :fb1:pgBreadCrumb"/>
+                </p:selectManyCheckbox>
+            </p:fieldset>
+            <p:fieldset rendered="#{loginMB.politicas[msgs.REGISTRAR_PREGUNTAS]}">
+                <p:commandButton value="Formular Pregunta" ajax="false" action="/pages/pregunta/nuevo.xhtml" />
+            </p:fieldset>
+            <p:fieldset>
+                <p:commandButton  value="Imprimir" action="#{consultaMB.reporte}" ajax="false"/>
+            </p:fieldset>
+        </h:panelGrid>
+    </h:form>
+</html>

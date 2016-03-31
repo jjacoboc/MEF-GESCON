@@ -79,6 +79,19 @@ public class UserServiceImpl implements UserService{
     }
     
     @Override
+    public List<User> getUsersByPerfil(BigDecimal perfil) throws Exception {
+        List<User> users = new ArrayList<User>();
+        UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
+        List<Mtuser> lista = userDao.getMtuserByPerfil(perfil);
+        for(Mtuser mtuser : lista) {
+            User user = new User();
+            BeanUtils.copyProperties(user, mtuser);
+            users.add(user);
+        }
+        return users;
+    }
+    
+    @Override
     public User getUserByDNI(String dni) throws Exception {
         UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
         Mtuser mtuser = userDao.getMtuserByDNI(dni);

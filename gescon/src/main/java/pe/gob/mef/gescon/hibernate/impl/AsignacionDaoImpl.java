@@ -58,8 +58,8 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         sql.append("SELECT COUNT(t.nconocimientoid) FROM TASIGNACION t ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
         sql.append("AND ((t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
-        sql.append("OR (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is null) ");
-        sql.append("OR (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is not null)) ");
+        sql.append("OR (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is null)) ");
+        //sql.append("OR (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is not null)) ");
 
         return (BigDecimal) getHibernateTemplate().execute(
                 new HibernateCallback() {
@@ -160,6 +160,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.nconocimientoid AND t.ntipoconocimientoid = a.ntpoconocimientoid ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is null and t.dfechaatencion is null) ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
+        sql.append("ORDER BY 7 ");
 
         return (List<HashMap>) getHibernateTemplate().execute(
                 new HibernateCallback() {
@@ -210,6 +211,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.nconocimientoid AND t.ntipoconocimientoid = a.ntpoconocimientoid ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is null) ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
+        sql.append("ORDER BY 7 ");
 
         return (List<HashMap>) getHibernateTemplate().execute(
                 new HibernateCallback() {
@@ -258,6 +260,7 @@ public class AsignacionDaoImpl extends HibernateDaoSupport implements Asignacion
         sql.append("INNER JOIN TASIGNACION t ON t.nconocimientoid = a.nconocimientoid AND t.ntipoconocimientoid = a.ntpoconocimientoid ");
         sql.append("AND (t.dfechaasignacion is not null and t.dfecharecepcion is not null and t.dfechaatencion is not null) ");
         sql.append("WHERE t.nusuarioid = ").append(mtuser.getNusuarioid()).append(" ");
+        sql.append("ORDER BY 7 ");
 
         return (List<HashMap>) getHibernateTemplate().execute(
                 new HibernateCallback() {

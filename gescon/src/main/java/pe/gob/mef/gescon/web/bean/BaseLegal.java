@@ -387,7 +387,7 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
 
     public String getVfechavigencia() {
         if(dfechavigencia != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_MEDIUM);
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_SHORT);
             vfechavigencia = sdf.format(dfechavigencia);
         }
         return vfechavigencia;
@@ -399,7 +399,7 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
 
     public String getVfechapublicacion() {
         if(dfechapublicacion != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_MEDIUM);
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATE_SHORT);
             vfechapublicacion = sdf.format(dfechapublicacion);
         }
         return vfechapublicacion;
@@ -411,7 +411,7 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
 
     public String getVfechacreacion() {
         if(dfechacreacion != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_SHORT);
             vfechacreacion = sdf.format(dfechacreacion);
         }
         return vfechacreacion;
@@ -423,7 +423,7 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
 
     public String getVfechamodificacion() {
         if(dfechamodificacion != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_MEDIUM);
+            SimpleDateFormat sdf = new SimpleDateFormat(Constante.FORMAT_DATETIME_SHORT);
             vfechamodificacion = sdf.format(dfechamodificacion);
         }
         return vfechamodificacion;

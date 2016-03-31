@@ -32,6 +32,14 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.jsoup.Jsoup;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
@@ -591,7 +599,7 @@ public class BaseLegalMB implements Serializable {
         this.setChkGobRegional(false);
         this.setChkGobLocal(false);
         this.setChkMancomunidades(false);
-        this.setChkDestacado(true);
+        this.setChkDestacado(false);
         this.setComentario(StringUtils.EMPTY);
         this.setFechaVigencia(null);
         this.setTema(StringUtils.EMPTY);
@@ -801,6 +809,10 @@ public class BaseLegalMB implements Serializable {
                     baseLegal.setVusuariomodificacion(user.getVlogin());
                     baseLegal.setDfechamodificacion(new Date());
                     service.saveOrUpdate(baseLegal);
+                    ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                    HashMap filter = new HashMap();
+                    filter.put("ntipoconocimientoid", Constante.BASELEGAL);                
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                 }
             }
         } catch (Exception e) {
@@ -989,8 +1001,8 @@ public class BaseLegalMB implements Serializable {
                 blvinculada.setVusuariomodificacion(user.getVlogin());
                 service.saveOrUpdate(blvinculada);
 
-                if (v.getNbaselegalid().toString().equals(Constante.ESTADO_BASELEGAL_MODIFICADA)
-                        || v.getNbaselegalid().toString().equals(Constante.ESTADO_BASELEGAL_CONCORDADO)) {
+                if (v.getNestadoid().toString().equals(Constante.ESTADO_BASELEGAL_MODIFICADA)
+                        || v.getNestadoid().toString().equals(Constante.ESTADO_BASELEGAL_CONCORDADO)) {
 
                     ConocimientoService cservice = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     List<Consulta> listaConocimientos = cservice.getConcimientosByVinculoBaseLegalId(blvinculada.getNbaselegalid());
@@ -1250,7 +1262,7 @@ public class BaseLegalMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (this.getChkDestacado()) {
+            if (this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ZERO) && this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
                 filter.put("ntipoconocimientoid", Constante.BASELEGAL);
@@ -1599,7 +1611,7 @@ public class BaseLegalMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (this.getChkDestacado()) {
+            if (this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ZERO) && this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
                 filter.put("ntipoconocimientoid", Constante.BASELEGAL);
@@ -1967,10 +1979,12 @@ public class BaseLegalMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedBaseLegal() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
                     this.getSelectedBaseLegal().setNactivo(BigDecimal.ONE);
                     this.getSelectedBaseLegal().setDfechamodificacion(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedBaseLegal().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedBaseLegal());
                     this.setListaBaseLegal(service.getBaselegales());
                 } else {
@@ -1988,10 +2002,13 @@ public class BaseLegalMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedBaseLegal() != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
                     BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
                     this.getSelectedBaseLegal().setNactivo(BigDecimal.ZERO);
+                    this.getSelectedBaseLegal().setNdestacado(BigDecimal.ZERO);
                     this.getSelectedBaseLegal().setDfechamodificacion(new Date());
-//                    this.getSelectedMaestro().setVusumod(user.getUsuario());
+                    this.getSelectedBaseLegal().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedBaseLegal());
                     this.setListaBaseLegal(service.getBaselegales());
                 } else {
@@ -2126,37 +2143,62 @@ public class BaseLegalMB implements Serializable {
             e.printStackTrace();
         }
     }
+    
+    public void postProcessXLS(Object document) {
+        HSSFWorkbook wb = (HSSFWorkbook) document;
+        HSSFSheet sheet = wb.getSheetAt(0);
 
-//    public void toCompare(ActionEvent event) {
-//        try {
-//            if (event != null) {
-//                if (CollectionUtils.isEmpty(this.getSelectedHistoriales())) {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe seleccionar dos versiones para comparar.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                    return;
-//                }
-//                if (!CollectionUtils.isEmpty(this.getSelectedHistoriales()) && this.getSelectedHistoriales().size() != 2) {
-//                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Sólo se puede comparar dos versiones a la vez.");
-//                    FacesContext.getCurrentInstance().addMessage(null, message);
-//                    return;
-//                }
-//                ArchivoHistorialService archivoHistorialService = (ArchivoHistorialService) ServiceFinder.findBean("ArchivoHistorialService");
-//                VinculoBaselegalHistorialService vinculoHistService = (VinculoBaselegalHistorialService) ServiceFinder.findBean("VinculoBaselegalHistorialService");
-//                for (BaselegalHist historial : this.getSelectedHistoriales()) {
-//                    historial.setArchivoHist(archivoHistorialService.getLastArchivoHistByBaseLegalHist(historial));
-//                    if (CollectionUtils.isNotEmpty(historial.getListaSeccionHist())) {
-//                        for (SeccionHist seccionHist : historial.getListaSeccionHist()) {
-//                            seccionHist.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "html.txt"));
-//                        }
-//                    }
-//                }
-//                this.setSelectedHistorialLeft(this.getSelectedHistoriales().get(0));
-//                this.setSelectedHistorialRight(this.getSelectedHistoriales().get(1));
-//                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/baselegal/historialCompare.xhtml");
-//            }
-//        } catch (Exception e) {
-//            e.getMessage();
-//            e.printStackTrace();
-//        }
-//    }
+        //Para los datos
+        HSSFCellStyle centerStyle = wb.createCellStyle();
+        centerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        
+        HSSFCellStyle centerGrayStyle = wb.createCellStyle();
+        centerGrayStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        centerGrayStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+        centerGrayStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        
+        HSSFCellStyle grayBG = wb.createCellStyle();
+        grayBG.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+        grayBG.setFillPattern(CellStyle.SOLID_FOREGROUND);
+        int i = 1;
+        for(BaseLegal b : this.getListaBaseLegal()) {
+            HSSFRow row = sheet.getRow(i);
+            for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
+                HSSFCell cell = row.getCell(j);
+                if(i % 2 == 0 ) {
+                    if(j > 0) {
+                        cell.setCellStyle(centerGrayStyle);
+                    } else {
+                        cell.setCellStyle(grayBG);
+                        cell.setCellValue(b.getVnumero());
+                    }
+                } else {
+                    if(j > 0) {
+                        cell.setCellStyle(centerStyle);
+                    } else {
+                        cell.setCellValue(b.getVnumero());
+                    }
+                }
+            }
+            i++;
+        }
+        
+        // Para la cabecera
+        HSSFRow header = sheet.getRow(0);
+        HSSFCellStyle headerStyle = wb.createCellStyle();
+        HSSFFont font = wb.createFont();
+        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+        headerStyle.setFont(font);
+        
+        for (int j = 0; j < header.getPhysicalNumberOfCells(); j++) {
+            HSSFCell cell = header.getCell(j);
+            cell.setCellStyle(headerStyle);
+            sheet.autoSizeColumn(j);
+        }
+    }
 }

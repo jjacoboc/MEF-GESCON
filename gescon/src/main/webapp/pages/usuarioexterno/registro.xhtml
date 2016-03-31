@@ -18,12 +18,13 @@
                                     <h:outputText value="Accede a todos los servicios del portal con solo un nombre y contraseña" styleClass="Fs16 FontBold"/>
                                     <p:fieldset legend="Información General">
                                         <h:panelGrid columns="2" styleClass="Wid100 panelcolumns">
-                                            <h:panelGrid columns="3">
+                                            <h:panelGrid id="pgInfoGral" columns="3">
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
                                                 <h:outputLabel value="El Usuario Labora en el MEF? "/>
                                                 <p:selectOneRadio id="console9" value="#{userMB.trabajaMef}">
                                                     <f:selectItem itemLabel="SI" itemValue="1" />
                                                     <f:selectItem itemLabel="NO" itemValue="0" />
+                                                    <p:ajax event="change" update=":f:pgInfoGral"/>
                                                 </p:selectOneRadio>
 
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -42,9 +43,9 @@
                                                 <h:outputText value="Nombre de Usuario: "/>
                                                 <p:inputText value="#{userMB.login}" size="25"  maxlength="25" style="text-transform: lowercase;"/>
                                                 
-                                                <h:outputText value="#{msgs.icon_asterisk}"/>
-                                                <h:outputLabel value="Perfil de Usuario: "/>
-                                                <p:selectOneMenu value="#{userMB.perfil}" panelStyle="Wid100" styleClass="Wid100">
+                                                <h:outputText value="#{msgs.icon_asterisk}" rendered="#{userMB.trabajaMef eq '1'}"/>
+                                                <h:outputLabel value="Perfil de Usuario: " rendered="#{userMB.trabajaMef eq '1'}"/>
+                                                <p:selectOneMenu value="#{userMB.perfil}" panelStyle="Wid100" styleClass="Wid100" rendered="#{userMB.trabajaMef eq '1'}">
                                                     <f:selectItem itemValue="" itemLabel="Seleccione"/>
                                                     <f:selectItems value="#{userMB.listaPerfil}"/>
                                                 </p:selectOneMenu>
@@ -180,7 +181,7 @@
                                     </p:fieldset>
                                     <h:panelGrid columns="2" width="100%">
                                         <h:panelGroup>
-                                            <p:commandButton value="Registrar" actionListener="#{userMB.save}" update=":f:growl"/>
+                                            <p:commandButton value="Registrar" actionListener="#{userMB.saveadm}" update=":f:growl"/>
                                             <p:spacer width="10"/>
                                             <p:commandButton value="Cancelar" ajax="false" action="/pages/usuarioexterno/lista.xhtml"/>
                                         </h:panelGroup>
@@ -194,9 +195,10 @@
                                   fitViewport="true" resizable="true" showEffect="fade" hideEffect="fade">
                             <h:form id="cropDialogForm">
                                 <h:panelGrid id="pgCrop" columns="1">
-                                    <p:fileUpload fileUploadListener="#{userMB.handleFileUpload}" mode="advanced" dragDropSupport="true" update=":cropDialogForm:pgCrop"/>
+                                    <p:fileUpload fileUploadListener="#{userMB.handleFileUpload}" mode="advanced" dragDropSupport="true" update=":cropDialogForm:pgCrop"
+                                                  cancelLabel="Cancelar" uploadLabel="Cargar" label="Examinar..."/>
                                     <p:imageCropper value="#{userMB.croppedImage}" image="#{userMB.imagenTemporal}" initialCoords="225,75,300,125" />
-                                    <p:commandButton value="Crop" action="#{userMB.crop}" update=":f:pgCrop" icon="ui-icon-scissors"/>
+                                    <p:commandButton value="Cortar" action="#{userMB.crop}" update=":f:pgCrop" icon="fa fa-cut white"/>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import pe.gob.mef.gescon.hibernate.dao.UbigeoDao;
 import pe.gob.mef.gescon.service.UbigeoService;
 import pe.gob.mef.gescon.util.ServiceFinder;
-import pe.gob.mef.gescon.web.ui.Ubigeo;
+import pe.gob.mef.gescon.web.bean.Ubigeo;
 
 /**
  *

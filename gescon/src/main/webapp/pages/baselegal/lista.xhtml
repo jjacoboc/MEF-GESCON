@@ -23,7 +23,7 @@
                                         <f:facet name="{Exporters}">
                                             <h:commandLink styleClass="Fright">
                                                 <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
-                                                <p:dataExporter type="xls" target="tbl" fileName="basesLegales" />
+                                                <p:dataExporter type="xls" target="tbl" fileName="basesLegales" postProcessor="#{baseLegalMB.postProcessXLS}"/>
                                             </h:commandLink>
                                         </f:facet>
                                         <p:column style="width: 20%;" sortBy="#{row.vnumero}" filterBy="#{row.vnumero}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">

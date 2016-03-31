@@ -23,7 +23,7 @@
                                         <f:facet name="{Exporters}">
                                             <h:commandLink styleClass="Fright">
                                                 <p:graphicImage library="images" name="File-Extension-Xls.png" width="24" height="24"/>
-                                                <p:dataExporter type="xls" target="tbl" fileName="wikis" />
+                                                <p:dataExporter type="xls" target="tbl" fileName="wikis" postProcessor="#{wikiMB.postProcessXLS}" />
                                             </h:commandLink>
                                         </f:facet>
                                         <p:column style="width: 47%" priority="1">
@@ -38,9 +38,7 @@
                                         </p:column>
                                         <p:column style="text-align: center; width: 15%;" priority="3">
                                             <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna03}"/></f:facet>
-                                            <h:outputText value="#{row.dfechapublicacion}">
-                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" />
-                                            </h:outputText>
+                                            <h:outputText value="#{row.vfechapublicacion}"/>
                                         </p:column>
                                         <p:column style="text-align: center; width: 10%;" priority="4">
                                             <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna04}"/></f:facet>

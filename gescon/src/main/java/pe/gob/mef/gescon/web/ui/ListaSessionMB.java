@@ -71,6 +71,7 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaUsuariosActivos;
     private List<SelectItem> filterEstado;
     private List<SelectItem> filterModulos;
+    private List<SelectItem> filterPerfiles;
     
     /**
      * Creates a new instance of ListaSessionMB
@@ -611,6 +612,20 @@ public class ListaSessionMB implements Serializable{
 
     public void setFilterModulos(List<SelectItem> filterModulos) {
         this.filterModulos = filterModulos;
+    }
+
+    public List<SelectItem> getFilterPerfiles() throws Exception {
+        if(filterPerfiles == null){
+            PerfilService perfilService = (PerfilService) ServiceFinder.findBean("PerfilService");
+            filterPerfiles =  new ArrayList<SelectItem>();
+            filterPerfiles.add(new SelectItem("", "Todos"));
+            filterPerfiles.addAll(new Items(perfilService.getPerfils(), null, "nperfilid","vnombre").getItems());
+        }
+        return filterPerfiles;
+    }
+
+    public void setFilterPerfiles(List<SelectItem> filterPerfiles) {
+        this.filterPerfiles = filterPerfiles;
     }
     
 }
