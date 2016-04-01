@@ -1273,6 +1273,8 @@ public class PendienteMB implements Serializable {
             LoginMB mb = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            
+            
             int perfil_actual = Integer.parseInt(service.obtenerPerfilxUsuario(mb.getUser().getNusuarioid()).toString());
             int user_actual = Integer.parseInt(mb.getUser().getNusuarioid().toString());
             int user_creacion;
@@ -1353,6 +1355,9 @@ public class PendienteMB implements Serializable {
                     } else {
                         this.fMsjUsu1 = "true";
                     }
+                    
+                    this.getSelectedAsignacion().setDfecharecepcion(new Date());
+                    serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
                     pagina = "/pages/Pendientes/moderarBaseLegal?faces-redirect=true";
 
@@ -1504,6 +1509,9 @@ public class PendienteMB implements Serializable {
                         this.fSInfMod = "false";
                         this.fMsjUsu1 = "false";
                     }
+                    
+                    this.getSelectedAsignacion().setDfecharecepcion(new Date());
+                    serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
                     if (situacion == 1) {
                         pagina = "/pages/Pendientes/moderarPregunta?faces-redirect=true";
@@ -1593,6 +1601,9 @@ public class PendienteMB implements Serializable {
                     } else {
                         this.fMsjUsu1 = "true";
                     }
+                    
+                    this.getSelectedAsignacion().setDfecharecepcion(new Date());
+                    serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
                     if (situacion == 1) {
                         pagina = "/pages/Pendientes/moderarWiki?faces-redirect=true";
@@ -1675,6 +1686,9 @@ public class PendienteMB implements Serializable {
                     } else {
                         this.fMsjUsu1 = "true";
                     }
+                    
+                    this.getSelectedAsignacion().setDfecharecepcion(new Date());
+                    serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
                     if (situacion == 1) {
                         pagina = "/pages/Pendientes/moderarContenido?faces-redirect=true";
@@ -1755,6 +1769,9 @@ public class PendienteMB implements Serializable {
                     } else {
                         this.fMsjUsu1 = "true";
                     }
+                    
+                    this.getSelectedAsignacion().setDfecharecepcion(new Date());
+                    serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
                     if (situacion == 1) {
                         pagina = "/pages/Pendientes/moderarBpracticas?faces-redirect=true";
@@ -1834,6 +1851,9 @@ public class PendienteMB implements Serializable {
                     } else {
                         this.fMsjUsu1 = "true";
                     }
+                    
+                    this.getSelectedAsignacion().setDfecharecepcion(new Date());
+                    serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
                     if (situacion == 1) {
                         pagina = "/pages/Pendientes/moderarOmejora?faces-redirect=true";

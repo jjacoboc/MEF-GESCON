@@ -19,6 +19,7 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import pe.gob.mef.gescon.hibernate.dao.CalificacionPreguntaDao;
 import pe.gob.mef.gescon.hibernate.domain.TcalificacionPregunta;
 
@@ -74,11 +75,13 @@ public class CalificacionPreguntaDaoImpl extends HibernateDaoSupport implements 
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void saveOrUpdate(TcalificacionPregunta tcalificacion) throws Exception {
         getHibernateTemplate().saveOrUpdate(tcalificacion);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void delete(final BigDecimal idcalificacion) throws Exception {
         getHibernateTemplate().execute(
                 new HibernateCallback() {
