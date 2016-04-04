@@ -5,11 +5,13 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
+import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
@@ -22,8 +24,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.TabChangeEvent;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
 import pe.gob.mef.gescon.service.AsignacionService;
@@ -31,9 +35,11 @@ import pe.gob.mef.gescon.service.ParametroService;
 import pe.gob.mef.gescon.service.PassService;
 import pe.gob.mef.gescon.service.PerfilService;
 import pe.gob.mef.gescon.service.PoliticaPerfilService;
+import pe.gob.mef.gescon.service.UbigeoService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.DateUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
+import pe.gob.mef.gescon.util.MailUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Parametro;
@@ -57,6 +63,7 @@ public class LoginMB implements Serializable {
     private String pass;
     private String newpass;
     private String confirmpass;
+    private String correo;
     private HashMap politicas;
     private BigDecimal notificaciones;
     private BigDecimal notificacionesAsignadas;
@@ -75,6 +82,7 @@ public class LoginMB implements Serializable {
     private Boolean claveDefault;
     private String notificacion;
     private Consulta selectedNotification;
+    private String photoImage;
 
     /**
      * Creates a new instance of LoginMB
@@ -166,6 +174,14 @@ public class LoginMB implements Serializable {
 
     public void setConfirmpass(String confirmpass) {
         this.confirmpass = confirmpass;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     public HashMap getPoliticas() {
@@ -322,6 +338,14 @@ public class LoginMB implements Serializable {
 
     public void setSelectedNotification(Consulta selectedNotification) {
         this.selectedNotification = selectedNotification;
+    }
+
+    public String getPhotoImage() {
+        return photoImage;
+    }
+
+    public void setPhotoImage(String photoImage) {
+        this.photoImage = photoImage;
     }
 
     @PostConstruct
@@ -506,32 +530,26 @@ public class LoginMB implements Serializable {
                                 } else {
                                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La nueva contraseña ingresada no coincide con la confirmación.");
                                     FacesContext.getCurrentInstance().addMessage(null, message);
-                                    return;
                                 }
                             } else {
                                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Confirme la nueva contraseña.");
                                 FacesContext.getCurrentInstance().addMessage(null, message);
-                                return;
                             }
                         } else {
                             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La nueva contraseña debe ser diferente a la actual.");
                             FacesContext.getCurrentInstance().addMessage(null, message);
-                            return;
                         }
                     } else {
                         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Ingrese la nueva contraseña.");
                         FacesContext.getCurrentInstance().addMessage(null, message);
-                        return;
                     }
                 } else {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "La contraseña ingresada es incorrecta.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
-                    return;
                 }
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Ingrese la contraseña ingresada actual.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
             }
         } catch (Exception e) {
             e.getMessage();
@@ -574,6 +592,134 @@ public class LoginMB implements Serializable {
             e.printStackTrace();
         }
         return page.concat("?faces-redirect=true");
+    }
+    
+    public void toMyProfile(ActionEvent event) {
+        try {
+            UserMB userMB = (UserMB) JSFUtils.getSessionAttribute("userMB");
+            this.setPhotoImage(getPhotoUser());
+            UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
+            userMB.setListaProvincia(new Items(ubigeoService.getProvinciasPorDepartamento(this.getUser().getVdpto()), null, "vcodprov", "vdescprov").getItems());
+            userMB.setListaDistrito(new Items(ubigeoService.getDistritosPorProvincia(this.getUser().getVdpto(), this.getUser().getVprov()), null, "vcoddist", "vdescdist").getItems());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/miperfil.xhtml");
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public String getPhotoUser() {
+        ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+        String path = bundle.getString("usrpath");
+        String pathImage = path + File.separator + this.getUser().getNusuarioid() + File.separator;
+        String newFileName = pathImage + "photo.jpg";
+        File f = new File(newFileName);
+        if (!f.exists()) {
+            newFileName = StringUtils.EMPTY;
+        }
+        return newFileName;
+    }
+    
+    public void toForgotPassword(ActionEvent event) {
+        try {
+            this.setLogin(StringUtils.EMPTY);
+            this.setCorreo(StringUtils.EMPTY);
+            Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
+            if (iter.hasNext() == true) {
+                iter.remove();
+                FacesContext.getCurrentInstance().renderResponse();
+            }
+            RequestContext.getCurrentInstance().execute("PF('iniDialog').hide();");
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void forgotPassword(ActionEvent event) {
+        User usuario;
+        try {
+            UserService service = (UserService) ServiceFinder.findBean("UserService");
+            if(StringUtils.isNotBlank(this.getLogin())) {
+                usuario = service.getUserByLogin(this.getLogin());
+            } else {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Ingrese su usuario de sesión.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if(StringUtils.isNotBlank(this.getCorreo())) {
+                usuario = service.getUserByEmail(this.getCorreo());
+            } else {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Ingrese su correo electrónico.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            PassService passService = (PassService) ServiceFinder.findBean("PassService");
+            Pass pas = passService.getPassByUser(usuario);
+            MailUtils.sendMail(usuario.getVcorreo(), "GESCON MEF - Olvidé mi contraseña.", getForgotPasswordBodyMail(pas.getVclave()));
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Su contraseña ha sido enviada al correo registrado. Por favor, revise su bandeja de entrada.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void onTabChange(TabChangeEvent event) {
+        try {
+            this.setLogin(StringUtils.EMPTY);
+            this.setCorreo(StringUtils.EMPTY);
+            Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
+            if (iter.hasNext() == true) {
+                iter.remove();
+                FacesContext.getCurrentInstance().renderResponse();
+            }
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public String getForgotPasswordBodyMail(String clave) {
+        StringBuilder body = new StringBuilder();
+        try {
+            body.append("<table>");
+            body.append("<tr>");
+            body.append("<td>");
+            body.append("<img src='cid:banner'>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 30px; font-weight: bold; height: 50px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("Olividó su Contraseña?");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 12px; height: 40px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("Estimado usuario, por motivos de seguridad le solicitamos, por favor, elimine este correo de su bandeja de entrada.");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 14px; height: 40px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("Actual clave de acceso es <span style='font-weight: bold; font-style: italic; color: #2E77D2;'>").append(clave).append("</span>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr style='font-size: 12px; height: 40px;'>");
+            body.append("<td colspan='6' style='text-align: center;'>");
+            body.append("Haz clic en el link de abajo para acceder al portal; en GESCON cuidamos tu privacidad. Gracias. ");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr>");
+            body.append("<td style='text-align:center;vertical-align:top;'>");
+            body.append("<a href='http://192.168.1.11:8180/gescon/'><img src='cid:boton'></a>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("</table>");
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+        return body.toString();
     }
 
     public void logout() {

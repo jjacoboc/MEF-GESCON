@@ -13,13 +13,13 @@
                     <f:view>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-                            <p:panel header="#{msgs.us_lbl_pnlEdit}" styleClass="TexAlLeft">
+                            <p:panel header="#{msgs.us_lbl_pnlView}" styleClass="TexAlLeft">
                                 <h:panelGrid columns="1" styleClass="Wid100">
                                     <p:fieldset legend="Información General">
                                         <h:panelGrid columns="2" styleClass="Wid100 panelcolumns">
                                             <h:panelGrid columns="3">
                                                 <h:outputText value="#{msgs.icon_asterisk}"/>
-                                                <h:outputLabel value="El Usuario Labora en el MEF? "/>
+                                                <h:outputLabel value="El usuario labora en el MEF? "/>
                                                 <h:outputText value="#{userMB.selectedUser.nuserinterno}">
                                                     <f:converter converterId="converterSiNo"/>
                                                 </h:outputText>
@@ -71,26 +71,21 @@
                                         <h:panelGrid columns="3">
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Departamento: "/>
-                                            <p:selectOneMenu id="dep" value="#{userMB.selectedUser.vdpto}" filter="true" panelStyle="Wid100" styleClass="Wid100">
-                                                <p:ajax event="change" listener="#{userMB.handleDepartamentoChangeValue}" update=":f:prov, :f:dist"/>
-                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
-                                                <f:selectItems value="#{userMB.listaDepartamento}"/>
-                                            </p:selectOneMenu>
+                                            <h:outputText value="#{userMB.selectedUser.vdpto}">
+                                                <f:converter converterId="converterDepartamento"/>
+                                            </h:outputText>
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Provincia: "/>
-                                            <p:selectOneMenu id="prov" value="#{userMB.selectedUser.vprov}" filter="true" panelStyle="Wid100" styleClass="Wid100">
-                                                <p:ajax event="change" listener="#{userMB.handleProvinciaChangeValue}" update=":f:dist"/>
-                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
-                                                <f:selectItems value="#{userMB.listaProvincia}"/>
-                                            </p:selectOneMenu>
+                                            <h:outputText value="#{userMB.selectedUser.vprov}">
+                                                <f:converter converterId="converterProvincia"/>
+                                            </h:outputText>
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Distrito: "/>
-                                            <p:selectOneMenu id="dist" value="#{userMB.selectedUser.vdist}" filter="true" panelStyle="Wid100" styleClass="Wid100">
-                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
-                                                <f:selectItems value="#{userMB.listaDistrito}"/>
-                                            </p:selectOneMenu>
+                                            <h:outputText value="#{userMB.selectedUser.vdist}">
+                                                <f:converter converterId="converterDistrito"/>
+                                            </h:outputText>
                                         </h:panelGrid>
                                     </p:fieldset>
 
@@ -98,10 +93,9 @@
                                         <h:panelGrid columns="3">
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Profesion: "/>
-                                            <p:selectOneMenu value="#{userMB.selectedUser.vprofesion}" filter="true" panelStyle="Wid100" styleClass="Wid100">
-                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
-                                                <f:selectItems value="#{listaSessionMB.listaProfesionActiva}"/>
-                                            </p:selectOneMenu>
+                                            <h:outputText value="#{userMB.selectedUser.vprofesion}">
+                                                <f:converter converterId="converterProfesion"/>
+                                            </h:outputText>
 
                                             <h:outputText value="#{msgs.icon_asterisk}"/>
                                             <h:outputLabel value="Entidad: "/>

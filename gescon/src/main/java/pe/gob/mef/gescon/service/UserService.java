@@ -23,6 +23,7 @@ public interface UserService {
     List<User> getUsersExternal() throws Exception;
     List<User> getUsersByPerfil(BigDecimal perfil) throws Exception;
     User getUserByDNI(String dni) throws Exception;
+    User getUserByEmail(String email) throws Exception;
     User getUserByLogin(String login) throws Exception;
     User getMtuserById(BigDecimal nusuarioid) throws Exception;
     void asignProfileToUser(TuserPerfil userperfil) throws Exception;

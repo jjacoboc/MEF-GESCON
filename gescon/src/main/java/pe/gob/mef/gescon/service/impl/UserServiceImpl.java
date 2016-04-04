@@ -103,6 +103,19 @@ public class UserServiceImpl implements UserService{
         }        
         return user;
     }
+    
+    @Override
+    public User getUserByEmail(String email) throws Exception {
+        UserDao userDao = (UserDao) ServiceFinder.findBean("UserDao");
+        Mtuser mtuser = userDao.getMtuserByEmail(email);
+        User user = new User();
+        if(mtuser != null) {
+            BeanUtils.copyProperties(user, mtuser);
+        } else {
+            user = null;
+        }        
+        return user;
+    }
 
     @Override
     public User getUserByLogin(String login) throws Exception {
