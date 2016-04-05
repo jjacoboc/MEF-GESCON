@@ -124,7 +124,7 @@
                                 </p:fieldset>
                                 <h:panelGrid columns="2" width="100%">
                                     <h:panelGroup>
-                                        <p:commandButton value="#{msgs.bl_btn_actualizar}" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.edit}" update=":f:growl,:f:pgEdit"/>
+                                        <p:commandButton value="#{msgs.bl_btn_actualizar}" rendered="#{pendienteMB.getfButtonMod()}" ajax="false"  action="#{pendienteMB.edit}" update=":f:growl,:f:pgEdit"/>
                                         <p:spacer width="10"/>
                                         <p:commandButton value="Publicar" ajax="false" rendered="#{pendienteMB.getfButtonMod()}" action="#{pendienteMB.PubBaseLegal}"/>
                                         <p:spacer width="10"/>
@@ -207,7 +207,7 @@
                                     <h:outputText value="#{msgs.bl_lbl_categorias}" style="font-weight: bold; text-decoration: underline;"/>
                                     <p:tree id="cats" value="#{pendienteMB.tree}" var="node" animate="true" cache="true"  
                                             selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                        <p:ajax event="select" listener="#{pendienteMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pgEdit" />
+                                        <p:ajax event="select" listener="#{pendienteMB.onNodeSelectBl}" oncomplete="PF('catDialog').hide();" update=":f:pgEdit" />
                                         <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>

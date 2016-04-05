@@ -109,6 +109,7 @@ public class PendienteMB implements Serializable {
     private final String pathwk = "wk/";
     private final String pathbp = "bp/";
     private final String pathom = "om/";
+    private BigDecimal cat_antigua, cat_nueva;
     private User user;
     private List<Consulta> listaNotificacionesAlerta;
     private String alertaFlag = "false";
@@ -1253,11 +1254,71 @@ public class PendienteMB implements Serializable {
         return null;
     }
 
-    public void onNodeSelect(NodeSelectEvent event) {
+    public void onNodeSelectPreg(NodeSelectEvent event) {
         try {
             if (event != null) {
                 this.setSelectedCategoria((Categoria) event.getTreeNode().getData());
                 this.selectedPregunta.setNcategoriaid(this.selectedCategoria.getNcategoriaid());
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void onNodeSelectBl(NodeSelectEvent event) {
+        try {
+            if (event != null) {
+                this.setSelectedCategoria((Categoria) event.getTreeNode().getData());
+                this.selectedBaseLegal.setNcategoriaid(this.selectedCategoria.getNcategoriaid());
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void onNodeSelectWk(NodeSelectEvent event) {
+        try {
+            if (event != null) {
+                this.setSelectedCategoria((Categoria) event.getTreeNode().getData());
+                this.selectedWiki.setNcategoriaid(this.selectedCategoria.getNcategoriaid());
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void onNodeSelectBp(NodeSelectEvent event) {
+        try {
+            if (event != null) {
+                this.setSelectedCategoria((Categoria) event.getTreeNode().getData());
+                this.selectedBpractica.setNcategoriaid(this.selectedCategoria.getNcategoriaid());
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void onNodeSelectCt(NodeSelectEvent event) {
+        try {
+            if (event != null) {
+                this.setSelectedCategoria((Categoria) event.getTreeNode().getData());
+                this.selectedContenido.setNcategoriaid(this.selectedCategoria.getNcategoriaid());
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void onNodeSelectOm(NodeSelectEvent event) {
+        try {
+            if (event != null) {
+                this.setSelectedCategoria((Categoria) event.getTreeNode().getData());
+                this.selectedOmejora.setNcategoriaid(this.selectedCategoria.getNcategoriaid());
             }
         } catch (Exception e) {
             e.getMessage();
@@ -1273,8 +1334,7 @@ public class PendienteMB implements Serializable {
             LoginMB mb = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
-            
-            
+
             int perfil_actual = Integer.parseInt(service.obtenerPerfilxUsuario(mb.getUser().getNusuarioid()).toString());
             int user_actual = Integer.parseInt(mb.getUser().getNusuarioid().toString());
             int user_creacion;
@@ -1309,6 +1369,7 @@ public class PendienteMB implements Serializable {
                     int situacion;
                     BaseLegalService servicebl = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
                     this.setSelectedBaseLegal(servicebl.getBaselegalById(BigDecimal.valueOf(id)));
+                    cat_antigua = this.getSelectedBaseLegal().getNcategoriaid();
                     ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
                     this.selectedBaseLegal.setArchivo(aservice.getArchivoByBaseLegal(this.getSelectedBaseLegal()));
                     index = this.getSelectedBaseLegal().getVnumero().indexOf("-");
@@ -1355,7 +1416,7 @@ public class PendienteMB implements Serializable {
                     } else {
                         this.fMsjUsu1 = "true";
                     }
-                    
+
                     this.getSelectedAsignacion().setDfecharecepcion(new Date());
                     serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
@@ -1367,6 +1428,7 @@ public class PendienteMB implements Serializable {
                     int situacion;
 
                     this.setSelectedPregunta(service.getPreguntaById(BigDecimal.valueOf(id)));
+                    cat_antigua = this.getSelectedPregunta().getNcategoriaid();
                     this.setEntidad(service.getNomEntidadbyIdEntidad(this.getSelectedPregunta().getNentidadid()));
                     setListaAsignacion(service.obtenerPreguntaxAsig(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS));
                     setFlistaPregunta(service.obtenerPreguntas(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS));
@@ -1509,7 +1571,7 @@ public class PendienteMB implements Serializable {
                         this.fSInfMod = "false";
                         this.fMsjUsu1 = "false";
                     }
-                    
+
                     this.getSelectedAsignacion().setDfecharecepcion(new Date());
                     serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
@@ -1531,6 +1593,7 @@ public class PendienteMB implements Serializable {
                     int situacion;
                     WikiService servicewk = (WikiService) ServiceFinder.findBean("WikiService");
                     this.setSelectedWiki(servicewk.getWikiById(BigDecimal.valueOf(tipo), BigDecimal.valueOf(id)));
+                    cat_antigua = this.getSelectedWiki().getNcategoriaid();
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedWiki().getNcategoriaid()));
 
@@ -1601,7 +1664,7 @@ public class PendienteMB implements Serializable {
                     } else {
                         this.fMsjUsu1 = "true";
                     }
-                    
+
                     this.getSelectedAsignacion().setDfecharecepcion(new Date());
                     serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
@@ -1614,6 +1677,7 @@ public class PendienteMB implements Serializable {
                     int situacion;
                     ContenidoService servicect = (ContenidoService) ServiceFinder.findBean("ContenidoService");
                     this.setSelectedContenido(servicect.getContenidoById(BigDecimal.valueOf(tipo), BigDecimal.valueOf(id)));
+                    cat_antigua = this.getSelectedContenido().getNcategoriaid();
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()));
                     this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedContenido().getVruta(), "html.txt"));
@@ -1686,7 +1750,7 @@ public class PendienteMB implements Serializable {
                     } else {
                         this.fMsjUsu1 = "true";
                     }
-                    
+
                     this.getSelectedAsignacion().setDfecharecepcion(new Date());
                     serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
@@ -1699,6 +1763,7 @@ public class PendienteMB implements Serializable {
                     int situacion;
                     ConocimientoService servicebp = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     this.setSelectedBpractica(servicebp.getBpracticaById(BigDecimal.valueOf(tipo), BigDecimal.valueOf(id)));
+                    cat_antigua = this.getSelectedBpractica().getNcategoriaid();
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBpractica().getNcategoriaid()));
 
@@ -1769,7 +1834,7 @@ public class PendienteMB implements Serializable {
                     } else {
                         this.fMsjUsu1 = "true";
                     }
-                    
+
                     this.getSelectedAsignacion().setDfecharecepcion(new Date());
                     serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
@@ -1782,6 +1847,7 @@ public class PendienteMB implements Serializable {
                     int situacion;
                     ConocimientoService servicebp = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     this.setSelectedOmejora(servicebp.getOmejoraById(BigDecimal.valueOf(tipo), BigDecimal.valueOf(id)));
+                    cat_antigua = this.getSelectedOmejora().getNcategoriaid();
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedOmejora().getNcategoriaid()));
 
@@ -1851,7 +1917,7 @@ public class PendienteMB implements Serializable {
                     } else {
                         this.fMsjUsu1 = "true";
                     }
-                    
+
                     this.getSelectedAsignacion().setDfecharecepcion(new Date());
                     serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
@@ -1913,7 +1979,7 @@ public class PendienteMB implements Serializable {
             asignacion.setDfechacreacion(new Date());
             asignacion.setDfechaasignacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
-            
+
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             loginMB.refreshNotifications();
 
@@ -1987,7 +2053,8 @@ public class PendienteMB implements Serializable {
         }
     }
 
-    public void savePregEdit(ActionEvent event) throws Exception {
+    public String savePregEdit() {
+        String pagina = null;
         try {
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -1996,8 +2063,10 @@ public class PendienteMB implements Serializable {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             if (this.getSelectedCategoria() == null) {
                 this.getSelectedPregunta().setNcategoriaid(this.getSelectedPregunta().getNcategoriaid());
+                cat_nueva = this.getSelectedPregunta().getNcategoriaid();
             } else {
                 this.getSelectedPregunta().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+                cat_nueva = this.getSelectedPregunta().getNcategoriaid();
             }
             this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
             this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
@@ -2060,10 +2129,141 @@ public class PendienteMB implements Serializable {
                 }
             }
 
+            if (cat_antigua != cat_nueva) {
+                AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                this.getSelectedAsignacion().setDfechaatencion(new Date());
+                serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+                Asignacion asignacion = new Asignacion();
+                asignacion.setNasignacionid(serviceasig.getNextPK());
+                asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
+                asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+                CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNmoderador());
+                asignacion.setDfechaasignacion(new Date());
+                asignacion.setDfechacreacion(new Date());
+                serviceasig.saveOrUpdate(asignacion);
+
+                pagina = "/index.xhtml";
+                loginMB.refreshNotifications();
+            } else {
+                pagina = "";
+            }
+
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
+        return pagina;
+
+    }
+
+    public String savePregEditE() {
+        String pagina = null;
+        try {
+
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user_savepreg = loginMB.getUser();
+
+            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+            if (this.getSelectedCategoria() == null) {
+                this.getSelectedPregunta().setNcategoriaid(this.getSelectedPregunta().getNcategoriaid());
+                cat_nueva = this.getSelectedPregunta().getNcategoriaid();
+            } else {
+                this.getSelectedPregunta().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+                cat_nueva = this.getSelectedPregunta().getNcategoriaid();
+            }
+            this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
+            this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
+            this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
+            this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta());
+            this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
+            this.getSelectedPregunta().setDfechamodificacion(new Date());
+            this.getSelectedPregunta().setVusuariomodificacion(user_savepreg.getVlogin());
+            service.saveOrUpdate(this.getSelectedPregunta());
+
+            RespuestaHistService serviceresp = (RespuestaHistService) ServiceFinder.findBean("RespuestaHistService");
+            RespuestaHist respuestahist = new RespuestaHist();
+            respuestahist.setNhistorialid(serviceresp.getNextPK());
+            respuestahist.setNpreguntaid(this.getSelectedPregunta().getNpreguntaid());
+            respuestahist.setVrespuesta(this.getSelectedPregunta().getVrespuesta());
+            respuestahist.setVusuariocreacion(user_savepreg.getVlogin());
+            respuestahist.setDfechacreacion(new Date());
+            serviceresp.saveOrUpdate(respuestahist);
+
+            listaTargetVinculos = new ArrayList<Consulta>();
+
+            if (this.getListaTargetVinculosBL() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            }
+            if (this.getListaTargetVinculosBP() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            }
+            if (this.getListaTargetVinculosCT() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            }
+            if (this.getListaTargetVinculosOM() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            }
+            if (this.getListaTargetVinculosPR() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            }
+            if (this.getListaTargetVinculosWK() == null) {
+            } else {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            }
+
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                VinculoPreguntaService vinculopreguntaService = (VinculoPreguntaService) ServiceFinder.findBean("VinculoPreguntaService");
+                service.delete(this.getSelectedPregunta().getNpreguntaid());
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    VinculoPregunta vinculopregunta = new VinculoPregunta();
+                    vinculopregunta.setNvinculoid(vinculopreguntaService.getNextPK());
+                    vinculopregunta.setNpreguntaid(this.getSelectedPregunta().getNpreguntaid());
+                    vinculopregunta.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculopregunta.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculopregunta.setDfechacreacion(new Date());
+                    vinculopregunta.setVusuariocreacion(user_savepreg.getVlogin());
+                    vinculopreguntaService.saveOrUpdate(vinculopregunta);
+
+                }
+            }
+
+            if (cat_antigua != cat_nueva) {
+                AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                this.getSelectedAsignacion().setDfechaatencion(new Date());
+                serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+                Asignacion asignacion = new Asignacion();
+                asignacion.setNasignacionid(serviceasig.getNextPK());
+                asignacion.setNtipoconocimientoid(Constante.PREGUNTAS);
+                asignacion.setNconocimientoid(this.getSelectedPregunta().getNpreguntaid());
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+                CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNespecialista());
+                asignacion.setDfechaasignacion(new Date());
+                asignacion.setDfechacreacion(new Date());
+                serviceasig.saveOrUpdate(asignacion);
+
+                pagina = "/index.xhtml";
+                loginMB.refreshNotifications();
+            } else {
+                pagina = "";
+            }
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return pagina;
 
     }
 
@@ -2105,9 +2305,9 @@ public class PendienteMB implements Serializable {
                 asignacion.setDfechaasignacion(new Date());
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
-                
+
                 loginMB.refreshNotifications();
-                
+
                 this.fSInfMod = "true";
                 pagina = "/index.xhtml";
             }
@@ -2244,7 +2444,7 @@ public class PendienteMB implements Serializable {
 
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 loginMB.refreshNotifications();
-                
+
                 pagina = "/index.xhtml";
             }
 
@@ -2285,7 +2485,7 @@ public class PendienteMB implements Serializable {
 
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 loginMB.refreshNotifications();
-                
+
                 this.fSInfEspe = "true";
 
                 pagina = "/index.xhtml";
@@ -2339,7 +2539,7 @@ public class PendienteMB implements Serializable {
 
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 loginMB.refreshNotifications();
-                
+
                 this.fMsjUsu2 = "true";
 
                 pagina = "/index.xhtml";
@@ -2391,7 +2591,7 @@ public class PendienteMB implements Serializable {
 
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 loginMB.refreshNotifications();
-                
+
                 this.fMsjUsu1 = "true";
                 pagina = "/index.xhtml";
             }
@@ -2455,12 +2655,17 @@ public class PendienteMB implements Serializable {
         }
     }
 
-    public void edit(ActionEvent event) {
+    public String edit() {
+        String pagina = null;
         try {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             if (this.getSelectedCategoria() != null) {
-                this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+                this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedBaseLegal().getNcategoriaid());
+                cat_nueva = this.getSelectedBaseLegal().getNcategoriaid();
+            } else {
+                this.getSelectedBaseLegal().setNcategoriaid(this.getSelectedBaseLegal().getNcategoriaid());
+                cat_nueva = this.getSelectedBaseLegal().getNcategoriaid();
             }
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.getSelectedBaseLegal().setVnombre(StringUtils.capitalize(this.getSelectedBaseLegal().getVnombre()));
@@ -2569,10 +2774,34 @@ public class PendienteMB implements Serializable {
                 vserviceHist.saveOrUpdate(vinculoHist);
             }
 
+            if (cat_antigua != cat_nueva) {
+                AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                this.getSelectedAsignacion().setDfechaatencion(new Date());
+                serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+                Asignacion asignacion = new Asignacion();
+                asignacion.setNasignacionid(serviceasig.getNextPK());
+                asignacion.setNtipoconocimientoid(Constante.BASELEGAL);
+                asignacion.setNconocimientoid(this.getSelectedBaseLegal().getNbaselegalid());
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+                CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()).getNmoderador());
+                asignacion.setDfechaasignacion(new Date());
+                asignacion.setDfechacreacion(new Date());
+                serviceasig.saveOrUpdate(asignacion);
+
+                pagina = "/index.xhtml";
+                loginMB.refreshNotifications();
+            } else {
+                pagina = "";
+            }
+
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+        return pagina;
     }
 
     public String PubBaseLegal() throws Exception {
@@ -2852,9 +3081,9 @@ public class PendienteMB implements Serializable {
                 asignacion.setDfechaasignacion(new Date());
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
-                
+
                 loginMB.refreshNotifications();
-                
+
                 pagina = "/index.xhtml";
             }
 
@@ -3020,9 +3249,9 @@ public class PendienteMB implements Serializable {
                 asignacion.setDfechaasignacion(new Date());
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
-                
+
                 loginMB.refreshNotifications();
-                
+
                 pagina = "/index.xhtml";
             }
 
@@ -3175,7 +3404,8 @@ public class PendienteMB implements Serializable {
         }
     }
 
-    public void saveContenidoEdit(ActionEvent event) throws Exception {
+    public String saveContenidoEdit() {
+        String pagina = null;
         try {
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -3190,7 +3420,15 @@ public class PendienteMB implements Serializable {
             } else {
                 this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
             }
-            this.getSelectedContenido().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+
+            if (this.getSelectedCategoria() == null) {
+                this.getSelectedContenido().setNcategoriaid(this.getSelectedContenido().getNcategoriaid());
+                cat_nueva = this.getSelectedContenido().getNcategoriaid();
+            } else {
+                this.getSelectedContenido().setNcategoriaid(this.getSelectedContenido().getNcategoriaid());
+                cat_nueva = this.getSelectedContenido().getNcategoriaid();
+            }
+
             this.getSelectedContenido().setDfechamodificacion(new Date());
             this.getSelectedContenido().setVusuariomodificacion(user_savecontenido.getVlogin());
             service.saveOrUpdate(this.getSelectedContenido());
@@ -3310,11 +3548,34 @@ public class PendienteMB implements Serializable {
 
             }
 
+            if (cat_antigua != cat_nueva) {
+                AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                this.getSelectedAsignacion().setDfechaatencion(new Date());
+                serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+                Asignacion asignacion = new Asignacion();
+                asignacion.setNasignacionid(serviceasig.getNextPK());
+                asignacion.setNtipoconocimientoid(Constante.CONTENIDO);
+                asignacion.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+                CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()).getNmoderador());
+                asignacion.setDfechaasignacion(new Date());
+                asignacion.setDfechacreacion(new Date());
+                serviceasig.saveOrUpdate(asignacion);
+
+                pagina = "/index.xhtml";
+                loginMB.refreshNotifications();
+            } else {
+                pagina = "";
+            }
+
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-
+        return pagina;
     }
 
     public String PublicarContenido() {
@@ -3647,7 +3908,7 @@ public class PendienteMB implements Serializable {
                 serviceasig.saveOrUpdate(asignacion);
 
                 loginMB.refreshNotifications();
-                
+
                 this.fSInfMod = "true";
                 pagina = "/index.xhtml";
             }
@@ -3818,7 +4079,7 @@ public class PendienteMB implements Serializable {
                 serviceasig.saveOrUpdate(asignacion);
 
                 loginMB.refreshNotifications();
-                
+
                 this.fSInfMod = "true";
                 pagina = "/index.xhtml";
             }
@@ -3992,7 +4253,7 @@ public class PendienteMB implements Serializable {
                 serviceasig.saveOrUpdate(asignacion);
 
                 loginMB.refreshNotifications();
-                
+
                 this.fSInfMod = "true";
                 pagina = "/index.xhtml";
             }
@@ -4156,7 +4417,7 @@ public class PendienteMB implements Serializable {
                 serviceasig.saveOrUpdate(asignacion);
 
                 loginMB.refreshNotifications();
-                
+
                 this.fSInfMod = "true";
                 pagina = "/index.xhtml";
             }
@@ -4322,7 +4583,7 @@ public class PendienteMB implements Serializable {
                 serviceasig.saveOrUpdate(asignacion);
 
                 loginMB.refreshNotifications();
-                
+
                 this.fSInfMod = "true";
                 pagina = "/index.xhtml";
             }
@@ -4487,7 +4748,7 @@ public class PendienteMB implements Serializable {
                 serviceasig.saveOrUpdate(asignacion);
 
                 loginMB.refreshNotifications();
-                
+
                 this.fSInfMod = "true";
                 pagina = "/index.xhtml";
             }
@@ -4652,7 +4913,7 @@ public class PendienteMB implements Serializable {
                 serviceasig.saveOrUpdate(asignacion);
 
                 loginMB.refreshNotifications();
-                
+
                 this.fSInfMod = "true";
                 pagina = "/index.xhtml";
             }
@@ -4820,7 +5081,7 @@ public class PendienteMB implements Serializable {
                 serviceasig.saveOrUpdate(asignacion);
 
                 loginMB.refreshNotifications();
-                
+
                 this.fSInfMod = "true";
                 pagina = "/index.xhtml";
             }
@@ -5363,33 +5624,23 @@ public class PendienteMB implements Serializable {
         return pagina;
     }
 
-    public void saveBpracticaEdit(ActionEvent event) {
+    public String saveBpracticaEdit() {
+        String pagina = null;
         try {
-            if (this.getSelectedCategoria() == null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (StringUtils.isBlank(this.getSelectedBpractica().getVtitulo())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título del wiki requerido. Ingrese el título del wiki a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (StringUtils.isBlank(this.getDescripcionHtml())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción del wiki requerido. Ingrese la descripción del wiki a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSeccion())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese al menos un (01) paso a seguir.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
+
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
-            this.getSelectedBpractica().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+
+            if (this.getSelectedCategoria() == null) {
+                this.getSelectedBpractica().setNcategoriaid(this.getSelectedBpractica().getNcategoriaid());
+                cat_nueva = this.getSelectedBpractica().getNcategoriaid();
+            } else {
+                this.getSelectedBpractica().setNcategoriaid(this.getSelectedBpractica().getNcategoriaid());
+                cat_nueva = this.getSelectedBpractica().getNcategoriaid();
+            }
+
             this.getSelectedBpractica().setVtitulo(StringUtils.upperCase(this.getSelectedBpractica().getVtitulo().trim()));
             if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
@@ -5511,39 +5762,54 @@ public class PendienteMB implements Serializable {
                 }
             }
 
+            if (cat_antigua != cat_nueva) {
+                AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                this.getSelectedAsignacion().setDfechaatencion(new Date());
+                serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+                Asignacion asignacion = new Asignacion();
+                asignacion.setNasignacionid(serviceasig.getNextPK());
+                asignacion.setNtipoconocimientoid(Constante.BUENAPRACTICA);
+                asignacion.setNconocimientoid(this.getSelectedBpractica().getNconocimientoid());
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+                CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedBpractica().getNcategoriaid()).getNmoderador());
+                asignacion.setDfechaasignacion(new Date());
+                asignacion.setDfechacreacion(new Date());
+                serviceasig.saveOrUpdate(asignacion);
+
+                pagina = "/index.xhtml";
+                loginMB.refreshNotifications();
+            } else {
+                pagina = "";
+            }
+
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+        return pagina;
     }
 
-    public void saveOmejoraEdit(ActionEvent event) {
+    public String saveOmejoraEdit() {
+        String pagina=null;
         try {
-            if (this.getSelectedCategoria() == null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría de la oportunidad de mejora a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (StringUtils.isBlank(this.getSelectedOmejora().getVtitulo())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título de la oportunidad de mejora a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (StringUtils.isBlank(this.getSelectedOmejora().getVdescripcion())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción de la oportunidad de mejora a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (StringUtils.isBlank(this.getContenidoHtml())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el contenido de la oportunidad de mejora a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
+
             this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
-            this.getSelectedOmejora().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+
+            if (this.getSelectedCategoria() == null) {
+                this.getSelectedOmejora().setNcategoriaid(this.getSelectedOmejora().getNcategoriaid());
+                cat_nueva = this.getSelectedOmejora().getNcategoriaid();
+            } else {
+                this.getSelectedOmejora().setNcategoriaid(this.getSelectedOmejora().getNcategoriaid());
+                cat_nueva = this.getSelectedOmejora().getNcategoriaid();
+            }
+
+            
             this.getSelectedOmejora().setVtitulo(StringUtils.upperCase(this.getSelectedOmejora().getVtitulo()));
             this.getSelectedOmejora().setVdescripcion(StringUtils.upperCase(this.getSelectedOmejora().getVdescripcion()));
             if (this.getContenidoPlain().length() < 400) {
@@ -5667,35 +5933,60 @@ public class PendienteMB implements Serializable {
                     vinculoHistService.saveOrUpdate(vinculoHist);
                 }
             }
+            
+            if(cat_antigua != cat_nueva)
+            {
+                AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                this.getSelectedAsignacion().setDfechaatencion(new Date());
+                serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+                
+                Asignacion asignacion = new Asignacion();
+                asignacion.setNasignacionid(serviceasig.getNextPK());
+                asignacion.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
+                asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+                CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedOmejora().getNcategoriaid()).getNmoderador());
+                asignacion.setDfechaasignacion(new Date());
+                asignacion.setDfechacreacion(new Date());
+                serviceasig.saveOrUpdate(asignacion);
+                
+                pagina = "/index.xhtml";
+                loginMB.refreshNotifications();
+            }
+            else
+            {
+                pagina = "";
+            }
+            
+            
 
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+        
+        return pagina;
     }
 
-    public void saveWikiEdit(ActionEvent event) {
+    public String saveWikiEdit() {
+        String pagina = null;
         try {
-            if (this.getSelectedCategoria() == null) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (StringUtils.isBlank(this.getSelectedWiki().getVtitulo())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título del wiki requerido. Ingrese el título del wiki a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
-            if (StringUtils.isBlank(this.getDescripcionHtml())) {
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción del wiki requerido. Ingrese la descripción del wiki a registrar.");
-                FacesContext.getCurrentInstance().addMessage(null, message);
-                return;
-            }
+
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
-            this.getSelectedWiki().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
+
+            if (this.getSelectedCategoria() == null) {
+                this.getSelectedWiki().setNcategoriaid(this.getSelectedWiki().getNcategoriaid());
+                cat_nueva = this.getSelectedWiki().getNcategoriaid();
+            } else {
+                this.getSelectedWiki().setNcategoriaid(this.getSelectedWiki().getNcategoriaid());
+                cat_nueva = this.getSelectedWiki().getNcategoriaid();
+            }
+
             this.getSelectedWiki().setVtitulo(StringUtils.upperCase(this.getSelectedWiki().getVtitulo()));
             if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
@@ -5817,10 +6108,34 @@ public class PendienteMB implements Serializable {
                 }
             }
 
+            if (cat_antigua != cat_nueva) {
+                AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                this.getSelectedAsignacion().setDfechaatencion(new Date());
+                serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+                Asignacion asignacion = new Asignacion();
+                asignacion.setNasignacionid(serviceasig.getNextPK());
+                asignacion.setNtipoconocimientoid(Constante.WIKI);
+                asignacion.setNconocimientoid(this.getSelectedWiki().getNconocimientoid());
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+                CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedWiki().getNcategoriaid()).getNmoderador());
+                asignacion.setDfechaasignacion(new Date());
+                asignacion.setDfechacreacion(new Date());
+                serviceasig.saveOrUpdate(asignacion);
+
+                pagina = "/index.xhtml";
+                loginMB.refreshNotifications();
+            } else {
+                pagina = "";
+            }
+
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+        return pagina;
     }
 
     public void logout() {

@@ -78,7 +78,7 @@
                                 </h:panelGrid>
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
-                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.savePregEdit}" update=":f:pgModPreg" />
+                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="#{pendienteMB.savePregEdit}" update=":f:pgModPreg" />
                                     <p:commandButton value="Derivar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="#{pendienteMB.DevEsp}"/>
                                     <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModPregDialogForm:pgSiModPreg" oncomplete="PF('siModPregDialog').show();"  />
                                     <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false"  action="#{pendienteMB.Rechazar}" />
@@ -132,7 +132,7 @@
                                     <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
                                     <p:tree id="cats" value="#{pendienteMB.tree}" var="node" animate="true" cache="true"  
                                             selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                        <p:ajax event="select" listener="#{pendienteMB.onNodeSelect}" oncomplete="PF('catPregDialog').hide();" update=":f:catedit" />
+                                        <p:ajax event="select" listener="#{pendienteMB.onNodeSelectPreg}" oncomplete="PF('catPregDialog').hide();" update=":f:catedit" />
                                         <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>
