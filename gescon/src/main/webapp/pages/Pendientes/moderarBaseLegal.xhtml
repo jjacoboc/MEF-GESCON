@@ -27,10 +27,17 @@
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="#{msgs.bl_lbl_categoria}"/>
                                     <h:panelGroup>
-                                        <p:commandButton value="#{msgs.bl_btn_categoria}" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
+                                        <p:commandButton value="#{msgs.bl_btn_categoriamod}" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
                                         <p:spacer width="15"/>
                                         <h:outputText value="#{pendienteMB.selectedCategoria.vnombre}" />
                                     </h:panelGroup>
+                                    
+                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                    <h:outputText value="#{msgs.bl_lbl_destacado}"/>
+                                    <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                        <p:selectBooleanCheckbox value="#{pendienteMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Las Bases Legales destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
+                                    </h:panelGrid>
 
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="#{msgs.bl_lbl_archivo}"/>
@@ -115,16 +122,17 @@
                                                 </h:outputText>
                                             </p:column>
                                             <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
-                                                <h:outputText value="#{t.nestadoid}">
-                                                    <f:converter converterId="converterEstadoBaseLegal"/>
-                                                </h:outputText>
+                                                <p:selectOneMenu value="#{t.nestadoid}" style="width: 110px;" panelStyle="font-size: 10px;">
+                                                    <f:selectItem itemLabel="Seleccione" itemValue="0" />
+                                                    <f:selectItems value="#{listaSessionMB.listaEstadoBaseLegalVinculo}"/>
+                                                </p:selectOneMenu>
                                             </p:column>
                                         </p:dataTable>
                                     </h:panelGrid>
                                 </p:fieldset>
                                 <h:panelGrid columns="2" width="100%">
                                     <h:panelGroup>
-                                        <p:commandButton value="#{msgs.bl_btn_actualizar}" rendered="#{pendienteMB.getfButtonMod()}" ajax="false"  action="#{pendienteMB.edit}" update=":f:growl,:f:pgEdit"/>
+                                        <p:commandButton value="#{msgs.bl_btn_actualizar}" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmActDlg').show();"/>
                                         <p:spacer width="10"/>
                                         <p:commandButton value="Publicar" ajax="false" rendered="#{pendienteMB.getfButtonMod()}" action="#{pendienteMB.PubBaseLegal}"/>
                                         <p:spacer width="10"/>
@@ -152,13 +160,13 @@
                                         <p:pickList value="#{pendienteMB.pickList}" var="p" itemValue="#{p}" itemLabel="#{p.vnumero} - #{p.vnombre}"
                                                     converter="converterPickListBaseLegal" showSourceFilter="true" showTargetFilter="true" 
                                                     filterMatchMode="contains">
-                                            <p:ajax event="transfer" listener="#{pendienteMB.onTransfer}" 
+                                            <p:ajax event="transfer" listener="#{pendienteMB.onTransferBL}" 
                                                     update=":f:pgEditVinc, :pickDialogForm:pgPick"/>
                                             <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
                                             <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
                                         </p:pickList>
-
                                     </h:panelGrid>
+                                    <p:commandButton value="Cerrar" onclick="PF('pickDialog').hide()" styleClass="ui-link Fs14"/>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
@@ -215,6 +223,67 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
+                        
+                        <p:dialog id="destDlg" header="#{msgs.bl_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
+                            <h:form id="destDialogForm">
+                                <h:panelGrid id="pgDest" columns="1">
+                                    <h:outputText value="#{msgs.bl_msg_destacado1}" styleClass="Fs14 FontBold red"/>
+                                    <h:outputText value="#{msgs.bl_msg_destacado2}" styleClass="Fs14 FontBold red"/>
+                                    <p:dataTable id="tbl" value="#{pendienteMB.listaDestacados}" var="row" rowIndexVar="rowIndex" scrollable="true"
+                                                 scrollRows="5" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <p:column style="width: 50%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna01}"/></f:facet>
+                                            <p:commandLink id="num" styleClass="GesconLink Fs14 Unselectable" global="false">
+                                                <h:outputText value="#{row.nombre}"/>
+                                            </p:commandLink>
+                                            <p:tooltip id="toolTipGrow" for="num" value="#{row.sumilla}" showEffect="clip" hideEffect="explode" style="font-size: 12px; max-width: 400px;" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna09}"/></f:facet>
+                                            <h:outputText value="#{row.categoria}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna03}"/></f:facet>
+                                            <h:outputText value="#{row.estado}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bl_lbl_columna05}"/></f:facet>
+                                            <h:outputText value="#{row.fechaPublicacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <p:commandLink actionListener="#{pendienteMB.toDeleteOutstanding}" oncomplete="PF('confirmDelDlg').show();" styleClass="GesconLink" title="eliminar base legal destacada">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:commandButton value="Cancelar" onclick="PF('destDialog').hide()" type="button" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.bl_msg_elidestacado}" header="#{msgs.bl_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
+                            <h:form id="confirmDelDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{pendienteMB.deleteOutstandingBL}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a actualizar la base legal. Desea Continuar?" header="ACTUALIZAR BASE LEGAL" widgetVar="confirmActDlg">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" action="#{pendienteMB.edit}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar la base legal. Desea Continuar?" header="PUBLICAR BASE LEGAL" widgetVar="confirmPubDlg">
+                            <h:form id="confirmPubDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" action="#{pendienteMB.PubBaseLegal}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmPubDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
                     </f:view>
                 </div>
             </div>

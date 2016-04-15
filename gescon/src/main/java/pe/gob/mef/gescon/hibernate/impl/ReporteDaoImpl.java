@@ -46,7 +46,7 @@ public class ReporteDaoImpl extends HibernateDaoSupport implements ReporteDao {
             sql.append(" DFECHAMODIFICACION AS FECHA_MODIFICACION, CASE when NACTIVO =1 THEN 'ACTIVO' ELSE 'DESACIVADO' END AS ESTADO ");
             sql.append(" FROM mtuser WHERE 1=1 ");
             if (parametros.get("FECHAINI") != null && parametros.get("FECHAFIN") != null) {
-                sql.append(" AND dfechacreacion between :FECHAINI AND :FECHAFIN ");
+                sql.append(" AND TRUNC(dfechacreacion) >= :FECHAINI AND TRUNC(dfechacreacion) <= :FECHAFIN ");
             }
             object = getHibernateTemplate().execute(
                     new HibernateCallback() {
@@ -80,7 +80,7 @@ public class ReporteDaoImpl extends HibernateDaoSupport implements ReporteDao {
             sql.append("INNER JOIN MTPOLITICA PL ON PP.NPOLITICAID = PL.NPOLITICAID ");
             sql.append("WHERE 1 = 1 ");
             if (parametros.get("FECHAINI") != null && parametros.get("FECHAFIN") != null) {
-                sql.append(" AND PP.dfechacreacion between :FECHAINI AND :FECHAFIN ");
+                sql.append(" AND TRUNC(PP.dfechacreacion) >= :FECHAINI AND TRUNC(PP.dfechacreacion) <= :FECHAFIN ");
             }
             sql.append("ORDER BY PF.VNOMBRE, PL.VNOMBRE ");
 
@@ -117,7 +117,7 @@ public class ReporteDaoImpl extends HibernateDaoSupport implements ReporteDao {
             sql.append(" INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
             sql.append(" WHERE 1=1 ");
             if (parametros.get("FECHAINI") != null && parametros.get("FECHAFIN") != null) {
-                sql.append(" AND a.dfechacreacion between :FECHAINI AND :FECHAFIN ");
+                sql.append(" AND TRUNC(a.dfechacreacion) >= :FECHAINI AND TRUNC(a.dfechacreacion) <= :FECHAFIN ");
             }
             sql.append(" UNION ");
             sql.append("SELECT a.vasunto AS NOMBRE, b.vnombre AS CATEGORIA, a.vusuariocreacion AS USUARIO_CREACION, ");
@@ -128,7 +128,7 @@ public class ReporteDaoImpl extends HibernateDaoSupport implements ReporteDao {
             sql.append(" INNER JOIN MTSITUACION c ON a.nsituacionid = c.nsituacionid ");
             sql.append(" WHERE 1=1 ");
             if (parametros.get("FECHAINI") != null && parametros.get("FECHAFIN") != null) {
-                sql.append(" AND a.dfechacreacion between :FECHAINI AND :FECHAFIN ");
+                sql.append(" AND TRUNC(a.dfechacreacion) >= :FECHAINI AND TRUNC(a.dfechacreacion) <= :FECHAFIN ");
             }
             sql.append(" UNION ");
             sql.append("SELECT a.vtitulo AS NOMBRE, b.vnombre AS CATEGORIA, a.vusuariocreacion AS USUARIO_CREACION, ");
@@ -140,7 +140,7 @@ public class ReporteDaoImpl extends HibernateDaoSupport implements ReporteDao {
             sql.append(" INNER JOIN MTTIPO_CONOCIMIENTO d ON a.ntpoconocimientoid = d.ntpoconocimientoid ");
             sql.append(" WHERE 1=1 ");
             if (parametros.get("FECHAINI") != null && parametros.get("FECHAFIN") != null) {
-                sql.append(" AND a.dfechacreacion between :FECHAINI AND :FECHAFIN ");
+                sql.append(" AND TRUNC(a.dfechacreacion) >= :FECHAINI AND TRUNC(a.dfechacreacion) <= :FECHAFIN ");
             }
 
             if (parametros.get("FECHAINI") != null && parametros.get("FECHAFIN") != null) {
@@ -189,7 +189,7 @@ public class ReporteDaoImpl extends HibernateDaoSupport implements ReporteDao {
             sql.append(" INNER JOIN tcalificacion_baselegal cl ON cl.NBASELEGALID = a.nbaselegalid ");
             sql.append(" WHERE 1=1 ");
             if (parametros.get("FECHAINI") != null && parametros.get("FECHAFIN") != null) {
-                sql.append(" AND a.dfechacreacion between :FECHAINI AND :FECHAFIN ");
+                sql.append(" AND TRUNC(a.dfechacreacion) >= :FECHAINI AND TRUNC(a.dfechacreacion) <= :FECHAFIN ");
             }
             sql.append(" UNION ");
             sql.append("SELECT a.vasunto AS NOMBRE, b.vnombre AS CATEGORIA, a.vusuariocreacion AS USUARIO_CREACION, ");
@@ -201,7 +201,7 @@ public class ReporteDaoImpl extends HibernateDaoSupport implements ReporteDao {
             sql.append(" INNER JOIN TCALIFICACION_PREGUNTA cl ON cl.npreguntaid = a.npreguntaid ");
             sql.append(" WHERE 1=1 ");
             if (parametros.get("FECHAINI") != null && parametros.get("FECHAFIN") != null) {
-                sql.append(" AND a.dfechacreacion between :FECHAINI AND :FECHAFIN ");
+                sql.append(" AND TRUNC(a.dfechacreacion) >= :FECHAINI AND TRUNC(a.dfechacreacion) <= :FECHAFIN ");
             }
             sql.append(" UNION ");
             sql.append("SELECT a.vtitulo AS NOMBRE, b.vnombre AS CATEGORIA, a.vusuariocreacion AS USUARIO_CREACION, ");
@@ -214,7 +214,7 @@ public class ReporteDaoImpl extends HibernateDaoSupport implements ReporteDao {
             sql.append(" INNER JOIN TCALIFICACION cl ON cl.NCONOCIMIENTOID = a.NCONOCIMIENTOID ");
             sql.append(" WHERE 1=1 ");
             if (parametros.get("FECHAINI") != null && parametros.get("FECHAFIN") != null) {
-                sql.append(" AND a.dfechacreacion between :FECHAINI AND :FECHAFIN ");
+                sql.append(" AND TRUNC(a.dfechacreacion) >= :FECHAINI AND TRUNC(a.dfechacreacion) <= :FECHAFIN ");
             }
 
             if (parametros.get("FECHAINI") != null && parametros.get("FECHAFIN") != null) {

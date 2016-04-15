@@ -17,11 +17,17 @@
 
                                     <h:outputLabel value="Categoría:"/>
                                     <h:panelGrid  columns="3">
-                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catPregDialog').show();" update=":catPregDialogForm:pgCatPreg" />    
+                                        <p:commandButton value="Cambiar Categoría" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catPregDialog').show();" update=":catPregDialogForm:pgCatPreg" />    
                                         <p:spacer width="10"/>
                                         <h:outputText id="catedit" value="#{pendienteMB.selectedPregunta.ncategoriaid}" >
                                             <f:converter converterId="converterCategoria"/>
                                         </h:outputText>
+                                    </h:panelGrid>
+                                    
+                                    <h:outputText value="#{msgs.pr_lbl_destacado}"/>
+                                    <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                        <p:selectBooleanCheckbox value="#{pendienteMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Las Preguntas destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
                                     </h:panelGrid>
 
                                     <p:spacer width="10"/>
@@ -109,50 +115,12 @@
                                 </p:fieldset>
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
-                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonModPub()}" ajax="false" action="#{pendienteMB.savePregEdit}" update=":f:pgModPreg" />
-                                    <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonModPub()}"  ajax="false" action="#{pendienteMB.Publicar}"/>
+                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonModPub()}" oncomplete="PF('confirmActDlg').show();" />
+                                    <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonModPub()}"  oncomplete="PF('confirmPubDlg').show();" />
                                     <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonModPub()}" ajax="false" action="/index.xhtml" />
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
-
-                        <p:dialog id="siPregDlg" header="Solicitar Informacion Adicional - Especialista" widgetVar="siPregDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                            <h:form id="siPregDialogForm">
-                                <p:messages id="msgs" showSummary="true" showDetail="true" />
-                                <h:panelGrid id="pgSiPreg"  columns="2">
-                                    <h:outputLabel value="Mensaje:"/>
-                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{pendienteMB.selectedPregunta.vmsjespecialista}" rows="4" cols="66" style="font-weight: normal;"
-                                                         readonly="#{pendienteMB.getfSInfEspe()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
-                                        <h:outputText id="display"/>
-                                    </h:panelGrid>
-                                    <p:spacer/>
-                                    <h:panelGrid style="float: right" columns="2" width="25%">
-                                        <p:commandButton value="Enviar" ajax="false" action="#{pendienteMB.sendSi}"/>
-                                        <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelSi}"/>
-                                    </h:panelGrid>
-                                </h:panelGrid>
-                            </h:form>
-                        </p:dialog>
-
-                        <p:dialog id="respUsuPregDlg" header="Responder al Especialista" widgetVar="respUsuPregDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                            <h:form id="respUsuPregDialogForm">
-                                <p:messages id="msgs" showSummary="true" showDetail="true" />
-                                <h:panelGrid id="pgRespUsuPreg"  columns="2">
-                                    <h:outputLabel value="Mensaje:"/>
-                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{pendienteMB.selectedPregunta.vmsjusuario2}" rows="4" cols="66" style="font-weight: normal;"
-                                                         readonly="#{pendienteMB.getfMsjUsu2()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
-                                        <h:outputText id="display"/>
-                                    </h:panelGrid>
-                                    <p:spacer/>
-                                    <h:panelGrid style="float: right" columns="2" width="25%">
-                                        <p:commandButton value="Enviar" ajax="false" action="#{pendienteMB.sendUsu}"/>
-                                        <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelRespUsu}" />
-                                    </h:panelGrid>
-                                </h:panelGrid>
-                            </h:form>
-                        </p:dialog>
 
                         <p:dialog id="catPregDlg" header="Seleccionar Categoría" widgetVar="catPregDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="catPregDialogForm">
@@ -200,6 +168,20 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a actualizar la pregunta. Desea Continuar?" header="ACTUALIZAR PREGUNTA" widgetVar="confirmActDlg">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" action="#{pendienteMB.savePregEdit}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar la pregunta. Desea Continuar?" header="PUBLICAR PREGUNTA" widgetVar="confirmPubDlg">
+                            <h:form id="confirmPubDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" action="#{pendienteMB.Publicar}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmPubDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
                     </f:view>
                 </div>
             </div>

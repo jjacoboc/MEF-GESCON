@@ -24,13 +24,9 @@
                                     <p:inputTextarea value="#{pendienteMB.selectedBpractica.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
                                                      readonly="#{pendienteMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfMsjUsu1()}"/>
 
-
-
-
                                     <h:outputLabel value="Mensaje del Moderador" rendered="#{pendienteMB.getfSInfMod()}"/>
                                     <p:inputTextarea  value="#{pendienteMB.selectedBpractica.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
                                                       readonly="#{pendienteMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfSInfMod()}"/>
-
 
                                     <p:spacer width="10" rendered="#{pendienteMB.getfSInfMod()}"/>
 
@@ -42,15 +38,23 @@
                                         <h:outputText value="#{pendienteMB.selectedBpractica.ncategoriaid}" styleClass="Fs14 FontBold black" rendered="#{pendienteMB.selectedBpractica.nsituacionid ge msgs.situacionPublicado}">
                                             <f:converter converterId="converterCategoria"/>
                                         </h:outputText>
-
                                     </h:panelGroup>
                                     <h:panelGroup rendered="#{pendienteMB.selectedBpractica.nsituacionid lt msgs.situacionPublicado}">
-                                        <p:commandButton value="#{msgs.bp_btn_categoria}" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
+                                        <p:commandButton value="#{msgs.bp_btn_categoriamod}" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
                                         <p:spacer width="15"/>
                                         <h:outputText value="#{pendienteMB.selectedBpractica.ncategoriaid}" styleClass="Fs18 FontBold black">
                                             <f:converter converterId="converterCategoria"/>
                                         </h:outputText>
                                     </h:panelGroup>
+                                    
+                                    <h:panelGrid columns="6" cellpadding="0" cellspacing="0">
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.bp_lbl_destacado}"/>
+                                        <p:spacer width="5"/>
+                                        <p:selectBooleanCheckbox value="#{pendienteMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Las Buenas Prácticas destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
+                                    </h:panelGrid>
 
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -209,10 +213,10 @@
                                 
                                 <h:panelGrid columns="2" width="100%" style="padding-left: 0px">
                                     <h:panelGroup>
-                                        <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false"  action="#{pendienteMB.saveBpracticaEdit}" update="pgEdit" />
-                                        <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="#{pendienteMB.publicarBpractica}"/>
+                                        <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmActDlg').show();"/>
+                                        <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmPubDlg').show();"/>
                                         <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModDialogForm:pgSiMod" oncomplete="PF('siModDialog').show();"  />
-                                        <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false"  action="#{pendienteMB.rechazarBpractica}" />
+                                        <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmRechDlg').show();"/>
                                         <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
                                         <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonMod() eq false}" actionListener="#{pendienteMB.toSi}" update=":respModDialogForm:pgRespMod" oncomplete="PF('respModDialog').show();"  />
                                     </h:panelGroup>
@@ -350,6 +354,73 @@
                             </h:form>
                         </p:dialog>
                         
+                        <p:dialog id="destDlg" header="#{msgs.bp_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
+                            <h:form id="destDialogForm">
+                                <h:panelGrid id="pgDest" columns="1">
+                                    <h:outputText value="#{msgs.bp_msg_destacado1}" styleClass="Fs14 FontBold red"/>
+                                    <h:outputText value="#{msgs.bp_msg_destacado2}" styleClass="Fs14 FontBold red"/>
+                                    <p:dataTable id="tbl" value="#{pendienteMB.listaDestacados}" var="row" rowIndexVar="rowIndex" scrollable="true"
+                                                 scrollRows="5" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <p:column style="width: 50%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna01}"/></f:facet>
+                                            <p:commandLink id="num" styleClass="GesconLink Fs14 Unselectable" global="false">
+                                                <h:outputText value="#{row.nombre}"/>
+                                            </p:commandLink>
+                                            <p:tooltip id="toolTipGrow" for="num" value="#{row.sumilla}" showEffect="clip" hideEffect="explode" style="font-size: 12px; max-width: 400px;" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna02}"/></f:facet>
+                                            <h:outputText value="#{row.categoria}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna04}"/></f:facet>
+                                            <h:outputText value="#{row.estado}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.bp_lbl_columna03}"/></f:facet>
+                                            <h:outputText value="#{row.fechaPublicacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <p:commandLink actionListener="#{pendienteMB.toDeleteOutstanding}" oncomplete="PF('confirmDelDlg').show();" styleClass="GesconLink" title="eliminar base legal destacada">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:commandButton value="Cancelar" onclick="PF('destDialog').hide()" type="button" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.bp_msg_elidestacado}" header="#{msgs.bp_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
+                            <h:form id="confirmDelDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{pendienteMB.deleteOutstandingBP}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a actualizar la buena práctica. Desea Continuar?" header="ACTUALIZAR BUENA PRACTICA" widgetVar="confirmActDlg">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" action="#{pendienteMB.saveBpracticaEdit}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar la buena práctica. Desea Continuar?" header="PUBLICAR BUENA PRACTICA" widgetVar="confirmPubDlg">
+                            <h:form id="confirmPubDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" action="#{pendienteMB.publicarBpractica}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmPubDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a rechazar la buena práctica. Desea Continuar?" header="RECHAZAR BUENA PRACTICA" widgetVar="confirmRechDlg">
+                            <h:form id="confirmRechDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmRechDlg').hide()" action="#{pendienteMB.rechazarBpractica}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmRechDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
                     </f:view>
                 </div>
             </div>

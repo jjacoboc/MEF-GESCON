@@ -28,9 +28,9 @@
                     </h:outputText>
                 </h:panelGroup>
 
-                <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}" styleClass="Fs14 FontBold"/>
+                <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}" styleClass="Fs14 FontBold" escape="false"/>
                 <p:spacer/>
-                <h:outputText value="#{preguntaMB.selectedPregunta.vrespuesta}" styleClass="Fs14"/>
+                <h:outputText value="#{preguntaMB.selectedPregunta.vrespuesta}" styleClass="Fs14" escape="false"/>
                 <p:spacer/>
                 
                 <p:fieldset legend="Vinculos Relacionados" toggleable="true">

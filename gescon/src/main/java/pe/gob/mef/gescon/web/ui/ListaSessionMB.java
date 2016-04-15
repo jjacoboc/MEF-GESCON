@@ -18,6 +18,7 @@ import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.EstadoBaseLegalService;
 import pe.gob.mef.gescon.service.MaestroDetalleService;
 import pe.gob.mef.gescon.service.MaestroService;
+import pe.gob.mef.gescon.service.ParametroService;
 import pe.gob.mef.gescon.service.PerfilService;
 import pe.gob.mef.gescon.service.RangoService;
 import pe.gob.mef.gescon.service.SituacionService;
@@ -48,6 +49,8 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaTipoConocimiento;
     private List<SelectItem> listaTipoDiscusion;
     private List<SelectItem> listaTipoDiscusionActivo;
+    private List<SelectItem> listaParametro;
+    private List<SelectItem> listaParametroActivo;
     private List<SelectItem> listaPerfil;
     private List<SelectItem> listaPerfilActivo;
     private List<SelectItem> listaProfesion;
@@ -297,6 +300,30 @@ public class ListaSessionMB implements Serializable{
 
     public void setListaTipoDiscusionActivo(List<SelectItem> listaTipoDiscusionActivo) {
         this.listaTipoDiscusionActivo = listaTipoDiscusionActivo;
+    }
+
+    public List<SelectItem> getListaParametro() throws Exception {
+        if(listaParametro == null){
+            ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
+            listaParametro =  new Items(parametroService.getParametros(), null, "nparametroid","vvalor").getItems();
+        }
+        return listaParametro;
+    }
+
+    public void setListaParametro(List<SelectItem> listaParametro) {
+        this.listaParametro = listaParametro;
+    }
+
+    public List<SelectItem> getListaParametroActivo() throws Exception {
+        if(listaParametro == null){
+            ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
+            listaParametro =  new Items(parametroService.getParametrosActived(), null, "nparametroid","vvalor").getItems();
+        }
+        return listaParametroActivo;
+    }
+
+    public void setListaParametroActivo(List<SelectItem> listaParametroActivo) {
+        this.listaParametroActivo = listaParametroActivo;
     }
 
     public List<SelectItem> getListaPerfil() throws Exception {

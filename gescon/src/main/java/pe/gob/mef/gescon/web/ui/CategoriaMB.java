@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -27,6 +28,7 @@ import javax.faces.model.SelectItem;
 import javax.imageio.ImageIO;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbFile;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,10 +45,12 @@ import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Categoria;
+import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.User;
 
 /**
@@ -674,12 +678,22 @@ public class CategoriaMB implements Serializable {
     }
 
     public void desactivar(ActionEvent event) {
+        HashMap filter = new HashMap();
         try {
             if (event != null) {
                 if (this.getSelectedNode() != null) {
                     LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                     User user = loginMB.getUser();
                     Categoria categoria = (Categoria) this.getSelectedNode().getData();
+                    filter.put("fCategoria", categoria.getNcategoriaid().toString());
+                    filter.put("fType", Constante.PREGUNTAS.toString());
+                    ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                    List<Consulta> listaConsulta = consultaService.getQueryFilter(filter);
+                    if(CollectionUtils.isNotEmpty(listaConsulta)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "No se puede desactivar una categoría con contenido publicado.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
                     CategoriaService service = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     categoria.setNestado(BigDecimal.ZERO);
                     categoria.setDfechamodificacion(new Date());

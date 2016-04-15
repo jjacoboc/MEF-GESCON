@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -319,6 +320,7 @@ public class ConsultaMB implements Serializable {
         this.tempPopup = tempPopup;
     }
 
+    @PostConstruct
     public void init() {
         try {
             ParametroService parametroService = (ParametroService) ServiceFinder.findBean("ParametroService");
@@ -360,8 +362,8 @@ public class ConsultaMB implements Serializable {
     public TreeNode getNodeByIdCategoria(TreeNode treeNode, String idCategoria) {
         try {
             if (treeNode != null) {
-                Categoria categoria = (Categoria) treeNode.getData();
-                if (categoria.getNcategoriaid().toString().equals(idCategoria)) {
+                Categoria cat = (Categoria) treeNode.getData();
+                if (cat.getNcategoriaid().toString().equals(idCategoria)) {
                     return treeNode;
                 }
                 List<TreeNode> lista = treeNode.getChildren();
@@ -618,7 +620,7 @@ public class ConsultaMB implements Serializable {
             int id = Integer.parseInt((String) JSFUtils.getRequestParameter("id"));
             int idTipo = Integer.parseInt((String) JSFUtils.getRequestParameter("idTipo"));
             boolean popup = Boolean.valueOf((String) JSFUtils.getRequestParameter("popup"));
-            boolean tempPopup = Boolean.valueOf((String) JSFUtils.getRequestParameter("tempPopup"));
+            boolean tmpPopup = Boolean.valueOf((String) JSFUtils.getRequestParameter("tempPopup"));
             switch(idTipo) {
                 case 1: { //Base Legal
                     BaseLegalMB bl = new BaseLegalMB();
@@ -654,14 +656,14 @@ public class ConsultaMB implements Serializable {
                     }
                     JSFUtils.getSession().setAttribute("baseLegalMB", bl);
                     if(popup) {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/baselegal/vistaPopup.xhtml','','1000','650');");
                         } else {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/baselegal/vistaConsulta.xhtml','','1000','650');");
                         }
                         this.setTempPopup("true");
                     } else {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/baselegal/vistaPopup.xhtml");
                             this.setTempPopup("true");
                         } else {
@@ -728,14 +730,14 @@ public class ConsultaMB implements Serializable {
                     }
                     JSFUtils.getSession().setAttribute("preguntaMB", pr);
                     if(popup) {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/pregunta/vistaPopup.xhtml','','1000','650');");
                         } else {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/pregunta/vistaConsulta.xhtml','','1000','650');");
                         }
                         this.setTempPopup("true");
                     } else {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/pregunta/vistaPopup.xhtml");
                             this.setTempPopup("true");
                         } else {
@@ -810,14 +812,14 @@ public class ConsultaMB implements Serializable {
                     }
                     JSFUtils.getSession().setAttribute("wikiMB", mb);
                     if(popup) {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/wiki/vistaPopup.xhtml','','1000','650');");
                         } else {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/wiki/vistaConsulta.xhtml','','1000','650');");
                         }
                         this.setTempPopup("true");
                     } else {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/vistaPopup.xhtml");
                             this.setTempPopup("true");
                         } else {
@@ -886,14 +888,14 @@ public class ConsultaMB implements Serializable {
                     }
                     JSFUtils.getSession().setAttribute("contenidoMB", ct);
                     if(popup) {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/contenido/vistaPopup.xhtml','','1000','650');");
                         } else {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/contenido/vistaConsulta.xhtml','','1000','650');");
                         }
                         this.setTempPopup("true");
                     } else {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/vistaPopup.xhtml");
                             this.setTempPopup("true");
                         } else {
@@ -968,14 +970,14 @@ public class ConsultaMB implements Serializable {
                     }
                     JSFUtils.getSession().setAttribute("buenaPracticaMB", bp);
                     if(popup) {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/buenapractica/vistaPopup.xhtml','','1000','650');");
                         } else {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/buenapractica/vistaConsulta.xhtml','','1000','650');");
                         }
                         this.setTempPopup("true");
                     } else {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/vistaPopup.xhtml");
                             this.setTempPopup("true");
                         } else {
@@ -1050,14 +1052,14 @@ public class ConsultaMB implements Serializable {
                     }
                     JSFUtils.getSession().setAttribute("oportunidadMB", om);
                     if(popup) {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/oportunidad/vistaPopup.xhtml','','1000','650');");
                         } else {
                             RequestContext.getCurrentInstance().execute("popupCenter('/gescon/pages/oportunidad/vistaConsulta.xhtml','','1000','650');");
                         }
                         this.setTempPopup("true");
                     } else {
-                        if(tempPopup) {
+                        if(tmpPopup) {
                             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/oportunidad/vistaPopup.xhtml");
                             this.setTempPopup("true");
                         } else {

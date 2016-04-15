@@ -43,6 +43,7 @@ import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CalificacionPreguntaService;
 import pe.gob.mef.gescon.service.CategoriaService;
+import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.RespuestaHistService;
 import pe.gob.mef.gescon.service.UserService;
@@ -51,7 +52,6 @@ import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Asignacion;
-import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.CalificacionPregunta;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Consulta;
@@ -100,6 +100,7 @@ public class PreguntaMB implements Serializable {
     private String tema;
     private TreeNode tree;
     private Categoria selectedCategoria;
+    private Boolean chkDestacado;
     private BigDecimal idTipoConocimiento;
     private List<Consulta> listaSourceVinculos;
     private List<Consulta> listaTargetVinculos;
@@ -122,6 +123,8 @@ public class PreguntaMB implements Serializable {
     private CalificacionPregunta selectedCalificacion;
     private BigDecimal calificacion;
     private String comentarioCalificacion;
+    private List<Consulta> listaDestacados;
+    private Consulta selectedDestacado;
 
     /**
      * Creates a new instance of MaestroMB
@@ -535,6 +538,14 @@ public class PreguntaMB implements Serializable {
         this.selectedCategoria = selectedCategoria;
     }
 
+    public Boolean getChkDestacado() {
+        return chkDestacado;
+    }
+
+    public void setChkDestacado(Boolean chkDestacado) {
+        this.chkDestacado = chkDestacado;
+    }
+
     /**
      * @return the idTipoConocimiento
      */
@@ -814,6 +825,22 @@ public class PreguntaMB implements Serializable {
         this.comentarioCalificacion = comentarioCalificacion;
     }
 
+    public List<Consulta> getListaDestacados() {
+        return listaDestacados;
+    }
+
+    public void setListaDestacados(List<Consulta> listaDestacados) {
+        this.listaDestacados = listaDestacados;
+    }
+
+    public Consulta getSelectedDestacado() {
+        return selectedDestacado;
+    }
+
+    public void setSelectedDestacado(Consulta selectedDestacado) {
+        this.selectedDestacado = selectedDestacado;
+    }
+
     @PostConstruct
     public void init() {
         try {
@@ -923,6 +950,40 @@ public class PreguntaMB implements Serializable {
             e.printStackTrace();
         }
     }
+    
+    public void toDeleteOutstanding(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                this.setSelectedDestacado(this.getListaDestacados().get(index));
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
+
+    public void deleteOutstanding(ActionEvent event) {
+        try {
+            if (event != null) {
+                PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+                Pregunta pregunta = service.getPreguntaById(this.getSelectedDestacado().getIdconocimiento());
+                if (pregunta != null) {
+                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                    User user = loginMB.getUser();
+                    pregunta.setNdestacado(BigDecimal.ZERO);
+                    pregunta.setVusuariomodificacion(user.getVlogin());
+                    pregunta.setDfechamodificacion(new Date());
+                    service.saveOrUpdate(pregunta);
+                    ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                    HashMap filter = new HashMap();
+                    filter.put("ntipoconocimientoid", Constante.PREGUNTAS);
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        }
+    }
 
     public String toSave() {
         try {
@@ -957,6 +1018,18 @@ public class PreguntaMB implements Serializable {
     public String save() throws Exception {
         String pagina="";
         try {
+            /* Validando si la cantidad de pregutnas destacados llegó al límite (10 max.).*/
+            if (this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.PREGUNTAS);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if (cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return "";
+                }
+            }
             if (CollectionUtils.isEmpty(this.getListaPregunta())) {
                 this.setListaPregunta(Collections.EMPTY_LIST);
             }
@@ -973,6 +1046,7 @@ public class PreguntaMB implements Serializable {
             pregunta.setVdetalle(this.getDetalle().trim());
             pregunta.setNentidadid(this.getEntidadId());
             pregunta.setVdatoadicional(this.getDatoAdicional().trim());
+            pregunta.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             pregunta.setNactivo(BigDecimal.ONE);
             pregunta.setDfechacreacion(new Date());
             pregunta.setVusuariocreacion(user.getVlogin());
@@ -1471,7 +1545,18 @@ public class PreguntaMB implements Serializable {
     public String Publicar() throws Exception {
         String pagina = null;
         try {
-            
+             /* Validando si la cantidad de pregutnas destacados llegó al límite (10 max.).*/
+            if (this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.PREGUNTAS);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if (cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return "";
+                }
+            }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user_savepreg = loginMB.getUser();
 
@@ -1486,6 +1571,7 @@ public class PreguntaMB implements Serializable {
             this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
             this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta());
             this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
+            this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedPregunta().setDfechamodificacion(new Date());
             this.getSelectedPregunta().setVusuariomodificacion(user_savepreg.getVlogin());
             this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 6));
@@ -1855,7 +1941,18 @@ public class PreguntaMB implements Serializable {
     public String update() throws Exception {
         String pagina = "";
         try {
-
+            /* Validando si la cantidad de pregutnas destacados llegó al límite (10 max.).*/
+            if (this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.PREGUNTAS);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if (cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return "";
+                }
+            }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user_savepreg = loginMB.getUser();
 
@@ -1870,6 +1967,7 @@ public class PreguntaMB implements Serializable {
             this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
             this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta());
             this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
+            this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedPregunta().setDfechamodificacion(new Date());
             this.getSelectedPregunta().setVusuariomodificacion(user_savepreg.getVlogin());
             service.saveOrUpdate(this.getSelectedPregunta());

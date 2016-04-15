@@ -28,7 +28,7 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="Categoría:"/>
                                     </h:panelGroup>
-                                    <h:panelGroup>
+                                    <h:panelGroup id="pgCat">
                                         <p:commandButton value="Selecciona Categoria" actionListener="#{contenidoMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
                                         <p:spacer width="15"/>
                                         <h:outputText value="#{contenidoMB.selectedCategoria.vnombre}" styleClass="Fs14"/>
@@ -479,7 +479,7 @@
                                     <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
                                     <p:tree id="cats" value="#{contenidoMB.tree}" var="node" animate="true" cache="true"  
                                             selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                        <p:ajax event="select" listener="#{contenidoMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pgNew" />
+                                        <p:ajax event="select" listener="#{contenidoMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pgCat" />
                                         <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>
@@ -522,52 +522,52 @@
                             </h:form>
                         </p:dialog>
 
-                        <p:dialog id="destDlg" header="#{msgs.ct_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
-                            <h:form id="destDialogForm">
-                                <h:panelGrid id="pgDest" columns="1">
-                                    <h:outputText value="#{msgs.ct_msg_destacado1}" styleClass="Fs14 FontBold red"/>
-                                    <h:outputText value="#{msgs.ct_msg_destacado2}" styleClass="Fs14 FontBold red"/>
-                                    <p:dataTable id="tbl" value="#{contenidoMB.listaDestacados}" var="row" rowIndexVar="rowIndex" scrollable="true"
-                                                 scrollRows="5" emptyMessage="#{msgs.lbl_listavacia}">
-                                        <p:column style="width: 50%;">
-                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna01}"/></f:facet>
-                                            <p:commandLink id="num" styleClass="GesconLink Fs14 Unselectable" global="false">
-                                                <h:outputText value="#{row.nombre}"/>
-                                            </p:commandLink>
-                                            <p:tooltip id="toolTipGrow" for="num" value="#{row.sumilla}" showEffect="clip" hideEffect="explode" style="font-size: 12px; max-width: 400px;" />
-                                        </p:column>
-                                        <p:column style="text-align: center; width: 15%;">
-                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna02}"/></f:facet>
-                                            <h:outputText value="#{row.categoria}" />
-                                        </p:column>
-                                        <p:column style="text-align: center; width: 10%;">
-                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna04}"/></f:facet>
-                                            <h:outputText value="#{row.estado}"/>
-                                        </p:column>
-                                        <p:column style="text-align: center; width: 15%;">
-                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna03}"/></f:facet>
-                                            <h:outputText value="#{row.fechaPublicacion}" >
-                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy"/>
-                                            </h:outputText>
-                                        </p:column>
-                                        <p:column style="text-align: center; width: 10%;">
-                                            <p:commandLink actionListener="#{contenidoMB.toDeleteOutstanding}" oncomplete="PF('confirmDelDlg').show();" styleClass="GesconLink" title="eliminar base legal destacada">
-                                                <h:outputText class="fa fa-close Fs16" />
-                                                <f:param name="index" value="#{rowIndex}"/>
-                                            </p:commandLink>
-                                        </p:column>
-                                    </p:dataTable>
-                                    <p:commandButton value="Cancelar" onclick="PF('destDialog').hide()" type="button" />
-                                </h:panelGrid>
-                            </h:form>
-                        </p:dialog>
+                            <p:dialog id="destDlg" header="#{msgs.ct_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
+                                <h:form id="destDialogForm">
+                                    <h:panelGrid id="pgDest" columns="1">
+                                        <h:outputText value="#{msgs.ct_msg_destacado1}" styleClass="Fs14 FontBold red"/>
+                                        <h:outputText value="#{msgs.ct_msg_destacado2}" styleClass="Fs14 FontBold red"/>
+                                        <p:dataTable id="tbl" value="#{contenidoMB.listaDestacados}" var="row" rowIndexVar="rowIndex" scrollable="true"
+                                                     scrollRows="5" emptyMessage="#{msgs.lbl_listavacia}">
+                                            <p:column style="width: 50%;">
+                                                <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna01}"/></f:facet>
+                                                <p:commandLink id="num" styleClass="GesconLink Fs14 Unselectable" global="false">
+                                                    <h:outputText value="#{row.nombre}"/>
+                                                </p:commandLink>
+                                                <p:tooltip id="toolTipGrow" for="num" value="#{row.sumilla}" showEffect="clip" hideEffect="explode" style="font-size: 12px; max-width: 400px;" />
+                                            </p:column>
+                                            <p:column style="text-align: center; width: 15%;">
+                                                <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna02}"/></f:facet>
+                                                <h:outputText value="#{row.categoria}" />
+                                            </p:column>
+                                            <p:column style="text-align: center; width: 10%;">
+                                                <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna04}"/></f:facet>
+                                                <h:outputText value="#{row.estado}"/>
+                                            </p:column>
+                                            <p:column style="text-align: center; width: 15%;">
+                                                <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna03}"/></f:facet>
+                                                <h:outputText value="#{row.fechaPublicacion}" >
+                                                    <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column style="text-align: center; width: 10%;">
+                                                <p:commandLink actionListener="#{contenidoMB.toDeleteOutstanding}" oncomplete="PF('confirmDelDlg').show();" styleClass="GesconLink" title="eliminar base legal destacada">
+                                                    <h:outputText class="fa fa-close Fs16" />
+                                                    <f:param name="index" value="#{rowIndex}"/>
+                                                </p:commandLink>
+                                            </p:column>
+                                        </p:dataTable>
+                                        <p:commandButton value="Cancelar" onclick="PF('destDialog').hide()" type="button" />
+                                    </h:panelGrid>
+                                </h:form>
+                            </p:dialog>
 
-                        <p:confirmDialog appendTo="@(body)" message="#{msgs.ct_msg_elidestacado}" header="#{msgs.ct_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
-                            <h:form id="confirmDelDlgForm">
-                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{contenidoMB.deleteOutstanding}"/>
-                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
-                            </h:form>
-                        </p:confirmDialog>
+                            <p:confirmDialog appendTo="@(body)" message="#{msgs.ct_msg_elidestacado}" header="#{msgs.ct_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
+                                <h:form id="confirmDelDlgForm">
+                                    <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{contenidoMB.deleteOutstanding}"/>
+                                    <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
+                                </h:form>
+                            </p:confirmDialog>
                         
                         <p:confirmDialog appendTo="@(body)" message="#{msgs.ct_msg_eliarchivo}" header="#{msgs.ct_lbl_pnlEliArchivo}" widgetVar="confirmDlg" style="font-size: 10px;">
                             <h:form id="confirmDlgForm">

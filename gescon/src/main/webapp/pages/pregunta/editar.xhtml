@@ -13,26 +13,36 @@
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Editar Pregunta" styleClass="TexAlLeft">
-                                <h:panelGrid id="pgModPreg"  columns="2" width="500px">                           
-                                    
+                                <h:panelGrid id="pgModPreg" columns="3">
+                                    <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="Categoría:"/>
-                                    <h:panelGrid  columns="3">
+                                    <h:panelGrid id="pgCat" columns="3">
                                         <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />    
                                         <p:spacer width="10"/>
                                         <h:outputText id="catedit" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
                                             <f:converter converterId="converterCategoria"/>
                                         </h:outputText>
                                     </h:panelGrid>
+                                    
+                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                    <h:outputText value="#{msgs.pr_lbl_destacado}"/>
+                                    <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                        <p:selectBooleanCheckbox value="#{preguntaMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Las Preguntas destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
+                                    </h:panelGrid>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
+                                    <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="Asunto:"/>
                                     <p:inputText size="99" value="#{preguntaMB.selectedPregunta.vasunto}" readonly="#{preguntaMB.getfButtonModPub() eq false}" maxlength="80"/>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
 
+                                    <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="Detalle:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                         <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
@@ -42,16 +52,21 @@
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
 
+                                    <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="Respuesta"/>
                                     <p:editor value="#{preguntaMB.selectedPregunta.vrespuesta}"/>
                                     
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
 
+                                    <p:spacer width="10"/>
                                     <h:outputLabel value="Entidad" style="text-decoration: underline" />
                                     <p:spacer/>
 
+                                    <p:spacer width="10"/>
                                     <h:panelGrid columns="3">
                                         <h:outputLabel value="NM:"/>
                                         <p:inputText size="5" value="#{preguntaMB.selectedPregunta.nentidadid}" maxlength="5" readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
@@ -64,7 +79,9 @@
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
+                                    <p:spacer width="10"/>
 
+                                    <p:spacer width="10"/>
                                     <h:outputLabel value="Dato adicional:"/>
                                     <p:inputText id="tema" size="99" value="#{preguntaMB.selectedPregunta.vdatoadicional}" maxlength="80" readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
                                 </h:panelGrid>
@@ -153,7 +170,7 @@
                                     <h:outputText value="Categorias" style="font-weight: bold; text-decoration: underline;"/>
                                     <p:tree id="cats" value="#{preguntaMB.tree}" var="node" animate="true" cache="true"  
                                             selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                        <p:ajax event="select" listener="#{preguntaMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pgModPreg" />
+                                        <p:ajax event="select" listener="#{preguntaMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pgCat" />
                                         <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>
@@ -161,6 +178,53 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
+                        
+                        <p:dialog id="destDlg" header="#{msgs.pr_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
+                            <h:form id="destDialogForm">
+                                <h:panelGrid id="pgDest" columns="1">
+                                    <h:outputText value="#{msgs.pr_msg_destacado1}" styleClass="Fs14 FontBold red"/>
+                                    <h:outputText value="#{msgs.pr_msg_destacado2}" styleClass="Fs14 FontBold red"/>
+                                    <p:dataTable id="tbl" value="#{preguntaMB.listaDestacados}" var="row" rowIndexVar="rowIndex" scrollable="true"
+                                                 scrollRows="5" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <p:column style="width: 50%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.pr_lbl_columna01}"/></f:facet>
+                                            <p:commandLink id="num" styleClass="GesconLink Fs14 Unselectable" global="false">
+                                                <h:outputText value="#{row.nombre}"/>
+                                            </p:commandLink>
+                                            <p:tooltip id="toolTipGrow" for="num" value="#{row.sumilla}" showEffect="clip" hideEffect="explode" style="font-size: 12px; max-width: 400px;" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.pr_lbl_columna02}"/></f:facet>
+                                            <h:outputText value="#{row.categoria}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.pr_lbl_columna04}"/></f:facet>
+                                            <h:outputText value="#{row.estado}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.pr_lbl_columna03}"/></f:facet>
+                                            <h:outputText value="#{row.fechaPublicacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <p:commandLink actionListener="#{preguntaMB.toDeleteOutstanding}" oncomplete="PF('confirmDelDlg').show();" styleClass="GesconLink" title="eliminar base legal destacada">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:commandButton value="Cancelar" onclick="PF('destDialog').hide()" type="button" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.pr_msg_elidestacado}" header="#{msgs.pr_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
+                            <h:form id="confirmDelDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{preguntaMB.deleteOutstanding}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
                     </f:view>
                 </div>
             </div>

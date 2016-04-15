@@ -92,6 +92,13 @@
                                         <span class="Fright Fs16 TexAlRight">Atendidas<span class="Fs10 DispBlock">#{loginMB.notificacionesAtendidas} atendidas</span></span>
                                     </p:commandLink>
                                 </li>
+                                <li>
+                                    <p:commandLink styleClass="Animated05 BoxbarLink" actionListener="#{loginMB.loadPublicPanel}" oncomplete="PF('pubDialog').show();" update=":pubDialogForm:pgPub">
+                                        <h:panelGroup rendered="#{loginMB.notificacionesPublicadas eq 0}"><i class="fa fa-envelope Fs18 gray"></i></h:panelGroup>
+                                        <h:panelGroup rendered="#{loginMB.notificacionesPublicadas gt 0}"><i class="fa fa-envelope Fs18 white"></i></h:panelGroup>
+                                        <span class="Fright Fs16 TexAlRight">Publicadas<span class="Fs10 DispBlock">#{loginMB.notificacionesPublicadas} publicadas</span></span>
+                                    </p:commandLink>
+                                </li>
                             </ul>
                         </li>
                     </h:panelGroup>
@@ -209,27 +216,65 @@
                 </h:form>
             </p:dialog>
 
-            <p:dialog id="srvDlg" header="Bandeja de Atendidos" widgetVar="srvDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" width="90%" >
+            <p:dialog id="srvDlg" header="Bandeja de Atendidos" widgetVar="srvDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" width="95%" >
                 <h:form id="srvDialogForm">
                     <h:panelGrid id="pgSrv" columns="1" >
                         <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesAtendidas}" filteredValue="#{loginMB.filteredListaNotificacionesAtendidas}" 
                                      var="row" paginator="true" rows="10" rowIndexVar="rowIndex" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
-                            <p:column style="width: 38%;" sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 200px;text-transform: uppercase;" priority="2">
+                            <p:column style="width: 24%;" sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="2">
                                 <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
                                 <h:outputText value="#{row.codigo}" title="#{row.nombre}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
                                 <h:outputText value="#{row.nombre}" styleClass="Fleft" rendered="#{empty row.codigo}"/>
                             </p:column>
-                            <p:column style="width: 18%;" sortBy="#{row.tipoConocimiento}" filterBy="#{row.tipoConocimiento}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                            <p:column style="width: 15%;" sortBy="#{row.tipoConocimiento}" filterBy="#{row.tipoConocimiento}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
                                 <f:facet name="header"><h:outputText value="TIPO CONOCIMIENTO"/></f:facet>
                                 <h:outputText value="#{row.tipoConocimiento}" styleClass="Fleft"/>
                             </p:column>
-                            <p:column style="width: 16%;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 150px;text-transform: uppercase;" priority="1">
+                            <p:column style="width: 15%;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
                                 <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
                                 <h:outputText value="#{row.categoria}" />
                             </p:column>
-                            <p:column style="width: 18%; text-align: center;" sortBy="#{row.fechaAtencion}" filterBy="#{row.fechaAtencion}" filterMatchMode="contains">
+                            <p:column style="width: 13%; text-align: center;" sortBy="#{row.fechaAtencion}" filterBy="#{row.fechaAtencion}" filterMatchMode="contains">
                                 <f:facet name="header"><h:outputText value="FECHA ATENCIÓN"/></f:facet>
                                 <h:outputText value="#{row.fechaAtencion}" >
+                                    <f:convertDateTime dateStyle="medium" type="both" locale="es" pattern="dd/MM/yyyy HH:mm:ss"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column style="width: 14%;" sortBy="#{row.accion}" filterBy="#{row.accion}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="ACCION"/></f:facet>
+                                <h:outputText value="#{row.accion}" />
+                            </p:column>
+                            <p:column style="width: 9%; text-align: center;" sortBy="#{row.estado}" filterBy="#{row.estado}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                <f:facet name="header"><h:outputText value="ESTADO"/></f:facet>
+                                <h:outputText value="#{row.estado}" />
+                            </p:column>
+                        </p:dataTable>
+                        <p:commandButton value="Cancelar" onclick="PF('srvDialog').hide()" styleClass="Fs14"/>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+            
+            <p:dialog id="pubDlg" header="Bandeja de Publicados" widgetVar="pubDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="true" closable="true" width="95%" >
+                <h:form id="pubDialogForm">
+                    <h:panelGrid id="pgPub" columns="1" >
+                        <p:dataTable id="tbl" value="#{loginMB.listaNotificacionesPublicadas}" filteredValue="#{loginMB.filteredListaNotificacionesPublicadas}" 
+                                     var="row" paginator="true" rows="10" rowIndexVar="rowIndex" paginatorPosition="top" emptyMessage="Ningún registro encontrado.">
+                            <p:column style="width: 38%;" sortBy="#{row.codigo} #{row.nombre}" filterBy="#{row.codigo} #{row.nombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="2">
+                                <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                <h:outputText value="#{row.codigo}" title="#{row.nombre}" styleClass="Fleft" rendered="#{not empty row.codigo}"/>
+                                <h:outputText value="#{row.nombre}" styleClass="Fleft" rendered="#{empty row.codigo}"/>
+                            </p:column>
+                            <p:column style="width: 20%;" sortBy="#{row.tipoConocimiento}" filterBy="#{row.tipoConocimiento}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="TIPO CONOCIMIENTO"/></f:facet>
+                                <h:outputText value="#{row.tipoConocimiento}" styleClass="Fleft"/>
+                            </p:column>
+                            <p:column style="width: 16%;" sortBy="#{row.categoria}" filterBy="#{row.categoria}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
+                                <f:facet name="header"><h:outputText value="CATEGORIA"/></f:facet>
+                                <h:outputText value="#{row.categoria}" />
+                            </p:column>
+                            <p:column style="width: 16%; text-align: center;" sortBy="#{row.fechaPublicacion}" filterBy="#{row.fechaPublicacion}" filterMatchMode="contains">
+                                <f:facet name="header"><h:outputText value="FECHA PUBLICACIÓN"/></f:facet>
+                                <h:outputText value="#{row.fechaPublicacion}" >
                                     <f:convertDateTime dateStyle="medium" type="both" locale="es" pattern="dd/MM/yyyy HH:mm:ss"/>
                                 </h:outputText>
                             </p:column>
@@ -238,7 +283,7 @@
                                 <h:outputText value="#{row.estado}" />
                             </p:column>
                         </p:dataTable>
-                        <p:commandButton value="Cancelar" onclick="PF('srvDialog').hide()" styleClass="Fs14"/>
+                        <p:commandButton value="Cancelar" onclick="PF('pubDialog').hide()" styleClass="Fs14"/>
                     </h:panelGrid>
                 </h:form>
             </p:dialog>

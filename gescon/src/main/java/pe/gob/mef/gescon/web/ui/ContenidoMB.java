@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.web.ui;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -86,7 +87,6 @@ import pe.gob.mef.gescon.web.bean.DiscusionHist;
 import pe.gob.mef.gescon.web.bean.DiscusionSeccion;
 import pe.gob.mef.gescon.web.bean.DiscusionSeccionHist;
 import pe.gob.mef.gescon.web.bean.Historial;
-import pe.gob.mef.gescon.web.bean.Pregunta;
 import pe.gob.mef.gescon.web.bean.SeccionHist;
 import pe.gob.mef.gescon.web.bean.User;
 import pe.gob.mef.gescon.web.bean.Vinculo;
@@ -857,7 +857,7 @@ public class ContenidoMB implements Serializable {
             this.setListaArchivos(new ArrayList<ArchivoConocimiento>());
             this.setListaSourceVinculos(new ArrayList<Consulta>());
             this.setListaTargetVinculos(new ArrayList<Consulta>());
-            this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
             ListaSessionMB listaSessionMB = (ListaSessionMB) JSFUtils.getSessionAttribute("listaSessionMB");
             for(SelectItem s : listaSessionMB.getListaTipoDocumentosActivos()) {
                 this.setTipoDocumentos(this.getTipoDocumentos().concat(StringUtils.capitalize(StringUtils.lowerCase(s.getLabel())).concat(", ")));
@@ -1086,10 +1086,21 @@ public class ContenidoMB implements Serializable {
                 }
                 
                 ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
+                String tipoDocumento = bundle.getString("tipoDocumento");
                 String tipoVideo = bundle.getString("tipoVideo");
+                String tipoAudio = bundle.getString("tipoAudio");
+                String tipoImagen = bundle.getString("tipoImagen");
+                String tipoArchivo = bundle.getString("tipoArchivo");
+                String tipoLink = bundle.getString("tipoLink");
+                String tipoOtro = bundle.getString("tipoOtro");
+                
                 String temppath = bundle.getString("temppath");
                 String filename = this.getUploadFile().getFileName();
                 String contentType = this.getUploadFile().getContentType();
+                
+                if(this.getTipoContenido().equals(tipoDocumento)) {
+                    
+                }
                 
 //                if(this.getTipoContenido().equals(tipoVideo)){
 //                    String ffmpeg = bundle.getString("ffmpeg");
@@ -1111,7 +1122,7 @@ public class ContenidoMB implements Serializable {
                 archivoconocimiento.setContent(new DefaultStreamedContent(new FileInputStream(archivoconocimiento.getFile()), contentType, filename));
                 this.getListaArchivos().add(archivoconocimiento);
             }
-        } catch(Exception e) {
+        } catch(NumberFormatException | FileNotFoundException e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }

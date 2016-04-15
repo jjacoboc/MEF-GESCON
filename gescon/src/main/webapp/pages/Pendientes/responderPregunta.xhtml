@@ -31,11 +31,17 @@
 
                                     <h:outputLabel value="Categoría:"/>
                                     <h:panelGrid  columns="3">
-                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catPregDialog').show();" update=":catPregDialogForm:pgCatPreg" />    
+                                        <p:commandButton value="Cambiar Categoría" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catPregDialog').show();" update=":catPregDialogForm:pgCatPreg" />    
                                         <p:spacer width="10"/>
                                         <h:outputText id="catedit" value="#{pendienteMB.selectedPregunta.ncategoriaid}" >
                                             <f:converter converterId="converterCategoria"/>
                                         </h:outputText>
+                                    </h:panelGrid>
+                                    
+                                    <h:outputText value="#{msgs.pr_lbl_destacado}"/>
+                                    <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                        <p:selectBooleanCheckbox value="#{pendienteMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Las Preguntas destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
                                     </h:panelGrid>
 
                                     <p:spacer width="10"/>
@@ -123,10 +129,9 @@
                                 </p:fieldset>
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
-                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonEspe()}" ajax="false" action="#{pendienteMB.savePregEditE}" update=":f:pgModPreg" />
-                                    <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonEspe()}" ajax="false" action="#{pendienteMB.Responder}"/>
+                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonEspe()}" oncomplete="PF('confirmActDlg').show();" />
+                                    <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonEspe()}" oncomplete="PF('confirmRespDlg').show();"/>
                                     <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonEspe()}" actionListener="#{pendienteMB.toSi}" update=":siPregDialogForm:pgSiPreg" oncomplete="PF('siPregDialog').show();"  />
-                                    <p:commandButton value="Derivar Especialista" rendered="#{pendienteMB.getfButtonEspe()}" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catPregDialog').show();" update=":catPregDialogForm:pgCatPreg" />
                                     <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonEspe()}" ajax="false" action="/index.xhtml" />
                                     <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonEspe() eq false}" actionListener="#{pendienteMB.toSi}" update=":respUsuPregDialogForm:pgRespUsuPreg" oncomplete="PF('respUsuPregDialog').show();"  />
                                 </h:panelGrid>
@@ -217,6 +222,20 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a actualizar la pregunta. Desea Continuar?" header="ACTUALIZAR PREGUNTA" widgetVar="confirmActDlg">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" action="#{pendienteMB.savePregEdit}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a responder la pregunta. Desea Continuar?" header="RESPONDER PREGUNTA" widgetVar="confirmRespDlg">
+                            <h:form id="confirmRespDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmRespDlg').hide()" action="#{pendienteMB.Responder}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmRespDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
                     </f:view>
                 </div>
             </div>

@@ -22,6 +22,7 @@ public class Tasignacion implements java.io.Serializable {
     private Date dfechaasignacion;
     private Date dfechaatencion;
     private Date dfecharecepcion;
+    private BigDecimal naccionid;
 
     public Tasignacion() {
     }
@@ -139,6 +140,14 @@ public class Tasignacion implements java.io.Serializable {
 
     public void setDfecharecepcion(Date dfecharecepcion) {
         this.dfecharecepcion = dfecharecepcion;
+    }
+
+    public BigDecimal getNaccionid() {
+        return naccionid;
+    }
+
+    public void setNaccionid(BigDecimal naccionid) {
+        this.naccionid = naccionid;
     }
 
 }

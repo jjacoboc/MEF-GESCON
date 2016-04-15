@@ -32,18 +32,24 @@
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
                                         <p:spacer width="5"/>
-                                        <h:outputText value="#{msgs.wk_lbl_categoria}"/>
+                                        <h:outputText value="#{msgs.ct_lbl_categoria}"/>
                                         <p:spacer width="10" rendered="#{pendienteMB.selectedContenido.nsituacionid ge msgs.situacionPublicado}"/>
                                         <h:outputText value="#{pendienteMB.selectedCategoria.vnombre}" styleClass="Fs14 FontBold black" rendered="#{pendienteMB.selectedContenido.nsituacionid ge msgs.situacionPublicado}"/>
                                     </h:panelGroup>
                                     <h:panelGroup rendered="#{pendienteMB.selectedContenido.nsituacionid lt msgs.situacionPublicado}">
-                                        <p:commandButton value="#{msgs.wk_btn_categoria}" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catContenidoDialog').show();" update=":catContenidoDialogForm:pgCatContenido" />
+                                        <p:commandButton value="#{msgs.ct_btn_categoriamod}" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catContenidoDialog').show();" update=":catContenidoDialogForm:pgCatContenido" />
                                         <p:spacer width="15"/>
                                         <h:outputText value="#{pendienteMB.selectedCategoria.vnombre}" styleClass="Fs18 FontBold black"/>
                                     </h:panelGroup>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
+
+                                    <h:outputText value="#{msgs.ct_lbl_destacado}"/>
+                                    <h:panelGrid columns="6" cellpadding="0" cellspacing="0">
+                                        <p:selectBooleanCheckbox value="#{pendienteMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Los Contenidos destacados serán mostrados en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
+                                    </h:panelGrid>
 
                                     <h:outputLabel value="Titulo"/>
                                     <p:inputText size="50" value="#{pendienteMB.selectedContenido.vtitulo}" style="text-transform: uppercase;" maxlength="25" /> 
@@ -213,14 +219,13 @@
                                     </h:panelGrid>
                                 </p:fieldset>
                                 <p:spacer/>
-
-
+                                
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
-                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="#{pendienteMB.saveContenidoEdit}" update=":f:pgModContenido" />
-                                    <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="#{pendienteMB.PublicarContenido}"/>
+                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmActDlg').show();"/>
+                                    <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmPubDlg').show();"/>
                                     <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModContenidoDialogForm:pgSiModContenido" oncomplete="PF('siModContenidoDialog').show();"  />
-                                    <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false"  action="#{pendienteMB.rechazar}" />
+                                    <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmRechDlg').show();"/>
                                     <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
                                     <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonMod() eq false}" actionListener="#{pendienteMB.toSi}" update=":respModContenidoDialogForm:pgRespModContenido" oncomplete="PF('respModContenidoDialog').show();"  />
                                 </h:panelGrid>
@@ -345,6 +350,74 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
+
+                        <p:dialog id="destDlg" header="#{msgs.ct_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
+                            <h:form id="destDialogForm">
+                                <h:panelGrid id="pgDest" columns="1">
+                                    <h:outputText value="#{msgs.ct_msg_destacado1}" styleClass="Fs14 FontBold red"/>
+                                    <h:outputText value="#{msgs.ct_msg_destacado2}" styleClass="Fs14 FontBold red"/>
+                                    <p:dataTable id="tbl" value="#{pendienteMB.listaDestacados}" var="row" rowIndexVar="rowIndex" scrollable="true"
+                                                 scrollRows="5" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <p:column style="width: 50%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna01}"/></f:facet>
+                                            <p:commandLink id="num" styleClass="GesconLink Fs14 Unselectable" global="false">
+                                                <h:outputText value="#{row.nombre}"/>
+                                            </p:commandLink>
+                                            <p:tooltip id="toolTipGrow" for="num" value="#{row.sumilla}" showEffect="clip" hideEffect="explode" style="font-size: 12px; max-width: 400px;" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna02}"/></f:facet>
+                                            <h:outputText value="#{row.categoria}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna04}"/></f:facet>
+                                            <h:outputText value="#{row.estado}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.ct_lbl_columna03}"/></f:facet>
+                                            <h:outputText value="#{row.fechaPublicacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <p:commandLink actionListener="#{pendienteMB.toDeleteOutstanding}" oncomplete="PF('confirmDelDlg').show();" styleClass="GesconLink" title="eliminar base legal destacada">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:commandButton value="Cancelar" onclick="PF('destDialog').hide()" type="button" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.ct_msg_elidestacado}" header="#{msgs.ct_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
+                            <h:form id="confirmDelDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{pendienteMB.deleteOutstandingCT}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a actualizar el contenido. Desea Continuar?" header="ACTUALIZAR CONTENIDO" widgetVar="confirmActDlg">
+                            <h:form id="confirmActDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" action="#{pendienteMB.saveContenidoEdit}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar el contenido. Desea Continuar?" header="PUBLICAR CONTENIDO" widgetVar="confirmPubDlg">
+                            <h:form id="confirmPubDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" action="#{pendienteMB.PublicarContenido}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmPubDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a rechazar el contenido. Desea Continuar?" header="RECHAZAR CONTENIDO" widgetVar="confirmRechDlg">
+                            <h:form id="confirmRechDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmRechDlg').hide()" action="#{pendienteMB.rechazarContenido}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmRechDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
                     </f:view>
                 </div>
             </div>

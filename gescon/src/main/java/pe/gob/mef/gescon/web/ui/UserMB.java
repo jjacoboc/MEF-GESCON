@@ -784,7 +784,7 @@ public class UserMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (StringUtils.isBlank(this.getPerfil())) {
+            if (StringUtils.isBlank(this.getPerfil()) && this.getTrabajaMef().equals(BigDecimal.ONE.toString())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el perfil del usuario a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;

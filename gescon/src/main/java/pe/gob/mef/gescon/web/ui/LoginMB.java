@@ -31,6 +31,7 @@ import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
 import pe.gob.mef.gescon.service.AsignacionService;
+import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.ParametroService;
 import pe.gob.mef.gescon.service.PassService;
 import pe.gob.mef.gescon.service.PerfilService;
@@ -69,12 +70,15 @@ public class LoginMB implements Serializable {
     private BigDecimal notificacionesAsignadas;
     private BigDecimal notificacionesRecibidas;
     private BigDecimal notificacionesAtendidas;
+    private BigDecimal notificacionesPublicadas;
     private List<Consulta> listaNotificacionesAsignadas;
     private List<Consulta> filteredListaNotificacionesAsignadas;
     private List<Consulta> listaNotificacionesRecibidas;
     private List<Consulta> filteredListaNotificacionesRecibidas;
     private List<Consulta> listaNotificacionesAtendidas;
     private List<Consulta> filteredListaNotificacionesAtendidas;
+    private List<Consulta> listaNotificacionesPublicadas;
+    private List<Consulta> filteredListaNotificacionesPublicadas;
     private List<Consulta> listaNotificacionesAlerta;
     private List<Consulta> filteredListaNotificacionesAlerta;
     private String alertaFlag;
@@ -224,6 +228,14 @@ public class LoginMB implements Serializable {
         this.notificacionesAtendidas = notificacionesAtendidas;
     }
 
+    public BigDecimal getNotificacionesPublicadas() {
+        return notificacionesPublicadas;
+    }
+
+    public void setNotificacionesPublicadas(BigDecimal notificacionesPublicadas) {
+        this.notificacionesPublicadas = notificacionesPublicadas;
+    }
+
     public List<Consulta> getListaNotificacionesAsignadas() {
         return listaNotificacionesAsignadas;
     }
@@ -270,6 +282,22 @@ public class LoginMB implements Serializable {
 
     public void setFilteredListaNotificacionesAtendidas(List<Consulta> filteredListaNotificacionesAtendidas) {
         this.filteredListaNotificacionesAtendidas = filteredListaNotificacionesAtendidas;
+    }
+
+    public List<Consulta> getListaNotificacionesPublicadas() {
+        return listaNotificacionesPublicadas;
+    }
+
+    public void setListaNotificacionesPublicadas(List<Consulta> listaNotificacionesPublicadas) {
+        this.listaNotificacionesPublicadas = listaNotificacionesPublicadas;
+    }
+
+    public List<Consulta> getFilteredListaNotificacionesPublicadas() {
+        return filteredListaNotificacionesPublicadas;
+    }
+
+    public void setFilteredListaNotificacionesPublicadas(List<Consulta> filteredListaNotificacionesPublicadas) {
+        this.filteredListaNotificacionesPublicadas = filteredListaNotificacionesPublicadas;
     }
 
     /**
@@ -410,6 +438,7 @@ public class LoginMB implements Serializable {
                             this.setNotificacionesAsignadas(asignacionService.getNumberNotificationsAssignedByUser(this.getUser()));
                             this.setNotificacionesRecibidas(asignacionService.getNumberNotificationsReceivedByUser(this.getUser()));
                             this.setNotificacionesAtendidas(asignacionService.getNumberNotificationsServedByUser(this.getUser()));
+                            this.setNotificacionesPublicadas(asignacionService.getNumberNotificationsPublicByUser(this.getUser()));
                             this.setListaNotificacionesAlerta(asignacionService.getNotificationsAlertPanelByMtuser(this.getUser()));
                             if (this.getListaNotificacionesAlerta().isEmpty()) {
                                 this.setAlertaFlag("false");
@@ -480,6 +509,19 @@ public class LoginMB implements Serializable {
                 AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
                 this.setListaNotificacionesAtendidas(asignacionService.getNotificationsServedPanelByUser(this.getUser()));
                 this.setFilteredListaNotificacionesAtendidas(new ArrayList());
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void loadPublicPanel(ActionEvent event) {
+        try {
+            if (event != null) {
+                AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                this.setListaNotificacionesPublicadas(asignacionService.getNotificationsPublicPanelByUser(this.getUser()));
+                this.setFilteredListaNotificacionesPublicadas(new ArrayList());
             }
         } catch (Exception e) {
             e.getMessage();
@@ -558,13 +600,31 @@ public class LoginMB implements Serializable {
     }
 
     public void refreshNotifications() {
+        HashMap filter = new HashMap();
         try {
             AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             this.setNotificaciones(asignacionService.getNumberNotificationsByUser(this.getUser()));
             this.setNotificacionesAsignadas(asignacionService.getNumberNotificationsAssignedByUser(this.getUser()));
             this.setNotificacionesRecibidas(asignacionService.getNumberNotificationsReceivedByUser(this.getUser()));
             this.setNotificacionesAtendidas(asignacionService.getNumberNotificationsServedByUser(this.getUser()));
+            this.setNotificacionesPublicadas(asignacionService.getNumberNotificationsPublicByUser(this.getUser()));
             this.setListaNotificacionesAlerta(asignacionService.getNotificationsAlertPanelByMtuser(this.getUser()));
+            
+            AdministracionMB admMB = (AdministracionMB) JSFUtils.getSessionAttribute("administracionMB");
+            ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+            filter.put("ntipoconocimientoid", Constante.BASELEGAL);
+            admMB.setListaDestacadosBL(consultaService.getDestacadosByTipoConocimiento(filter));
+            filter.put("ntipoconocimientoid", Constante.PREGUNTAS);
+            admMB.setListaDestacadosPR(consultaService.getDestacadosByTipoConocimiento(filter));
+            filter.put("ntipoconocimientoid", Constante.WIKI);
+            admMB.setListaDestacadosWK(consultaService.getDestacadosByTipoConocimiento(filter));
+            filter.put("ntipoconocimientoid", Constante.BUENAPRACTICA);
+            admMB.setListaDestacadosBP(consultaService.getDestacadosByTipoConocimiento(filter));
+            filter.put("ntipoconocimientoid", Constante.CONTENIDO);
+            admMB.setListaDestacadosCT(consultaService.getDestacadosByTipoConocimiento(filter));
+            filter.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA);
+            admMB.setListaDestacadosOM(consultaService.getDestacadosByTipoConocimiento(filter));
+            JSFUtils.getSession().setAttribute("administracionMB", admMB);
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

@@ -41,5 +41,8 @@
         <property name="dfecharecepcion" type="timestamp">
             <column name="DFECHARECEPCION" />
         </property>
+        <property name="naccionid" type="big_decimal">
+            <column name="NACCIONID" precision="22" scale="0" />
+        </property>
     </class>
 </hibernate-mapping>

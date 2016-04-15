@@ -5,17 +5,31 @@
  */
 package pe.gob.mef.gescon.web.ui;
 
+import com.google.gson.Gson;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.nio.file.Files;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+import org.apache.poi.util.IOUtils;
+import pe.gob.mef.gescon.common.Parameters;
 
 /**
  *
  * @author JJacobo
  */
+@MultipartConfig
 public class UploadImage extends HttpServlet {
 
     /**
@@ -29,22 +43,31 @@ public class UploadImage extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            String file = request.getParameter("file");
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet UploadImage</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet UploadImage at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            String mb = request.getParameter("mb");
+            Part file = request.getPart("file");
+            
+            //getting fileserver path
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+            String path = bundle.getString("path");
+            String temppath = bundle.getString("temppath");
+            
+            //saving file in fileserver
+            FileOutputStream fileOutStream = new FileOutputStream(new File(temppath, file.getSubmittedFileName()));
+            fileOutStream.write(IOUtils.toByteArray(file.getInputStream()));
+            fileOutStream.flush();
+            fileOutStream.close();
+            
+            //sending json to response
+            Map<String, String> gson = new LinkedHashMap<>();
+            gson.put("link", temppath+file.getSubmittedFileName());
+            String json = new Gson().toJson(gson);
+            out.write(json);
         } finally {
-            out.close();
+            out.flush();
         }
     }
 

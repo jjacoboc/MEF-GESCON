@@ -33,7 +33,7 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.bp_lbl_categoria}"/>
                                     </h:panelGroup>
-                                    <h:panelGroup>
+                                    <h:panelGroup id="pgCat">
                                         <p:commandButton value="#{msgs.bp_btn_categoria}" actionListener="#{buenaPracticaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
                                         <p:spacer width="15"/>
                                         <h:outputText value="#{buenaPracticaMB.selectedCategoria.vnombre}" styleClass="Fs14"/>
@@ -256,7 +256,7 @@
                                     <h:outputText value="#{msgs.bp_lbl_categorias}" style="font-weight: bold; text-decoration: underline;"/>
                                     <p:tree id="cats" value="#{buenaPracticaMB.tree}" var="node" animate="true" cache="true"  
                                             selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                        <p:ajax event="select" listener="#{buenaPracticaMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pgNew, :f:pgNewVinc" />
+                                        <p:ajax event="select" listener="#{buenaPracticaMB.onNodeSelect}" oncomplete="PF('catDialog').hide();" update=":f:pgCat" />
                                         <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>

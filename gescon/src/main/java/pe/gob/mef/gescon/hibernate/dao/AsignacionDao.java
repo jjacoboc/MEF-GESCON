@@ -17,19 +17,21 @@ import pe.gob.mef.gescon.hibernate.domain.Tasignacion;
  */
 public interface AsignacionDao {
     
-    public BigDecimal getNextPK() throws Exception;
-    public BigDecimal getNumberNotificationsByMtuser(Mtuser mtuser) throws Exception;
-    public BigDecimal getNumberNotificationsAssignedByMtuser(Mtuser mtuser) throws Exception;
-    public BigDecimal getNumberNotificationsReceivedByMtuser(Mtuser mtuser) throws Exception;
-    public BigDecimal getNumberNotificationsServedByMtuser(Mtuser mtuser) throws Exception;
-    public List<HashMap> getNotificationsAssignedPanelByMtuser(Mtuser mtuser) throws Exception;
-    public List<HashMap> getNotificationsReceivedPanelByMtuser(Mtuser mtuser) throws Exception;
-    public List<HashMap> getNotificationsServedPanelByMtuser(Mtuser mtuser) throws Exception;
-    public List<HashMap> getNotificationsAlertPanelByMtuser(Mtuser mtuser) throws Exception;
-    public BigDecimal getModeratorByMtcategoria(BigDecimal ncategoriaid) throws Exception;
-    public BigDecimal getEspecialistaByMtcategoria(BigDecimal ncategoriaid) throws Exception;
-    public BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception;
-    public BigDecimal getUserCreacionByBaseLegal(BigDecimal nbaselegalid) throws Exception;
-    public BigDecimal getUserCreacionByContenido(BigDecimal idtipo,BigDecimal nconocimientoid) throws Exception;
-    public void saveOrUpdate(Tasignacion tasignacion) throws Exception;
+    BigDecimal getNextPK() throws Exception;
+    BigDecimal getNumberNotificationsByMtuser(Mtuser mtuser) throws Exception;
+    BigDecimal getNumberNotificationsAssignedByMtuser(Mtuser mtuser) throws Exception;
+    BigDecimal getNumberNotificationsReceivedByMtuser(Mtuser mtuser) throws Exception;
+    BigDecimal getNumberNotificationsServedByMtuser(Mtuser mtuser) throws Exception;
+    BigDecimal getNumberNotificationsPublicByMtuser(Mtuser mtuser) throws Exception;
+    List<HashMap> getNotificationsAssignedPanelByMtuser(Mtuser mtuser) throws Exception;
+    List<HashMap> getNotificationsReceivedPanelByMtuser(Mtuser mtuser) throws Exception;
+    List<HashMap> getNotificationsServedPanelByMtuser(Mtuser mtuser) throws Exception;
+    List<HashMap> getNotificationsPublicPanelByMtuser(Mtuser mtuser) throws Exception;
+    List<HashMap> getNotificationsAlertPanelByMtuser(Mtuser mtuser) throws Exception;
+    BigDecimal getModeratorByMtcategoria(BigDecimal ncategoriaid) throws Exception;
+    BigDecimal getEspecialistaByMtcategoria(BigDecimal ncategoriaid) throws Exception;
+    BigDecimal getUserCreacionByPregunta(BigDecimal npreguntaid) throws Exception;
+    BigDecimal getUserCreacionByBaseLegal(BigDecimal nbaselegalid) throws Exception;
+    BigDecimal getUserCreacionByContenido(BigDecimal idtipo,BigDecimal nconocimientoid) throws Exception;
+    void saveOrUpdate(Tasignacion tasignacion) throws Exception;
 }
