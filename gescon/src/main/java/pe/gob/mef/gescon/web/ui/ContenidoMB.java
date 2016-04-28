@@ -859,6 +859,7 @@ public class ContenidoMB implements Serializable {
             this.setListaTargetVinculos(new ArrayList<Consulta>());
             this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
             ListaSessionMB listaSessionMB = (ListaSessionMB) JSFUtils.getSessionAttribute("listaSessionMB");
+            listaSessionMB = listaSessionMB != null ? listaSessionMB : new ListaSessionMB();
             for(SelectItem s : listaSessionMB.getListaTipoDocumentosActivos()) {
                 this.setTipoDocumentos(this.getTipoDocumentos().concat(StringUtils.capitalize(StringUtils.lowerCase(s.getLabel())).concat(", ")));
             }
@@ -913,7 +914,7 @@ public class ContenidoMB implements Serializable {
             this.setListaArchivos(new ArrayList());
             this.setListaDestacados(new ArrayList<Consulta>());
             this.setSelectedDestacado(null);
-            this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
             Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
             if (iter.hasNext() == true) {
                 iter.remove();
@@ -1085,6 +1086,12 @@ public class ContenidoMB implements Serializable {
                     return;
                 }
                 
+                if(this.getUploadFile() == null) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe Cargar el archivo antes de adjuntar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+                
                 ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
                 String tipoDocumento = bundle.getString("tipoDocumento");
                 String tipoVideo = bundle.getString("tipoVideo");
@@ -1098,19 +1105,77 @@ public class ContenidoMB implements Serializable {
                 String filename = this.getUploadFile().getFileName();
                 String contentType = this.getUploadFile().getContentType();
                 
-                if(this.getTipoContenido().equals(tipoDocumento)) {
-                    
-                }
+                String contentTypePdf = bundle.getString("contentTypePdf");
+                String contentTypeWord = bundle.getString("contentTypeWord");
+                String contentTypeExcel = bundle.getString("contentTypeExcel");
+                String contentTypePowerPoint = bundle.getString("contentTypePowerPoint");
+                String contentTypeWordx = bundle.getString("contentTypeWordx");
+                String contentTypeExcelx = bundle.getString("contentTypeExcelx");
+                String contentTypePowerPointx = bundle.getString("contentTypePowerPointx");
+                String contentTypeMpg = bundle.getString("contentTypeMpg");
+                String contentTypeAvi = bundle.getString("contentTypeAvi");
+                String contentTypeMp4 = bundle.getString("contentTypeMp4");
+                String contentTypeQuickTime = bundle.getString("contentTypeQuickTime");
+                String contentTypeMp3 = bundle.getString("contentTypeMp3");
+                String contentTypeMp3_ = bundle.getString("contentTypeMp3_");
+                String contentTypeWav = bundle.getString("contentTypeWav");
+                String contentTypeGif = bundle.getString("contentTypeGif");
+                String contentTypeJpg = bundle.getString("contentTypeJpg");
+                String contentTypePng = bundle.getString("contentTypePng");
+                String contentTypeTiff = bundle.getString("contentTypeTiff");
+                String contentTypePlain = bundle.getString("contentTypePlain");
+                String contentTypeRichtext = bundle.getString("contentTypeRichtext");
+                String contentTypeXml = bundle.getString("contentTypeXml");
+                String contentTypeHtml = bundle.getString("contentTypeHtml");
+                String contentTypeLink = bundle.getString("contentTypeLink");
                 
-//                if(this.getTipoContenido().equals(tipoVideo)){
-//                    String ffmpeg = bundle.getString("ffmpeg");
-//                    String filenameFLV = filename.substring(0, filename.lastIndexOf(".")).concat(".flv");
-//                    FLVConverter FLVConverter = new FLVConverter(ffmpeg);
-//                    FLVConverter.convert(temppath + filename, temppath + filenameFLV, 420, 315, 5);
-//                    filename = filenameFLV;
-//                    contentType = bundle.getString("contentTypeFlash");
-//                    inputStream = new FileInputStream(new File(temppath + filenameFLV));
-//                }
+                if(this.getTipoContenido().equals(tipoDocumento)) {
+                    if(!contentType.equals(contentTypePdf) && !contentType.equals(contentTypeWord) && !contentType.equals(contentTypeExcel)
+                            && !contentType.equals(contentTypePowerPoint) && !contentType.equals(contentTypeWordx)
+                            && !contentType.equals(contentTypeExcelx) && !contentType.equals(contentTypePowerPointx)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                if(this.getTipoContenido().equals(tipoVideo)) {
+                    if(!contentType.equals(contentTypeMpg) && !contentType.equals(contentTypeAvi) 
+                            && !contentType.equals(contentTypeMp4) && !contentType.equals(contentTypeQuickTime)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                if(this.getTipoContenido().equals(tipoAudio)) {
+                    if(!contentType.equals(contentTypeMp3) && !contentType.equals(contentTypeMp3_) && !contentType.equals(contentTypeWav)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                if(this.getTipoContenido().equals(tipoImagen)) {
+                    if(!contentType.equals(contentTypeGif) && !contentType.equals(contentTypeJpg) 
+                            && !contentType.equals(contentTypePng) && !contentType.equals(contentTypeTiff)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                if(this.getTipoContenido().equals(tipoArchivo)) {
+                    if(!contentType.equals(contentTypePlain) && !contentType.equals(contentTypeRichtext) 
+                            && !contentType.equals(contentTypeXml) && !contentType.equals(contentTypeHtml)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                if(this.getTipoContenido().equals(tipoLink)) {
+                    if(!contentType.equals(contentTypeLink)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
                 
                 ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
                 archivoconocimiento.setUploadedFile(this.getUploadFile());
@@ -1174,6 +1239,27 @@ public class ContenidoMB implements Serializable {
 
     public void save(ActionEvent event) {
         try {
+            this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
+            if (this.getSelectedCategoria() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría del contenido a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getTitulo())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título del contenido a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getDescripcion())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción del contenido a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getContenidoHtml())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el contenido del contenido a registrar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
             if(this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -1309,6 +1395,8 @@ public class ContenidoMB implements Serializable {
                 archivoconocimiento.setNconocimientoid(conocimiento.getNconocimientoid());
                 archivoconocimiento.setVnombre(v.getVnombre());
                 archivoconocimiento.setNversion(BigDecimal.ONE);
+                archivoconocimiento.setNtipoarchivo(v.getNtipoarchivo());
+                archivoconocimiento.setVcontenttype(v.getVcontenttype());
                 archivoconocimiento.setVruta(path + conocimiento.getNconocimientoid().toString() + "/" + archivoconocimiento.getNversion().toString() + "/" + archivoconocimiento.getVnombre());
                 archivoconocimiento.setVusuariocreacion(user.getVlogin());
                 archivoconocimiento.setDfechacreacion(new Date());
@@ -1446,10 +1534,7 @@ public class ContenidoMB implements Serializable {
             fileOutStream.close();
             File temp = new File(bundle.getString("temppath"), archivoconocimiento.getVnombre());
             temp.delete();
-        } catch (NumberFormatException e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (NumberFormatException | IOException e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
@@ -1596,6 +1681,27 @@ public class ContenidoMB implements Serializable {
 
     public void edit(ActionEvent event) {
         try {
+            this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
+            if (this.getSelectedCategoria() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría del contenido a editar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSelectedContenido().getVtitulo())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título del contenido a editar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSelectedContenido().getVdescripcion())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción del contenido a editar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getContenidoHtml())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el contenido del contenido a editar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
             if(this.getSelectedContenido().getNdestacado().equals(BigDecimal.ZERO) && this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -1730,6 +1836,8 @@ public class ContenidoMB implements Serializable {
                 archivoconocimiento.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
                 archivoconocimiento.setVnombre(v.getVnombre());
                 archivoconocimiento.setNversion(historial.getNnumversion());
+                archivoconocimiento.setNtipoarchivo(v.getNtipoarchivo());
+                archivoconocimiento.setVcontenttype(v.getVcontenttype());
                 archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "/" + archivoconocimiento.getNversion().toString() + "/" + archivoconocimiento.getVnombre());
                 archivoconocimiento.setVusuariocreacion(user.getVlogin());
                 archivoconocimiento.setDfechacreacion(new Date());
@@ -1781,6 +1889,27 @@ public class ContenidoMB implements Serializable {
 
     public void post(ActionEvent event) {
         try {
+            this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
+            if (this.getSelectedCategoria() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría del contenido a publicar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSelectedContenido().getVtitulo())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título del contenido a publicar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getSelectedContenido().getVdescripcion())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción del contenido a publicar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            if (StringUtils.isBlank(this.getContenidoHtml())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el contenido del contenido a publicar.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
             if(this.getSelectedContenido().getNdestacado().equals(BigDecimal.ZERO) && this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -1916,6 +2045,8 @@ public class ContenidoMB implements Serializable {
                 archivoconocimiento.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
                 archivoconocimiento.setVnombre(v.getVnombre());
                 archivoconocimiento.setNversion(historial.getNnumversion());
+                archivoconocimiento.setNtipoarchivo(v.getNtipoarchivo());
+                archivoconocimiento.setVcontenttype(v.getVcontenttype());
                 archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "/" + archivoconocimiento.getNversion().toString() + "/" + archivoconocimiento.getVnombre());
                 archivoconocimiento.setVusuariocreacion(user.getVlogin());
                 archivoconocimiento.setDfechacreacion(new Date());

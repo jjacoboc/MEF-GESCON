@@ -267,6 +267,7 @@ public class ContenidoDaoImpl extends HibernateDaoSupport implements ContenidoDa
     }
     
     @Override
+    @Transactional(readOnly = false)
     public void delete(final BigDecimal conocimientoid) throws Exception {
         final StringBuilder sql = new StringBuilder();
         Object object = null;
@@ -290,6 +291,7 @@ public class ContenidoDaoImpl extends HibernateDaoSupport implements ContenidoDa
     }
     
     @Override
+    @Transactional(readOnly = false)
     public void deleteArchivos(final BigDecimal conocimientoid) throws Exception {
         final StringBuilder sql = new StringBuilder();
         Object object = null;

@@ -10,6 +10,26 @@
             <div class="Container100">
                 <div class="ContainerIndent TexAlCenter">                    
                     <f:view>
+                        <ui:include src="../froala.xhtml"/>
+                        <!-- Initialize the editor. -->
+                        <script>
+                            $(function() {
+                                $('#descHtml').froalaEditor({
+                                    key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
+                                    language: 'es'
+                                });
+                                actualizar=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#confirmActDlgForm\\:txt').val(value);
+                                    PF('confirmActDlg').show();
+                                };
+                                publicar=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#confirmPubDlgForm\\:txt').val(value);
+                                    PF('confirmPubDlg').show();
+                                };
+                            });
+                        </script>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Publicar Pregunta" styleClass="TexAlLeft">
@@ -50,7 +70,7 @@
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Respuesta"/>
-                                    <p:editor value="#{pendienteMB.selectedPregunta.vrespuesta}"/>
+                                    <textarea id="descHtml" name="descHtml">#{pendienteMB.selectedPregunta.vrespuesta}</textarea>
                                     
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
@@ -115,8 +135,8 @@
                                 </p:fieldset>
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
-                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonModPub()}" oncomplete="PF('confirmActDlg').show();" />
-                                    <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonModPub()}"  oncomplete="PF('confirmPubDlg').show();" />
+                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonModPub()}" oncomplete="actualizar();" />
+                                    <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonModPub()}"  oncomplete="publicar();" />
                                     <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonModPub()}" ajax="false" action="/index.xhtml" />
                                 </h:panelGrid>
                             </p:panel>
@@ -171,14 +191,16 @@
                         
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a actualizar la pregunta. Desea Continuar?" header="ACTUALIZAR PREGUNTA" widgetVar="confirmActDlg">
                             <h:form id="confirmActDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" action="#{pendienteMB.savePregEdit}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.selectedPregunta.vrespuesta}"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" actionListener="#{pendienteMB.savePregEdit}" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>
                         
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar la pregunta. Desea Continuar?" header="PUBLICAR PREGUNTA" widgetVar="confirmPubDlg">
                             <h:form id="confirmPubDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" action="#{pendienteMB.Publicar}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.selectedPregunta.vrespuesta}"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" actionListener="#{pendienteMB.Publicar}" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmPubDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>

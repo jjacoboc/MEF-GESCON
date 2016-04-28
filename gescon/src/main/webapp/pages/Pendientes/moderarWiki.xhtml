@@ -15,21 +15,49 @@
             <div class="Container100">
                 <div class="ContainerIndent TexAlCenter">
                     <f:view>
+                        <ui:include src="../froala.xhtml"/>
+                        <!-- Initialize the editor. -->
+                        <script>
+                            $(function () {
+                                $('#descHtml').froalaEditor({
+                                    key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
+                                    language: 'es'
+                                });
+                                actualizar=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#confirmActDlgForm\\:txt').val(value);
+                                    PF('confirmActDlg').show();
+                                };
+                                publicar=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#confirmPubDlgForm\\:txt').val(value);
+                                    PF('confirmPubDlg').show();
+                                };
+                                solicitar=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#siModDialogForm\\:txt').val(value);
+                                    PF('siModDialog').show();
+                                };
+                                responder=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#respModDialogForm\\:txt').val(value);
+                                    PF('respModDialog').show();
+                                };
+                            });
+                        </script>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Moderar Wiki" styleClass="TexAlLeft">
-                                <h:panelGrid id="pgEdit" columns="1" width="100%">
+                                    <h:panelGrid id="pgEdit" columns="1" width="100%">
+                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{pendienteMB.getfMsjUsu1()}"/>
+                                    <p:inputTextarea value="#{pendienteMB.selectedWiki.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
+                                                     readonly="#{pendienteMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfMsjUsu1()}"/>
 
-                                    
-                                        <h:outputLabel  value="Mensaje del usuario:" rendered="#{pendienteMB.getfMsjUsu1()}"/>
-                                        <p:inputTextarea value="#{pendienteMB.selectedWiki.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
-                                                         readonly="#{pendienteMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfMsjUsu1()}"/>
-                                    
-                                        <h:outputLabel value="Mensaje del Moderador" rendered="#{pendienteMB.getfSInfMod()}"/>
-                                        <p:inputTextarea  value="#{pendienteMB.selectedWiki.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
-                                                          readonly="#{pendienteMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfSInfMod()}"/>
-                                        
-                                        <p:spacer width="10" rendered="#{pendienteMB.getfSInfMod()}"/>
+                                    <h:outputLabel value="Mensaje del Moderador" rendered="#{pendienteMB.getfSInfMod()}"/>
+                                    <p:inputTextarea  value="#{pendienteMB.selectedWiki.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
+                                                      readonly="#{pendienteMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfSInfMod()}"/>
+
+                                    <p:spacer width="10" rendered="#{pendienteMB.getfSInfMod()}"/>
 
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
@@ -43,11 +71,11 @@
                                     <h:panelGroup rendered="#{pendienteMB.selectedWiki.nsituacionid lt msgs.situacionPublicado}">
                                         <p:commandButton value="#{msgs.wk_btn_categoriamod}" actionListener="#{pendienteMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
                                         <p:spacer width="15"/>
-                                        <h:outputText value="#{pendienteMB.selectedWiki.ncategoriaid}" styleClass="Fs18 FontBold black">
+                                        <h:outputText id="catedit" value="#{pendienteMB.selectedWiki.ncategoriaid}" styleClass="Fs18 FontBold black">
                                             <f:converter converterId="converterCategoria"/>
                                         </h:outputText>
                                     </h:panelGroup>
-                                        
+
                                     <h:panelGrid columns="6" cellpadding="0" cellspacing="0">
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
                                         <p:spacer width="5"/>
@@ -71,7 +99,7 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.wk_lbl_descripcion}"/>
                                     </h:panelGroup>
-                                    <p:editor id="descHtml" value="#{pendienteMB.descripcionHtml}" />
+                                    <textarea id="descHtml" name="descHtml">#{pendienteMB.descripcionHtml}</textarea>
 
                                     <h:outputText value="#{msgs.wk_lbl_detalle}"/>
                                     <p:fieldset>
@@ -206,17 +234,17 @@
                                         </p:tabView>
                                     </h:panelGrid>
                                 </p:fieldset>
-                                
+
                                 <p:spacer width="10"/>
-                                
+
                                 <h:panelGrid columns="2" width="100%" style="padding-left: 0px">
                                     <h:panelGroup>
-                                        <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmActDlg').show();"/>
-                                        <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmPubDlg').show();"/>
-                                        <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModDialogForm:pgSiMod" oncomplete="PF('siModDialog').show();"  />
+                                        <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="actualizar();"/>
+                                        <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="publicar();"/>
+                                        <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModDialogForm:pgSiMod" oncomplete="solicitar();"  />
                                         <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmRechDlg').show();" />
                                         <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
-                                        <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonMod() eq false}" actionListener="#{pendienteMB.toSi}" update=":respModDialogForm:pgRespMod" oncomplete="PF('respModDialog').show();"  />
+                                        <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonMod() eq false}" actionListener="#{pendienteMB.toSi}" update=":respModDialogForm:pgRespMod" oncomplete="responder();"  />
                                     </h:panelGroup>
                                     <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
                                 </h:panelGrid>
@@ -229,7 +257,7 @@
                                     <h:outputText value="#{msgs.wk_lbl_categorias}" style="font-weight: bold; text-decoration: underline;"/>
                                     <p:tree id="cats" value="#{pendienteMB.tree}" var="node" animate="true" cache="true"  
                                             selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
-                                        <p:ajax event="select" listener="#{pendienteMB.onNodeSelectWk}" oncomplete="PF('catDialog').hide();" update=":f:pgEdit, :f:pgEditVinc" />
+                                        <p:ajax event="select" listener="#{pendienteMB.onNodeSelectWk}" oncomplete="PF('catDialog').hide();" update=":f:catedit, :f:pgEditVinc" />
                                         <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>
@@ -317,6 +345,7 @@
                         <p:dialog id="siModDlg" header="Solicitar Informacion Adicional - Moderador" widgetVar="siModDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="siModDialogForm">
                                 <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.descripcionHtml}"/>
                                 <h:panelGrid id="pgSiMod"  columns="2">
                                     <h:outputLabel value="Mensaje:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
@@ -326,7 +355,7 @@
                                     </h:panelGrid>
                                     <p:spacer/>
                                     <h:panelGrid style="float: right" columns="2" width="25%">
-                                        <p:commandButton value="Enviar" ajax="false" action="#{pendienteMB.sendWikiSolicita}"/>
+                                        <p:commandButton value="Enviar" ajax="false" actionListener="#{pendienteMB.sendWikiSolicita}"/>
                                         <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelRespWikiMod}" />
                                     </h:panelGrid>
                                 </h:panelGrid>
@@ -336,6 +365,7 @@
                         <p:dialog id="respModDlg" header="Responder al Moderador" widgetVar="respModDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="respModDialogForm">
                                 <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.descripcionHtml}"/>
                                 <h:panelGrid id="pgRespMod"  columns="2">
                                     <h:outputLabel value="Mensaje:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
@@ -345,13 +375,13 @@
                                     </h:panelGrid>
                                     <p:spacer/>
                                     <h:panelGrid style="float: right" columns="2" width="25%">
-                                        <p:commandButton value="Enviar" ajax="false"  action="#{pendienteMB.sendWikiRespuesta}"/>
+                                        <p:commandButton value="Enviar" ajax="false"  actionListener="#{pendienteMB.sendWikiRespuesta}"/>
                                         <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelRespWikiMod}" />
                                     </h:panelGrid>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
                         <p:dialog id="destDlg" header="#{msgs.wk_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
                             <h:form id="destDialogForm">
                                 <h:panelGrid id="pgDest" columns="1">
@@ -391,31 +421,33 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
                         <p:confirmDialog appendTo="@(body)" message="#{msgs.wk_msg_elidestacado}" header="#{msgs.wk_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
                             <h:form id="confirmDelDlgForm">
                                 <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{pendienteMB.deleteOutstandingWK}"/>
                                 <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
                             </h:form>
                         </p:confirmDialog>
-                        
+
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a actualizar el wiki. Desea Continuar?" header="ACTUALIZAR WIKI" widgetVar="confirmActDlg">
                             <h:form id="confirmActDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" action="#{pendienteMB.saveWikiEdit}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.descripcionHtml}"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" actionListener="#{pendienteMB.saveWikiEdit}" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>
-                        
+
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar el wiki. Desea Continuar?" header="PUBLICAR WIKI" widgetVar="confirmPubDlg">
                             <h:form id="confirmPubDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" action="#{pendienteMB.publicarWiki}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.descripcionHtml}"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" actionListener="#{pendienteMB.publicarWiki}" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmPubDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>
-                        
+
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a rechazar el wiki. Desea Continuar?" header="RECHAZAR WIKI" widgetVar="confirmRechDlg">
                             <h:form id="confirmRechDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmRechDlg').hide()" action="#{pendienteMB.rechazarWiki}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmRechDlg').hide()" actionListener="#{pendienteMB.rechazarWiki}" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmRechDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>

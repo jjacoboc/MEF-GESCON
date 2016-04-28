@@ -9,10 +9,7 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.URI;
-import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -63,7 +60,7 @@ public class UploadImage extends HttpServlet {
             
             //sending json to response
             Map<String, String> gson = new LinkedHashMap<>();
-            gson.put("link", temppath+file.getSubmittedFileName());
+            gson.put("link", "file://190.187.41.30/gescon/temp/"+file.getSubmittedFileName());
             String json = new Gson().toJson(gson);
             out.write(json);
         } finally {

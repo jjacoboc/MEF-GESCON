@@ -596,7 +596,7 @@ public class BuenaPracticaMB implements Serializable{
     
     public void clearSection() {
         try {
-            this.setSelectedSeccion(null);
+            this.setSelectedSeccion(new Seccion());
             this.setTitulo(StringUtils.EMPTY);
             this.setDetalleHtml(StringUtils.EMPTY);
             this.setDetallePlain(StringUtils.EMPTY);
@@ -724,6 +724,7 @@ public class BuenaPracticaMB implements Serializable{
 
     public void addSection(ActionEvent event) {
         try {
+            this.setDetalleHtml(JSFUtils.getRequestParameter("txtHtml"));
             if(StringUtils.isBlank(this.getTitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título de la sección requerido. Ingrese el título de la sección a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -745,7 +746,7 @@ public class BuenaPracticaMB implements Serializable{
                 seccion.setNorden(BigDecimal.valueOf(this.getListaSeccion().size() + 1));
             }
             this.getListaSeccion().add(seccion);
-            RequestContext.getCurrentInstance().execute("PF('secDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('secPanel').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -765,6 +766,7 @@ public class BuenaPracticaMB implements Serializable{
     
     public void editSection(ActionEvent event) {
         try {
+            this.getSelectedSeccion().setDetalleHtml(JSFUtils.getRequestParameter("etxtHtml"));
             if(StringUtils.isBlank(this.getSelectedSeccion().getVtitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título de la sección requerido. Ingrese el título de la sección a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -1119,6 +1121,7 @@ public class BuenaPracticaMB implements Serializable{
 
     public void save(ActionEvent event) {
         try {
+            this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
             if(this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría de la buena práctica a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -1397,6 +1400,7 @@ public class BuenaPracticaMB implements Serializable{
 
     public void edit(ActionEvent event) {
         try {
+            this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
             if(this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -1621,6 +1625,7 @@ public class BuenaPracticaMB implements Serializable{
     
     public void post(ActionEvent event) {
         try {
+            this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
             if(this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);

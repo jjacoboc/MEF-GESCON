@@ -7,6 +7,7 @@ package pe.gob.mef.gescon.web.ui;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -146,7 +147,9 @@ public class PendienteMB implements Serializable {
     private String entidad;
     private Conocimiento selectedContenido;
     private DualListModel<Consulta> pickListContenido;
+    private String tipoContenido;
     private List<ArchivoConocimiento> listaArchivos;
+    private ArchivoConocimiento selectedArchivo;
     private BigDecimal idTipoConocimiento;
     private List<Consulta> listaSourceVinculos;
     private List<Consulta> listaTargetVinculos;
@@ -682,6 +685,14 @@ public class PendienteMB implements Serializable {
         this.pickListContenido = pickListContenido;
     }
 
+    public String getTipoContenido() {
+        return tipoContenido;
+    }
+
+    public void setTipoContenido(String tipoContenido) {
+        this.tipoContenido = tipoContenido;
+    }
+
     /**
      * @return the listaArchivos
      */
@@ -694,6 +705,14 @@ public class PendienteMB implements Serializable {
      */
     public void setListaArchivos(List<ArchivoConocimiento> listaArchivos) {
         this.listaArchivos = listaArchivos;
+    }
+
+    public ArchivoConocimiento getSelectedArchivo() {
+        return selectedArchivo;
+    }
+
+    public void setSelectedArchivo(ArchivoConocimiento selectedArchivo) {
+        this.selectedArchivo = selectedArchivo;
     }
 
     /**
@@ -1558,7 +1577,7 @@ public class PendienteMB implements Serializable {
                     this.setChkGobRegional(this.getSelectedBaseLegal().getNgobregional().equals(BigDecimal.ONE));
                     this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
                     this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
-                    this.setChkDestacado(this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ONE));
+                    this.setChkDestacado(BigDecimal.ONE.equals(this.getSelectedBaseLegal().getNdestacado()));
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
                     this.setListaSource(servicebl.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
@@ -1608,7 +1627,7 @@ public class PendienteMB implements Serializable {
                     this.setSelectedPregunta(service.getPreguntaById(BigDecimal.valueOf(id)));
                     cat_antigua = this.getSelectedPregunta().getNcategoriaid();
                     this.setEntidad(service.getNomEntidadbyIdEntidad(this.getSelectedPregunta().getNentidadid()));
-                    this.setChkDestacado(this.getSelectedPregunta().getNdestacado().equals(BigDecimal.ONE));
+                    this.setChkDestacado(BigDecimal.ONE.equals(this.getSelectedPregunta().getNdestacado()));
                     setListaAsignacion(service.obtenerPreguntaxAsig(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS));
                     setFlistaPregunta(service.obtenerPreguntas(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS));
 
@@ -1764,7 +1783,7 @@ public class PendienteMB implements Serializable {
                     cat_antigua = this.getSelectedWiki().getNcategoriaid();
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedWiki().getNcategoriaid()));
-                    this.setChkDestacado(this.getSelectedWiki().getNdestacado().equals(BigDecimal.ONE));
+                    this.setChkDestacado(BigDecimal.ONE.equals(this.getSelectedWiki().getNdestacado()));
                     this.setDescripcionHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedWiki().getVruta(), "html.txt"));
                     SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
                     this.setListaSeccion(seccionService.getSeccionesByConocimiento(this.getSelectedWiki().getNconocimientoid()));
@@ -1848,7 +1867,7 @@ public class PendienteMB implements Serializable {
                     cat_antigua = this.getSelectedContenido().getNcategoriaid();
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedContenido().getNcategoriaid()));
-                    this.setChkDestacado(this.getSelectedContenido().getNdestacado().equals(BigDecimal.ONE));
+                    this.setChkDestacado(BigDecimal.ONE.equals(this.getSelectedContenido().getNdestacado()));
                     this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedContenido().getVruta(), "html.txt"));
                     ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
                     this.setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedContenido().getNconocimientoid()));
@@ -1935,7 +1954,7 @@ public class PendienteMB implements Serializable {
                     cat_antigua = this.getSelectedBpractica().getNcategoriaid();
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBpractica().getNcategoriaid()));
-                    this.setChkDestacado(this.getSelectedBpractica().getNdestacado().equals(BigDecimal.ONE));
+                    this.setChkDestacado(BigDecimal.ONE.equals(this.getSelectedBpractica().getNdestacado()));
                     this.setDescripcionHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedBpractica().getVruta(), "html.txt"));
                     SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
                     this.setListaSeccion(seccionService.getSeccionesByConocimiento(this.getSelectedBpractica().getNconocimientoid()));
@@ -2019,7 +2038,7 @@ public class PendienteMB implements Serializable {
                     cat_antigua = this.getSelectedOmejora().getNcategoriaid();
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedOmejora().getNcategoriaid()));
-                    this.setChkDestacado(this.getSelectedOmejora().getNdestacado().equals(BigDecimal.ONE));
+                    this.setChkDestacado(BigDecimal.ONE.equals(this.getSelectedOmejora().getNdestacado()));
                     this.setContenidoHtml(GcmFileUtils.readStringFromFileServer(this.getSelectedOmejora().getVruta(), "html.txt"));
                     SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
                     this.setListaSeccion(seccionService.getSeccionesByConocimiento(this.getSelectedOmejora().getNconocimientoid()));
@@ -2208,15 +2227,6 @@ public class PendienteMB implements Serializable {
         return pagina;
     }
 
-    public void toCancelCT(ActionEvent event) {
-        try {
-            RequestContext.getCurrentInstance().execute("PF('tpoconDialog').hide();");
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     public void toCancel(ActionEvent event) {
         try {
             RequestContext.getCurrentInstance().execute("PF('respPregDialog').hide();");
@@ -2239,9 +2249,10 @@ public class PendienteMB implements Serializable {
         }
     }
 
-    public String savePregEdit() {
-        String pagina = "/index.xhtml";
+    public void savePregEdit(ActionEvent event) {
+        String pagina = "/gescon/index.xhtml";
         try {
+            //this.getSelectedPregunta().setVrespuesta(JSFUtils.getRequestParameter("descHtml"));
             /* Validando si la cantidad de pregutnas destacados llegÃ³ al lÃ­mite (10 max.).*/
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
@@ -2251,7 +2262,7 @@ public class PendienteMB implements Serializable {
                 if (cant.intValue() >= 10) {
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                     RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return "";
+                    return;
                 }
             }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -2339,11 +2350,13 @@ public class PendienteMB implements Serializable {
                 serviceasig.saveOrUpdate(asignacion);
             }
             loginMB.refreshNotifications();
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Actualización exitosa!.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
 
     }
 
@@ -2533,8 +2546,9 @@ public class PendienteMB implements Serializable {
     }
 
     public String Publicar() {
-        String pagina = null;
+        String pagina = "/gescon/index.xhtml";
         try {
+            //this.getSelectedPregunta().setVrespuesta(JSFUtils.getRequestParameter("descHtml"));
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 6));
@@ -2549,8 +2563,9 @@ public class PendienteMB implements Serializable {
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             loginMB.refreshNotifications();
-            pagina = "/index.xhtml";
-
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se publicó la pregunta.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -2615,15 +2630,14 @@ public class PendienteMB implements Serializable {
 
     }
 
-    public String Responder() {
-        String pagina = null;
+    public void Responder(ActionEvent event) {
         try {
             if (StringUtils.isBlank(this.getSelectedPregunta().getVrespuesta())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Campo requerido. Ingrese la respuesta.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                pagina = null;
             } else {
                 PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+                //this.getSelectedPregunta().setVrespuesta(JSFUtils.getRequestParameter("descHtml"));
                 this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 5));
                 service.saveOrUpdate(this.getSelectedPregunta());
@@ -2647,26 +2661,24 @@ public class PendienteMB implements Serializable {
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 loginMB.refreshNotifications();
 
-                pagina = "/index.xhtml";
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se respondió la pregunta.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String sendSi() {
-        String pagina = null;
+    public void sendSi(ActionEvent event) {
         try {
-
             if (StringUtils.isBlank(this.getSelectedPregunta().getVmsjespecialista())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Campo requerido. Ingrese el mensaje a enviar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                pagina = null;
             } else {
                 PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+                //this.getSelectedPregunta().setVrespuesta(JSFUtils.getRequestParameter("descHtml"));
                 this.getSelectedPregunta().setVmsjespecialista(this.getSelectedPregunta().getVmsjespecialista().toUpperCase());
                 service.saveOrUpdate(this.getSelectedPregunta());
 
@@ -2691,15 +2703,14 @@ public class PendienteMB implements Serializable {
 
                 this.fSInfEspe = "true";
 
-                pagina = "/index.xhtml";
-
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se respondió la pregunta.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
     public void toCancelSi(ActionEvent event) {
@@ -2721,6 +2732,7 @@ public class PendienteMB implements Serializable {
                 pagina = null;
             } else {
                 PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+                //this.getSelectedPregunta().setVrespuesta(JSFUtils.getRequestParameter("descHtml"));
                 this.getSelectedPregunta().setVmsjusuario2(this.getSelectedPregunta().getVmsjusuario2().toUpperCase());
                 service.saveOrUpdate(this.getSelectedPregunta());
 
@@ -4088,11 +4100,6 @@ public class PendienteMB implements Serializable {
                     fileOutStream.flush();
                     fileOutStream.close();
                     this.setContent(new DefaultStreamedContent(f.getInputstream(), f.getContentType(), f.getFileName()));
-
-                    ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
-                    archivoconocimiento.setVnombre(f.getFileName());
-                    this.listaArchivos.add(archivoconocimiento);
-
                 }
             }
         } catch (Exception e) {
@@ -4238,11 +4245,12 @@ public class PendienteMB implements Serializable {
         }
     }
 
-    public String saveContenidoEdit() {
+    public void saveContenidoEdit(ActionEvent event) {
         String pagina = null;
         try {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user_savecontenido = loginMB.getUser();
+            //this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -4251,7 +4259,7 @@ public class PendienteMB implements Serializable {
                 if (cant.intValue() >= 10) {
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                     RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return "";
+                    return;
                 }
             }
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
@@ -4363,7 +4371,6 @@ public class PendienteMB implements Serializable {
                     vinculoHist.setDfechacreacion(new Date());
                     vinculoHist.setVusuariocreacion(user_savecontenido.getVlogin());
                     vinculoHistService.saveOrUpdate(vinculoHist);
-
                 }
             }
 
@@ -4377,6 +4384,8 @@ public class PendienteMB implements Serializable {
                 archivoconocimiento.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
                 archivoconocimiento.setVnombre(v.getVnombre());
                 archivoconocimiento.setNversion(historial.getNnumversion());
+                archivoconocimiento.setNtipoarchivo(v.getNtipoarchivo());
+                archivoconocimiento.setVcontenttype(v.getVcontenttype());
                 archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "/" + archivoconocimiento.getNversion().toString() + "/" + archivoconocimiento.getVnombre());
                 archivoconocimiento.setVusuariocreacion(user_savecontenido.getVlogin());
                 archivoconocimiento.setDfechacreacion(new Date());
@@ -4403,23 +4412,25 @@ public class PendienteMB implements Serializable {
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
 
-                pagina = "/index.xhtml";
+                pagina = "/gescon/index.xhtml";
             } else {
                 pagina = "";
             }
             loginMB.refreshNotifications();
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Actualización exitosa!.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String PublicarContenido() {
-        String pagina = null;
+    public void PublicarContenido(ActionEvent event) {
         try {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user_savecontenido = loginMB.getUser();
+            //this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -4428,7 +4439,7 @@ public class PendienteMB implements Serializable {
                 if (cant.intValue() >= 10) {
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                     RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return "";
+                    return;
                 }
             }
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
@@ -4553,6 +4564,8 @@ public class PendienteMB implements Serializable {
                 archivoconocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
                 archivoconocimiento.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
                 archivoconocimiento.setVnombre(v.getVnombre());
+                archivoconocimiento.setNtipoarchivo(v.getNtipoarchivo());
+                archivoconocimiento.setVcontenttype(v.getVcontenttype());
                 archivoconocimiento.setNversion(historial.getNnumversion());
                 archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "/" + archivoconocimiento.getNversion().toString() + "/" + archivoconocimiento.getVnombre());
                 archivoconocimiento.setVusuariocreacion(user_savecontenido.getVlogin());
@@ -4562,17 +4575,16 @@ public class PendienteMB implements Serializable {
 
             }
             loginMB.refreshNotifications();
-            pagina = "/index.xhtml";
-
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se publicó el contenido exitosamente.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String RechazarContenido() {
-        String pagina = null;
+    public void RechazarContenido(ActionEvent event) {
         try {
             ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
             this.getSelectedContenido().setNsituacionid(BigDecimal.valueOf((long) 7));
@@ -4587,25 +4599,25 @@ public class PendienteMB implements Serializable {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             loginMB.refreshNotifications();
 
-            pagina = "/index.xhtml";
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se rechazó el contenido.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
 
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String sendContenidoSolicita() {
-        String pagina = null;
+    public void sendContenidoSolicita(ActionEvent event) {
         try {
             if (StringUtils.isBlank(this.getSelectedContenido().getVmsjsolicita())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Campo requerido. Ingrese el mensaje a enviar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                pagina = null;
             } else {
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user_savecontenido = loginMB.getUser();
+                //this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
                 if (this.getChkDestacado()) {
                     ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                     HashMap filter = new HashMap();
@@ -4614,7 +4626,7 @@ public class PendienteMB implements Serializable {
                     if (cant.intValue() >= 10) {
                         this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                         RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                        return "";
+                        return;
                     }
                 }
                 ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
@@ -4731,6 +4743,8 @@ public class PendienteMB implements Serializable {
                     archivoconocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
                     archivoconocimiento.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
                     archivoconocimiento.setVnombre(v.getVnombre());
+                    archivoconocimiento.setNtipoarchivo(v.getNtipoarchivo());
+                    archivoconocimiento.setVcontenttype(v.getVcontenttype());
                     archivoconocimiento.setNversion(historial.getNnumversion());
                     archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "/" + archivoconocimiento.getNversion().toString() + "/" + archivoconocimiento.getVnombre());
                     archivoconocimiento.setVusuariocreacion(user_savecontenido.getVlogin());
@@ -4759,26 +4773,25 @@ public class PendienteMB implements Serializable {
                 loginMB.refreshNotifications();
 
                 this.fSInfMod = "true";
-                pagina = "/index.xhtml";
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se envió la solicitud de información.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String sendContenidoRespuesta() {
-        String pagina = null;
+    public void sendContenidoRespuesta(ActionEvent event) {
         try {
             if (StringUtils.isBlank(this.getSelectedContenido().getVmsjrespuesta())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Campo requerido. Ingrese el mensaje a enviar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                pagina = null;
             } else {
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                 User user_savecontenido = loginMB.getUser();
+                //this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
                 if (this.getChkDestacado()) {
                     ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                     HashMap filter = new HashMap();
@@ -4787,7 +4800,7 @@ public class PendienteMB implements Serializable {
                     if (cant.intValue() >= 10) {
                         this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                         RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                        return "";
+                        return;
                     }
                 }
                 ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
@@ -4906,6 +4919,8 @@ public class PendienteMB implements Serializable {
                     archivoconocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
                     archivoconocimiento.setNconocimientoid(this.getSelectedContenido().getNconocimientoid());
                     archivoconocimiento.setVnombre(v.getVnombre());
+                    archivoconocimiento.setNtipoarchivo(v.getNtipoarchivo());
+                    archivoconocimiento.setVcontenttype(v.getVcontenttype());
                     archivoconocimiento.setNversion(historial.getNnumversion());
                     archivoconocimiento.setVruta(path + this.getSelectedContenido().getNconocimientoid().toString() + "/" + archivoconocimiento.getNversion().toString() + "/" + archivoconocimiento.getVnombre());
                     archivoconocimiento.setVusuariocreacion(user_savecontenido.getVlogin());
@@ -4935,14 +4950,15 @@ public class PendienteMB implements Serializable {
                 loginMB.refreshNotifications();
 
                 this.fSInfMod = "true";
-                pagina = "/index.xhtml";
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se envió la respuesta a la solicitud de información.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
 
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
     public void toCancelRespContenidoMod(ActionEvent event) {
@@ -4955,14 +4971,13 @@ public class PendienteMB implements Serializable {
         }
     }
 
-    public String sendWikiSolicita() {
-        String pagina = null;
+    public void sendWikiSolicita(ActionEvent event) {
         try {
             if (StringUtils.isBlank(this.getSelectedWiki().getVmsjsolicita())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Campo requerido. Ingrese el mensaje a enviar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                pagina = null;
             } else {
+                //this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
                 if (this.getChkDestacado()) {
                     ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                     HashMap filter = new HashMap();
@@ -4971,7 +4986,7 @@ public class PendienteMB implements Serializable {
                     if (cant.intValue() >= 10) {
                         this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                         RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                        return "";
+                        return;
                     }
                 }
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -5121,24 +5136,23 @@ public class PendienteMB implements Serializable {
                 loginMB.refreshNotifications();
 
                 this.fSInfMod = "true";
-                pagina = "/index.xhtml";
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Solicitud de información enviada.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String sendBpracticaSolicita() {
-        String pagina = null;
+    public void sendBpracticaSolicita(ActionEvent event) {
         try {
             if (StringUtils.isBlank(this.getSelectedBpractica().getVmsjsolicita())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Campo requerido. Ingrese el mensaje a enviar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                pagina = null;
             } else {
+                //this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
                 if (this.getChkDestacado()) {
                     ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                     HashMap filter = new HashMap();
@@ -5147,7 +5161,7 @@ public class PendienteMB implements Serializable {
                     if (cant.intValue() >= 10) {
                         this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                         RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                        return "";
+                        return;
                     }
                 }
                 this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
@@ -5297,24 +5311,23 @@ public class PendienteMB implements Serializable {
                 loginMB.refreshNotifications();
 
                 this.fSInfMod = "true";
-                pagina = "/index.xhtml";
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Solicitud de información adicional enviada.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String sendOmejoraSolicita() {
-        String pagina = null;
+    public void sendOmejoraSolicita(ActionEvent event) {
         try {
             if (StringUtils.isBlank(this.getSelectedOmejora().getVmsjsolicita())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Campo requerido. Ingrese el mensaje a enviar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                pagina = null;
             } else {
+                //this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
                 if (this.getChkDestacado()) {
                     ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                     HashMap filter = new HashMap();
@@ -5323,7 +5336,7 @@ public class PendienteMB implements Serializable {
                     if (cant.intValue() >= 10) {
                         this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                         RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                        return "";
+                        return;
                     }
                 }
                 this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
@@ -5346,7 +5359,7 @@ public class PendienteMB implements Serializable {
 
                 this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
                 GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "html.txt", this.getContenidoHtml());
-                GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "plain.txt", this.getContenidoHtml());
+                GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "plain.txt", this.getContenidoPlain());
 
                 HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
                 Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedOmejora().getNconocimientoid());
@@ -5476,24 +5489,24 @@ public class PendienteMB implements Serializable {
                 loginMB.refreshNotifications();
 
                 this.fSInfMod = "true";
-                pagina = "/index.xhtml";
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se envió la solicitud de información adicional.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
 
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String sendWikiRespuesta() {
-        String pagina = null;
+    public void sendWikiRespuesta(ActionEvent event) {
         try {
             if (StringUtils.isBlank(this.getSelectedWiki().getVmsjrespuesta())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Campo requerido. Ingrese el mensaje a enviar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                pagina = null;
             } else {
+                //this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
                 if (this.getChkDestacado()) {
                     ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                     HashMap filter = new HashMap();
@@ -5502,7 +5515,7 @@ public class PendienteMB implements Serializable {
                     if (cant.intValue() >= 10) {
                         this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                         RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                        return "";
+                        return;
                     }
                 }
                 LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -5653,24 +5666,23 @@ public class PendienteMB implements Serializable {
                 loginMB.refreshNotifications();
 
                 this.fSInfMod = "true";
-                pagina = "/index.xhtml";
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Solicitud de información respondida.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String sendBpracticaRespuesta() {
-        String pagina = null;
+    public void sendBpracticaRespuesta(ActionEvent event) {
         try {
             if (StringUtils.isBlank(this.getSelectedBpractica().getVmsjrespuesta())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Campo requerido. Ingrese el mensaje a enviar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                pagina = null;
             } else {
+                //this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
                 if (this.getChkDestacado()) {
                     ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                     HashMap filter = new HashMap();
@@ -5679,7 +5691,7 @@ public class PendienteMB implements Serializable {
                     if (cant.intValue() >= 10) {
                         this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                         RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                        return "";
+                        return;
                     }
                 }
                 this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
@@ -5830,24 +5842,23 @@ public class PendienteMB implements Serializable {
                 loginMB.refreshNotifications();
 
                 this.fSInfMod = "true";
-                pagina = "/index.xhtml";
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se respondió la solicitud de información.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String sendOmejoraRespuesta() {
-        String pagina = null;
+    public void sendOmejoraRespuesta(ActionEvent event) {
         try {
             if (StringUtils.isBlank(this.getSelectedOmejora().getVmsjrespuesta())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Campo requerido. Ingrese el mensaje a enviar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                pagina = null;
             } else {
+                //this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
                 if (this.getChkDestacado()) {
                     ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                     HashMap filter = new HashMap();
@@ -5856,7 +5867,7 @@ public class PendienteMB implements Serializable {
                     if (cant.intValue() >= 10) {
                         this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                         RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                        return "";
+                        return;
                     }
                 }
                 this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
@@ -5879,7 +5890,7 @@ public class PendienteMB implements Serializable {
 
                 this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
                 GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "html.txt", this.getContenidoHtml());
-                GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "plain.txt", this.getContenidoHtml());
+                GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "plain.txt", this.getContenidoPlain());
 
                 HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
                 Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedOmejora().getNconocimientoid());
@@ -6010,14 +6021,14 @@ public class PendienteMB implements Serializable {
                 loginMB.refreshNotifications();
 
                 this.fSInfMod = "true";
-                pagina = "/index.xhtml";
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Respuesta de la solicitud de información enviada.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
             }
-
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
     public void toCancelRespWikiMod(ActionEvent event) {
@@ -6050,8 +6061,7 @@ public class PendienteMB implements Serializable {
         }
     }
 
-    public String rechazarWiki() {
-        String pagina = null;
+    public void rechazarWiki(ActionEvent event) {
         try {
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             this.getSelectedWiki().setNsituacionid(BigDecimal.valueOf((long) 7));
@@ -6066,13 +6076,13 @@ public class PendienteMB implements Serializable {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             loginMB.refreshNotifications();
 
-            pagina = "/index.xhtml";
-
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se rechazó el wiki.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
     public String rechazarOmejora() {
@@ -6128,6 +6138,7 @@ public class PendienteMB implements Serializable {
     public String publicarWiki() {
         String pagina = null;
         try {
+            //this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -6275,9 +6286,9 @@ public class PendienteMB implements Serializable {
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
             loginMB.refreshNotifications();
-
-            pagina = "/index.xhtml";
-
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se publicó el wiki.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -6285,9 +6296,9 @@ public class PendienteMB implements Serializable {
         return pagina;
     }
 
-    public String publicarBpractica() {
-        String pagina = null;
+    public void publicarBpractica(ActionEvent event) {
         try {
+            //this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -6296,7 +6307,7 @@ public class PendienteMB implements Serializable {
                 if (cant.intValue() >= 10) {
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                     RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return "";
+                    return;
                 }
             }
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
@@ -6435,19 +6446,18 @@ public class PendienteMB implements Serializable {
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
             loginMB.refreshNotifications();
-
-            pagina = "/index.xhtml";
-
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se publicó la buena práctica.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String publicarOmejora() {
-        String pagina = null;
+    public void publicarOmejora(ActionEvent event) {
         try {
+            //this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -6456,7 +6466,7 @@ public class PendienteMB implements Serializable {
                 if (cant.intValue() >= 10) {
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                     RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return "";
+                    return;
                 }
             }
             this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
@@ -6480,7 +6490,7 @@ public class PendienteMB implements Serializable {
 
             this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "html.txt", this.getContenidoHtml());
-            GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "plain.txt", this.getContenidoHtml());
+            GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "plain.txt", this.getContenidoPlain());
 
             HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
             Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedOmejora().getNconocimientoid());
@@ -6598,19 +6608,20 @@ public class PendienteMB implements Serializable {
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
             loginMB.refreshNotifications();
-
-            pagina = "/index.xhtml";
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se publicó la oportunidad de mejora.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
 
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String saveBpracticaEdit() {
+    public void saveBpracticaEdit(ActionEvent event) {
         String pagina = null;
         try {
+            //this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -6619,7 +6630,7 @@ public class PendienteMB implements Serializable {
                 if (cant.intValue() >= 10) {
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                     RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return "";
+                    return;
                 }
             }
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());
@@ -6775,21 +6786,24 @@ public class PendienteMB implements Serializable {
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
 
-                pagina = "/index.xhtml";
+                pagina = "/gescon/index.xhtml";
             } else {
                 pagina = "";
             }
             loginMB.refreshNotifications();
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Actualización exitosa!.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
-        return pagina;
     }
 
-    public String saveOmejoraEdit() {
+    public void saveOmejoraEdit(ActionEvent event) {
         String pagina = null;
         try {
+            //this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -6798,7 +6812,7 @@ public class PendienteMB implements Serializable {
                 if (cant.intValue() >= 10) {
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                     RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return "";
+                    return;
                 }
             }
             this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
@@ -6828,7 +6842,7 @@ public class PendienteMB implements Serializable {
 
             this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
             GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "html.txt", this.getContenidoHtml());
-            GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "plain.txt", this.getContenidoHtml());
+            GcmFileUtils.writeStringToFileServer(this.getSelectedOmejora().getVruta(), "plain.txt", this.getContenidoPlain());
 
             HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
             Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedOmejora().getNconocimientoid());
@@ -6957,22 +6971,24 @@ public class PendienteMB implements Serializable {
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
 
-                pagina = "/index.xhtml";
+                pagina = "/gescon/index.xhtml";
             } else {
                 pagina = "";
             }
             loginMB.refreshNotifications();
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Actualización exitosa!.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
-
-        return pagina;
     }
 
-    public String saveWikiEdit() {
+    public void saveWikiEdit(ActionEvent event) {
         String pagina = null;
         try {
+            //this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
             if (this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
@@ -6981,7 +6997,7 @@ public class PendienteMB implements Serializable {
                 if (cant.intValue() >= 10) {
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                     RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return "";
+                    return;
                 }
             }
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
@@ -7137,16 +7153,18 @@ public class PendienteMB implements Serializable {
                 asignacion.setDfechacreacion(new Date());
                 serviceasig.saveOrUpdate(asignacion);
 
-                pagina = "/index.xhtml";
+                pagina = "/gescon/index.xhtml";
             } else {
                 pagina = "";
             }
             loginMB.refreshNotifications();
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Actualización exitosa!.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect(pagina);
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
-        return pagina;
     }
 
     public void logout() {
@@ -7935,5 +7953,154 @@ public class PendienteMB implements Serializable {
             }
         }
     }
+    
+    public void setSelectedFile(ActionEvent event) {
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+                this.setSelectedArchivo(this.getListaArchivos().get(index));
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
+    public void deleteFile() {
+        try {
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+            File temp = new File(bundle.getString("temppath"), this.getSelectedArchivo().getVnombre());
+            if(temp.exists())   temp.delete();
+            if(this.getSelectedArchivo().getNconocimientoid() != null) {
+                String id = this.getSelectedArchivo().getNconocimientoid().toString();
+                File dir = new File(bundle.getString("path") + "ct" + '/' + id + "/0/" + this.getSelectedArchivo().getVnombre());
+                if(dir.exists())    dir.delete();
+            }
+            if(this.getSelectedArchivo().getNarchivoid() != null) {
+                ArchivoConocimientoService aservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
+                aservice.delete(this.getSelectedArchivo().getNarchivoid());
+            }
+            this.getListaArchivos().remove(this.getSelectedArchivo());
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void adjuntar(ActionEvent event) {
+        try {
+            if (event != null) {
+                if(StringUtils.isBlank(this.getTipoContenido())) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de contenido a adjuntar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+                
+                if(this.getUploadFile() == null) {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe Cargar el archivo antes de adjuntar.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+                
+                ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
+                String tipoDocumento = bundle.getString("tipoDocumento");
+                String tipoVideo = bundle.getString("tipoVideo");
+                String tipoAudio = bundle.getString("tipoAudio");
+                String tipoImagen = bundle.getString("tipoImagen");
+                String tipoArchivo = bundle.getString("tipoArchivo");
+                String tipoLink = bundle.getString("tipoLink");
+                String tipoOtro = bundle.getString("tipoOtro");
+                
+                String tmppath = bundle.getString("temppath");
+                String filename = this.getUploadFile().getFileName();
+                String contentType = this.getUploadFile().getContentType();
+                
+                String contentTypePdf = bundle.getString("contentTypePdf");
+                String contentTypeWord = bundle.getString("contentTypeWord");
+                String contentTypeExcel = bundle.getString("contentTypeExcel");
+                String contentTypePowerPoint = bundle.getString("contentTypePowerPoint");
+                String contentTypeWordx = bundle.getString("contentTypeWordx");
+                String contentTypeExcelx = bundle.getString("contentTypeExcelx");
+                String contentTypePowerPointx = bundle.getString("contentTypePowerPointx");
+                String contentTypeMpg = bundle.getString("contentTypeMpg");
+                String contentTypeAvi = bundle.getString("contentTypeAvi");
+                String contentTypeMp4 = bundle.getString("contentTypeMp4");
+                String contentTypeQuickTime = bundle.getString("contentTypeQuickTime");
+                String contentTypeMp3 = bundle.getString("contentTypeMp3");
+                String contentTypeMp3_ = bundle.getString("contentTypeMp3_");
+                String contentTypeWav = bundle.getString("contentTypeWav");
+                String contentTypeGif = bundle.getString("contentTypeGif");
+                String contentTypeJpg = bundle.getString("contentTypeJpg");
+                String contentTypePng = bundle.getString("contentTypePng");
+                String contentTypeTiff = bundle.getString("contentTypeTiff");
+                String contentTypePlain = bundle.getString("contentTypePlain");
+                String contentTypeRichtext = bundle.getString("contentTypeRichtext");
+                String contentTypeXml = bundle.getString("contentTypeXml");
+                String contentTypeHtml = bundle.getString("contentTypeHtml");
+                String contentTypeLink = bundle.getString("contentTypeLink");
+                
+                if(this.getTipoContenido().equals(tipoDocumento)) {
+                    if(!contentType.equals(contentTypePdf) && !contentType.equals(contentTypeWord) && !contentType.equals(contentTypeExcel)
+                            && !contentType.equals(contentTypePowerPoint) && !contentType.equals(contentTypeWordx)
+                            && !contentType.equals(contentTypeExcelx) && !contentType.equals(contentTypePowerPointx)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                if(this.getTipoContenido().equals(tipoVideo)) {
+                    if(!contentType.equals(contentTypeMpg) && !contentType.equals(contentTypeAvi) 
+                            && !contentType.equals(contentTypeMp4) && !contentType.equals(contentTypeQuickTime)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                if(this.getTipoContenido().equals(tipoAudio)) {
+                    if(!contentType.equals(contentTypeMp3) && !contentType.equals(contentTypeMp3_) && !contentType.equals(contentTypeWav)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                if(this.getTipoContenido().equals(tipoImagen)) {
+                    if(!contentType.equals(contentTypeGif) && !contentType.equals(contentTypeJpg) 
+                            && !contentType.equals(contentTypePng) && !contentType.equals(contentTypeTiff)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                if(this.getTipoContenido().equals(tipoArchivo)) {
+                    if(!contentType.equals(contentTypePlain) && !contentType.equals(contentTypeRichtext) 
+                            && !contentType.equals(contentTypeXml) && !contentType.equals(contentTypeHtml)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                if(this.getTipoContenido().equals(tipoLink)) {
+                    if(!contentType.equals(contentTypeLink)) {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Formato de archivo incorrecto!.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                        return;
+                    }
+                }
+                
+                ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
+                archivoconocimiento.setUploadedFile(this.getUploadFile());
+                archivoconocimiento.setVnombre(filename);
+                archivoconocimiento.setNtipoarchivo(BigDecimal.valueOf(Long.parseLong(this.getTipoContenido())));
+                archivoconocimiento.setVcontenttype(contentType);
+                archivoconocimiento.setVruta(tmppath + filename);
+                archivoconocimiento.setFile(new File(archivoconocimiento.getVruta()));
+                archivoconocimiento.setContent(new DefaultStreamedContent(new FileInputStream(archivoconocimiento.getFile()), contentType, filename));
+                this.getListaArchivos().add(archivoconocimiento);
+                System.out.println("filename: "+filename);
+            }
+        } catch(NumberFormatException | FileNotFoundException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

@@ -196,7 +196,7 @@
                         
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a actualizar la pregunta. Desea Continuar?" header="ACTUALIZAR PREGUNTA" widgetVar="confirmActDlg">
                             <h:form id="confirmActDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" action="#{pendienteMB.savePregEdit}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" actionListener="#{pendienteMB.savePregEdit}" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>

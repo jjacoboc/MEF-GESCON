@@ -1180,6 +1180,7 @@ public class OportunidadMB implements Serializable {
 
     public void save(ActionEvent event) {
         try {
+            this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
             if(this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría de la oportunidad de mejora a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -1415,6 +1416,7 @@ public class OportunidadMB implements Serializable {
 
     public void edit(ActionEvent event) {
         try {
+            this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
             if(this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría de la oportunidad de mejora a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -1634,6 +1636,7 @@ public class OportunidadMB implements Serializable {
     
     public void post(ActionEvent event) {
         try {
+            this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
             if(this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría de la oportunidad de mejora a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);

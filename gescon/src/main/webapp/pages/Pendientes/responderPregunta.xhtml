@@ -10,6 +10,36 @@
             <div class="Container100">
                 <div class="ContainerIndent TexAlCenter">                    
                     <f:view>
+                        <ui:include src="../froala.xhtml"/>
+                        <!-- Initialize the editor. -->
+                        <script>
+                            $(function() {
+                                $('#descHtml').froalaEditor({
+                                    key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
+                                    language: 'es'
+                                });
+                                actualizar=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#confirmActDlgForm\\:txt').val(value);
+                                    PF('confirmActDlg').show();
+                                };
+                                publicar=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#confirmRespDlgForm\\:txt').val(value);
+                                    PF('confirmRespDlg').show();
+                                };
+                                solicitar=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#siPregDialogForm\\:txt').val(value);
+                                    PF('siPregDialog').show();
+                                };
+                                responder=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#respUsuPregDialogForm\\:txt').val(value);
+                                    PF('respUsuPregDialog').show();
+                                };
+                            });
+                        </script>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Responder Pregunta" styleClass="TexAlLeft">
@@ -64,7 +94,7 @@
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Respuesta"/>
-                                    <p:editor value="#{pendienteMB.selectedPregunta.vrespuesta}"/>
+                                    <textarea id="descHtml" name="descHtml">#{pendienteMB.selectedPregunta.vrespuesta}</textarea>
                                     
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
@@ -129,11 +159,11 @@
                                 </p:fieldset>
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
-                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonEspe()}" oncomplete="PF('confirmActDlg').show();" />
-                                    <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonEspe()}" oncomplete="PF('confirmRespDlg').show();"/>
-                                    <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonEspe()}" actionListener="#{pendienteMB.toSi}" update=":siPregDialogForm:pgSiPreg" oncomplete="PF('siPregDialog').show();"  />
+                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonEspe()}" oncomplete="actualizar();" />
+                                    <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonEspe()}" oncomplete="publicar();"/>
+                                    <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonEspe()}" actionListener="#{pendienteMB.toSi}" update=":siPregDialogForm:pgSiPreg" oncomplete="solicitar();"  />
                                     <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonEspe()}" ajax="false" action="/index.xhtml" />
-                                    <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonEspe() eq false}" actionListener="#{pendienteMB.toSi}" update=":respUsuPregDialogForm:pgRespUsuPreg" oncomplete="PF('respUsuPregDialog').show();"  />
+                                    <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonEspe() eq false}" actionListener="#{pendienteMB.toSi}" update=":respUsuPregDialogForm:pgRespUsuPreg" oncomplete="responder();"  />
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
@@ -141,6 +171,7 @@
                         <p:dialog id="siPregDlg" header="Solicitar Informacion Adicional - Especialista" widgetVar="siPregDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="siPregDialogForm">
                                 <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.selectedPregunta.vrespuesta}"/>
                                 <h:panelGrid id="pgSiPreg"  columns="2">
                                     <h:outputLabel value="Mensaje:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
@@ -151,7 +182,7 @@
                                     <p:spacer/>
                                     <h:panelGrid style="float: right" columns="2" width="25%">
                                         <p:commandButton value="Enviar" ajax="false" action="#{pendienteMB.sendSi}"/>
-                                        <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelSi}"/>
+                                        <p:commandButton value="Cancelar" onclick="PF('siDialog').hide();" />
                                     </h:panelGrid>
                                 </h:panelGrid>
                             </h:form>
@@ -160,6 +191,7 @@
                         <p:dialog id="respUsuPregDlg" header="Responder al Especialista" widgetVar="respUsuPregDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="respUsuPregDialogForm">
                                 <p:messages id="msgs" showSummary="true" showDetail="true" />
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.selectedPregunta.vrespuesta}"/>
                                 <h:panelGrid id="pgRespUsuPreg"  columns="2">
                                     <h:outputLabel value="Mensaje:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
@@ -225,14 +257,16 @@
                         
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a actualizar la pregunta. Desea Continuar?" header="ACTUALIZAR PREGUNTA" widgetVar="confirmActDlg">
                             <h:form id="confirmActDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" action="#{pendienteMB.savePregEdit}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.selectedPregunta.vrespuesta}"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" actionListener="#{pendienteMB.savePregEdit}" styleClass="ui-confirmdialog-yes" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" styleClass="ui-confirmdialog-no" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>
                         
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a responder la pregunta. Desea Continuar?" header="RESPONDER PREGUNTA" widgetVar="confirmRespDlg">
                             <h:form id="confirmRespDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmRespDlg').hide()" action="#{pendienteMB.Responder}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.selectedPregunta.vrespuesta}"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmRespDlg').hide()" actionListener="#{pendienteMB.Responder}" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmRespDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>

@@ -15,6 +15,16 @@
             <div class="Container100">
                 <div class="ContainerIndent TexAlCenter">
                     <f:view>
+                        <ui:include src="../froala.xhtml"/>
+                        <!-- Initialize the editor. -->
+                        <script>
+                            $(function() {
+                                $('#descHtml').froalaEditor({
+                                    key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
+                                    language: 'es'
+                                });
+                            });
+                        </script>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="#{msgs.om_lbl_pnlEdit}" styleClass="TexAlLeft">
@@ -66,7 +76,9 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.om_lbl_contenido}"/>
                                     </h:panelGroup>
+                                    
                                     <textarea id="descHtml" name="descHtml">#{oportunidadMB.contenidoHtml}</textarea>
+                                    <p:spacer/>
                                     
                                     <h:panelGroup rendered="#{not empty oportunidadMB.listaSeccion}">
                                         <h:outputText value="#{msgs.icon_asterisk}"/>

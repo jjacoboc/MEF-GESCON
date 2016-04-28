@@ -20,8 +20,29 @@
                         <script>
                             $(function() {
                                 $('#descHtml').froalaEditor({
+                                    key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
                                     language: 'es'
                                 });
+                                $('#txtHtml').froalaEditor({
+                                    key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
+                                    language: 'es'
+                                });
+                                secDialog = function () {
+                                    $('#f\\:titulo').val('');
+                                    $('#txtHtml').val('');
+                                    $('#txtHtml').froalaEditor({
+                                        key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
+                                        language: 'es'
+                                    });
+                                };
+                                esecDialog = function () {
+                                    $('#f\\:etitulo').val(#{wikiMB.selectedSeccion.vtitulo});
+                                    $('#etxtHtml').val(#{wikiMB.selectedSeccion.detalleHtml});
+                                    $('#etxtHtml').froalaEditor({
+                                        key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
+                                        language: 'es'
+                                    });
+                                };
                             });
                         </script>
                         <h:form id="f">
@@ -60,20 +81,41 @@
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.wk_lbl_descripcion}"/>
                                     </h:panelGroup>
-                                    <p:fieldset>
-                                        <textarea id="descHtml" name="descHtml">#{wikiMB.descripcionHtml}</textarea>
-                                    </p:fieldset>
+                                    
+                                    <textarea id="descHtml" name="descHtml">#{wikiMB.descripcionHtml}</textarea>
+                                    <p:spacer/>
                                     
                                     <h:outputText value="#{msgs.wk_lbl_detalle}"/>
-                                    <p:fieldset>
-                                        <p:commandButton value="#{msgs.wk_btn_seccion}" actionListener="#{wikiMB.toAddSection}" update=":secDialogForm:pgSec" oncomplete="PF('secDialog').show();" styleClass="ui-link Fs14"/>
-                                        <table style="">
+                                    <p:fieldset id="fs">
+                                        <p:commandButton value="#{msgs.wk_btn_seccion}" actionListener="#{wikiMB.toAddSection}" oncomplete="secDialog();" update=":f:pgSec" styleClass="ui-link Fs14"/>
+                                        <p:overlayPanel id="secPanel" widgetVar="secPanel" for="btnSec" hideEffect="fade" showCloseIcon="true" style="border: 2px solid black;">
+                                            <h:panelGrid id="pgSec" columns="1" >
+                                                <h:outputText value="#{msgs.wk_lbl_pnlSeccion}" styleClass="FontBold"/>
+                                                <p:spacer/>
+                                                <h:panelGroup>
+                                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                                    <p:spacer width="5"/>
+                                                    <h:outputText value="#{msgs.wk_lbl_titulo}"/>
+                                                </h:panelGroup>
+                                                <p:inputText id="titulo" value="#{wikiMB.titulo}" size="100" styleClass="Fs14" maxlength="100"/>
+
+                                                <h:panelGroup>
+                                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                                    <p:spacer width="5"/>
+                                                    <h:outputText value="#{msgs.wk_lbl_detalle2}"/>
+                                                </h:panelGroup>
+                                                <textarea id="txtHtml" name="txtHtml">#{wikiMB.detalleHtml}</textarea>
+
+                                                <p:commandButton value="#{msgs.wk_btn_addseccion}" actionListener="#{wikiMB.addSection}" update=":f:fs, :f:growl" styleClass="ui-link Fs14"/>
+                                            </h:panelGrid>
+                                        </p:overlayPanel>
+                                        <table class="Wid100">
                                             <ui:repeat value="#{wikiMB.listaSeccion}" var="s" varStatus="vs">
                                                 <tr>
                                                     <td style="border-bottom: gray solid 1px;">
                                                         <h:outputText value="#{s.vtitulo}" styleClass="Fs14 FontBold black"/>
                                                         <h:outputText value=" [ " styleClass="FontBold black"/>
-                                                        <p:commandLink value="editar" actionListener="#{wikiMB.toEditSection}" update=":esecDialogForm:pgEsec" oncomplete="PF('esecDialog').show();" styleClass="ui-link Fs12">
+                                                        <p:commandLink value="editar" actionListener="#{wikiMB.toEditSection}" oncomplete="PF('esecPanel').show();" update=":f:pgEsec" styleClass="ui-link Fs12">
                                                             <f:param name="index" value="#{vs.index}"/>
                                                         </p:commandLink>
                                                         <h:outputText value="]" styleClass="FontBold black"/>
@@ -83,6 +125,27 @@
                                                 <tr><td><p:spacer/></td></tr>
                                             </ui:repeat>
                                         </table>
+                                        <p:overlayPanel id="esecPanel" widgetVar="esecPanel" hideEffect="fade" showCloseIcon="true" onShow="esecDialog();" dynamic="true" style="border: 2px solid black;" >
+                                            <h:panelGrid id="pgEsec" columns="1">
+                                                <h:outputText value="#{msgs.wk_lbl_pnlSeccione}" styleClass="FontBold"/>
+                                                <p:spacer/>
+                                                <h:panelGroup>
+                                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                                    <p:spacer width="5"/>
+                                                    <h:outputText value="#{msgs.wk_lbl_titulo}"/>
+                                                </h:panelGroup>
+                                                <p:inputText id="etitulo" value="#{wikiMB.selectedSeccion.vtitulo}" size="100" styleClass="Fs14" maxlength="100"/>
+
+                                                <h:panelGroup>
+                                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                                    <p:spacer width="5"/>
+                                                    <h:outputText value="#{msgs.wk_lbl_detalle2}"/>
+                                                </h:panelGroup>
+                                                <textarea id="etxtHtml" name="etxtHtml">#{wikiMB.selectedSeccion.detalleHtml}</textarea>
+
+                                                <p:commandButton value="#{msgs.wk_btn_editseccion}" actionListener="#{wikiMB.editSection}" update=":f:fs, :f:growl" styleClass="ui-link Fs14"/>
+                                            </h:panelGrid>
+                                        </p:overlayPanel>
                                     </p:fieldset>
 
                                     <p:spacer/>                                    
@@ -256,50 +319,6 @@
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>
                                     </p:tree>
-                                </h:panelGrid>
-                            </h:form>
-                        </p:dialog>
-
-                        <p:dialog id="secDlg" header="#{msgs.wk_lbl_pnlSeccion}" widgetVar="secDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
-                            <h:form id="secDialogForm">
-                                <h:panelGrid id="pgSec" columns="1">
-                                    <h:panelGroup>
-                                        <h:outputText value="#{msgs.icon_asterisk}"/>
-                                        <p:spacer width="5"/>
-                                        <h:outputText value="#{msgs.wk_lbl_titulo}"/>
-                                    </h:panelGroup>
-                                    <p:inputText value="#{wikiMB.titulo}" size="100" styleClass="Fs14" maxlength="100"/>
-
-                                    <h:panelGroup>
-                                        <h:outputText value="#{msgs.icon_asterisk}"/>
-                                        <p:spacer width="5"/>
-                                        <h:outputText value="#{msgs.wk_lbl_detalle2}"/>
-                                    </h:panelGroup>
-                                    <p:editor id="txtHtml" value="#{wikiMB.detalleHtml}" />
-
-                                    <p:commandButton value="#{msgs.wk_btn_addseccion}" actionListener="#{wikiMB.addSection}" update=":f:pgEdit, :f:growl" styleClass="ui-link Fs14"/>
-                                </h:panelGrid>
-                            </h:form>
-                        </p:dialog>
-                        
-                        <p:dialog id="esecDlg" header="#{msgs.wk_lbl_pnlSeccione}" widgetVar="esecDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
-                            <h:form id="esecDialogForm">
-                                <h:panelGrid id="pgEsec" columns="1">
-                                    <h:panelGroup>
-                                        <h:outputText value="#{msgs.icon_asterisk}"/>
-                                        <p:spacer width="5"/>
-                                        <h:outputText value="#{msgs.wk_lbl_titulo}"/>
-                                    </h:panelGroup>
-                                    <p:inputText value="#{wikiMB.selectedSeccion.vtitulo}" size="100" styleClass="Fs14" maxlength="100"/>
-
-                                    <h:panelGroup>
-                                        <h:outputText value="#{msgs.icon_asterisk}"/>
-                                        <p:spacer width="5"/>
-                                        <h:outputText value="#{msgs.wk_lbl_detalle2}"/>
-                                    </h:panelGroup>
-                                    <p:editor id="txtHtml" value="#{wikiMB.selectedSeccion.detalleHtml}" />
-
-                                    <p:commandButton value="#{msgs.wk_btn_editseccion}" actionListener="#{wikiMB.editSection}" update=":f:pgEdit, :f:growl" styleClass="ui-link Fs14"/>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
