@@ -82,6 +82,12 @@ public class JSFUtils {
         return object;
     }
     
+    public static void setSessionAttribute(String key, Object value){
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpSession session = ((HttpServletRequest)context.getExternalContext().getRequest()).getSession(false);
+        session.setAttribute(key, value);
+    }
+    
     public static String getLabelByValueOnSelectItems(Object value, List<SelectItem> list){
         for(SelectItem item : list){
             if(item.getValue().equals(value)){

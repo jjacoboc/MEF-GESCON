@@ -42,6 +42,7 @@ public class UsuarioImage {
             // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
             return new DefaultStreamedContent();
         } else {
+            System.out.println("External context: " + context.getExternalContext());
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             String ruta = JSFUtils.getRequestParameter("ruta");
 
@@ -56,6 +57,7 @@ public class UsuarioImage {
                     fis = new FileInputStream(file);
                     contentType = "image/jpg";
                 } else {
+                    System.out.println("External context: " + context.getExternalContext());
                     file = new File(context.getExternalContext() + "/resources/images/blank-avatar.png");
                     fis = new FileInputStream(file);
                     contentType = "image/png";

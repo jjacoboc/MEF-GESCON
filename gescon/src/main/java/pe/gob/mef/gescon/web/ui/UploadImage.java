@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -49,18 +50,25 @@ public class UploadImage extends HttpServlet {
             
             //getting fileserver path
             ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
-            String path = bundle.getString("path");
             String temppath = bundle.getString("temppath");
             
+            ServletContext context = request.getSession().getServletContext();
+            temppath = context.getRealPath("/") + "\\resources\\uploads\\";
+            
             //saving file in fileserver
-            FileOutputStream fileOutStream = new FileOutputStream(new File(temppath, file.getSubmittedFileName()));
+            File dir = new File(temppath);
+            if(!dir.exists()) {
+                dir.mkdirs();
+            }
+            File f = new File(temppath, file.getSubmittedFileName());
+            FileOutputStream fileOutStream = new FileOutputStream(f);
             fileOutStream.write(IOUtils.toByteArray(file.getInputStream()));
             fileOutStream.flush();
             fileOutStream.close();
             
             //sending json to response
             Map<String, String> gson = new LinkedHashMap<>();
-            gson.put("link", "file://190.187.41.30/gescon/temp/"+file.getSubmittedFileName());
+            gson.put("link", "/gescon/faces/javax.faces.resource/"+file.getSubmittedFileName()+"?ln=uploads");
             String json = new Gson().toJson(gson);
             out.write(json);
         } finally {

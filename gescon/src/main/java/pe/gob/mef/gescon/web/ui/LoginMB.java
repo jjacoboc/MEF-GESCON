@@ -656,11 +656,16 @@ public class LoginMB implements Serializable {
     
     public void toMyProfile(ActionEvent event) {
         try {
+            FacesContext context = FacesContext.getCurrentInstance();
+            System.out.println("External context: " + context.getExternalContext().toString());
             UserMB userMB = (UserMB) JSFUtils.getSessionAttribute("userMB");
+            userMB = userMB != null ? userMB : new UserMB();
             this.setPhotoImage(getPhotoUser());
             UbigeoService ubigeoService = (UbigeoService) ServiceFinder.findBean("UbigeoService");
+            userMB.setListaDepartamento(new Items(ubigeoService.getDepartamentos(), null, "vcoddep", "vdescdep").getItems());
             userMB.setListaProvincia(new Items(ubigeoService.getProvinciasPorDepartamento(this.getUser().getVdpto()), null, "vcodprov", "vdescprov").getItems());
             userMB.setListaDistrito(new Items(ubigeoService.getDistritosPorProvincia(this.getUser().getVdpto(), this.getUser().getVprov()), null, "vcoddist", "vdescdist").getItems());
+            JSFUtils.setSessionAttribute("userMB", userMB);
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/miperfil.xhtml");
         } catch (Exception e) {
             log.error(e.getMessage());

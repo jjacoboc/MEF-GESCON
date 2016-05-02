@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -25,13 +26,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFFontFormatting;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
 import org.jsoup.Jsoup;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
@@ -41,6 +40,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.hibernate.domain.ThistorialId;
 import pe.gob.mef.gescon.hibernate.domain.TseccionHistId;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoHistId;
@@ -540,9 +540,10 @@ public class WikiMB implements Serializable {
         try {
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             this.setListaWiki(conocimientoService.getConocimientosByType(Constante.WIKI));
+            this.setListaSeccion(new ArrayList());
             this.setListaSourceVinculos(new ArrayList<Consulta>());
             this.setListaTargetVinculos(new ArrayList<Consulta>());
-            this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -586,7 +587,7 @@ public class WikiMB implements Serializable {
             this.setListaTargetVinculosWK(new ArrayList());
             this.setListaDestacados(new ArrayList<Consulta>());
             this.setSelectedDestacado(null);
-            this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
             Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
             if (iter.hasNext() == true) {
                 iter.remove();
@@ -1161,13 +1162,18 @@ public class WikiMB implements Serializable {
                     }
                 }
             }
-
+            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+//            String imgpath = bundle.getString("imgpath");
+//            String imglib = bundle.getString("imglib");
+//            String regix = imgpath
+//            this.getDescripcionHtml().re
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            BigDecimal id = conocimientoService.getNextPK();
             Conocimiento wiki = new Conocimiento();
             wiki.setNtipoconocimientoid(Constante.WIKI);
-            wiki.setNconocimientoid(conocimientoService.getNextPK());
+            wiki.setNconocimientoid(id);
             wiki.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             wiki.setVtitulo(StringUtils.upperCase(this.getNombre()));
             this.setDescripcionPlain(Jsoup.parse(this.getDescripcionHtml()).text());

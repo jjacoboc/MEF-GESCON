@@ -2,69 +2,69 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html">
-    
-        <!-- Include Font Awesome. -->
-                        <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
 
-                        <!-- Include Editor style. -->
-                        <h:outputStylesheet library="froala-editor" name="css/froala_editor.min.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/froala_style.min.css"/>
+    <!-- Include Font Awesome. -->
+    <h:outputStylesheet library="froala-editor" name="css/ext/font-awesome.min.css"/>
 
-                        <!-- Include Code Mirror style -->
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css"/>
-                        
-                        <!-- Include Editor Plugins style. -->
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/char_counter.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/code_view.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/colors.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/emoticons.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/file.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/fullscreen.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/image.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/image_manager.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/line_breaker.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/quick_insert.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/table.css"/>
-                        <h:outputStylesheet library="froala-editor" name="css/plugins/video.css"/>
-                        
-                        <!-- Include jQuery. 
-                        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-                        -->
-                        <!-- Include JS files. -->
-                        <h:outputScript library="froala-editor" name="js/froala_editor.min.js"/>
+    <!-- Include Editor style. -->
+    <h:outputStylesheet library="froala-editor" name="css/froala_editor.min.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/froala_style.min.css"/>
 
-                        <!-- Include Code Mirror. -->
-                        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js"></script>
-                        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js"></script>
-                        
-                        <!-- Include Plugins. -->
-                        <h:outputScript library="froala-editor" name="js/plugins/align.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/char_counter.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/code_beautifier.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/code_view.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/colors.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/emoticons.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/entities.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/file.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/font_family.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/font_size.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/fullscreen.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/image.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/image_manager.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/inline_style.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/line_breaker.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/link.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/lists.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/paragraph_format.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/paragraph_style.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/quick_insert.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/quote.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/table.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/save.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/url.min.js"/>
-                        <h:outputScript library="froala-editor" name="js/plugins/video.min.js"/>
-                        
-                        <!-- Include Language file if we want to use it. -->
-                        <h:outputScript library="froala-editor" name="js/languages/es.js"/>
-    
+    <!-- Include Code Mirror style -->
+    <h:outputStylesheet library="froala-editor" name="css/ext/codemirror.min.css"/>
+
+    <!-- Include Editor Plugins style. -->
+    <h:outputStylesheet library="froala-editor" name="css/plugins/char_counter.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/code_view.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/colors.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/emoticons.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/file.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/fullscreen.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/image.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/image_manager.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/line_breaker.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/quick_insert.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/table.css"/>
+    <h:outputStylesheet library="froala-editor" name="css/plugins/video.css"/>
+
+    <!-- Include jQuery. 
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    -->
+    <!-- Include JS files. -->
+    <h:outputScript library="froala-editor" name="js/froala_editor.min.js"/>
+
+    <!-- Include Code Mirror. -->
+    <h:outputScript library="froala-editor" name="js/ext/codemirror.min.js"/>
+    <h:outputScript library="froala-editor" name="js/ext/xml.min.js"/>
+
+    <!-- Include Plugins. -->
+    <h:outputScript library="froala-editor" name="js/plugins/align.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/char_counter.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/code_beautifier.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/code_view.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/colors.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/emoticons.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/entities.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/file.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/font_family.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/font_size.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/fullscreen.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/image.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/image_manager.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/inline_style.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/line_breaker.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/link.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/lists.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/paragraph_format.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/paragraph_style.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/quick_insert.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/quote.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/table.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/save.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/url.min.js"/>
+    <h:outputScript library="froala-editor" name="js/plugins/video.min.js"/>
+
+    <!-- Include Language file if we want to use it. -->
+    <h:outputScript library="froala-editor" name="js/languages/es.js"/>
+
 </html>
