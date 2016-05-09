@@ -36,6 +36,7 @@ import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.hibernate.domain.TpassId;
 import pe.gob.mef.gescon.hibernate.domain.TuserPerfil;
 import pe.gob.mef.gescon.hibernate.domain.TuserPerfilId;
+import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.ParametroService;
 import pe.gob.mef.gescon.service.PassService;
 import pe.gob.mef.gescon.service.PerfilService;
@@ -936,6 +937,7 @@ public class UserMB implements Serializable {
                     User user = loginMB.getUser();
                     UserService service = (UserService) ServiceFinder.findBean("UserService");
                     this.getSelectedUser().setNestado(BigDecimal.ONE);
+                    this.getSelectedUser().setNactivo(BigDecimal.ONE);
                     this.getSelectedUser().setDfechamodificacion(new Date());
                     this.getSelectedUser().setVusuariomodificacion(user.getVlogin());
                     service.saveOrUpdate(this.getSelectedUser());
@@ -955,14 +957,27 @@ public class UserMB implements Serializable {
         try {
             if (event != null) {
                 if (this.getSelectedUser() != null) {
-                    LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
-                    User user = loginMB.getUser();
-                    UserService service = (UserService) ServiceFinder.findBean("UserService");
-                    this.getSelectedUser().setNestado(BigDecimal.ZERO);
-                    this.getSelectedUser().setDfechamodificacion(new Date());
-                    this.getSelectedUser().setVusuariomodificacion(user.getVlogin());
-                    service.saveOrUpdate(this.getSelectedUser());
-                    this.setListaUser(service.getUsers());
+                    
+                    AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                    if(serviceasig.getNumberNotificationsByUser(this.getSelectedUser()).toString().equals("0"))
+                    {
+                        LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+                        User user = loginMB.getUser();
+                        UserService service = (UserService) ServiceFinder.findBean("UserService");
+                        this.getSelectedUser().setNestado(BigDecimal.ZERO);
+                        this.getSelectedUser().setNactivo(BigDecimal.ZERO);
+                        this.getSelectedUser().setDfechamodificacion(new Date());
+                        this.getSelectedUser().setVusuariomodificacion(user.getVlogin());
+                        service.saveOrUpdate(this.getSelectedUser());
+                        this.setListaUser(service.getUsers());
+                    }
+                    else
+                    {
+                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "No se puede desactivar el usuario, tiene pendientes por atender.");
+                        FacesContext.getCurrentInstance().addMessage(null, message);
+                    }
+                    
+                    
                 } else {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, Constante.SEVERETY_ALERTA, "Debe seleccionar el usuario a desactivar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);

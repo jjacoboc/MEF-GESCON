@@ -1308,6 +1308,8 @@ public class OportunidadMB implements Serializable {
                 }
             }
             
+            if(this.getSelectedCategoria().getNflagom().toString().equals("1"))
+            {
             Asignacion asignacion = new Asignacion();
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             asignacion.setNasignacionid(serviceasig.getNextPK());
@@ -1319,6 +1321,7 @@ public class OportunidadMB implements Serializable {
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
+            }
             
             this.setListaOportunidad(conocimientoService.getConocimientosByType(Constante.OPORTUNIDADMEJORA));
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/oportunidad/lista.xhtml");
