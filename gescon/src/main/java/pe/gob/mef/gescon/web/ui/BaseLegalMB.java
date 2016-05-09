@@ -1919,6 +1919,19 @@ public class BaseLegalMB implements Serializable {
                 vinculoHist.setVusuariocreacion(user.getVlogin());
                 vserviceHist.saveOrUpdate(vinculoHist);
             }
+            
+            List<Asignacion> listaAsignacion = service.obtenerBaseLegalxAsig(this.getSelectedBaseLegal().getNbaselegalid(), user.getNusuarioid(), Constante.BASELEGAL);
+            if(org.apache.commons.collections.CollectionUtils.isNotEmpty(listaAsignacion)) {
+                Asignacion asignacion = listaAsignacion.get(0);
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                if(asignacion.getDfecharecepcion() == null) {
+                    asignacion.setDfecharecepcion(new Date());
+                }
+                asignacion.setDfechaatencion(new Date());
+                asignacion.setNaccionid(BigDecimal.valueOf(Long.parseLong("8")));
+                AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                asignacionService.saveOrUpdate(asignacion);
+            }
 
             this.setListaBaseLegal(service.getBaselegales());
             for (BaseLegal bl : this.getListaBaseLegal()) {

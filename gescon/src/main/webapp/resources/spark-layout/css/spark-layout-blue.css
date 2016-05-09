@@ -204,7 +204,7 @@ body{margin:0px; /*background-image:url("#{resource['spark-layout:images/backgro
 
 a{text-decoration:none; outline:none;}
 img{outline:none;}
-li{list-style:none;}
+//li{list-style:none;}
 
 /* text colors */
 .red{color:#D0525D;}

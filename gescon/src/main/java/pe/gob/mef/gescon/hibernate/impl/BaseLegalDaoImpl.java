@@ -85,12 +85,12 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
         try {
             sql.append("SELECT a.nbaselegalid AS ID, a.vnumero AS NUMERO, a.vnombre AS NOMBRE, a.vsumilla AS SUMILLA, ");
             sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechapublicacion AS FECHA, ");
-            sql.append("       a.nestadoid AS IDESTADO, c.vnombre AS ESTADO ");
+            sql.append("       e.ntipovinculo AS IDESTADO, c.vnombre AS ESTADO ");
             sql.append("FROM TBASELEGAL a ");
             sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
-            sql.append("INNER JOIN MTESTADO_BASELEGAL c ON a.nestadoid = c.nestadoid ");
+            sql.append("INNER JOIN TVINCULO_BASELEGAL e ON a.nbaselegalid = e.nbaselegalvinculadaid AND e.nbaselegalid = :ID ");
+            sql.append("INNER JOIN MTESTADO_BASELEGAL c ON e.ntipovinculo = c.nestadoid ");
             sql.append("WHERE a.nactivo = :ACTIVO ");
-            //sql.append("AND a.nestadoid IN (:ESTADO_REGISTRADO,:ESTADO_PUBLICADO,:ESTADO_CONCORDADO) ");
             sql.append("AND a.nbaselegalid IN(SELECT d.nbaselegalvinculadaid FROM TVINCULO_BASELEGAL d WHERE d.nbaselegalid = :ID)");
             sql.append("ORDER BY a.vnumero ");
 
@@ -101,9 +101,6 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
                             Query query = session.createSQLQuery(sql.toString());
                             query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
                             query.setParameter("ACTIVO", BigDecimal.ONE);
-//                            query.setParameter("ESTADO_REGISTRADO", Constante.ESTADO_BASELEGAL_REGISTRADO);
-//                            query.setParameter("ESTADO_PUBLICADO", Constante.ESTADO_BASELEGAL_PUBLICADO);
-//                            query.setParameter("ESTADO_CONCORDADO", Constante.ESTADO_BASELEGAL_CONCORDADO);
                             query.setParameter("ID", id);
                             return query.list();
                         }

@@ -1801,6 +1801,20 @@ public class BuenaPracticaMB implements Serializable{
                     vinculoHistService.saveOrUpdate(vinculoHist);
                 }
             }
+            
+            AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            List<Asignacion> listaAsignacion = conocimientoService.obtenerBpracticaxAsig(this.getSelectedBuenaPractica().getNconocimientoid(), user.getNusuarioid(), Constante.BUENAPRACTICA);
+            if(CollectionUtils.isNotEmpty(listaAsignacion)) {
+                Asignacion asignacion = listaAsignacion.get(0);
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                if(asignacion.getDfecharecepcion() == null) {
+                    asignacion.setDfecharecepcion(new Date());
+                }
+                asignacion.setDfechaatencion(new Date());
+                asignacion.setNaccionid(BigDecimal.valueOf(Long.parseLong("8")));
+                asignacionService.saveOrUpdate(asignacion);
+            }
+            
             this.setListaBuenaPractica(conocimientoService.getConocimientosByType(Constante.BUENAPRACTICA));
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/lista.xhtml");
         } catch (Exception e) {

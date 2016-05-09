@@ -27,7 +27,7 @@
 }
 .fr-view table td,
 .fr-view table th {
-  border: 1px solid #dddddd;
+  border: 1px solid #222222;
 }
 .fr-view table td:empty,
 .fr-view table th:empty {

@@ -1812,14 +1812,16 @@ public class OportunidadMB implements Serializable {
             
             AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             List<Asignacion> listaAsignacion = conocimientoService.obtenerOmejoraxAsig(this.getSelectedOportunidad().getNconocimientoid(), user.getNusuarioid(), Constante.OPORTUNIDADMEJORA);
-            Asignacion asignacion = listaAsignacion.get(0);
-            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
-            if(asignacion.getDfecharecepcion() == null) {
-                asignacion.setDfecharecepcion(new Date());
+            if(CollectionUtils.isNotEmpty(listaAsignacion)) {
+                Asignacion asignacion = listaAsignacion.get(0);
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                if(asignacion.getDfecharecepcion() == null) {
+                    asignacion.setDfecharecepcion(new Date());
+                }
+                asignacion.setDfechaatencion(new Date());
+                asignacion.setNaccionid(BigDecimal.valueOf(Long.parseLong("8")));
+                asignacionService.saveOrUpdate(asignacion);
             }
-            asignacion.setDfechaatencion(new Date());
-            asignacion.setNaccionid(BigDecimal.valueOf(Long.parseLong("8")));
-            asignacionService.saveOrUpdate(asignacion);
             
             Asignacion nueva_asignacion = new Asignacion();
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");

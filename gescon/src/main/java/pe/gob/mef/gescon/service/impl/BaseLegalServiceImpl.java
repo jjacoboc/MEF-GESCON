@@ -34,7 +34,7 @@ public class BaseLegalServiceImpl implements BaseLegalService{
 
     @Override
     public List<BaseLegal> getBaselegales() throws Exception {
-        List<BaseLegal> baseLegales = new ArrayList<BaseLegal>();
+        List<BaseLegal> baseLegales = new ArrayList<>();
         BaseLegalDao baseLegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
         List<Tbaselegal> lista = baseLegalDao.getTbaselegales();
         for(Tbaselegal tbaselegal : lista) {
@@ -47,7 +47,7 @@ public class BaseLegalServiceImpl implements BaseLegalService{
     
     @Override
     public List<BaseLegal> getBaselegalesActivedPosted() throws Exception {
-        List<BaseLegal> baseLegales = new ArrayList<BaseLegal>();
+        List<BaseLegal> baseLegales = new ArrayList<>();
         BaseLegalDao baseLegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
         List<Tbaselegal> lista = baseLegalDao.getTbaselegalesActivedPosted();
         for(Tbaselegal tbaselegal : lista) {
@@ -71,7 +71,7 @@ public class BaseLegalServiceImpl implements BaseLegalService{
     public List<BaseLegal> getTbaselegalesLinkedById(final BigDecimal id) throws Exception {
         BaseLegalDao baseLegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
         List<HashMap> lista = baseLegalDao.getTbaselegalesLinkedById(id);
-        List<BaseLegal> baseLegales = new ArrayList<BaseLegal>();
+        List<BaseLegal> baseLegales = new ArrayList<>();
         for(HashMap m : lista) {
             BaseLegal bl = new BaseLegal();
             bl.setNbaselegalid((BigDecimal) m.get("ID"));
@@ -90,7 +90,7 @@ public class BaseLegalServiceImpl implements BaseLegalService{
     public List<BaseLegal> getTbaselegalesNotLinkedById(final BigDecimal id) throws Exception {
         BaseLegalDao baseLegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
         List<HashMap> lista = baseLegalDao.getTbaselegalesNotLinkedById(id);
-        List<BaseLegal> baseLegales = new ArrayList<BaseLegal>();
+        List<BaseLegal> baseLegales = new ArrayList<>();
         for(HashMap m : lista) {
             BaseLegal bl = new BaseLegal();
             bl.setNbaselegalid((BigDecimal) m.get("ID"));
@@ -107,7 +107,7 @@ public class BaseLegalServiceImpl implements BaseLegalService{
     
     @Override
     public List<Asignacion> obtenerBaseLegalxAsig(final BigDecimal baselegalid, final BigDecimal usuarioid,BigDecimal tpoconocimientoid) throws Exception {
-        List<Asignacion> asignacions = new ArrayList<Asignacion>();
+        List<Asignacion> asignacions = new ArrayList<>();
         BaseLegalDao baselegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
         List<HashMap> lista = baselegalDao.obtenerBaseLegalxAsig(baselegalid,usuarioid,tpoconocimientoid);
         for (HashMap bean : lista) {

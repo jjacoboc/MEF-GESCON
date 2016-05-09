@@ -66,9 +66,9 @@
                                                 <h:outputText class="fa fa-play-circle-o Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>
-                                            <p:spacer width="5px;" rendered="#{loginMB.politicas[msgs.PUBLICAR_OPORTUNIDAD] and row.dfechapublicacion ne null and row.nanalisis eq null}"/>
+                                            <p:spacer width="5px;" rendered="#{loginMB.politicas[msgs.ANALIZAR_OPORTUNIDAD] and row.dfechapublicacion ne null and row.nanalisis eq null}"/>
                                             <p:commandLink ajax="false" action="#{oportunidadMB.toAnalysis}" styleClass="GesconLink" title="analizar oportunidad de mejora"
-                                                           rendered="#{loginMB.politicas[msgs.PUBLICAR_OPORTUNIDAD] and row.dfechapublicacion ne null and row.nanalisis eq null}">
+                                                           rendered="#{loginMB.politicas[msgs.ANALIZAR_OPORTUNIDAD] and row.dfechapublicacion ne null and row.nanalisis eq null}">
                                                 <h:outputText class="fa fa-sellsy Fs16" />
                                                 <f:param name="index" value="#{rowIndex}" />
                                             </p:commandLink>

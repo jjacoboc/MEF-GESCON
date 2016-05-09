@@ -255,10 +255,10 @@
                                     <h:panelGroup>
                                         <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="actualizar();"/>
                                         <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="publicar();"/>
-                                        <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModDialogForm:pgSiMod" oncomplete="solicitar();"  />
+                                        <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModDialogForm:pgSiMod" oncomplete="solicitar();" />
                                         <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmRechDlg').show();"/>
                                         <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
-                                        <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonMod() eq false}" actionListener="#{pendienteMB.toSi}" update=":respModDialogForm:pgRespMod" oncomplete="responder();"  />
+                                        <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonMod() eq false}" actionListener="#{pendienteMB.toSi}" update=":respModDialogForm:pgRespMod" oncomplete="responder();" />
                                     </h:panelGroup>
                                     <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
                                 </h:panelGrid>
