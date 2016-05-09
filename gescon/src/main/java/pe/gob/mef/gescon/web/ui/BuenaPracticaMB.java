@@ -1290,6 +1290,9 @@ public class BuenaPracticaMB implements Serializable{
                 }
             }
             
+            
+            if(this.getSelectedCategoria().getNflagbp().toString().equals("1"))
+            {
             Asignacion asignacion = new Asignacion();
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             asignacion.setNasignacionid(serviceasig.getNextPK());
@@ -1301,6 +1304,7 @@ public class BuenaPracticaMB implements Serializable{
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
+            }
             
             this.setListaBuenaPractica(conocimientoService.getConocimientosByType(Constante.BUENAPRACTICA));
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/lista.xhtml");

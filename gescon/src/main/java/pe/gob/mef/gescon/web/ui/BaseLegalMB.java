@@ -921,7 +921,16 @@ public class BaseLegalMB implements Serializable {
             base.setDfechavigencia(this.getFechaVigencia());
             base.setVtema(this.getTema());
             base.setNactivo(BigDecimal.ONE);
-            base.setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_REGISTRADO)));
+            if(this.getSelectedCategoria().getNflagbl().toString().equals("1"))
+            {
+                base.setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_REGISTRADO)));
+            }
+            else
+            {
+                base.setNestadoid(BigDecimal.valueOf(Long.valueOf(Constante.ESTADO_BASELEGAL_PUBLICADO)));
+                base.setDfechapublicacion(new Date());
+            }
+            
             base.setVusuariocreacion(user.getVlogin());
             base.setDfechacreacion(new Date());
             service.saveOrUpdate(base);
@@ -1151,18 +1160,24 @@ public class BaseLegalMB implements Serializable {
                     vserviceHist.saveOrUpdate(vinculoHist);
                 }
             }
+            
+            
+            if(this.getSelectedCategoria().getNflagbl().toString().equals("1"))
+            {
+                Asignacion asignacion = new Asignacion();
+                AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                asignacion.setNasignacionid(serviceasig.getNextPK());
+                asignacion.setNtipoconocimientoid(Constante.BASELEGAL);
+                asignacion.setNconocimientoid(base.getNbaselegalid());
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+                CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedCategoria().getNcategoriaid()).getNmoderador());
+                asignacion.setDfechaasignacion(new Date());
+                asignacion.setDfechacreacion(new Date());
+                serviceasig.saveOrUpdate(asignacion);
+            }
 
-            Asignacion asignacion = new Asignacion();
-            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
-            asignacion.setNasignacionid(serviceasig.getNextPK());
-            asignacion.setNtipoconocimientoid(Constante.BASELEGAL);
-            asignacion.setNconocimientoid(base.getNbaselegalid());
-            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedCategoria().getNcategoriaid()).getNmoderador());
-            asignacion.setDfechaasignacion(new Date());
-            asignacion.setDfechacreacion(new Date());
-            serviceasig.saveOrUpdate(asignacion);
+
 
             this.setListaBaseLegal(service.getBaselegales());
             for (BaseLegal bl : this.getListaBaseLegal()) {

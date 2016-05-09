@@ -1404,6 +1404,9 @@ public class ContenidoMB implements Serializable {
                 saveFile(archivoconocimiento);
             }
 
+            
+            if(this.getSelectedCategoria().getNflagct().toString().equals("1"))
+            {
             Asignacion asignacion = new Asignacion();
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             asignacion.setNasignacionid(serviceasig.getNextPK());
@@ -1415,6 +1418,7 @@ public class ContenidoMB implements Serializable {
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
+            }
 
             listaContenido = service.getContenidos();
         } catch (Exception e) {

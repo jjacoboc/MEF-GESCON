@@ -162,6 +162,7 @@
                                     <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonEspe()}" oncomplete="actualizar();" />
                                     <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonEspe()}" oncomplete="publicar();"/>
                                     <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonEspe()}" actionListener="#{pendienteMB.toSi}" update=":siPregDialogForm:pgSiPreg" oncomplete="solicitar();"  />
+                                    <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonEspe()}" oncomplete="PF('confirmRechDlg').show();" />
                                     <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonEspe()}" ajax="false" action="/index.xhtml" />
                                     <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonEspe() eq false}" actionListener="#{pendienteMB.toSi}" update=":respUsuPregDialogForm:pgRespUsuPreg" oncomplete="responder();"  />
                                 </h:panelGrid>
@@ -268,6 +269,13 @@
                                 <p:inputText id="txt" type="hidden" value="#{pendienteMB.selectedPregunta.vrespuesta}"/>
                                 <p:commandButton value="SI" oncomplete="PF('confirmRespDlg').hide()" actionListener="#{pendienteMB.Responder}" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmRespDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a rechazar la pregunta. Desea Continuar?" header="RECHAZAR PREGUNTA" widgetVar="confirmRechDlg">
+                            <h:form id="confirmRechDlgForm">
+                                <p:commandButton value="SI" oncomplete="PF('confirmRechDlg').hide()" action="#{pendienteMB.Rechazar}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmRechDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>
                     </f:view>

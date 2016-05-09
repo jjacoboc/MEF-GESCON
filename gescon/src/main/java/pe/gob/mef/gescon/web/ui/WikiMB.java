@@ -1294,6 +1294,9 @@ public class WikiMB implements Serializable {
                     vinculoHistService.saveOrUpdate(vinculoHist);
                 }
             }
+            
+            if(this.getSelectedCategoria().getNflagwiki().toString().equals("1"))
+            {
             Asignacion asignacion = new Asignacion();
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             asignacion.setNasignacionid(serviceasig.getNextPK());
@@ -1305,6 +1308,7 @@ public class WikiMB implements Serializable {
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
+            }
 
             this.setListaWiki(conocimientoService.getConocimientosByType(Constante.WIKI));
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/lista.xhtml");

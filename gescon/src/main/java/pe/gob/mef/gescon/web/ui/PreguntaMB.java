@@ -1061,7 +1061,9 @@ public class PreguntaMB implements Serializable {
             String ruta0 = this.path + pregunta.getNpreguntaid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
             String texto = pregunta.getVasunto() + " \n " + pregunta.getVdetalle() + " \n " + pregunta.getVrespuesta();
             GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
-
+            
+            if(this.getSelectedCategoria().getNflagpr().toString().equals("1"))
+            {
             Asignacion asignacion = new Asignacion();
             AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             asignacion.setNasignacionid(serviceasig.getNextPK());
@@ -1073,6 +1075,7 @@ public class PreguntaMB implements Serializable {
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
+            }
             
             idperfil = service.obtenerPerfilxUsuario(user.getNusuarioid());
             
