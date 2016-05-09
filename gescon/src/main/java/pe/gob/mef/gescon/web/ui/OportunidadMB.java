@@ -1313,7 +1313,7 @@ public class OportunidadMB implements Serializable {
             asignacion.setNasignacionid(serviceasig.getNextPK());
             asignacion.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
             asignacion.setNconocimientoid(conocimiento.getNconocimientoid());
-            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_VERIFICAR)));
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
             asignacion.setNusuarioid(categoriaService.getCategoriaById(conocimiento.getNcategoriaid()).getNmoderador());
             asignacion.setDfechaasignacion(new Date());
@@ -1805,6 +1805,31 @@ public class OportunidadMB implements Serializable {
                     vinculoHistService.saveOrUpdate(vinculoHist);
                 }
             }
+            
+            
+            AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            List<Asignacion> listaAsignacion = conocimientoService.obtenerOmejoraxAsig(this.getSelectedOportunidad().getNconocimientoid(), user.getNusuarioid(), Constante.OPORTUNIDADMEJORA);
+            Asignacion asignacion = listaAsignacion.get(0);
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            if(asignacion.getDfecharecepcion() == null) {
+                asignacion.setDfecharecepcion(new Date());
+            }
+            asignacion.setDfechaatencion(new Date());
+            asignacion.setNaccionid(BigDecimal.valueOf(Long.parseLong("8")));
+            asignacionService.saveOrUpdate(asignacion);
+            
+            Asignacion nueva_asignacion = new Asignacion();
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            nueva_asignacion.setNasignacionid(serviceasig.getNextPK());
+            nueva_asignacion.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
+            nueva_asignacion.setNconocimientoid(this.getSelectedOportunidad().getNconocimientoid());
+            nueva_asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_POR_ANALIZAR)));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            nueva_asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedOportunidad().getNcategoriaid()).getNespecialista());
+            nueva_asignacion.setDfechaasignacion(new Date());
+            nueva_asignacion.setDfechacreacion(new Date());
+            serviceasig.saveOrUpdate(nueva_asignacion);
+            
             this.setListaOportunidad(conocimientoService.getConocimientosByType(Constante.OPORTUNIDADMEJORA));
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/oportunidad/lista.xhtml");
         } catch (Exception e) {
