@@ -62,6 +62,7 @@ import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.ContenidoService;
 import pe.gob.mef.gescon.service.HistorialService;
+import pe.gob.mef.gescon.service.ImplementacionService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.RespuestaHistService;
 import pe.gob.mef.gescon.service.SeccionHistService;
@@ -69,6 +70,7 @@ import pe.gob.mef.gescon.service.SeccionService;
 import pe.gob.mef.gescon.service.VinculoBaseLegalService;
 import pe.gob.mef.gescon.service.VinculoBaselegalHistorialService;
 import pe.gob.mef.gescon.service.VinculoHistService;
+import pe.gob.mef.gescon.service.VinculoImplementacionService;
 import pe.gob.mef.gescon.service.VinculoPreguntaService;
 import pe.gob.mef.gescon.service.VinculoService;
 import pe.gob.mef.gescon.service.WikiService;
@@ -85,6 +87,7 @@ import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Historial;
+import pe.gob.mef.gescon.web.bean.Implementacion;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 import pe.gob.mef.gescon.web.bean.RespuestaHist;
 import pe.gob.mef.gescon.web.bean.Seccion;
@@ -94,6 +97,7 @@ import pe.gob.mef.gescon.web.bean.Vinculo;
 import pe.gob.mef.gescon.web.bean.VinculoBaselegal;
 import pe.gob.mef.gescon.web.bean.VinculoBaselegalHist;
 import pe.gob.mef.gescon.web.bean.VinculoHist;
+import pe.gob.mef.gescon.web.bean.VinculoImplementacion;
 import pe.gob.mef.gescon.web.bean.VinculoPregunta;
 
 /**
@@ -188,6 +192,9 @@ public class PendienteMB implements Serializable {
     private Boolean chkDestacado;
     private List<Consulta> listaDestacados;
     private Consulta selectedDestacado;
+    private BigDecimal analisis;
+    private int dias;
+    private String motivo;
 
     /**
      * Creates a new instance of LoginMB
@@ -1235,6 +1242,30 @@ public class PendienteMB implements Serializable {
     public void setSelectedDestacado(Consulta selectedDestacado) {
         this.selectedDestacado = selectedDestacado;
     }
+
+    public BigDecimal getAnalisis() {
+        return analisis;
+    }
+
+    public void setAnalisis(BigDecimal analisis) {
+        this.analisis = analisis;
+    }
+
+    public int getDias() {
+        return dias;
+    }
+
+    public void setDias(int dias) {
+        this.dias = dias;
+    }
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
     
     public void init() {
         try {
@@ -2111,6 +2142,12 @@ public class PendienteMB implements Serializable {
 
                     if (situacion == 1) {
                         pagina = "/pages/Pendientes/moderarOmejora?faces-redirect=true";
+                    } else if (situacion == 6) {
+                        if(this.getSelectedOmejora().getNanalisis() != null){
+                            pagina = "/pages/Pendientes/implementarOmejora?faces-redirect=true";
+                        } else {
+                            pagina = "/pages/Pendientes/analizarOmejora?faces-redirect=true";
+                        }
                     }
                     break;
                 }
@@ -6484,7 +6521,7 @@ public class PendienteMB implements Serializable {
             this.getSelectedOmejora().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedOmejora().setDfechamodificacion(new Date());
             this.getSelectedOmejora().setVusuariomodificacion(usuario.getVlogin());
-            this.getSelectedOmejora().setNsituacionid(BigDecimal.valueOf((long) 6));
+            this.getSelectedOmejora().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_VERIFICADO)));
             this.getSelectedOmejora().setDfechapublicacion(new Date());
             conocimientoService.saveOrUpdate(this.getSelectedOmejora());
 
@@ -6606,9 +6643,175 @@ public class PendienteMB implements Serializable {
             this.getSelectedAsignacion().setDfechaatencion(new Date());
             this.getSelectedAsignacion().setNaccionid(BigDecimal.valueOf(Long.parseLong("8")));
             serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+            
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
+            asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(serviceasig.getEspecialistaByCategoria(this.getSelectedOmejora().getNcategoriaid()));
+            asignacion.setDfechaasignacion(new Date());
+            asignacion.setDfechacreacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
 
             loginMB.refreshNotifications();
             FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se publicó la oportunidad de mejora.");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void analizarOmejora(ActionEvent event) {
+        try {
+            if(this.getAnalisis() == null) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el análisis correspondiente a la oportunidad de mejora.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            } else if(this.getAnalisis().equals(BigDecimal.ONE)) {
+                if(this.getDias() < 1){
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese los días de implementación.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+            } else {
+                if(StringUtils.isBlank(this.getMotivo())){
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el motivo del rechazo.");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    return;
+                }
+            }
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            this.getSelectedOmejora().setNanalisis(this.getAnalisis());
+            this.getSelectedOmejora().setNdias(BigDecimal.valueOf(this.getDias()));
+            this.getSelectedOmejora().setVobservacion(this.getMotivo());
+            this.getSelectedOmejora().setDfechamodificacion(new Date());
+            this.getSelectedOmejora().setVusuariomodificacion(user.getVlogin());
+            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            conocimientoService.saveOrUpdate(this.getSelectedOmejora());
+            
+            String mensaje = "";
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
+            if(this.getAnalisis().equals(BigDecimal.ONE)) {
+                this.getSelectedAsignacion().setNaccionid(BigDecimal.valueOf(Long.parseLong("14")));
+                mensaje = "Se aprobó la iportunidad de mejora.";
+            } else {
+                this.getSelectedAsignacion().setNaccionid(BigDecimal.valueOf(Long.parseLong("13")));
+                mensaje = "Se rechazó la iportunidad de mejora.";
+            }
+            
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
+            asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(serviceasig.getEspecialistaByCategoria(this.getSelectedOmejora().getNcategoriaid()));
+            asignacion.setDfechaasignacion(new Date());
+            asignacion.setDfechacreacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+
+            loginMB.refreshNotifications();
+
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", mensaje);
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void implementarOmejora(ActionEvent event) {
+        try {
+            //this.setContenidoHtml(JSFUtils.getRequestParameter("descHtml"));
+            if (this.getChkDestacado()) {
+                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
+                HashMap filter = new HashMap();
+                filter.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA);
+                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
+                if (cant.intValue() >= 10) {
+                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
+                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
+                    return;
+                }
+            }
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User usuario = loginMB.getUser();
+            ImplementacionService implementacionService = (ImplementacionService) ServiceFinder.findBean("ImplementacionService");
+            Implementacion implementacion = new Implementacion();
+            implementacion.setNimplementacionid(implementacionService.getNextPK());
+            implementacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
+            implementacion.setNtipoconocimientoid(this.getSelectedOmejora().getNtipoconocimientoid());
+            implementacion.setNcategoriaid(this.getSelectedOmejora().getNcategoriaid());
+            implementacion.setVtitulo(StringUtils.upperCase(this.getSelectedOmejora().getVtitulo()));
+            implementacion.setVdescripcion(StringUtils.upperCase(this.getSelectedOmejora().getVdescripcion()));
+            if (this.getContenidoPlain().length() < 400) {
+                implementacion.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
+            } else {
+                implementacion.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+            }
+            implementacion.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            
+            implementacion.setDfechacreacion(new Date());
+            implementacion.setVusuariocreacion(usuario.getVlogin());
+            implementacion.setNsituacionid(BigDecimal.valueOf((long) 6));
+            implementacionService.saveOrUpdate(implementacion);
+            
+            String np = this.pathom.concat(this.getSelectedOmejora().getNconocimientoid().toString()).concat("/impl/");
+            this.setContenidoPlain(Jsoup.parse(this.getContenidoHtml()).text());
+            GcmFileUtils.writeStringToFileServer(np, "html.txt", this.getContenidoHtml());
+            GcmFileUtils.writeStringToFileServer(np, "plain.txt", this.getContenidoPlain());
+            
+            this.setListaTargetVinculos(new ArrayList());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+
+            if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                VinculoImplementacionService vinculoService = (VinculoImplementacionService) ServiceFinder.findBean("VinculoImplementacionService");
+                vinculoService.deleteByConocimiento(implementacion.getNimplementacionid());
+                for (Consulta consulta : this.getListaTargetVinculos()) {
+                    VinculoImplementacion vinculo = new VinculoImplementacion();
+                    vinculo.setNimplvinculoid(vinculoService.getNextPK());
+                    vinculo.setNimplementacionid(implementacion.getNconocimientoid());
+                    vinculo.setNconocimientovinc(consulta.getIdconocimiento());
+                    vinculo.setNtipoconocimientovinc(consulta.getIdTipoConocimiento());
+                    vinculo.setDfechacreacion(new Date());
+                    vinculo.setVusuariocreacion(usuario.getVlogin());
+                    vinculoService.saveOrUpdate(vinculo);
+                }
+            }
+
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
+            this.getSelectedAsignacion().setNaccionid(BigDecimal.valueOf(Long.parseLong("15")));
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+            
+            Asignacion asignacion = new Asignacion();
+            asignacion.setNasignacionid(serviceasig.getNextPK());
+            asignacion.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
+            asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
+            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(this.getSelectedOmejora().getNcategoriaid()));
+            asignacion.setDfechaasignacion(new Date());
+            asignacion.setDfechacreacion(new Date());
+            serviceasig.saveOrUpdate(asignacion);
+
+            loginMB.refreshNotifications();
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO.", "Se implementó la oportunidad de mejora.");
             FacesContext.getCurrentInstance().addMessage(null, message);
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/index.xhtml");
 

@@ -54,6 +54,8 @@ public class Constante implements Serializable {
     public static String SITUACION_PUBLICADO = "6";
     public static String SITUACION_RECHAZADO = "7";
     public static String SITUACION_POR_ANALIZAR = "8";
+    public static String SITUACION_APROBADO = "9";
+    public static String SITUACION_VERIFICADO = "10";
     
     public static int ADMINISTRADOR =21;
     public static int ESPECIALISTA =2;

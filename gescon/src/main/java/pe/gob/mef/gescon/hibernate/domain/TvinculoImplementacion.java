@@ -1,7 +1,6 @@
 package pe.gob.mef.gescon.hibernate.domain;
 // Generated 06/11/2015 11:03:52 AM by Hibernate Tools 4.3.1
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -17,6 +16,7 @@ public class TvinculoImplementacion implements java.io.Serializable {
     private String vusuariomodificacion;
     private Date dfechamodificacion;
     private BigDecimal nconocimientovinc;
+    private BigDecimal ntipoconocimientovinc;
 
     public TvinculoImplementacion() {
     }
@@ -89,6 +89,14 @@ public class TvinculoImplementacion implements java.io.Serializable {
 
     public void setNconocimientovinc(BigDecimal nconocimientovinc) {
         this.nconocimientovinc = nconocimientovinc;
+    }
+
+    public BigDecimal getNtipoconocimientovinc() {
+        return ntipoconocimientovinc;
+    }
+
+    public void setNtipoconocimientovinc(BigDecimal ntipoconocimientovinc) {
+        this.ntipoconocimientovinc = ntipoconocimientovinc;
     }
 
 }

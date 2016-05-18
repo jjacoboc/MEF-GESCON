@@ -1,0 +1,388 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <style>
+        .ui-picklist-filter {
+            font-size: 14px !important;
+        }
+    </style>
+    <ui:define name="content">
+        <div class="layout-portlets-box">
+            <div class="Container100">
+                <div class="ContainerIndent TexAlCenter">
+                    <f:view>
+                        <ui:include src="../froala.xhtml"/>
+                        <!-- Initialize the editor. -->
+                        <script>
+                            $(function () {
+                                $('#descHtml').froalaEditor({
+                                    key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
+                                    language: 'es'
+                                });
+                                publicar=function(){
+                                    var value = $('#descHtml').val();
+                                    $('#confirmPubDlgForm\\:txt').val(value);
+                                    PF('confirmPubDlg').show();
+                                };
+                            });
+                        </script>
+                        <h:form id="f">
+                            <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
+                            <p:panel header="Implementar Oportunidad de Mejora" styleClass="TexAlLeft">
+                                <h:panelGrid id="pgEdit" columns="1" width="100%">
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_categoria}"/>
+                                        <p:spacer width="10" rendered="#{pendienteMB.selectedOmejora.nsituacionid ge msgs.situacionPublicado}"/>
+                                        <h:outputText value="#{pendienteMB.selectedOmejora.ncategoriaid}" styleClass="Fs14 FontBold black" rendered="#{pendienteMB.selectedOmejora.nsituacionid ge msgs.situacionPublicado}">
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+                                    </h:panelGroup>
+                                    <h:panelGroup rendered="#{pendienteMB.selectedOmejora.nsituacionid lt msgs.situacionPublicado}">
+                                        <p:commandButton value="#{msgs.om_btn_categoriamod}" actionListener="#{oportunidadMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="#{pendienteMB.selectedOmejora.ncategoriaid}" styleClass="Fs18 FontBold black">
+                                            <f:converter converterId="converterCategoria"/>
+                                        </h:outputText>
+                                    </h:panelGroup>
+                                    
+                                    <h:panelGrid columns="6" cellpadding="0" cellspacing="0">
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_destacado}"/>
+                                        <p:spacer width="5"/>
+                                        <p:selectBooleanCheckbox value="#{pendienteMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Las Oportunidades de Mejora destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
+                                    </h:panelGrid>
+
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_nombre}"/>
+                                        <p:spacer width="10" rendered="#{pendienteMB.selectedOmejora.nsituacionid ge msgs.situacionPublicado}"/>
+                                        <h:outputText value="#{pendienteMB.selectedOmejora.vtitulo}" styleClass="Fs14 FontBold black" rendered="#{pendienteMB.selectedOmejora.nsituacionid ge msgs.situacionPublicado}"/>
+                                    </h:panelGroup>
+                                    <p:inputText value="#{pendienteMB.selectedOmejora.vtitulo}" size="110" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;" rendered="#{pendienteMB.selectedOmejora.nsituacionid lt msgs.situacionPublicado}"/>
+
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_descripcion}"/>
+                                    </h:panelGroup>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{pendienteMB.selectedOmejora.vdescripcion}" rows="5" cols="150" styleClass="Fs14 FontNormal"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_contenido}"/>
+                                    </h:panelGroup>
+                                    <textarea id="descHtml" name="descHtml">#{pendienteMB.contenidoHtml}</textarea>
+
+                                    <h:panelGroup rendered="#{not empty pendienteMB.listaSeccion}">
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_detalle}"/>
+                                    </h:panelGroup>
+                                    <p:fieldset rendered="#{not empty pendienteMB.listaSeccion}">
+                                        <p:commandButton value="#{msgs.om_btn_seccion}" actionListener="#{pendienteMB.toAddSection}" update=":secDialogForm:pgSec" oncomplete="PF('secDialog').show();" styleClass="ui-link Fs14"/>
+                                        <table>
+                                            <ui:repeat value="#{pendienteMB.listaSeccion}" var="s" varStatus="vs">
+                                                <tr>
+                                                    <td style="border-bottom: gray solid 1px;">
+                                                        <h:outputText value="Paso #{vs.index + 1}: #{s.vtitulo}" styleClass="Fs14 FontBold black"/>
+                                                        <h:outputText value=" [ " styleClass="FontBold black"/>
+                                                        <p:commandLink value="editar" actionListener="#{pendienteMB.toEditSection}" update=":esecDialogForm:pgEsec" oncomplete="PF('esecDialog').show();" styleClass="ui-link Fs12">
+                                                            <f:param name="index" value="#{vs.index}"/>
+                                                        </p:commandLink>
+                                                        <h:outputText value="]" styleClass="FontBold black"/>
+                                                    </td>
+                                                </tr>
+                                                <tr><td><h:outputText value="#{s.detalleHtml}" escape="false" styleClass="Fs14"/></td></tr>
+                                                <tr><td><p:spacer/></td></tr>
+                                            </ui:repeat>
+                                        </table>
+                                    </p:fieldset>
+
+                                    <h:outputText value="#{msgs.om_lbl_vinculo}"/>
+                                </h:panelGrid>
+                                <p:fieldset>
+                                    <h:panelGrid id="pgEditVinc" columns="1" cellpadding="0" cellspacing="0" width="100%">
+                                        <p:commandButton value="#{msgs.om_btn_vinculo}" actionListener="#{pendienteMB.toAddLinkOmejora}" update=":pickDialogForm:pgPick" oncomplete="PF('pickDialog').show();" styleClass="ui-link Fs14"/>
+                                        <p:tabView id="tabview">
+                                            <p:tab title="Bases Legales">
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 
+                                                             emptyMessage="Ninguna base legal vinculada." >
+                                                    <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                                        <h:outputText value="#{p.codigo}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                                        <h:outputText value="#{p.nombre}" />
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Contenidos">
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosCT}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ningún contenido vinculado." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Buenas Prácticas">
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosBP}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna buena práctica vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Oportunidades de Mejora">
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosOM}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna oportunidad de mejora vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Wikis">
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosWK}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ningún wiki vinculado." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna13}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                            <p:tab title="Respuestas">
+                                                <p:dataTable value="#{pendienteMB.listaTargetVinculosPR}" var="p" scrollRows="5" scrollable="true"
+                                                             emptyMessage="Ninguna respuesta vinculada." >
+                                                    <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
+                                                        <h:outputText value="#{p.nombre}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                        <h:outputText value="#{p.sumilla}"/>
+                                                    </p:column>
+                                                    <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                                                        <h:outputText value="#{p.categoria}" />
+                                                    </p:column>
+                                                    <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                                        <h:outputText value="#{p.estado}" />
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </p:tab>
+                                        </p:tabView>
+                                    </h:panelGrid>
+                                </p:fieldset>
+                                <p:spacer width="10"/>
+                                
+                                <h:panelGrid columns="2" width="100%" style="padding-left: 0px">
+                                    <h:panelGroup>
+                                        <p:commandButton value="Registrar Implementación" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="publicar();"/>
+                                        <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
+                                    </h:panelGroup>
+                                    <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+
+                        <p:dialog id="catDlg" header="#{msgs.om_lbl_pnlCategoria}" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="catDialogForm">
+                                <h:panelGrid id="pgCat" columns="1">
+                                    <h:outputText value="#{msgs.om_lbl_categorias}" style="font-weight: bold; text-decoration: underline;"/>
+                                    <p:tree id="cats" value="#{pendienteMB.tree}" var="node" animate="true" cache="true"  
+                                            selectionMode="single" style="width: 100%;border: 0;" dynamic="true" highlight="true">
+                                        <p:ajax event="select" listener="#{pendienteMB.onNodeSelectOm}" oncomplete="PF('catDialog').hide();" update=":f:pgEdit, :f:pgEditVinc" />
+                                        <p:treeNode expandedIcon="ui-icon ui-icon-folder-open" collapsedIcon="ui-icon ui-icon-folder-collapsed">
+                                            <h:outputText value="#{node.vnombre}"/>
+                                        </p:treeNode>
+                                    </p:tree>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="secDlg" header="#{msgs.om_lbl_pnlSeccion}" widgetVar="secDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="secDialogForm">
+                                <h:panelGrid id="pgSec" columns="1">
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_titulo}"/>
+                                    </h:panelGroup>
+                                    <p:inputText value="#{pendienteMB.titulo}" size="100" styleClass="Fs14" maxlength="100"/>
+
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_detalle2}"/>
+                                    </h:panelGroup>
+                                    <p:editor id="txtHtml" value="#{pendienteMB.detalleHtml}" />
+
+                                    <p:commandButton value="#{msgs.om_btn_addseccion}" actionListener="#{pendienteMB.addSection}" update=":f:pgEdit, :f:growl" styleClass="ui-link Fs14"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="esecDlg" header="#{msgs.om_lbl_pnlSeccione}" widgetVar="esecDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
+                            <h:form id="esecDialogForm">
+                                <h:panelGrid id="pgEsec" columns="1">
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_titulo}"/>
+                                    </h:panelGroup>
+                                    <p:inputText value="#{pendienteMB.selectedSeccion.vtitulo}" size="100" styleClass="Fs14" maxlength="100"/>
+
+                                    <h:panelGroup>
+                                        <h:outputText value="#{msgs.icon_asterisk}"/>
+                                        <p:spacer width="5"/>
+                                        <h:outputText value="#{msgs.om_lbl_detalle2}"/>
+                                    </h:panelGroup>
+                                    <p:editor id="txtHtml" value="#{pendienteMB.selectedSeccion.detalleHtml}" />
+
+                                    <p:commandButton value="#{msgs.om_btn_editseccion}" actionListener="#{pendienteMB.editSection}" update=":f:pgEdit, :f:growl" styleClass="ui-link Fs14"/>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+
+                        <p:dialog id="pickDlg" header="#{msgs.om_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="pickDialogForm">
+                                <h:panelGrid id="pgPick" columns="1">
+                                    <h:outputText value="Tipo de Conocimiento:"/>
+                                    <p:selectOneMenu value="#{pendienteMB.idTipoConocimiento}" styleClass="Wid20">
+                                        <p:ajax event="change" listener="#{pendienteMB.onListTipoConocimientoChangeOmejora}" update=":pickDialogForm:pgPick"/>
+                                        <f:selectItem itemValue="" itemLabel="Seleccione" />
+                                        <f:selectItems value="#{listaSessionMB.listaTipoConocimiento}"/>
+                                    </p:selectOneMenu>
+                                    <p:pickList value="#{pendienteMB.pickListOmejora}" var="p" itemValue="#{p}" converter="converterPickListConocimiento" 
+                                                itemLabel="#{p.codigo} #{p.nombre} #{p.categoria} #{p.estado}" showSourceFilter="true" 
+                                                showTargetFilter="true" filterMatchMode="contains" styleClass="wk-picklist-list">
+                                        <p:ajax event="transfer" listener="#{pendienteMB.onTransferOmejora}" update=":f:tabview"/>
+                                        <f:facet name="sourceCaption">#{msgs.bl_lbl_source}</f:facet>
+                                        <f:facet name="targetCaption">#{msgs.bl_lbl_target}</f:facet>
+
+                                        <p:column style="width: 60%;">
+                                            <h:outputText value="#{p.codigo}" rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value=" - " rendered="#{not empty p.codigo}"/>
+                                            <h:outputText value="#{p.nombre}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center;">
+                                            <h:outputText value="#{p.categoria}" />
+                                        </p:column>
+                                        <p:column style="width: 20%; text-align: center;">
+                                            <h:outputText value="#{p.estado}" />
+                                        </p:column>
+                                    </p:pickList>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                        
+                        <p:dialog id="destDlg" header="#{msgs.om_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
+                            <h:form id="destDialogForm">
+                                <h:panelGrid id="pgDest" columns="1">
+                                    <h:outputText value="#{msgs.om_msg_destacado1}" styleClass="Fs14 FontBold red"/>
+                                    <h:outputText value="#{msgs.om_msg_destacado2}" styleClass="Fs14 FontBold red"/>
+                                    <p:dataTable id="tbl" value="#{pendienteMB.listaDestacados}" var="row" rowIndexVar="rowIndex" scrollable="true"
+                                                 scrollRows="5" emptyMessage="#{msgs.lbl_listavacia}">
+                                        <p:column style="width: 50%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.om_lbl_columna01}"/></f:facet>
+                                            <p:commandLink id="num" styleClass="GesconLink Fs14 Unselectable" global="false">
+                                                <h:outputText value="#{row.nombre}"/>
+                                            </p:commandLink>
+                                            <p:tooltip id="toolTipGrow" for="num" value="#{row.sumilla}" showEffect="clip" hideEffect="explode" style="font-size: 12px; max-width: 400px;" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.om_lbl_columna02}"/></f:facet>
+                                            <h:outputText value="#{row.categoria}" />
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.om_lbl_columna04}"/></f:facet>
+                                            <h:outputText value="#{row.estado}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;">
+                                            <f:facet name="header"><h:outputText value="#{msgs.om_lbl_columna03}"/></f:facet>
+                                            <h:outputText value="#{row.fechaPublicacion}" >
+                                                <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 10%;">
+                                            <p:commandLink actionListener="#{pendienteMB.toDeleteOutstanding}" oncomplete="PF('confirmDelDlg').show();" styleClass="GesconLink" title="eliminar base legal destacada">
+                                                <h:outputText class="fa fa-close Fs16" />
+                                                <f:param name="index" value="#{rowIndex}"/>
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:commandButton value="Cancelar" onclick="PF('destDialog').hide()" type="button" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="#{msgs.om_msg_elidestacado}" header="#{msgs.om_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
+                            <h:form id="confirmDelDlgForm">
+                                <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{pendienteMB.deleteOutstandingOM}"/>
+                                <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
+                            </h:form>
+                        </p:confirmDialog>
+                        
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar la oportunidad de mejora. Desea Continuar?" header="PUBLICAR OPORTUNIDAD DE MEJORA" widgetVar="confirmPubDlg">
+                            <h:form id="confirmPubDlgForm">
+                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.contenidoHtml}"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" actionListener="#{pendienteMB.publicarOmejora}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="NO" onclick="PF('confirmPubDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
+                            </h:form>
+                        </p:confirmDialog>
+                    </f:view>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

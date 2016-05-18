@@ -22,6 +22,7 @@ public class VinculoImplementacion implements Serializable{
     private String vusuariomodificacion;
     private Date dfechamodificacion;
     private BigDecimal nconocimientovinc;
+    private BigDecimal ntipoconocimientovinc;
     
     public VinculoImplementacion() {
         
@@ -81,5 +82,13 @@ public class VinculoImplementacion implements Serializable{
 
     public void setNconocimientovinc(BigDecimal nconocimientovinc) {
         this.nconocimientovinc = nconocimientovinc;
+    }
+
+    public BigDecimal getNtipoconocimientovinc() {
+        return ntipoconocimientovinc;
+    }
+
+    public void setNtipoconocimientovinc(BigDecimal ntipoconocimientovinc) {
+        this.ntipoconocimientovinc = ntipoconocimientovinc;
     }
 }
