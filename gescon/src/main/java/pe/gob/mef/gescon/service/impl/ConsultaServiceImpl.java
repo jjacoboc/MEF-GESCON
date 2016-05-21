@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.hibernate.dao.ConsultaDao;
@@ -26,7 +27,7 @@ public class ConsultaServiceImpl implements ConsultaService{
 
     @Override
     public List<Consulta> getQueryFilter(HashMap filters) {
-        List<Consulta> lista = new ArrayList<Consulta>();
+        List<Consulta> lista = new ArrayList<>();
         try {
             ConsultaDao consultaDao = (ConsultaDao) ServiceFinder.findBean("ConsultaDao");
             List<HashMap> consulta = consultaDao.getQueryFilter(filters);
@@ -64,7 +65,7 @@ public class ConsultaServiceImpl implements ConsultaService{
     
     @Override
     public List<Consulta> getDestacadosByTipoConocimiento(HashMap filters) {
-        List<Consulta> lista = new ArrayList<Consulta>();
+        List<Consulta> lista = new ArrayList<>();
         try {
             ConsultaDao consultaDao = (ConsultaDao) ServiceFinder.findBean("ConsultaDao");
             List<HashMap> consulta = consultaDao.getDestacadosByTipoConocimiento(filters);
@@ -74,6 +75,7 @@ public class ConsultaServiceImpl implements ConsultaService{
                     c.setIdconocimiento((BigDecimal) map.get("ID"));
                     c.setNombre((String) map.get("NOMBRE"));
                     String sumilla = (String) map.get("SUMILLA");
+                    sumilla = sumilla != null ? sumilla : StringUtils.EMPTY;
                     if(sumilla.length() > 160) {
                         sumilla = sumilla.substring(0, 160);
                         sumilla = sumilla.substring(0, sumilla.lastIndexOf(" ")).concat("...");
@@ -104,13 +106,13 @@ public class ConsultaServiceImpl implements ConsultaService{
     
     @Override
     public List<HashMap<String,Object>> listarReporte(HashMap filters) {
-        List<HashMap<String,Object>> lista = new ArrayList<HashMap<String,Object>>();
+        List<HashMap<String,Object>> lista = new ArrayList<>();
         try {
             ConsultaDao consultaDao = (ConsultaDao) ServiceFinder.findBean("ConsultaDao");
             List<HashMap<String,Object>> consulta = consultaDao.listarReporte(filters);
             if(!CollectionUtils.isEmpty(consulta)) {
                 for(HashMap<String,Object> r : consulta) {
-                    HashMap<String,Object> map = new HashMap<String,Object>();
+                    HashMap<String,Object> map = new HashMap<>();
                     map.put("ID", r.get("ID"));
                     map.put("NOMBRE", r.get("NOMBRE"));
                     map.put("SUMILLA", r.get("SUMILLA"));

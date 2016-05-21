@@ -17,9 +17,14 @@ public class Implementacion implements Serializable{
     
     private BigDecimal nimplementacionid;
     private BigDecimal nconocimientoid;
+    private BigDecimal ncategoriaid;
+    private BigDecimal nsituacionid;
+    private BigDecimal ntipoconocimientoid;
     private String vdescripcion;
     private String vtitulo;
     private String vcontenido;
+    private BigDecimal ndestacado;
+    private String vruta;
     private String vmsjespecialista;
     private String vmsjmoderador;
     private String vusuariocreacion;
@@ -47,6 +52,30 @@ public class Implementacion implements Serializable{
         this.nconocimientoid = nconocimientoid;
     }
 
+    public BigDecimal getNcategoriaid() {
+        return ncategoriaid;
+    }
+
+    public void setNcategoriaid(BigDecimal ncategoriaid) {
+        this.ncategoriaid = ncategoriaid;
+    }
+
+    public BigDecimal getNsituacionid() {
+        return nsituacionid;
+    }
+
+    public void setNsituacionid(BigDecimal nsituacionid) {
+        this.nsituacionid = nsituacionid;
+    }
+
+    public BigDecimal getNtipoconocimientoid() {
+        return ntipoconocimientoid;
+    }
+
+    public void setNtipoconocimientoid(BigDecimal ntipoconocimientoid) {
+        this.ntipoconocimientoid = ntipoconocimientoid;
+    }
+
     public String getVdescripcion() {
         return vdescripcion;
     }
@@ -69,6 +98,22 @@ public class Implementacion implements Serializable{
 
     public void setVcontenido(String vcontenido) {
         this.vcontenido = vcontenido;
+    }
+
+    public BigDecimal getNdestacado() {
+        return ndestacado;
+    }
+
+    public void setNdestacado(BigDecimal ndestacado) {
+        this.ndestacado = ndestacado;
+    }
+
+    public String getVruta() {
+        return vruta;
+    }
+
+    public void setVruta(String vruta) {
+        this.vruta = vruta;
     }
 
     public String getVmsjespecialista() {

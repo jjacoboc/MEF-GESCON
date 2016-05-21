@@ -59,6 +59,7 @@ import pe.gob.mef.gescon.service.SeccionService;
 import pe.gob.mef.gescon.service.UserService;
 import pe.gob.mef.gescon.service.VinculoHistService;
 import pe.gob.mef.gescon.service.VinculoService;
+import pe.gob.mef.gescon.service.WikiService;
 import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
@@ -1794,6 +1795,21 @@ public class WikiMB implements Serializable {
                     vinculoHistService.saveOrUpdate(vinculoHist);
                 }
             }
+            
+            WikiService servicewk = (WikiService) ServiceFinder.findBean("WikiService");
+            List<Asignacion> listaAsignacion = servicewk.obtenerWikixAsig(this.getSelectedWiki().getNconocimientoid(), user.getNusuarioid(), Constante.WIKI);
+            if(CollectionUtils.isNotEmpty(listaAsignacion)) {
+                Asignacion asignacion = listaAsignacion.get(0);
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                if(asignacion.getDfecharecepcion() == null) {
+                    asignacion.setDfecharecepcion(new Date());
+                }
+                asignacion.setDfechaatencion(new Date());
+                asignacion.setNaccionid(BigDecimal.valueOf(Long.parseLong("8")));
+                AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                asignacionService.saveOrUpdate(asignacion);
+            }
+            
             this.setListaWiki(conocimientoService.getConocimientosByType(Constante.WIKI));
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/wiki/lista.xhtml");
         } catch (Exception e) {

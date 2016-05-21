@@ -158,7 +158,7 @@
 
                                                         <h:panelGroup rendered="#{row.ntipoarchivo eq msgs.tipoImagen}">
                                                             <p:graphicImage id="img1" library="images" name="File-Extension-Jpg.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeJpg}"/>
-                                                            <p:overlayPanel id="imgPanel1" for="img1" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                            <p:overlayPanel id="imgPanel1" for="img1" showEffect="blind" hideEffect="explode" showEvent="click" 
                                                                             hideEvent="mousedown" dismissable="false" showCloseIcon="true">
                                                                 <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
                                                                     <f:param name="ruta" value="#{row.vruta}"/>
@@ -166,7 +166,7 @@
                                                                 </p:graphicImage>
                                                             </p:overlayPanel>
                                                             <p:graphicImage id="img2" library="images" name="File-Extension-Png.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypePng}"/>
-                                                            <p:overlayPanel id="imgPanel2" for="img2" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                            <p:overlayPanel id="imgPanel2" for="img2" showEffect="blind" hideEffect="explode" showEvent="click" 
                                                                             hideEvent="mousedown" dismissable="false" showCloseIcon="true">
                                                                 <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
                                                                     <f:param name="ruta" value="#{row.vruta}"/>
@@ -174,7 +174,7 @@
                                                                 </p:graphicImage>
                                                             </p:overlayPanel>
                                                             <p:graphicImage id="img3" library="images" name="File-Extension-Tif.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeTiff}"/>
-                                                            <p:overlayPanel id="imgPanel3" for="img3" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                            <p:overlayPanel id="imgPanel3" for="img3" showEffect="blind" hideEffect="explode" showEvent="click" 
                                                                             hideEvent="mousedown" dismissable="false" showCloseIcon="true">
                                                                 <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
                                                                     <f:param name="ruta" value="#{row.vruta}"/>
@@ -182,7 +182,7 @@
                                                                 </p:graphicImage>
                                                             </p:overlayPanel>
                                                             <p:graphicImage id="img4" library="images" name="File-Extension-Bmp.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeBmp}"/>
-                                                            <p:overlayPanel id="imgPanel4" for="img4" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                            <p:overlayPanel id="imgPanel4" for="img4" showEffect="blind" hideEffect="explode" showEvent="click" 
                                                                             hideEvent="mousedown" dismissable="false" showCloseIcon="true">
                                                                 <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
                                                                     <f:param name="ruta" value="#{row.vruta}"/>
@@ -190,7 +190,7 @@
                                                                 </p:graphicImage>
                                                             </p:overlayPanel>
                                                             <p:graphicImage id="img5" library="images" name="File-Extension-Gif.png" title="visualizar imagen" width="24" height="24" rendered="#{row.vcontenttype eq msgs.contentTypeGif}"/>
-                                                            <p:overlayPanel id="imgPanel5" for="img5" showEffect="blind" hideEffect="explode" showEvent="mouseover" 
+                                                            <p:overlayPanel id="imgPanel5" for="img5" showEffect="blind" hideEffect="explode" showEvent="click" 
                                                                             hideEvent="mousedown" dismissable="false" showCloseIcon="true">
                                                                 <p:graphicImage value="#{contenidoImages.image}" width="400" cache="false" >
                                                                     <f:param name="ruta" value="#{row.vruta}"/>

@@ -23,43 +23,17 @@
                                     key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
                                     language: 'es'
                                 });
-                                actualizar=function(){
-                                    var value = $('#descHtml').val();
-                                    $('#confirmActDlgForm\\:txt').val(value);
-                                    PF('confirmActDlg').show();
-                                };
                                 publicar=function(){
                                     var value = $('#descHtml').val();
                                     $('#confirmPubDlgForm\\:txt').val(value);
                                     PF('confirmPubDlg').show();
                                 };
-                                solicitar=function(){
-                                    var value = $('#descHtml').val();
-                                    $('#siModDialogForm\\:txt').val(value);
-                                    PF('siModDialog').show();
-                                };
-                                responder=function(){
-                                    var value = $('#descHtml').val();
-                                    $('#respModDialogForm\\:txt').val(value);
-                                    PF('respModDialog').show();
-                                };
                             });
                         </script>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
-                            <p:panel header="Moderar Oportunidad de Mejora" styleClass="TexAlLeft">
+                            <p:panel header="Implementar Oportunidad de Mejora" styleClass="TexAlLeft">
                                 <h:panelGrid id="pgEdit" columns="1" width="100%">
-
-                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{pendienteMB.getfMsjUsu1()}"/>
-                                    <p:inputTextarea value="#{pendienteMB.selectedOmejora.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
-                                                     readonly="#{pendienteMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfMsjUsu1()}"/>
-
-                                    <h:outputLabel value="Mensaje del Moderador" rendered="#{pendienteMB.getfSInfMod()}"/>
-                                    <p:inputTextarea  value="#{pendienteMB.selectedOmejora.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
-                                                      readonly="#{pendienteMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfSInfMod()}"/>
-
-                                    <p:spacer width="10" rendered="#{pendienteMB.getfSInfMod()}"/>
-
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
                                         <p:spacer width="5"/>
@@ -253,12 +227,8 @@
                                 
                                 <h:panelGrid columns="2" width="100%" style="padding-left: 0px">
                                     <h:panelGroup>
-                                        <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="actualizar();"/>
-                                        <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="publicar();"/>
-                                        <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModDialogForm:pgSiMod" oncomplete="solicitar();" />
-                                        <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmRechDlg').show();"/>
+                                        <p:commandButton value="Registrar Implementación" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="publicar();"/>
                                         <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
-                                        <p:commandButton value="Responder" rendered="#{pendienteMB.getfButtonMod() eq false}" actionListener="#{pendienteMB.toSi}" update=":respModDialogForm:pgRespMod" oncomplete="responder();" />
                                     </h:panelGroup>
                                     <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
                                 </h:panelGrid>
@@ -356,46 +326,6 @@
                             </h:form>
                         </p:dialog>
                         
-                        <p:dialog id="siModDlg" header="Solicitar Informacion Adicional - Moderador" widgetVar="siModDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                            <h:form id="siModDialogForm">
-                                <p:messages id="msgs" showSummary="true" showDetail="true" />
-                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.contenidoHtml}"/>
-                                <h:panelGrid id="pgSiMod"  columns="2">
-                                    <h:outputLabel value="Mensaje:"/>
-                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{pendienteMB.selectedOmejora.vmsjsolicita}" rows="4" cols="66" style="font-weight: normal;"
-                                                         readonly="#{pendienteMB.getfSInfMod()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
-                                        <h:outputText id="display"/>
-                                    </h:panelGrid>
-                                    <p:spacer/>
-                                    <h:panelGrid style="float: right" columns="2" width="25%">
-                                        <p:commandButton value="Enviar" actionListener="#{pendienteMB.sendOmejoraSolicita}"/>
-                                        <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelRespOmejoraMod}" />
-                                    </h:panelGrid>
-                                </h:panelGrid>
-                            </h:form>
-                        </p:dialog>
-
-                        <p:dialog id="respModDlg" header="Responder al Moderador" widgetVar="respModDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
-                            <h:form id="respModDialogForm">
-                                <p:messages id="msgs" showSummary="true" showDetail="true" />
-                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.contenidoHtml}"/>
-                                <h:panelGrid id="pgRespMod"  columns="2">
-                                    <h:outputLabel value="Mensaje:"/>
-                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{pendienteMB.selectedOmejora.vmsjrespuesta}" rows="4" cols="66" style="font-weight: normal;"
-                                                         readonly="#{pendienteMB.getfMsjUsu1()}" counter="display" maxlength="400" counterTemplate="{0} caracteres restantes."/>
-                                        <h:outputText id="display"/>
-                                    </h:panelGrid>
-                                    <p:spacer/>
-                                    <h:panelGrid style="float: right" columns="2" width="25%">
-                                        <p:commandButton value="Enviar" actionListener="#{pendienteMB.sendOmejoraRespuesta}"/>
-                                        <p:commandButton value="Cancelar" actionListener="#{pendienteMB.toCancelRespOmejoraMod}" />
-                                    </h:panelGrid>
-                                </h:panelGrid>
-                            </h:form>
-                        </p:dialog>
-                        
                         <p:dialog id="destDlg" header="#{msgs.om_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
                             <h:form id="destDialogForm">
                                 <h:panelGrid id="pgDest" columns="1">
@@ -443,26 +373,11 @@
                             </h:form>
                         </p:confirmDialog>
                         
-                        <p:confirmDialog appendTo="@(body)" message="Se procederá a actualizar la oportunidad de mejora. Desea Continuar?" header="ACTUALIZAR OPORTUNIDAD DE MEJORA" widgetVar="confirmActDlg">
-                            <h:form id="confirmActDlgForm">
-                                <p:inputText id="txt" type="hidden" value="#{pendienteMB.contenidoHtml}"/>
-                                <p:commandButton value="SI" oncomplete="PF('confirmActDlg').hide()" actionListener="#{pendienteMB.saveOmejoraEdit}" icon="ui-icon-check fa fa-check Fs14 white"/>
-                                <p:commandButton value="NO" onclick="PF('confirmActDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
-                            </h:form>
-                        </p:confirmDialog>
-                        
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar la oportunidad de mejora. Desea Continuar?" header="PUBLICAR OPORTUNIDAD DE MEJORA" widgetVar="confirmPubDlg">
                             <h:form id="confirmPubDlgForm">
                                 <p:inputText id="txt" type="hidden" value="#{pendienteMB.contenidoHtml}"/>
                                 <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" actionListener="#{pendienteMB.publicarOmejora}" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmPubDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
-                            </h:form>
-                        </p:confirmDialog>
-                        
-                        <p:confirmDialog appendTo="@(body)" message="Se procederá a rechazar la oportunidad de mejora. Desea Continuar?" header="RECHAZAR OPORTUNIDAD DE MEJORA" widgetVar="confirmRechDlg">
-                            <h:form id="confirmRechDlgForm">
-                                <p:commandButton value="SI" oncomplete="PF('confirmRechDlg').hide()" action="#{pendienteMB.rechazarOmejora}" icon="ui-icon-check fa fa-check Fs14 white"/>
-                                <p:commandButton value="NO" onclick="PF('confirmRechDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>
                     </f:view>

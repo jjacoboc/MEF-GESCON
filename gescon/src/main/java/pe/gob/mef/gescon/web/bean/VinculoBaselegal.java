@@ -21,6 +21,7 @@ public class VinculoBaselegal implements Serializable{
     private Tbaselegal tbaselegal;
     private BigDecimal nbaselegalvinculadaid;
     private BigDecimal ntipovinculo;
+    private BigDecimal nestadoid;
     private String vusuariocreacion;
     private Date dfechacreacion;
     private String vusuariomodificacion;
@@ -84,6 +85,14 @@ public class VinculoBaselegal implements Serializable{
      */
     public void setNtipovinculo(BigDecimal ntipovinculo) {
         this.ntipovinculo = ntipovinculo;
+    }
+
+    public BigDecimal getNestadoid() {
+        return nestadoid;
+    }
+
+    public void setNestadoid(BigDecimal nestadoid) {
+        this.nestadoid = nestadoid;
     }
 
     /**

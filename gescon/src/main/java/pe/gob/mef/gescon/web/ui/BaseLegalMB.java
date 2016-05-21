@@ -1235,7 +1235,7 @@ public class BaseLegalMB implements Serializable {
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
-            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
+            this.setPickList(new DualListModel<>(this.getListaSource(), this.getListaTarget()));
             this.setFilteredListaBaseLegal(new ArrayList());
             this.setUploadFile(null);
             this.setFile(null);
@@ -1918,6 +1918,19 @@ public class BaseLegalMB implements Serializable {
                 vinculoHist.setDfechacreacion(new Date());
                 vinculoHist.setVusuariocreacion(user.getVlogin());
                 vserviceHist.saveOrUpdate(vinculoHist);
+            }
+            
+            List<Asignacion> listaAsignacion = service.obtenerBaseLegalxAsig(this.getSelectedBaseLegal().getNbaselegalid(), user.getNusuarioid(), Constante.BASELEGAL);
+            if(org.apache.commons.collections.CollectionUtils.isNotEmpty(listaAsignacion)) {
+                Asignacion asignacion = listaAsignacion.get(0);
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+                if(asignacion.getDfecharecepcion() == null) {
+                    asignacion.setDfecharecepcion(new Date());
+                }
+                asignacion.setDfechaatencion(new Date());
+                asignacion.setNaccionid(BigDecimal.valueOf(Long.parseLong("8")));
+                AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                asignacionService.saveOrUpdate(asignacion);
             }
 
             this.setListaBaseLegal(service.getBaselegales());
