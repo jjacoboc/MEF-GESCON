@@ -18,16 +18,23 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.context.RequestContext;
 import org.springframework.util.CollectionUtils;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.service.EntidadService;
+import pe.gob.mef.gescon.service.UbigeoEntidadService;
+import pe.gob.mef.gescon.service.UbigeoService;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.Entidad;
+import pe.gob.mef.gescon.web.bean.TipoEntidad;
 import pe.gob.mef.gescon.web.bean.User;
 
 /**
@@ -48,6 +55,14 @@ public class EntidadMB implements Serializable{
     private List<Entidad> listaEntidad;
     private List<Entidad> filteredListaEntidad;
     private Entidad selectedEntidad;
+    private List<SelectItem> listaDepartamento;
+    private List<SelectItem> listaProvincia;
+    private List<SelectItem> listaDistrito;
+    private String departamento;
+    private String provincia;
+    private String distrito;
+    private String tipoentidad;
+    private List<TipoEntidad> listaTipoEntidad;
     
     /**
      * Creates a new instance of EntidadMB
@@ -167,6 +182,118 @@ public class EntidadMB implements Serializable{
         this.selectedEntidad = selectedEntidad;
     }
 
+    /**
+     * @return the listaDepartamento
+     */
+    public List<SelectItem> getListaDepartamento() {
+        return listaDepartamento;
+    }
+
+    /**
+     * @param listaDepartamento the listaDepartamento to set
+     */
+    public void setListaDepartamento(List<SelectItem> listaDepartamento) {
+        this.listaDepartamento = listaDepartamento;
+    }
+
+    /**
+     * @return the listaProvincia
+     */
+    public List<SelectItem> getListaProvincia() {
+        return listaProvincia;
+    }
+
+    /**
+     * @param listaProvincia the listaProvincia to set
+     */
+    public void setListaProvincia(List<SelectItem> listaProvincia) {
+        this.listaProvincia = listaProvincia;
+    }
+
+    /**
+     * @return the listaDistrito
+     */
+    public List<SelectItem> getListaDistrito() {
+        return listaDistrito;
+    }
+
+    /**
+     * @param listaDistrito the listaDistrito to set
+     */
+    public void setListaDistrito(List<SelectItem> listaDistrito) {
+        this.listaDistrito = listaDistrito;
+    }
+
+    /**
+     * @return the departamento
+     */
+    public String getDepartamento() {
+        return departamento;
+    }
+
+    /**
+     * @param departamento the departamento to set
+     */
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
+    }
+
+    /**
+     * @return the provincia
+     */
+    public String getProvincia() {
+        return provincia;
+    }
+
+    /**
+     * @param provincia the provincia to set
+     */
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
+
+    /**
+     * @return the distrito
+     */
+    public String getDistrito() {
+        return distrito;
+    }
+
+    /**
+     * @param distrito the distrito to set
+     */
+    public void setDistrito(String distrito) {
+        this.distrito = distrito;
+    }
+
+    /**
+     * @return the tipoentidad
+     */
+    public String getTipoentidad() {
+        return tipoentidad;
+    }
+
+    /**
+     * @param tipoentidad the tipoentidad to set
+     */
+    public void setTipoentidad(String tipoentidad) {
+        this.tipoentidad = tipoentidad;
+    }
+
+    /**
+     * @return the listaTipoEntidad
+     */
+    public List<TipoEntidad> getListaTipoEntidad() {
+        return listaTipoEntidad;
+    }
+
+    /**
+     * @param listaTipoEntidad the listaTipoEntidad to set
+     */
+    public void setListaTipoEntidad(List<TipoEntidad> listaTipoEntidad) {
+        this.listaTipoEntidad = listaTipoEntidad;
+    }
+
     
     
     @PostConstruct
@@ -174,6 +301,9 @@ public class EntidadMB implements Serializable{
         try {
             EntidadService service = (EntidadService) ServiceFinder.findBean("EntidadService");
             listaEntidad = service.getEntidades();
+            UbigeoEntidadService ubigeoService = (UbigeoEntidadService) ServiceFinder.findBean("UbigeoEntidadService");
+            listaDepartamento = new Items(ubigeoService.getDepartamentos(), null, "cdepartamento", "vdescripcion").getItems();
+            listaTipoEntidad = new Items(service.getTipos(),null,"ntipoentidadid","vdescripcion").getItems();
         } catch(Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -187,6 +317,13 @@ public class EntidadMB implements Serializable{
         this.setCodigo(null);
         this.setActivo(BigDecimal.ONE);
         this.setSelectedEntidad(null);
+        this.setListaProvincia(new ArrayList());
+        this.setListaDistrito(new ArrayList());
+        this.setListaTipoEntidad(new ArrayList());
+        this.setDepartamento(StringUtils.EMPTY);
+        this.setProvincia(StringUtils.EMPTY);
+        this.setDistrito(StringUtils.EMPTY);
+        this.setTipoentidad(StringUtils.EMPTY);
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {
             iter.remove();
@@ -204,6 +341,10 @@ public class EntidadMB implements Serializable{
                     this.setSelectedEntidad(this.getListaEntidad().get(index));
                 }
                 this.setFilteredListaEntidad(new ArrayList());
+                
+                UbigeoEntidadService ubigeoService = (UbigeoEntidadService) ServiceFinder.findBean("UbigeoEntidadService");
+            listaProvincia = new Items(ubigeoService.getProvinciasPorDepartamento(this.getSelectedEntidad().getVdepartamento()), null, "cdepartamento", "vdescripcion").getItems();
+            listaDistrito = new Items(ubigeoService.getDistritosPorProvincia(this.getSelectedEntidad().getVdepartamento(), this.getSelectedEntidad().getVprovincia()), null, "cprovincia", "vdescripcion").getItems();
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -214,6 +355,8 @@ public class EntidadMB implements Serializable{
     public void toSave(ActionEvent event) {
         try {
             this.cleanAttributes();
+            EntidadService service = (EntidadService) ServiceFinder.findBean("EntidadService");
+            listaTipoEntidad = new Items(service.getTipos(),null,"ntipoentidadid","vdescripcion").getItems();
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -240,6 +383,11 @@ public class EntidadMB implements Serializable{
                 entidad.setNactivo(BigDecimal.ONE);
                 entidad.setDfechacreacion(new Date());
                 entidad.setVusuariocreacion(user.getVlogin());
+                entidad.setVdepartamento(this.getDepartamento());
+                entidad.setVprovincia(this.getProvincia());
+                entidad.setVdistrito(this.getDistrito());
+                entidad.setVdepartamento(this.getDepartamento());
+                entidad.setNtipoid(BigDecimal.valueOf(Long.parseLong(this.getTipoentidad())));
                 service.saveOrUpdate(entidad);
                 this.setListaEntidad(service.getEntidades());
                 this.cleanAttributes();
@@ -255,6 +403,11 @@ public class EntidadMB implements Serializable{
         try {
             if(event != null) {
                 this.setSelectedRow(event);
+                UbigeoEntidadService ubigeo2Service = (UbigeoEntidadService) ServiceFinder.findBean("UbigeoEntidadService");
+                EntidadService service = (EntidadService) ServiceFinder.findBean("EntidadService");
+                listaProvincia = new Items(ubigeo2Service.getProvinciasPorDepartamento(this.getSelectedEntidad().getVdepartamento()), null, "cprovincia", "vdescripcion").getItems();
+                listaDistrito = new Items(ubigeo2Service.getDistritosPorProvincia(this.getSelectedEntidad().getVdepartamento(), this.getSelectedEntidad().getVprovincia()), null, "cdistrito", "vdescripcion").getItems();
+                listaTipoEntidad = new Items(service.getTipos(),null,"ntipoentidadid","vdescripcion").getItems();
             }
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -287,6 +440,10 @@ public class EntidadMB implements Serializable{
                 this.getSelectedEntidad().setVdescripcion(StringUtils.capitalize(this.getSelectedEntidad().getVdescripcion().trim()));
                 this.getSelectedEntidad().setVusuariomodificacion(user.getVlogin());
                 this.getSelectedEntidad().setDfechamodificacion(new Date());
+                this.getSelectedEntidad().setVdepartamento(this.getSelectedEntidad().getVdepartamento());
+                this.getSelectedEntidad().setVprovincia(this.getSelectedEntidad().getVprovincia());
+                this.getSelectedEntidad().setVdistrito(this.getSelectedEntidad().getVdistrito());
+                this.getSelectedEntidad().setNtipoid(this.getSelectedEntidad().getNtipoid());
                 EntidadService service = (EntidadService) ServiceFinder.findBean("EntidadService");
                 service.saveOrUpdate(this.getSelectedEntidad());
                 this.setListaEntidad(service.getEntidades());
@@ -367,9 +524,73 @@ public class EntidadMB implements Serializable{
                 error = true;
                 return error;
             }
+            else if (this.getDepartamento()== null || this.getDepartamento().isEmpty()) {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ubigeo requerido. Ingrese el departamento de la entidad.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                error = true;
+                return error;
+            }
+            else if (this.getProvincia()== null || this.getProvincia().isEmpty()) {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ubigeo requerido. Ingrese la provincia de la entidad.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                error = true;
+                return error;
+            }
+            else if (this.getDistrito()== null || this.getDistrito().isEmpty()) {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ubigeo requerido. Ingrese el distrito de la entidad.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                error = true;
+                return error;
+            }
+            else if (this.getTipoentidad()== null || this.getTipoentidad().isEmpty()) {
+                message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Tipo requerido. Ingrese el Tipo de la entidad.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                error = true;
+                return error;
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }
         return error;
     }
+    
+    public void handleDepartamentoChangeValue(AjaxBehaviorEvent event) {
+        try {
+            if (event != null) {
+                String coddep = (String) ((SelectOneMenu) event.getSource()).getValue();
+                this.setDepartamento(coddep);
+                if (StringUtils.isNotBlank(coddep)) {
+                    UbigeoEntidadService ubigeo2Service = (UbigeoEntidadService) ServiceFinder.findBean("UbigeoEntidadService");
+                    listaProvincia = new Items(ubigeo2Service.getProvinciasPorDepartamento(coddep), null, "cprovincia", "vdescripcion").getItems();
+                } else {
+                    this.setListaProvincia(new ArrayList());
+                    this.setListaDistrito(new ArrayList());
+                    this.setProvincia(StringUtils.EMPTY);
+                    this.setDistrito(StringUtils.EMPTY);
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public void handleProvinciaChangeValue(AjaxBehaviorEvent event) {
+        try {
+            if (event != null) {
+                String codprov = (String) ((SelectOneMenu) event.getSource()).getValue();
+                this.setProvincia(codprov);
+                if (StringUtils.isNotBlank(codprov)) {
+                    UbigeoEntidadService ubigeo2Service = (UbigeoEntidadService) ServiceFinder.findBean("UbigeoEntidadService");
+                    listaDistrito = new Items(ubigeo2Service.getDistritosPorProvincia(this.getDepartamento(), codprov), null, "cdistrito", "vdescripcion").getItems();
+                } else {
+                    this.setListaDistrito(new ArrayList());
+                    this.setDistrito(StringUtils.EMPTY);
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+   }
 }

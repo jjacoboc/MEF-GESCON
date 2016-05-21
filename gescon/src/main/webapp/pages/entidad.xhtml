@@ -91,6 +91,39 @@
                                                          counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
+                                    
+                                    
+                                            <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputLabel value="Departamento: "/>
+                                            <p:selectOneMenu id="dep" value="#{entidadMB.departamento}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <p:ajax event="change" listener="#{entidadMB.handleDepartamentoChangeValue}" update=":newDialogForm:prov, :newDialogForm:dist"/>
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{entidadMB.listaDepartamento}"/>
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputLabel value="Provincia: "/>
+                                            <p:selectOneMenu id="prov" value="#{entidadMB.provincia}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <p:ajax event="change" listener="#{entidadMB.handleProvinciaChangeValue}" update=":newDialogForm:dist"/>
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{entidadMB.listaProvincia}"/>
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputLabel value="Distrito: "/>
+                                            <p:selectOneMenu id="dist" value="#{entidadMB.distrito}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{entidadMB.listaDistrito}"/>
+                                            </p:selectOneMenu>
+                                            
+                                            <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputLabel value="Tipo "/>
+                                            <p:selectOneMenu id="tipoe" value="#{entidadMB.tipoentidad}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{entidadMB.listaTipoEntidad}"/>
+                                            </p:selectOneMenu>
+                                        
+                                    
                                 </h:panelGrid>
                                 <p:commandButton  value="Registrar" actionListener="#{entidadMB.save}" update=":f:growl, :f:tbl"/>
                             </h:form>
@@ -115,6 +148,36 @@
                                                          counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
+                                    
+                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputLabel value="Departamento: "/>
+                                            <p:selectOneMenu id="dep" value="#{entidadMB.selectedEntidad.vdepartamento}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <p:ajax event="change" listener="#{entidadMB.handleDepartamentoChangeValue}" update=":editDialogForm:prov, :editDialogForm:dist"/>
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{entidadMB.listaDepartamento}"/>
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputLabel value="Provincia: "/>
+                                            <p:selectOneMenu id="prov" value="#{entidadMB.selectedEntidad.vprovincia}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <p:ajax event="change" listener="#{entidadMB.handleProvinciaChangeValue}" update=":editDialogForm:dist"/>
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{entidadMB.listaProvincia}"/>
+                                            </p:selectOneMenu>
+
+                                            <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputLabel value="Distrito: "/>
+                                            <p:selectOneMenu id="dist" value="#{entidadMB.selectedEntidad.vdistrito}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{entidadMB.listaDistrito}"/>
+                                            </p:selectOneMenu>
+                                            
+                                            <h:outputText value="#{msgs.icon_asterisk}"/>
+                                            <h:outputLabel value="Tipo "/>
+                                            <p:selectOneMenu id="tipoe" value="#{entidadMB.selectedEntidad.ntipoid}" filter="true" panelStyle="Wid100" styleClass="Wid100">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione"/>
+                                                <f:selectItems value="#{entidadMB.listaTipoEntidad}"/>
+                                            </p:selectOneMenu>
 
                                     <h:outputText value="*"/>
                                     <h:outputText value="Activo:"/>

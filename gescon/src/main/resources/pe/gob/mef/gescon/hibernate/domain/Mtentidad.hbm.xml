@@ -32,5 +32,17 @@
         <property name="nactivo" type="big_decimal">
             <column name="NACTIVO" precision="22" scale="0"/>
         </property>
+        <property name="vdepartamento" type="string">
+            <column name="VDEPARTAMENTO" length="250" />
+        </property>
+        <property name="vprovincia" type="string">
+            <column name="VPROVINCIA" length="250" />
+        </property>
+        <property name="vdistrito" type="string">
+            <column name="VDISTRITO" length="250" />
+        </property>
+        <property name="ntipoid" type="big_decimal">
+            <column name="NTIPOID" precision="22" scale="0"/>
+        </property>
     </class>
 </hibernate-mapping>

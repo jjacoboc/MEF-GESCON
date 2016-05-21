@@ -28,8 +28,14 @@ public class Entidad implements Serializable {
     private BigDecimal nactivo;
     private String vfechacreacion;
     private String vfechamodificacion;
+    private String vdepartamento;
+    private String vprovincia;
+    private String vdistrito;
+    private BigDecimal ntipoid;
+    private String vtipo;
+    
 
-    public void Rango() {
+    public void Entidad() {
 
     }
 
@@ -193,5 +199,75 @@ public class Entidad implements Serializable {
      */
     public void setVfechamodificacion(String vfechamodificacion) {
         this.vfechamodificacion = vfechamodificacion;
+    }
+
+    /**
+     * @return the vdepartamento
+     */
+    public String getVdepartamento() {
+        return vdepartamento;
+    }
+
+    /**
+     * @param vdepartamento the vdepartamento to set
+     */
+    public void setVdepartamento(String vdepartamento) {
+        this.vdepartamento = vdepartamento;
+    }
+
+    /**
+     * @return the vprovincia
+     */
+    public String getVprovincia() {
+        return vprovincia;
+    }
+
+    /**
+     * @param vprovincia the vprovincia to set
+     */
+    public void setVprovincia(String vprovincia) {
+        this.vprovincia = vprovincia;
+    }
+
+    /**
+     * @return the vdistrito
+     */
+    public String getVdistrito() {
+        return vdistrito;
+    }
+
+    /**
+     * @param vdistrito the vdistrito to set
+     */
+    public void setVdistrito(String vdistrito) {
+        this.vdistrito = vdistrito;
+    }
+
+    /**
+     * @return the ntipoid
+     */
+    public BigDecimal getNtipoid() {
+        return ntipoid;
+    }
+
+    /**
+     * @param ntipoid the ntipoid to set
+     */
+    public void setNtipoid(BigDecimal ntipoid) {
+        this.ntipoid = ntipoid;
+    }
+
+    /**
+     * @return the vtipo
+     */
+    public String getVtipo() {
+        return vtipo;
+    }
+
+    /**
+     * @param vtipo the vtipo to set
+     */
+    public void setVtipo(String vtipo) {
+        this.vtipo = vtipo;
     }
 }

@@ -18,6 +18,10 @@ public class Mtentidad implements java.io.Serializable {
     private Date dfechacreacion;
     private Date dfechamodificacion;
     private BigDecimal nactivo;
+    private String vdepartamento;
+    private String vprovincia;
+    private String vdistrito;
+    private BigDecimal ntipoid;
 
     public Mtentidad() {
     }
@@ -26,7 +30,7 @@ public class Mtentidad implements java.io.Serializable {
         this.nentidadid = nentidadid;
     }
 
-    public Mtentidad(BigDecimal nentidadid, String vcodigoentidad,String vnombre, String vdescripcion, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nactivo) {
+    public Mtentidad(BigDecimal nentidadid, String vcodigoentidad,String vnombre, String vdescripcion, String vusuariocreacion, String vusuariomodificacion, Date dfechacreacion, Date dfechamodificacion, BigDecimal nactivo, String vdepartamento, String vprovincia, String vdistrito, BigDecimal ntipoid) {
         this.nentidadid = nentidadid;
         this.vcodigoentidad = vcodigoentidad;
         this.vnombre = vnombre;
@@ -36,6 +40,10 @@ public class Mtentidad implements java.io.Serializable {
         this.dfechacreacion = dfechacreacion;
         this.dfechamodificacion = dfechamodificacion;
         this.nactivo = nactivo;
+        this.vdepartamento = vdepartamento;
+        this.vprovincia = vprovincia;
+        this.vdistrito = vdistrito;
+        this.ntipoid = ntipoid;
     }
 
     /**
@@ -128,5 +136,61 @@ public class Mtentidad implements java.io.Serializable {
      */
     public void setNactivo(BigDecimal nactivo) {
         this.nactivo = nactivo;
+    }
+
+    /**
+     * @return the vdepartamento
+     */
+    public String getVdepartamento() {
+        return vdepartamento;
+    }
+
+    /**
+     * @param vdepartamento the vdepartamento to set
+     */
+    public void setVdepartamento(String vdepartamento) {
+        this.vdepartamento = vdepartamento;
+    }
+
+    /**
+     * @return the vprovincia
+     */
+    public String getVprovincia() {
+        return vprovincia;
+    }
+
+    /**
+     * @param vprovincia the vprovincia to set
+     */
+    public void setVprovincia(String vprovincia) {
+        this.vprovincia = vprovincia;
+    }
+
+    /**
+     * @return the vdistrito
+     */
+    public String getVdistrito() {
+        return vdistrito;
+    }
+
+    /**
+     * @param vdistrito the vdistrito to set
+     */
+    public void setVdistrito(String vdistrito) {
+        this.vdistrito = vdistrito;
+    }
+
+    /**
+     * @return the ntipoid
+     */
+    public BigDecimal getNtipoid() {
+        return ntipoid;
+    }
+
+    /**
+     * @param ntipoid the ntipoid to set
+     */
+    public void setNtipoid(BigDecimal ntipoid) {
+        this.ntipoid = ntipoid;
     }
 }

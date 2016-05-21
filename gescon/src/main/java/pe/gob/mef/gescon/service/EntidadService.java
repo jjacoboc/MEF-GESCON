@@ -8,6 +8,7 @@ package pe.gob.mef.gescon.service;
 import java.math.BigDecimal;
 import java.util.List;
 import pe.gob.mef.gescon.web.bean.Entidad;
+import pe.gob.mef.gescon.web.bean.TipoEntidad;
 
 /**
  *
@@ -17,5 +18,7 @@ public interface EntidadService {
     
     public BigDecimal getNextPK() throws Exception;
     public List<Entidad> getEntidades() throws Exception;
+    public List<Entidad> getEntidadesUbigeo() throws Exception;
+    public List<TipoEntidad> getTipos() throws Exception;
     public void saveOrUpdate(Entidad entidad) throws Exception;
 }
