@@ -6728,7 +6728,8 @@ public class PendienteMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
             asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(serviceasig.getEspecialistaByCategoria(this.getSelectedOmejora().getNcategoriaid()));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNespecialista());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
@@ -6792,7 +6793,8 @@ public class PendienteMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
             asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(serviceasig.getEspecialistaByCategoria(this.getSelectedOmejora().getNcategoriaid()));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNespecialista());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
@@ -6884,7 +6886,8 @@ public class PendienteMB implements Serializable {
             asignacion.setNtipoconocimientoid(Constante.OPORTUNIDADMEJORA);
             asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            asignacion.setNusuarioid(serviceasig.getModeratorByCategoria(this.getSelectedOmejora().getNcategoriaid()));
+            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNmoderador());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
