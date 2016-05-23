@@ -51,14 +51,11 @@
                                     <h:outputLabel value="Entidad" style="text-decoration: underline" />
                                     <p:spacer/>
 
+                                    <h:outputLabel value="Codigo de Unidad Ejecutora:"/>
                                     <h:panelGrid columns="3">
-                                        <h:outputLabel value="NM:"/>
-                                        <p:inputText size="5" value="#{preguntaMB.selectedPregunta.nentidadid}" maxlength="5" readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
-                                        <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
-                                    </h:panelGrid>
-                                    <h:panelGrid columns="2">
+                                        <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
                                         <h:outputLabel value="Nombre:"/>
-                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}" readonly="#{preguntaMB.getfButtonModPub() eq false}"/>  
+                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}" /> 
                                     </h:panelGrid>
 
                                     <p:spacer width="10"/>

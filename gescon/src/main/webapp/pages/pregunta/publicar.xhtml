@@ -13,7 +13,7 @@
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Publicar Pregunta" styleClass="TexAlLeft">
-                                <h:panelGrid id="pgModPreg"  columns="2" width="500px">                           
+                                <h:panelGrid id="pgModPreg"  columns="3" width="500px">                           
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="Categoría:"/>
                                     <h:panelGrid id="pgCat" columns="3">
@@ -60,15 +60,13 @@
                                     <h:outputLabel value="Entidad" style="text-decoration: underline" />
                                     <p:spacer/>
 
-                                    <p:spacer width="10"/>
-                                    <h:panelGrid columns="3">
-                                        <h:outputLabel value="NM:"/>
-                                        <p:inputText size="5" value="#{preguntaMB.selectedPregunta.nentidadid}" maxlength="5" readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
-                                        <p:commandButton actionListener="#{preguntaMB.toEntEdit}" icon="ui-icon-search" update="ent"/>
-                                    </h:panelGrid>
-                                    <h:panelGrid columns="2">
+                                    <p:spacer/>
+                                    <h:outputLabel value="Codigo de Unidad Ejecutora:"/>
+                                    <h:panelGrid columns="4">
+                                        <p:inputText size="5" value="#{preguntaMB.selectedPregunta.nentidadid}" maxlength="5"/>
+                                        <p:commandButton actionListener="#{preguntaMB.toEnt}" oncomplete="PF('entDialog').show();" update=":entDialogForm:pgEnt"  icon="ui-icon-search" />
                                         <h:outputLabel value="Nombre:"/>
-                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}" readonly="#{preguntaMB.getfButtonModPub() eq false}"/>  
+                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}" /> 
                                     </h:panelGrid>
 
                                     <p:spacer width="10"/>
@@ -219,6 +217,49 @@
                                 <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
                             </h:form>
                         </p:confirmDialog>
+                        
+                        <p:dialog id="entDlg" header="Seleccionar Entidad" widgetVar="entDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="entDialogForm">
+                                <h:panelGrid id="pgEnt" columns="1">
+                                    <p:dataTable id="tbl" value="#{preguntaMB.listaEntidad}" filteredValue="#{preguntaMB.filteredListaEntidad}" var="row" 
+                                                 paginator="true" paginatorPosition="top" selectionMode="single" selection="#{preguntaMB.selectedEntidad}" rows="15" rowIndexVar="rowIndex" draggableColumns="true" rowHover="true" 
+                                                 rowKey="#{row.vcodigoentidad}" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
+                                        <p:column style="width: 10%;" sortBy="#{row.vcodigoentidad}" filterBy="#{row.vcodigoentidad}" filterMatchMode="contains" filterStyle="width: 80%;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="CODIGO"/></f:facet>
+                                            <h:outputText value="#{row.vcodigoentidad}"/>
+                                        </p:column>
+                                        <p:column style="width: 15%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                            <h:outputText value="#{row.vnombre}"/>
+                                        </p:column>
+                                        <p:column style="width: 25%" sortBy="#{row.vdepartamento}" filterBy="#{row.vdepartamento}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
+                                            <f:facet name="header"><h:outputText value="DEPARTAMENTO"/></f:facet>
+                                            <h:outputText value="#{row.vdepartamento}"/>
+                                        </p:column>
+                                        <p:column style="width: 25%" sortBy="#{row.vprovincia}" filterBy="#{row.vprovincia}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
+                                            <f:facet name="header"><h:outputText value="PROVINCIA"/></f:facet>
+                                            <h:outputText value="#{row.vprovincia}"/>
+                                        </p:column>
+                                        <p:column style="width: 25%" sortBy="#{row.vdistrito}" filterBy="#{row.vdistrito}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
+                                            <f:facet name="header"><h:outputText value="DISTRITO"/></f:facet>
+                                            <h:outputText value="#{row.vdistrito}"/>
+                                        </p:column>
+                                        <p:column style="width: 25%" sortBy="#{row.vtipo}" filterBy="#{row.vtipo}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
+                                            <f:facet name="header"><h:outputText value="TIPO"/></f:facet>
+                                            <h:outputText value="#{row.vtipo}"/>
+                                        </p:column>
+                                        <p:column style="width: 8%; text-align: center;">
+                                            <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
+                                            <p:commandLink actionListener="#{preguntaMB.SeleccionarEP}" styleClass="GesconLink" title="Seleccionar" oncomplete="PF('entDialog').hide();" update=":f:pgModPreg" >
+                                                <h:outputText class="fa fa-search Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
                     </f:view>
                 </div>
             </div>

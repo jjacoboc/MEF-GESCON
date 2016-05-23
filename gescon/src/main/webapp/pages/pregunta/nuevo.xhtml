@@ -12,66 +12,67 @@
                     <f:view>
                         <h:form id="newDialogForm">
                             <p:panel header="Registrar Pregunta" styleClass="TexAlLeft">
-                            <h:panelGrid id="pgNew"  columns="3">
-                                <h:outputText value="#{msgs.icon_asterisk}"/>
-                                <h:outputLabel value="Categoría:"/>
-                                <h:panelGroup id="pgCat">
-                                    <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
-                                    <p:spacer width="15"/>
-                                    <h:outputText value="#{preguntaMB.selectedCategoria.vnombre}" />
-                                </h:panelGroup>
-                                
-                                <h:outputText value="#{msgs.icon_asterisk}"/>
-                                <h:outputText value="#{msgs.pr_lbl_destacado}"/>
-                                <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
-                                    <p:selectBooleanCheckbox value="#{preguntaMB.chkDestacado}" />
-                                    <h:outputText value="(Nota: Las Preguntas destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
+                                <h:panelGrid id="pgNew"  columns="3">
+                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="Categoría:"/>
+                                    <h:panelGroup id="pgCat">
+                                        <p:commandButton value="Seleccionar Categoría" actionListener="#{preguntaMB.loadTree}" oncomplete="PF('catDialog').show();" update=":catDialogForm:pgCat" />
+                                        <p:spacer width="15"/>
+                                        <h:outputText value="#{preguntaMB.selectedCategoria.vnombre}" />
+                                    </h:panelGroup>
+
+                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                    <h:outputText value="#{msgs.pr_lbl_destacado}"/>
+                                    <h:panelGrid columns="2" cellpadding="0" cellspacing="0">
+                                        <p:selectBooleanCheckbox value="#{preguntaMB.chkDestacado}" />
+                                        <h:outputText value="(Nota: Las Preguntas destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
+                                    </h:panelGrid>
+
+                                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="Asunto:"/>
+                                    <p:inputText size="99" value="#{preguntaMB.asunto}" maxlength="80"/>
+
+                                    <p:spacer/>
+                                    <h:outputLabel value="Detalle:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.detalle}" rows="4" cols="66" style="font-weight: normal;"
+                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display"/>
+                                    </h:panelGrid>
+
+                                    <p:spacer/>
+                                    <h:outputLabel value="Entidad" style="text-decoration: underline"/>
+                                    <p:spacer/>
+
+                                    
+                                    
+                                    <p:spacer/>
+                                    <h:outputLabel value="Codigo de Unidad Ejecutora:"/>
+                                    <h:panelGrid columns="4">
+                                        <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
+                                        <p:commandButton actionListener="#{preguntaMB.toEnt}" oncomplete="PF('entDialog').show();" update=":entDialogForm:pgEnt"  icon="ui-icon-search" />
+                                        <h:outputLabel value="Nombre:"/>
+                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}" /> 
+                                    </h:panelGrid>
+                                    
+
+                                    <p:spacer/>
+                                    <p:spacer/>
+                                    <p:spacer/>
+
+                                    <p:spacer/>
+                                    <h:outputLabel value="Dato adicional:"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputText id="tema" size="99" value="#{preguntaMB.datoAdicional}" maxlength="80"/>
+                                        <p:watermark for="tema" value="(Opcional) Este dato solo lo podra ver el especialista"/>
+                                    </h:panelGrid>
+
                                 </h:panelGrid>
-
-                                <h:outputText value="#{msgs.icon_asterisk}"/>
-                                <h:outputLabel value="Asunto:"/>
-                                <p:inputText size="99" value="#{preguntaMB.asunto}" maxlength="80"/>
-
-                                <p:spacer/>
-                                <h:outputLabel value="Detalle:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputTextarea value="#{preguntaMB.detalle}" rows="4" cols="66" style="font-weight: normal;"
-                                                     counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                    <h:outputText id="display"/>
+                                <h:panelGrid columns="2" width="100%">
+                                    <p:commandButton value="Registrar" ajax="false" action="#{preguntaMB.save}" />
+                                    <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
                                 </h:panelGrid>
-
-                                <p:spacer/>
-                                <h:outputLabel value="Entidad" style="text-decoration: underline"/>
-                                <p:spacer/>
-
-                                <p:spacer/>
-                                <h:panelGrid columns="3">
-                                    <h:outputLabel value="NM:"/>
-                                    <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
-                                    <p:commandButton actionListener="#{preguntaMB.toEnt}" icon="ui-icon-search" update="ent"/>
-                                </h:panelGrid>
-                                <h:panelGrid columns="2">
-                                    <h:outputLabel value="Nombre:"/>
-                                    <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}" />  
-                                </h:panelGrid>
-
-                                <p:spacer/>
-                                <p:spacer/>
-                                <p:spacer/>
-
-                                <p:spacer/>
-                                <h:outputLabel value="Dato adicional:"/>
-                                <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                    <p:inputText id="tema" size="99" value="#{preguntaMB.datoAdicional}" maxlength="80"/>
-                                    <p:watermark for="tema" value="(Opcional) Este dato solo lo podra ver el especialista"/>
-                                </h:panelGrid>
-
-                            </h:panelGrid>
-                            <h:panelGrid columns="2" width="100%">
-                                <p:commandButton value="Registrar" ajax="false" action="#{preguntaMB.save}" />
-                                <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
-                            </h:panelGrid>
-                                </p:panel>
+                            </p:panel>
                         </h:form>
 
                         <p:dialog id="catDlg" header="Seleccionar Categoría" widgetVar="catDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
@@ -88,7 +89,7 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
                         <p:dialog id="destDlg" header="#{msgs.pr_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
                             <h:form id="destDialogForm">
                                 <h:panelGrid id="pgDest" columns="1">
@@ -128,13 +129,56 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
                         <p:confirmDialog appendTo="@(body)" message="#{msgs.pr_msg_elidestacado}" header="#{msgs.pr_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
                             <h:form id="confirmDelDlgForm">
                                 <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{preguntaMB.deleteOutstanding}"/>
                                 <p:commandButton value="#{msgs.lbl_NO}" onclick="PF('confirmDelDlg').hide()" type="button" />
                             </h:form>
                         </p:confirmDialog>
+
+                        <p:dialog id="entDlg" header="Seleccionar Entidad" widgetVar="entDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
+                            <h:form id="entDialogForm">
+                                <h:panelGrid id="pgEnt" columns="1">
+                                    <p:dataTable id="tbl" value="#{preguntaMB.listaEntidad}" filteredValue="#{preguntaMB.filteredListaEntidad}" var="row" 
+                                                 paginator="true" paginatorPosition="top" selectionMode="single" selection="#{preguntaMB.selectedEntidad}" rows="15" rowIndexVar="rowIndex" draggableColumns="true" rowHover="true" 
+                                                 rowKey="#{row.vcodigoentidad}" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                                 rowStyleClass="#{row.nactivo eq '0' ? 'rowInactive' : null}" emptyMessage="Ningún registro encontrado.">
+                                        <p:column style="width: 10%;" sortBy="#{row.vcodigoentidad}" filterBy="#{row.vcodigoentidad}" filterMatchMode="contains" filterStyle="width: 80%;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="CODIGO"/></f:facet>
+                                            <h:outputText value="#{row.vcodigoentidad}"/>
+                                        </p:column>
+                                        <p:column style="width: 15%;" sortBy="#{row.vnombre}" filterBy="#{row.vnombre}" filterMatchMode="contains" filterStyle="width: 90%;text-transform: uppercase;" priority="1">
+                                            <f:facet name="header"><h:outputText value="NOMBRE"/></f:facet>
+                                            <h:outputText value="#{row.vnombre}"/>
+                                        </p:column>
+                                        <p:column style="width: 25%" sortBy="#{row.vdepartamento}" filterBy="#{row.vdepartamento}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
+                                            <f:facet name="header"><h:outputText value="DEPARTAMENTO"/></f:facet>
+                                            <h:outputText value="#{row.vdepartamento}"/>
+                                        </p:column>
+                                        <p:column style="width: 25%" sortBy="#{row.vprovincia}" filterBy="#{row.vprovincia}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
+                                            <f:facet name="header"><h:outputText value="PROVINCIA"/></f:facet>
+                                            <h:outputText value="#{row.vprovincia}"/>
+                                        </p:column>
+                                        <p:column style="width: 25%" sortBy="#{row.vdistrito}" filterBy="#{row.vdistrito}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
+                                            <f:facet name="header"><h:outputText value="DISTRITO"/></f:facet>
+                                            <h:outputText value="#{row.vdistrito}"/>
+                                        </p:column>
+                                        <p:column style="width: 25%" sortBy="#{row.vtipo}" filterBy="#{row.vtipo}" filterMatchMode="contains" filterStyle="width: 90%;" priority="2">
+                                            <f:facet name="header"><h:outputText value="TIPO"/></f:facet>
+                                            <h:outputText value="#{row.vtipo}"/>
+                                        </p:column>
+                                        <p:column style="width: 8%; text-align: center;">
+                                            <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
+                                            <p:commandLink actionListener="#{preguntaMB.SeleccionarE}" styleClass="GesconLink" title="Seleccionar" oncomplete="PF('entDialog').hide();" update=":newDialogForm:pgNew" >
+                                                <h:outputText class="fa fa-search Fs16" />
+                                                <f:param name="index" value="#{rowIndex}" />
+                                            </p:commandLink>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
                     </f:view>
                 </div>
             </div>

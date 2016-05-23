@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/01/2016 07:52:48 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="pe.gob.mef.gescon.hibernate.domain.MttipoEntidad" table="MTTIPO_ENTIDAD" schema="GESCON3" optimistic-lock="version">
+        <id name="ntipoentidadid" type="big_decimal">
+            <column name="NTIPOENTIDADID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="vdescripcion" type="string">
+            <column name="VDESCRIPCION" length="100" />
+        </property>
+    </class>
+</hibernate-mapping>

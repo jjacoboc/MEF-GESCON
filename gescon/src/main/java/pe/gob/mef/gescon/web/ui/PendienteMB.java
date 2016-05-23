@@ -61,6 +61,7 @@ import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.ContenidoService;
+import pe.gob.mef.gescon.service.EntidadService;
 import pe.gob.mef.gescon.service.HistorialService;
 import pe.gob.mef.gescon.service.ImplementacionService;
 import pe.gob.mef.gescon.service.PreguntaService;
@@ -86,6 +87,7 @@ import pe.gob.mef.gescon.web.bean.BaselegalHist;
 import pe.gob.mef.gescon.web.bean.Categoria;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
 import pe.gob.mef.gescon.web.bean.Consulta;
+import pe.gob.mef.gescon.web.bean.Entidad;
 import pe.gob.mef.gescon.web.bean.Historial;
 import pe.gob.mef.gescon.web.bean.Implementacion;
 import pe.gob.mef.gescon.web.bean.Pregunta;
@@ -192,6 +194,9 @@ public class PendienteMB implements Serializable {
     private Boolean chkDestacado;
     private List<Consulta> listaDestacados;
     private Consulta selectedDestacado;
+    private List<Entidad> listaEntidad;
+    private List<Entidad> filteredListaEntidad;
+    private Entidad selectedEntidad;
     private BigDecimal analisis;
     private int dias;
     private String motivo;
@@ -1243,6 +1248,49 @@ public class PendienteMB implements Serializable {
         this.selectedDestacado = selectedDestacado;
     }
 
+    /**
+     * @return the listaEntidad
+     */
+    public List<Entidad> getListaEntidad() {
+        return listaEntidad;
+    }
+
+    /**
+     * @param listaEntidad the listaEntidad to set
+     */
+    public void setListaEntidad(List<Entidad> listaEntidad) {
+        this.listaEntidad = listaEntidad;
+    }
+
+    /**
+     * @return the filteredListaEntidad
+     */
+    public List<Entidad> getFilteredListaEntidad() {
+        return filteredListaEntidad;
+    }
+
+    /**
+     * @param filteredListaEntidad the filteredListaEntidad to set
+     */
+    public void setFilteredListaEntidad(List<Entidad> filteredListaEntidad) {
+        this.filteredListaEntidad = filteredListaEntidad;
+    }
+
+    /**
+     * @return the selectedEntidad
+     */
+    public Entidad getSelectedEntidad() {
+        return selectedEntidad;
+    }
+
+    /**
+     * @param selectedEntidad the selectedEntidad to set
+     */
+    public void setSelectedEntidad(Entidad selectedEntidad) {
+        this.selectedEntidad = selectedEntidad;
+        
+    }
+    
     public BigDecimal getAnalisis() {
         return analisis;
     }
@@ -2275,11 +2323,44 @@ public class PendienteMB implements Serializable {
     }
 
     public void toEnt(ActionEvent event) {
+//        try {
+//            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
+//            this.setEntidad(service.getNomEntidadbyIdEntidad(this.getEntidadId()));
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//            e.printStackTrace();
+//        }
         try {
-            PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.setEntidad(service.getNomEntidadbyIdEntidad(this.getSelectedPregunta().getNentidadid()));
+            if (event != null) {
+                EntidadService service = (EntidadService) ServiceFinder.findBean("EntidadService");
+                this.setListaEntidad(service.getEntidadesUbigeo());
+            }
         } catch (Exception e) {
-            log.error(e.getMessage());
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void SeleccionarEP(ActionEvent event) {
+
+        try {
+            if (event != null) {
+                int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
+
+                if (!CollectionUtils.isEmpty(this.getFilteredListaEntidad())) {
+                    this.setSelectedEntidad(this.getFilteredListaEntidad().get(index));
+                    this.setEntidad(this.getSelectedEntidad().getVnombre());
+                    this.getSelectedPregunta().setNentidadid(BigDecimal.valueOf(Long.parseLong(this.getSelectedEntidad().getVcodigoentidad())));
+                } else {
+                    this.setSelectedEntidad(this.getListaEntidad().get(index));
+                    this.setEntidad(this.getSelectedEntidad().getVnombre());
+                    this.getSelectedPregunta().setNentidadid(BigDecimal.valueOf(Long.parseLong(this.getSelectedEntidad().getVcodigoentidad())));
+                }
+                this.setFilteredListaEntidad(new ArrayList());
+
+            }
+        } catch (Exception e) {
+            e.getMessage();
             e.printStackTrace();
         }
     }
