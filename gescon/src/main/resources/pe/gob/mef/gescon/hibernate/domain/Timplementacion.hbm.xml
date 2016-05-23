@@ -41,6 +41,9 @@
         <property name="vruta" type="string">
             <column length="400" name="VRUTA"/>
         </property>
+        <property name="vresumen" type="string">
+            <column length="4000" name="VRESUMEN"/>
+        </property>
         <property name="vusuariocreacion" type="string">
             <column name="VUSUARIOCREACION" length="25" />
         </property>

@@ -21,6 +21,7 @@ public class Timplementacion implements java.io.Serializable {
     private String vcontenido;
     private BigDecimal ndestacado;
     private String vruta;
+    private String vresumen;
     private String vmsjespecialista;
     private String vmsjmoderador;
     private String vusuariocreacion;
@@ -129,6 +130,14 @@ public class Timplementacion implements java.io.Serializable {
 
     public void setVruta(String vruta) {
         this.vruta = vruta;
+    }
+
+    public String getVresumen() {
+        return vresumen;
+    }
+
+    public void setVresumen(String vresumen) {
+        this.vresumen = vresumen;
     }
 
     public String getVmsjespecialista() {
