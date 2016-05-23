@@ -2140,14 +2140,12 @@ public class PendienteMB implements Serializable {
                     this.getSelectedAsignacion().setDfecharecepcion(new Date());
                     serviceasig.saveOrUpdate(this.getSelectedAsignacion());
 
-                    if (situacion == 1) {
+                    if (situacion == Integer.parseInt(Constante.SITUACION_POR_VERIFICAR)) { 
                         pagina = "/pages/Pendientes/moderarOmejora?faces-redirect=true";
-                    } else if (situacion == 6) {
-                        if(this.getSelectedOmejora().getNanalisis() != null){
-                            pagina = "/pages/Pendientes/implementarOmejora?faces-redirect=true";
-                        } else {
-                            pagina = "/pages/Pendientes/analizarOmejora?faces-redirect=true";
-                        }
+                    } else if (situacion == Integer.parseInt(Constante.SITUACION_VERIFICADO)) { 
+                        pagina = "/pages/Pendientes/analizarOmejora?faces-redirect=true";
+                    } else if (situacion == Integer.parseInt(Constante.SITUACION_APROBADO)) {
+                        pagina = "/pages/Pendientes/implementarOmejora?faces-redirect=true";
                     }
                     break;
                 }
@@ -6817,6 +6815,39 @@ public class PendienteMB implements Serializable {
 
         } catch (Exception e) {
             log.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    public void saveResumen(ActionEvent event) {
+        try {
+            if(StringUtils.isNotBlank(this.getContenidoPlain())) {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el análisis correspondiente a la oportunidad de mejora.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                return;
+            }
+            
+            LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
+            User user = loginMB.getUser();
+            ImplementacionService implementacionService = (ImplementacionService) ServiceFinder.findBean("ImplementacionService");
+            Implementacion implementacion = implementacionService.getImplementacionByConocimiento(this.getSelectedOmejora().getNconocimientoid());
+            implementacion.setVresumen(this.getContenidoPlain());
+            implementacion.setDfechamodificacion(new Date());
+            implementacion.setVusuariomodificacion(user.getVlogin());
+            
+            implementacionService.saveOrUpdate(implementacion);
+            
+            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            this.getSelectedOmejora().setNsituacionid(BigDecimal.valueOf((long) 6));
+            conocimientoService.saveOrUpdate(this.getSelectedOmejora());
+            
+            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            this.getSelectedAsignacion().setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
+            this.getSelectedAsignacion().setDfechaatencion(new Date());
+            this.getSelectedAsignacion().setNaccionid(BigDecimal.valueOf(Long.parseLong("8")));
+            serviceasig.saveOrUpdate(this.getSelectedAsignacion());
+        } catch (Exception e) {
+            e.getMessage();
             e.printStackTrace();
         }
     }
