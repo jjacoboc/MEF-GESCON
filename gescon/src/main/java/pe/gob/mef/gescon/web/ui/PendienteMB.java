@@ -6729,7 +6729,7 @@ public class PendienteMB implements Serializable {
             asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNespecialista());
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedOmejora().getNcategoriaid()).getNespecialista());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
@@ -6771,6 +6771,7 @@ public class PendienteMB implements Serializable {
             this.getSelectedOmejora().setVobservacion(this.getMotivo());
             this.getSelectedOmejora().setDfechamodificacion(new Date());
             this.getSelectedOmejora().setVusuariomodificacion(user.getVlogin());
+            this.getSelectedOmejora().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_APROBADO)));
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             conocimientoService.saveOrUpdate(this.getSelectedOmejora());
             
@@ -6794,7 +6795,7 @@ public class PendienteMB implements Serializable {
             asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNespecialista());
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedOmejora().getNcategoriaid()).getNespecialista());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);
@@ -6887,7 +6888,7 @@ public class PendienteMB implements Serializable {
             asignacion.setNconocimientoid(this.getSelectedOmejora().getNconocimientoid());
             asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
             CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedPregunta().getNcategoriaid()).getNmoderador());
+            asignacion.setNusuarioid(categoriaService.getCategoriaById(this.getSelectedOmejora().getNcategoriaid()).getNmoderador());
             asignacion.setDfechaasignacion(new Date());
             asignacion.setDfechacreacion(new Date());
             serviceasig.saveOrUpdate(asignacion);

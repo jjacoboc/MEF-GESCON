@@ -227,8 +227,8 @@
                                 
                                 <h:panelGrid columns="2" width="100%" style="padding-left: 0px">
                                     <h:panelGroup>
-                                        <p:commandButton value="Registrar Implementación" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="publicar();"/>
-                                        <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
+                                        <p:commandButton value="Registrar Implementación" oncomplete="publicar();"/>
+                                        <p:commandButton value="Regresar"  ajax="false" action="/index.xhtml" />
                                     </h:panelGroup>
                                     <h:outputText value="(*) Datos obligatorios." style="font-size: 9px;float: right;"/>
                                 </h:panelGrid>
@@ -376,7 +376,7 @@
                         <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar la oportunidad de mejora. Desea Continuar?" header="PUBLICAR OPORTUNIDAD DE MEJORA" widgetVar="confirmPubDlg">
                             <h:form id="confirmPubDlgForm">
                                 <p:inputText id="txt" type="hidden" value="#{pendienteMB.contenidoHtml}"/>
-                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" actionListener="#{pendienteMB.publicarOmejora}" icon="ui-icon-check fa fa-check Fs14 white"/>
+                                <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" actionListener="#{pendienteMB.implementarOmejora}" icon="ui-icon-check fa fa-check Fs14 white"/>
                                 <p:commandButton value="NO" onclick="PF('confirmPubDlg').hide()" icon="ui-icon-close fa fa-close Fs14 white" />
                             </h:form>
                         </p:confirmDialog>
