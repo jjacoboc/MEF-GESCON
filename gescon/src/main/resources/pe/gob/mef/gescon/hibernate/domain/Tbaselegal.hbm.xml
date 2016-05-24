@@ -21,13 +21,13 @@
             <column name="NTIPORANGOID" precision="22" scale="0" />
         </property>
         <property name="vnombre" type="string">
-            <column name="VNOMBRE" length="400" />
+            <column name="VNOMBRE" length="2000" />
         </property>
         <property name="vnumero" type="string">
             <column name="VNUMERO" length="100" />
         </property>
         <property name="vsumilla" type="string">
-            <column name="VSUMILLA" length="400" />
+            <column name="VSUMILLA" length="4000" />
         </property>
         <property name="dfechavigencia" type="timestamp">
             <column name="DFECHAVIGENCIA" />
@@ -73,6 +73,9 @@
         </property>
         <property name="ndestacado" type="big_decimal">
             <column name="NDESTACADO" precision="22" scale="0" />
+        </property>
+        <property name="ncodigowiki" type="big_decimal">
+            <column name="NCODIGOWIKI" precision="22" scale="0" />
         </property>
         <set name="tvinculoBaselegals" table="TVINCULO_BASELEGAL" inverse="true" lazy="true" fetch="select">
             <key>

@@ -34,6 +34,7 @@ public class Tbaselegal implements java.io.Serializable {
     private String vmsjusuariocreacion;
     private String vmsjmoderador;
     private BigDecimal ndestacado;
+    private BigDecimal ncodigowiki;
     private Set tvinculoBaselegals = new HashSet(0);
     private Set tarchivos = new HashSet(0);
 
@@ -263,6 +264,14 @@ public class Tbaselegal implements java.io.Serializable {
 
     public void setNdestacado(BigDecimal ndestacado) {
         this.ndestacado = ndestacado;
+    }
+
+    public BigDecimal getNcodigowiki() {
+        return ncodigowiki;
+    }
+
+    public void setNcodigowiki(BigDecimal ncodigowiki) {
+        this.ncodigowiki = ncodigowiki;
     }
 
     public Set getTvinculoBaselegals() {

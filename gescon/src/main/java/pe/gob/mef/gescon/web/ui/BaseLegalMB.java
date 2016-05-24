@@ -99,6 +99,7 @@ import pe.gob.mef.gescon.web.bean.Vinculo;
 import pe.gob.mef.gescon.web.bean.VinculoBaselegal;
 import pe.gob.mef.gescon.web.bean.VinculoBaselegalHist;
 import pe.gob.mef.gescon.web.bean.VinculoHist;
+import pe.gob.mef.gescon.web.bean.Wiki;
 
 /**
  *
@@ -149,6 +150,9 @@ public class BaseLegalMB implements Serializable {
     private BaselegalHist selectedHistorialRight;
     private List<Consulta> listaDestacados;
     private Consulta selectedDestacado;
+    private List<Conocimiento> listaWikis;
+    private Conocimiento selectedWiki;
+    private BigDecimal codigoWiki;
 
     /**
      * Creates a new instance of BaseLegalMB
@@ -564,6 +568,30 @@ public class BaseLegalMB implements Serializable {
         this.selectedDestacado = selectedDestacado;
     }
 
+    public List<Conocimiento> getListaWikis() {
+        return listaWikis;
+    }
+
+    public void setListaWikis(List<Conocimiento> listaWikis) {
+        this.listaWikis = listaWikis;
+    }
+
+    public Conocimiento getSelectedWiki() {
+        return selectedWiki;
+    }
+
+    public void setSelectedWiki(Conocimiento selectedWiki) {
+        this.selectedWiki = selectedWiki;
+    }
+
+    public BigDecimal getCodigoWiki() {
+        return codigoWiki;
+    }
+
+    public void setCodigoWiki(BigDecimal codigoWiki) {
+        this.codigoWiki = codigoWiki;
+    }
+
     @PostConstruct
     public void init() {
         try {
@@ -880,17 +908,7 @@ public class BaseLegalMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if (this.getChkDestacado()) {
-                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
-                HashMap filter = new HashMap();
-                filter.put("ntipoconocimientoid", Constante.BASELEGAL);
-                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
-                if (cant.intValue() >= 10) {
-                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
-                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return;
-                }
-            }
+            
             if (!CollectionUtils.isEmpty(this.getListaTarget())) {
                 for (BaseLegal v : this.getListaTarget()) {
                     if(v.getNestadoid().equals(BigDecimal.ZERO)) {
@@ -916,7 +934,7 @@ public class BaseLegalMB implements Serializable {
             base.setNgobregional(this.getChkGobRegional() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
             base.setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
-            base.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            base.setNcodigowiki(this.getCodigoWiki());
             base.setVsumilla(this.getComentario().trim());
             base.setDfechavigencia(this.getFechaVigencia());
             base.setVtema(this.getTema());
@@ -1230,6 +1248,9 @@ public class BaseLegalMB implements Serializable {
             this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
             this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
             this.setChkDestacado(this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ONE));
+            this.setCodigoWiki(this.getSelectedBaseLegal().getNcodigowiki());
+            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            this.setSelectedWiki(conocimientoService.getConocimientoById(this.getCodigoWiki()));
             RangoService rangoService = (RangoService) ServiceFinder.findBean("RangoService");
             this.setListaRangos(new Items(rangoService.getRangosActivosByTipo(this.getSelectedBaseLegal().getNtiporangoid()), null, "nrangoid", "vnombre").getItems());
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
@@ -1327,6 +1348,7 @@ public class BaseLegalMB implements Serializable {
             this.getSelectedBaseLegal().setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNcodigowiki(this.getCodigoWiki());
             this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
             this.getSelectedBaseLegal().setDfechavigencia(this.getSelectedBaseLegal().getDfechavigencia());
             this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
@@ -1591,12 +1613,15 @@ public class BaseLegalMB implements Serializable {
             this.setChkGobLocal(this.getSelectedBaseLegal().getNgoblocal().equals(BigDecimal.ONE));
             this.setChkMancomunidades(this.getSelectedBaseLegal().getNmancomunidades().equals(BigDecimal.ONE));
             this.setChkDestacado(this.getSelectedBaseLegal().getNdestacado().equals(BigDecimal.ONE));
+            this.setCodigoWiki(this.getSelectedBaseLegal().getNcodigowiki());
+            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            this.setSelectedWiki(conocimientoService.getConocimientoById(this.getCodigoWiki()));
             RangoService rangoService = (RangoService) ServiceFinder.findBean("RangoService");
             this.setListaRangos(new Items(rangoService.getRangosActivosByTipo(this.getSelectedBaseLegal().getNtiporangoid()), null, "nrangoid", "vnombre").getItems());
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
-            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
+            this.setPickList(new DualListModel<>(this.getListaSource(), this.getListaTarget()));
             this.setFilteredListaBaseLegal(new ArrayList());
         } catch (Exception e) {
             e.getMessage();
@@ -1685,6 +1710,7 @@ public class BaseLegalMB implements Serializable {
             this.getSelectedBaseLegal().setNgoblocal(this.getChkGobLocal() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNmancomunidades(this.getChkMancomunidades() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBaseLegal().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            this.getSelectedBaseLegal().setNcodigowiki(this.getCodigoWiki());
             this.getSelectedBaseLegal().setVsumilla(this.getSelectedBaseLegal().getVsumilla().trim());
             this.getSelectedBaseLegal().setDfechavigencia(this.getSelectedBaseLegal().getDfechavigencia());
             this.getSelectedBaseLegal().setVtema(this.getSelectedBaseLegal().getVtema());
@@ -2257,6 +2283,27 @@ public class BaseLegalMB implements Serializable {
             HSSFCell cell = header.getCell(j);
             cell.setCellStyle(headerStyle);
             sheet.autoSizeColumn(j);
+        }
+    }
+    
+    public void listarWikisPublicados(ActionEvent event) {
+        try {
+            ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
+            this.setListaWikis(conocimientoService.getConocimientosActivedPublicByType(Constante.WIKI));
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void onRowSelect(ActionEvent event) {
+        try {
+            if(this.getSelectedWiki() != null) {
+                this.setCodigoWiki(this.getSelectedWiki().getNconocimientoid());
+            }
+        } catch(Exception e) {
+            e.getMessage();
+            e.printStackTrace();
         }
     }
 }

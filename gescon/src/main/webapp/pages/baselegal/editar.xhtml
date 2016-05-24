@@ -49,7 +49,7 @@
                                     <h:outputText value="#{msgs.bl_lbl_nombre}"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                         <p:inputTextarea value="#{baseLegalMB.selectedBaseLegal.vnombre}" rows="4" cols="100" styleClass="Fs14"
-                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                                         counter="display" maxlength="2000" counterTemplate="{0} caracteres restantes." />
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
 
@@ -104,7 +104,7 @@
                                     <h:outputLabel value="#{msgs.bl_lbl_sumilla}"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                         <p:inputTextarea value="#{baseLegalMB.selectedBaseLegal.vsumilla}" rows="4" cols="66" style="font-weight: normal;"
-                                                         counter="counter" maxlength="400" counterTemplate="{0} caracteres restantes." />
+                                                         counter="counter" maxlength="4000" counterTemplate="{0} caracteres restantes." />
                                         <h:outputText id="counter"/>
                                     </h:panelGrid>
 
@@ -119,6 +119,25 @@
                                     <p:spacer/>
                                     <h:outputText value="#{msgs.bl_lbl_destacado}"/>
                                     <p:selectBooleanCheckbox value="#{baseLegalMB.chkDestacado}" />
+                                    
+                                    <p:spacer/>
+                                    <h:outputText value="Detalle Vinculos: "/>
+                                    <h:panelGrid id="detVinculo" columns="1" cellspacing="0" cellpadding="0">
+                                        <h:panelGrid columns="3" cellspacing="0" cellpadding="0">
+                                            <p:inputText size="10" value="#{baseLegalMB.codigoWiki}" styleClass="Fs14" style="text-transform: uppercase;" maxlength="10"/>
+                                            <p:spacer width="5"/>
+                                            <p:commandLink actionListener="#{baseLegalMB.listarWikisPublicados}" oncomplete="PF('listDialog').show();" update=":listDialogForm:pgList">
+                                                <h:outputText class="fa fa-search Fs14"/>
+                                            </p:commandLink>
+                                        </h:panelGrid>
+                                        <h:commandLink actionListener="#{consultaMB.view}" rendered="#{not empty baseLegalMB.selectedWiki.vtitulo}" styleClass="GesconLink" >
+                                            <h:outputText value="Ir a #{baseLegalMB.selectedWiki.vtitulo}" styleClass="Fs12"/>
+                                            <f:param name="id" value="#{baseLegalMB.codigoWiki}"/>
+                                            <f:param name="idTipo" value="3"/>
+                                            <f:param name="popup" value="true"/>
+                                            <f:param name="tempPopup" value="true"/>
+                                        </h:commandLink>
+                                    </h:panelGrid>
                                 </h:panelGrid>
                                 <h:panelGrid columns="1">
                                     <p:spacer/>
@@ -129,7 +148,7 @@
                                         <p:commandButton value="#{msgs.bl_btn_vinculo}" actionListener="#{baseLegalMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pgPick" styleClass="ui-link Fs14"/>
                                         <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada."
                                                      rowStyleClass="#{t.nestadoid eq '4' ? 'blink' : null}">
-                                            <p:column style="width: 25%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                            <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
                                                 <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
                                                     <h:outputText value="#{t.vnumero}"/>
                                                     <f:param name="id" value="#{t.nbaselegalid}"/>
@@ -146,7 +165,7 @@
                                                     <f:converter converterId="converterCategoria"/>
                                                 </h:outputText>
                                             </p:column>
-                                            <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                                            <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
                                                 <p:selectOneMenu value="#{t.nestadoid}" style="width: 110px;" panelStyle="font-size: 10px;">
                                                     <f:selectItem itemLabel="Seleccione" itemValue="0" />
                                                     <f:selectItems value="#{listaSessionMB.listaEstadoBaseLegalVinculo}"/>
@@ -207,6 +226,36 @@
                                             <h:outputText value="#{node.vnombre}"/>
                                         </p:treeNode>
                                     </p:tree>
+                                </h:panelGrid>
+                            </h:form>
+                        </p:dialog>
+                        
+                        <p:dialog id="listDlg" header="Listado de Wikis" widgetVar="listDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
+                            <h:form id="listDialogForm">
+                                <h:panelGrid id="pgList" columns="1">
+                                    <p:dataTable id="list" value="#{baseLegalMB.listaWikis}" var="row" paginator="true" rowHover="true"
+                                                 rows="10" rowIndexVar="rowIndex" paginatorPosition="top" emptyMessage="#{msgs.lbl_listavacia}"
+                                                 paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                                 selection="#{baseLegalMB.selectedWiki}" rowKey="#{row.nconocimientoid}">
+                                        <p:column selectionMode="single" style="width:16px;text-align:center"/>
+                                        <p:column style="width: 47%" priority="1">
+                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna01}"/></f:facet>
+                                            <h:outputText value="#{row.vtitulo}"/>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 18%" priority="2">
+                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna02}"/></f:facet>
+                                            <h:outputText value="#{row.ncategoriaid}">
+                                                <f:converter converterId="converterCategoria"/>
+                                            </h:outputText>
+                                        </p:column>
+                                        <p:column style="text-align: center; width: 15%;" priority="3">
+                                            <f:facet name="header"><h:outputText value="#{msgs.wk_lbl_columna03}"/></f:facet>
+                                            <h:outputText value="#{row.vfechapublicacion}"/>
+                                        </p:column>
+                                        <f:facet name="footer">
+                                            <p:commandButton process="list" actionListener="#{baseLegalMB.onRowSelect}" update=":f:detVinculo" value="Seleccionar" oncomplete="PF('listDialog').hide()" styleClass="Fleft"/>
+                                        </f:facet>
+                                    </p:dataTable>
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>

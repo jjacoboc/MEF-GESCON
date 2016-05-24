@@ -373,7 +373,7 @@
                             </h:form>
                         </p:confirmDialog>
                         
-                        <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar la oportunidad de mejora. Desea Continuar?" header="PUBLICAR OPORTUNIDAD DE MEJORA" widgetVar="confirmPubDlg">
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a implementar la oportunidad de mejora. Desea Continuar?" header="PUBLICAR OPORTUNIDAD DE MEJORA" widgetVar="confirmPubDlg">
                             <h:form id="confirmPubDlgForm">
                                 <p:inputText id="txt" type="hidden" value="#{pendienteMB.contenidoHtml}"/>
                                 <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" actionListener="#{pendienteMB.implementarOmejora}" icon="ui-icon-check fa fa-check Fs14 white"/>

@@ -42,6 +42,7 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
     private String vmsjusuariocreacion;
     private String vmsjmoderador;
     private BigDecimal ndestacado;
+    private BigDecimal ncodigowiki;
     private Archivo archivo;
     private List<Archivo> listaArchivo;
     private String vfechavigencia;
@@ -355,6 +356,14 @@ public class BaseLegal implements Serializable, Comparable<BaseLegal>{
 
     public void setNdestacado(BigDecimal ndestacado) {
         this.ndestacado = ndestacado;
+    }
+
+    public BigDecimal getNcodigowiki() {
+        return ncodigowiki;
+    }
+
+    public void setNcodigowiki(BigDecimal ncodigowiki) {
+        this.ncodigowiki = ncodigowiki;
     }
 
     /**

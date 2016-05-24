@@ -254,7 +254,7 @@
                                 <h:panelGrid columns="2" width="100%" style="padding-left: 0px">
                                     <h:panelGroup>
                                         <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="actualizar();"/>
-                                        <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="publicar();"/>
+                                        <p:commandButton value="Verificar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="publicar();"/>
                                         <p:commandButton value="Solicitar Informacion Adicional" rendered="#{pendienteMB.getfButtonMod()}" actionListener="#{pendienteMB.toSi}" update=":siModDialogForm:pgSiMod" oncomplete="solicitar();" />
                                         <p:commandButton value="Rechazar" rendered="#{pendienteMB.getfButtonMod()}" oncomplete="PF('confirmRechDlg').show();"/>
                                         <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonMod()}" ajax="false" action="/index.xhtml" />
@@ -451,7 +451,7 @@
                             </h:form>
                         </p:confirmDialog>
                         
-                        <p:confirmDialog appendTo="@(body)" message="Se procederá a publicar la oportunidad de mejora. Desea Continuar?" header="PUBLICAR OPORTUNIDAD DE MEJORA" widgetVar="confirmPubDlg">
+                        <p:confirmDialog appendTo="@(body)" message="Se procederá a verificar la oportunidad de mejora. Desea Continuar?" header="PUBLICAR OPORTUNIDAD DE MEJORA" widgetVar="confirmPubDlg">
                             <h:form id="confirmPubDlgForm">
                                 <p:inputText id="txt" type="hidden" value="#{pendienteMB.contenidoHtml}"/>
                                 <p:commandButton value="SI" oncomplete="PF('confirmPubDlg').hide()" actionListener="#{pendienteMB.publicarOmejora}" icon="ui-icon-check fa fa-check Fs14 white"/>
