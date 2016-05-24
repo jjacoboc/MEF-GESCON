@@ -2194,6 +2194,8 @@ public class PendienteMB implements Serializable {
                         pagina = "/pages/Pendientes/analizarOmejora?faces-redirect=true";
                     } else if (situacion == Integer.parseInt(Constante.SITUACION_APROBADO)) {
                         pagina = "/pages/Pendientes/implementarOmejora?faces-redirect=true";
+                    } else if (situacion == Integer.parseInt(Constante.SITUACION_IMPLEMENTADO)) {
+                        pagina = "/pages/Pendientes/resumenOmejora?faces-redirect=true";
                     }
                     break;
                 }
@@ -6845,7 +6847,7 @@ public class PendienteMB implements Serializable {
             
             implementacion.setDfechacreacion(new Date());
             implementacion.setVusuariocreacion(usuario.getVlogin());
-            implementacion.setNsituacionid(BigDecimal.valueOf((long) 6));
+            implementacion.setNsituacionid(BigDecimal.valueOf((long) 11));
             implementacionService.saveOrUpdate(implementacion);
             
             String np = this.pathom.concat(this.getSelectedOmejora().getNconocimientoid().toString()).concat("/impl/");
