@@ -1142,17 +1142,6 @@ public class BuenaPracticaMB implements Serializable{
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(this.getChkDestacado()) {
-                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
-                HashMap filter = new HashMap();
-                filter.put("ntipoconocimientoid", Constante.BUENAPRACTICA);
-                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
-                if(cant.intValue() >= 10) {
-                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
-                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return;
-                }
-            }
             /* Validando si exiten vínculos de bases legales derogadas */
             int contador = 0;
             if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
@@ -1171,7 +1160,7 @@ public class BuenaPracticaMB implements Serializable{
             conocimiento.setNtipoconocimientoid(Constante.BUENAPRACTICA);
             conocimiento.setNconocimientoid(conocimientoService.getNextPK());
             conocimiento.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
-            conocimiento.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            conocimiento.setNdestacado(BigDecimal.ZERO);
             conocimiento.setVtitulo(StringUtils.upperCase(this.getNombre()));
             if(this.getDescripcionPlain().length() < 400) {
                 conocimiento.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));

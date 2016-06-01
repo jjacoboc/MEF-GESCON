@@ -38,7 +38,26 @@
                                         <p:selectBooleanCheckbox value="#{pendienteMB.chkDestacado}" />
                                         <h:outputText value="(Nota: Las Bases Legales destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
                                     </h:panelGrid>
+                                    
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_rango}"/>
+                                    <p:selectOneMenu id="codcese" value="#{pendienteMB.selectedBaseLegal.nrangoid}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;">
+                                        <f:selectItem itemValue="" itemLabel="Seleccione" />
+                                        <f:selectItems value="#{listaSessionMB.listaRangoBaseLegal}"/>
+                                    </p:selectOneMenu>
+                                    
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_numero}"/>
+                                    <p:inputText size="25" value="#{pendienteMB.selectedBaseLegal.vnumero}" style="text-transform: uppercase;" maxlength="25"/>
 
+                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
+                                    <h:outputLabel value="#{msgs.bl_lbl_nombre}"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{pendienteMB.selectedBaseLegal.vnombre}" rows="4" cols="100" styleClass="Fs14"
+                                                         counter="display0" maxlength="2000" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display0"/>
+                                    </h:panelGrid>
+                                    
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="#{msgs.bl_lbl_archivo}"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
@@ -56,21 +75,10 @@
                                             </f:facet>
                                         </p:lightBox>
                                     </h:panelGrid>
-
+                                    
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
-                                    <h:outputLabel value="#{msgs.bl_lbl_nombre}"/>
-                                    <p:inputText size="50" value="#{pendienteMB.selectedBaseLegal.vnombre}" style="text-transform: uppercase;" maxlength="25"/>
-
-                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
-                                    <h:outputLabel value="#{msgs.bl_lbl_numero}"/>
-                                    <p:inputText size="25" value="#{pendienteMB.selectedBaseLegal.vnumero}" style="text-transform: uppercase;" maxlength="25"/>
-
-                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
-                                    <h:outputLabel value="#{msgs.bl_lbl_rango}"/>
-                                    <p:selectOneMenu id="codcese" value="#{pendienteMB.selectedBaseLegal.nrangoid}" panelStyle="font-size: 10px;width: 150px;" style="font-size: 10px;">
-                                        <f:selectItem itemValue="" itemLabel="Seleccione" />
-                                        <f:selectItems value="#{listaSessionMB.listaRangoBaseLegal}"/>
-                                    </p:selectOneMenu>
+                                    <h:outputLabel value="#{msgs.bl_lbl_fecha}"/>
+                                    <p:calendar id="fcese" locale="es" value="#{pendienteMB.selectedBaseLegal.dfechavigencia}" size="12" pattern="dd/MM/yyyy" showOn="button" readonlyInput="true" showButtonPanel="true"/>
 
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="#{msgs.bl_lbl_ambito}"/>                                
@@ -84,14 +92,10 @@
                                     <p:spacer/>
                                     <h:outputLabel value="#{msgs.bl_lbl_sumilla}"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{pendienteMB.selectedBaseLegal.vsumilla}" rows="4" cols="66" style="font-weight: normal;"
-                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                        <h:outputText id="display"/>
+                                        <p:inputTextarea value="#{pendienteMB.selectedBaseLegal.vsumilla}" rows="4" cols="100" styleClass="Fs14"
+                                                         counter="counter" maxlength="4000" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="counter"/>
                                     </h:panelGrid>
-
-                                    <h:outputLabel value="#{msgs.icon_asterisk}"/>
-                                    <h:outputLabel value="#{msgs.bl_lbl_fecha}"/>
-                                    <p:calendar id="fcese" locale="es" value="#{pendienteMB.selectedBaseLegal.dfechavigencia}" size="8" pattern="dd/MM/yyyy" showOn="button" readonlyInput="true" showButtonPanel="true"/>
 
                                     <h:outputLabel value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="#{msgs.bl_lbl_tema}"/>
@@ -107,13 +111,13 @@
                                 </h:panelGrid>
                                 <p:fieldset>
                                     <h:panelGrid id="pgEditVinc" columns="1" cellpadding="0" cellspacing="0">
-                                        <p:commandLink value="#{msgs.bl_btn_vinculo}" actionListener="#{pendienteMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pgPick"/>
+                                        <p:commandButton value="#{msgs.bl_btn_vinculo}" actionListener="#{pendienteMB.loadPickList}" oncomplete="PF('pickDialog').show();" update=":pickDialogForm:pgPick" styleClass="ui-link Fs14"/>
                                         <p:spacer height="5"/>
                                         <p:dataTable value="#{pendienteMB.listaTarget}" var="t" emptyMessage="Ninguna base legal vinculada.">
-                                            <p:column style="width: 10%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                                            <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
                                                 <h:outputText value="#{t.vnumero}"/>
                                             </p:column>
-                                            <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
+                                            <p:column style="width: 45%" headerText="#{msgs.bl_lbl_columna08}">
                                                 <h:outputText value="#{t.vnombre}"/>
                                             </p:column>
                                             <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">

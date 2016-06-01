@@ -1201,17 +1201,6 @@ public class OportunidadMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(this.getChkDestacado()) {
-                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
-                HashMap filter = new HashMap();
-                filter.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA);
-                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
-                if(cant.intValue() >= 10) {
-                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
-                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return;
-                }
-            }
             /* Validando si exiten vínculos de bases legales derogadas */
             int contador = 0;
             if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
@@ -1244,7 +1233,7 @@ public class OportunidadMB implements Serializable {
             }
             String np0 = this.path.concat(conocimiento.getNconocimientoid().toString()).concat("/0/");
             conocimiento.setVruta(np0);
-            conocimiento.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            conocimiento.setNdestacado(BigDecimal.ZERO);
             conocimiento.setDfechacreacion(new Date());
             conocimiento.setVusuariocreacion(user.getVlogin());
             conocimientoService.saveOrUpdate(conocimiento);

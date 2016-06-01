@@ -24,7 +24,7 @@
             <column name="NENTIDADID" precision="22" scale="0" />
         </property>
         <property name="vdatoadicional" type="string">
-            <column name="VDATOADICIONAL" length="100" />
+            <column name="VDATOADICIONAL" length="2000" />
         </property>
         <property name="vrespuesta" type="string">
             <column name="VRESPUESTA" length="400" />

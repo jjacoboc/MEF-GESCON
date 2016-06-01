@@ -256,7 +256,7 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
         }
         if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
             sql.append("SELECT ");
-            sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, '' AS NUMERO, b.vasunto AS NOMBRE , b.vrespuesta AS SUMILLA, ");
+            sql.append("    a.nvinculoid as ID, a.nconocimientovinc as IDCONOCIMIENTO, '' AS NUMERO, b.vasunto AS NOMBRE , b.vdetalle AS SUMILLA, ");
             sql.append("    b.ncategoriaid AS IDCATEGORIA, c.vnombre AS CATEGORIA, b.dfechacreacion AS FECHA, ");
             sql.append("    2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
             sql.append("    b.nsituacionid AS IDESTADO, d.vnombre AS ESTADO ");
@@ -329,7 +329,7 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
             }
             if(StringUtils.isNotBlank(ntipoconocimientoid) && ntipoconocimientoid.equals("2")) {
                 sql.append("SELECT ");
-                sql.append("    a.npreguntaid AS ID, '' AS NUMERO, a.vasunto AS NOMBRE, a.vrespuesta AS SUMILLA, ");
+                sql.append("    a.npreguntaid AS ID, '' AS NUMERO, a.vasunto AS NOMBRE, a.vdetalle AS SUMILLA, ");
                 sql.append("    a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechacreacion AS FECHA, ");
                 sql.append("    2 AS IDTIPOCONOCIMIENTO, 'Preguntas y Respuestas' AS TIPOCONOCIMIENTO, ");
                 sql.append("    a.nsituacionid AS IDESTADO, c.vnombre AS ESTADO ");

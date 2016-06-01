@@ -131,7 +131,7 @@
                                     
                                     <h:outputText value="#{msgs.wk_lbl_detalle}"/>
                                     <p:fieldset id="fs">
-                                        <p:commandButton value="#{msgs.wk_btn_seccion}" actionListener="#{wikiMB.toAddSection}" oncomplete="secDialog();" update=":f:pgSec" styleClass="ui-link Fs14"/>
+                                        <p:commandButton id="btnSec" value="#{msgs.wk_btn_seccion}" actionListener="#{wikiMB.toAddSection}" oncomplete="secDialog();" update=":f:pgSec" styleClass="ui-link Fs14"/>
                                         <p:overlayPanel id="secPanel" widgetVar="secPanel" for="btnSec" hideEffect="fade" showCloseIcon="true" style="border: 2px solid black;">
                                             <h:panelGrid id="pgSec" columns="1" >
                                                 <h:outputText value="#{msgs.wk_lbl_pnlSeccion}" styleClass="FontBold"/>

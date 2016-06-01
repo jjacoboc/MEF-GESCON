@@ -218,7 +218,7 @@
                             <h:form id="resForm">
                                 <h:panelGrid id="pgRes" columns="1">
                                     <h:outputText value="Resumen:"/>
-                                    <p:inputTextarea value="#{pendienteMB.contenidoPlain}" rows="10" />
+                                    <p:inputTextarea value="#{pendienteMB.contenidoPlain}" rows="10" cols="100" />
                                     <p:commandButton value="Registrar Resumen" actionListener="#{pendienteMB.saveResumen}" update=":f:growl" styleClass="ui-link Fs14"/>
                                 </h:panelGrid>
                             </h:form>

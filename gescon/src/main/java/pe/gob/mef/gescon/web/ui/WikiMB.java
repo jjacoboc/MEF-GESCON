@@ -968,26 +968,27 @@ public class WikiMB implements Serializable {
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     if (this.getSelectedWiki() != null) {
                         filters.put("nconocimientoid", this.getSelectedWiki().getNconocimientoid().toString());
+                        this.setListaTargetVinculos(new ArrayList());
                         if (id.equals(Constante.BASELEGAL)) {
                             this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
-                            this.setListaTargetVinculos(this.getListaTargetVinculosBL());
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
                         } else if (id.equals(Constante.PREGUNTAS)) {
                             this.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
-                            this.setListaTargetVinculos(this.getListaTargetVinculosPR());
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
                         } else if (id.equals(Constante.WIKI)) {
                             this.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
-                            this.setListaTargetVinculos(this.getListaTargetVinculosWK());
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
                         } else if (id.equals(Constante.CONTENIDO)) {
                             this.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
-                            this.setListaTargetVinculos(this.getListaTargetVinculosCT());
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
                         } else if (id.equals(Constante.BUENAPRACTICA)) {
                             this.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
-                            this.setListaTargetVinculos(this.getListaTargetVinculosBP());
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
                         } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
                             this.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
-                            this.setListaTargetVinculos(this.getListaTargetVinculosOM());
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
                         }
-                        List<String> ids = new ArrayList<String>();
+                        List<String> ids = new ArrayList<>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
@@ -1018,7 +1019,7 @@ public class WikiMB implements Serializable {
                         this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
                         this.setListaSourceVinculos(this.getListaSourceVinculosOM());
                     }
-                    this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
                 }
             }
         } catch (Exception e) {
@@ -1142,18 +1143,6 @@ public class WikiMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            /* Validando si la cantidad de wikis destacados llegó al límite (10 max.).*/
-            if (this.getChkDestacado()) {
-                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
-                HashMap filter = new HashMap();
-                filter.put("ntipoconocimientoid", Constante.WIKI);
-                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
-                if (cant.intValue() >= 10) {
-                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
-                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return;
-                }
-            }
             /* Validando si exiten vínculos de bases legales derogadas */
             int contador = 0;
             if (CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
@@ -1184,7 +1173,7 @@ public class WikiMB implements Serializable {
                 wiki.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 300)));
             }
             wiki.setNactivo(BigDecimal.ONE);
-            wiki.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            wiki.setNdestacado(BigDecimal.ZERO);
             if (contador > 0) {
                 wiki.setNflgvinculo(BigDecimal.ONE);
             } else {

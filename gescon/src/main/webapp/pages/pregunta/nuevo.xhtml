@@ -23,7 +23,7 @@
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="Asunto:"/>
-                                    <p:inputText size="99" value="#{preguntaMB.asunto}" maxlength="80"/>
+                                    <p:inputText size="100" value="#{preguntaMB.asunto}" maxlength="80"/>
 
                                     <p:spacer/>
                                     <h:outputLabel value="Detalle:"/>
@@ -36,27 +36,26 @@
                                     <p:spacer/>
                                     <h:outputLabel value="Entidad" style="text-decoration: underline"/>
                                     <p:spacer/>
-
-                                    
                                     
                                     <p:spacer/>
-                                    <h:outputLabel value="Codigo de Unidad Ejecutora:"/>
+                                    <h:outputLabel value="Codigo de Unidad Ejecutora:" style="white-space: nowrap;"/>
                                     <h:panelGrid columns="4">
                                         <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
                                         <p:commandButton actionListener="#{preguntaMB.toEnt}" oncomplete="PF('entDialog').show();" update=":entDialogForm:pgEnt"  icon="ui-icon-search" />
-                                        <h:outputLabel value="Nombre:"/>
-                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}" /> 
+                                        <h:outputLabel value="Nombre:" />
+                                        <p:inputText id="ent" size="88" value="#{preguntaMB.entidad}" disabled="true" styleClass="Fs12 FontBold" /> 
                                     </h:panelGrid>
-                                    
 
                                     <p:spacer/>
                                     <p:spacer/>
                                     <p:spacer/>
 
                                     <p:spacer/>
-                                    <h:outputLabel value="Dato adicional:"/>
+                                    <h:outputLabel value="Dato adicional:" style="white-space: nowrap;"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputText id="tema" size="99" value="#{preguntaMB.datoAdicional}" maxlength="80"/>
+                                        <p:inputTextarea id="tema" value="#{preguntaMB.datoAdicional}" rows="4" cols="100" styleClass="Fs14"
+                                                         counter="display1" maxlength="2000" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display1"/>
                                         <p:watermark for="tema" value="(Opcional) Este dato solo lo podra ver el especialista"/>
                                     </h:panelGrid>
 

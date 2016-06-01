@@ -54,7 +54,7 @@
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Asunto:"/>
-                                    <p:inputText size="99" value="#{pendienteMB.selectedPregunta.vasunto}" readonly="#{pendienteMB.getfButtonModPub() eq false}" maxlength="80"/>
+                                    <p:inputText size="100" value="#{pendienteMB.selectedPregunta.vasunto}" readonly="#{pendienteMB.getfButtonModPub() eq false}" maxlength="80"/>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
@@ -69,7 +69,7 @@
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
-                                    <h:outputLabel value="Respuesta"/>
+                                    <h:outputLabel value="Respuesta:"/>
                                     <textarea id="descHtml" name="descHtml">#{pendienteMB.selectedPregunta.vrespuesta}</textarea>
                                     
                                     <p:spacer width="10"/>
@@ -78,21 +78,24 @@
                                     <h:outputLabel value="Entidad" style="text-decoration: underline" />
                                     <p:spacer/>
 
-                                    <h:panelGrid columns="3">
-                                        <h:outputLabel value="Codigo de Unidad Ejecutora:"/>
+                                    <h:outputLabel value="Codigo de Unidad Ejecutora:" style="white-space: nowrap;"/>
+                                    <h:panelGrid columns="4">
                                         <p:inputText size="5" value="#{pendienteMB.selectedPregunta.nentidadid}" maxlength="5" readonly="#{pendienteMB.getfButtonMod() eq false}"/>
                                         <p:commandButton actionListener="#{pendienteMB.toEnt}" oncomplete="PF('entDialog').show();" update=":entDialogForm:pgEnt" icon="ui-icon-search" />
-                                    </h:panelGrid>
-                                    <h:panelGrid columns="2">
                                         <h:outputLabel value="Nombre:"/>
-                                        <p:inputText id="ent" size="50" value="#{pendienteMB.entidad}" readonly="#{pendienteMB.getfButtonMod() eq false}"/>  
+                                        <p:inputText id="ent" size="88" value="#{pendienteMB.entidad}" disabled="true" styleClass="Fs12 FontBold"/>  
                                     </h:panelGrid>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
-                                    <h:outputLabel value="Dato adicional:"/>
-                                    <p:inputText id="tema" size="99" value="#{pendienteMB.selectedPregunta.vdatoadicional}" maxlength="80" readonly="#{pendienteMB.getfButtonModPub() eq false}"/>
+                                    <h:outputLabel value="Dato adicional:" style="white-space: nowrap;"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea id="tema" value="#{pendienteMB.selectedPregunta.vdatoadicional}" rows="4" cols="100" styleClass="Fs14"
+                                                         counter="display1" maxlength="2000" counterTemplate="{0} caracteres restantes." readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
+                                        <h:outputText id="display1"/>
+                                        <p:watermark for="tema" value="(Opcional) Este dato solo lo podra ver el especialista"/>
+                                    </h:panelGrid>
                                 </h:panelGrid>
                                 
                                 <p:spacer width="10"/>
@@ -109,7 +112,7 @@
                                                         <h:outputText value="#{p.nombre}"/>
                                                     </p:column>
                                                     <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
-                                                        <h:outputText value="#{p.sumilla}"/>
+                                                        <h:outputText value="#{p.sumilla}" escape="false"/>
                                                     </p:column>
                                                 </p:dataTable>
                                             </p:tab>
@@ -120,7 +123,7 @@
                                                         <h:outputText value="#{p.nombre}"/>
                                                     </p:column>
                                                     <p:column style="width: 55%" headerText="#{msgs.bl_lbl_columna08}">
-                                                        <h:outputText value="#{p.sumilla}" />
+                                                        <h:outputText value="#{p.sumilla}" escape="false"/>
                                                     </p:column>
                                                     <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
                                                         <h:outputText value="#{p.categoria}" />

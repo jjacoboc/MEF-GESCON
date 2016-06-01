@@ -1260,17 +1260,6 @@ public class ContenidoMB implements Serializable {
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(this.getChkDestacado()) {
-                ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
-                HashMap filter = new HashMap();
-                filter.put("ntipoconocimientoid", Constante.CONTENIDO);
-                BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
-                if(cant.intValue() >= 10) {
-                    this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
-                    RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
-                    return;
-                }
-            }
             /* Validando si exiten vínculos de bases legales derogadas */
             int contador = 0;
             if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
@@ -1295,7 +1284,7 @@ public class ContenidoMB implements Serializable {
             conocimiento.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             conocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
             conocimiento.setVtitulo(this.getTitulo().trim());
-            conocimiento.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            conocimiento.setNdestacado(BigDecimal.ZERO);
             conocimiento.setVdescripcion(this.getDescripcion().trim());
             if (this.getContenidoPlain().length() < 400) {
                 conocimiento.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));

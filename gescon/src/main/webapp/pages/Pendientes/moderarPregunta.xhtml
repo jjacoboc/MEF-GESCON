@@ -15,14 +15,14 @@
                             <p:panel header="Moderar Pregunta" styleClass="TexAlLeft">
                                 <h:panelGrid id="pgModPreg"  columns="2" width="500px">                           
 
-                                    <h:outputLabel  value="Mensaje del usuario:" rendered="#{pendienteMB.getfMsjUsu1()}"/>
+                                    <h:outputLabel  value="Mensaje del Usuario:" style="white-space: nowrap;" rendered="#{pendienteMB.getfMsjUsu1()}"/>
                                     <p:inputTextarea value="#{pendienteMB.selectedPregunta.vmsjusuario1}" rows="4" cols="66" style="font-weight: normal;"
                                                      readonly="#{pendienteMB.getfMsjUsu1()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfMsjUsu1()}"/>
 
                                     <p:spacer width="10" rendered="#{pendienteMB.getfMsjUsu1()}"/>
                                     <p:spacer width="10" rendered="#{pendienteMB.getfMsjUsu1()}"/>
 
-                                    <h:outputLabel value="Mensaje del Moderador" rendered="#{pendienteMB.getfSInfMod()}"/>
+                                    <h:outputLabel value="Mensaje del Moderador:" style="white-space: nowrap;" rendered="#{pendienteMB.getfSInfMod()}"/>
                                     <p:inputTextarea  value="#{pendienteMB.selectedPregunta.vmsjmoderador}" rows="4" cols="66" style="font-weight: normal;"
                                                       readonly="#{pendienteMB.getfSInfMod()}"  maxlength="400" counterTemplate="{0} caracteres restantes." rendered="#{pendienteMB.getfSInfMod()}"/>
 
@@ -48,7 +48,7 @@
                                     <p:spacer width="10"/>
 
                                     <h:outputLabel value="Asunto:"/>
-                                    <p:inputText size="99" value="#{pendienteMB.selectedPregunta.vasunto}" readonly="#{pendienteMB.getfButtonMod() eq false}" maxlength="80"/>
+                                    <p:inputText size="100" value="#{pendienteMB.selectedPregunta.vasunto}" readonly="#{pendienteMB.getfButtonMod() eq false}" maxlength="80"/>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
@@ -66,21 +66,24 @@
                                     <h:outputLabel value="Entidad" style="text-decoration: underline" />
                                     <p:spacer/>
 
-                                    <h:panelGrid columns="3">
-                                        <h:outputLabel value="Codigo de Unidad Ejecutora:"/>
+                                    <h:outputLabel value="Codigo de Unidad Ejecutora:" style="white-space: nowrap;"/>
+                                    <h:panelGrid columns="4">
                                         <p:inputText size="5" value="#{pendienteMB.selectedPregunta.nentidadid}" maxlength="5" readonly="#{pendienteMB.getfButtonMod() eq false}"/>
                                         <p:commandButton actionListener="#{pendienteMB.toEnt}" oncomplete="PF('entDialog').show();" update=":entDialogForm:pgEnt" icon="ui-icon-search" />
-                                    </h:panelGrid>
-                                    <h:panelGrid columns="2">
                                         <h:outputLabel value="Nombre:"/>
-                                        <p:inputText id="ent" size="50" value="#{pendienteMB.entidad}" readonly="#{pendienteMB.getfButtonMod() eq false}"/>  
+                                        <p:inputText id="ent" size="88" value="#{pendienteMB.entidad}" disabled="true" styleClass="Fs12 FontBold"/>  
                                     </h:panelGrid>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
-                                    <h:outputLabel value="Dato adicional:"/>
-                                    <p:inputText id="tema" size="99" value="#{pendienteMB.selectedPregunta.vdatoadicional}" maxlength="80" readonly="#{pendienteMB.getfButtonMod() eq false}"/>
+                                    <h:outputLabel value="Dato adicional:" style="white-space: nowrap;"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea id="tema" value="#{pendienteMB.selectedPregunta.vdatoadicional}" rows="4" cols="100" styleClass="Fs14"
+                                                         counter="display1" maxlength="2000" counterTemplate="{0} caracteres restantes." readonly="#{preguntaMB.getfButtonMod() eq false}"/>
+                                        <h:outputText id="display1"/>
+                                        <p:watermark for="tema" value="(Opcional) Este dato solo lo podra ver el especialista"/>
+                                    </h:panelGrid>
                                 </h:panelGrid>
                                 <br></br>
                                 <h:panelGrid columns="5" style="padding-left: 55px">
