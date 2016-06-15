@@ -23,14 +23,18 @@
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="Asunto:"/>
-                                    <p:inputText size="100" value="#{preguntaMB.asunto}" maxlength="80"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                        <p:inputTextarea value="#{preguntaMB.asunto}" rows="4" cols="100" style="font-weight: normal;"
+                                                         counter="display0" maxlength="2000" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display0"/>
+                                    </h:panelGrid>
 
                                     <p:spacer/>
                                     <h:outputLabel value="Detalle:"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{preguntaMB.detalle}" rows="4" cols="66" style="font-weight: normal;"
-                                                         counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                        <h:outputText id="display"/>
+                                        <p:inputTextarea value="#{preguntaMB.detalle}" rows="4" cols="100" style="font-weight: normal;"
+                                                         counter="display1" maxlength="4000" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display1"/>
                                     </h:panelGrid>
 
                                     <p:spacer/>
@@ -54,8 +58,8 @@
                                     <h:outputLabel value="Dato adicional:" style="white-space: nowrap;"/>
                                     <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
                                         <p:inputTextarea id="tema" value="#{preguntaMB.datoAdicional}" rows="4" cols="100" styleClass="Fs14"
-                                                         counter="display1" maxlength="2000" counterTemplate="{0} caracteres restantes." />
-                                        <h:outputText id="display1"/>
+                                                         counter="display2" maxlength="2000" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display2"/>
                                         <p:watermark for="tema" value="(Opcional) Este dato solo lo podra ver el especialista"/>
                                     </h:panelGrid>
 

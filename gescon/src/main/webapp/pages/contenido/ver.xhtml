@@ -13,36 +13,29 @@
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Ver Contenido" styleClass="TexAlLeft">
-                                <h:panelGrid id="pgModContenido"  columns="2" width="500px">                           
+                                <h:panelGrid id="pgModContenido" columns="2" >
                                     <h:outputLabel value="Categoría:"/>
-                                    <h:panelGrid  columns="3">
-                                        <p:spacer width="10"/>
-                                        <h:outputText id="catedit" value="#{contenidoMB.selectedContenido.ncategoriaid}" >
-                                            <f:converter converterId="converterCategoria"/>
-                                        </h:outputText>
-                                    </h:panelGrid>
+                                    <h:outputText id="catedit" value="#{contenidoMB.selectedContenido.ncategoriaid}" >
+                                        <f:converter converterId="converterCategoria"/>
+                                    </h:outputText>
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
-                                    <h:outputLabel value="Titulo"/>
-                                    <p:inputText size="50" value="#{contenidoMB.selectedContenido.vtitulo}" style="text-transform: uppercase;" maxlength="25" /> 
+                                    <h:outputLabel value="Titulo:"/>
+                                    <h:outputText value="#{contenidoMB.selectedContenido.vtitulo}" />
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
-                                    <h:outputLabel value="Descripcion"/>
-                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{contenidoMB.selectedContenido.vdescripcion}" rows="4" cols="57" style="font-weight: normal;"
-                                                         counter="displaydet" maxlength="400" counterTemplate="{0} caracteres restantes." />
-                                        <h:outputText id="displaydet"/>
-                                    </h:panelGrid>
+                                    <h:outputLabel value="Descripcion:"/>
+                                    <h:outputText value="#{contenidoMB.selectedContenido.vdescripcion}" escape="false" />
 
                                     <p:spacer width="10"/>
                                     <p:spacer width="10"/>
 
-                                    <h:outputLabel value="Contenido"/>
-                                    <p:editor value="#{contenidoMB.selectedContenido.vcontenido}"/>
+                                    <h:outputLabel value="Contenido:"/>
+                                    <h:outputText value="#{contenidoMB.contenidoHtml}" escape="false" />
 
                                 </h:panelGrid>
 

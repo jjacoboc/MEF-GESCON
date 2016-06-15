@@ -6,6 +6,7 @@
 package pe.gob.mef.gescon.hibernate.dao;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import pe.gob.mef.gescon.hibernate.domain.TvinculoHist;
 
@@ -20,4 +21,5 @@ public interface VinculoHistDao {
     List<TvinculoHist> getTvinculoHists() throws Exception;
     List<TvinculoHist> getTvinculoHistsByThistorial(BigDecimal idhistorial) throws Exception;
     void saveOrUpdate(TvinculoHist tvinculoHist) throws Exception;
+    List<HashMap> getConcimientosVinculadosByHistorial(HashMap filters) throws Exception;
 }

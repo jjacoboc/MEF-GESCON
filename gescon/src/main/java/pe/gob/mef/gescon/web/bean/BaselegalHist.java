@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import pe.gob.mef.gescon.common.Constante;
 
 /**
@@ -44,7 +45,8 @@ public class BaselegalHist implements Serializable {
     private String vfechamodificacion;
     private String vnombreusuario;
     private ArchivoHist archivoHist;
-    
+    private List<BaseLegal> listaVinculos;
+            
     public BaselegalHist(){
         
     }
@@ -271,5 +273,13 @@ public class BaselegalHist implements Serializable {
 
     public void setArchivoHist(ArchivoHist archivoHist) {
         this.archivoHist = archivoHist;
+    }
+
+    public List<BaseLegal> getListaVinculos() {
+        return listaVinculos;
+    }
+
+    public void setListaVinculos(List<BaseLegal> listaVinculos) {
+        this.listaVinculos = listaVinculos;
     }
 }

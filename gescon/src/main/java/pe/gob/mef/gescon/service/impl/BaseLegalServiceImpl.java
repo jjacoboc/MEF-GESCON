@@ -128,6 +128,25 @@ public class BaseLegalServiceImpl implements BaseLegalService{
         }
         return asignacions;
     }
+    
+    @Override
+    public List<BaseLegal> getTbaselegalesByLinkId(final BigDecimal id) throws Exception {
+        BaseLegalDao baseLegalDao = (BaseLegalDao) ServiceFinder.findBean("BaseLegalDao");
+        List<HashMap> lista = baseLegalDao.getTbaselegalesByLinkId(id);
+        List<BaseLegal> baseLegales = new ArrayList<>();
+        for(HashMap m : lista) {
+            BaseLegal bl = new BaseLegal();
+            bl.setNbaselegalid((BigDecimal) m.get("ID"));
+            bl.setVnumero((String) m.get("NUMERO"));
+            bl.setVnombre((String) m.get("NOMBRE"));
+            bl.setVsumilla((String) m.get("SUMILLA"));
+            bl.setNcategoriaid((BigDecimal) m.get("IDCATEGORIA"));  
+            bl.setNestadoid((BigDecimal) m.get("IDESTADO"));
+            bl.setDfechavigencia((Date) m.get("FECHA"));
+            baseLegales.add(bl);
+        }
+        return baseLegales;
+    }
 
     @Override
     public void saveOrUpdate(BaseLegal baseLegal) throws Exception {

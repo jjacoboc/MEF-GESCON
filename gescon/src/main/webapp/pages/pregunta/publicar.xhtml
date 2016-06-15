@@ -31,37 +31,23 @@
                                         <h:outputText value="(Nota: Las Preguntas destacadas serán mostradas en la página principal del sistema.)" styleClass="Fs11 FontBold black" style="background: yellow;"/>
                                     </h:panelGrid>
 
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="Asunto:"/>
-                                    <p:inputText size="100" value="#{preguntaMB.selectedPregunta.vasunto}" readonly="#{preguntaMB.getfButtonModPub() eq false}" maxlength="80"/>
-
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0" rendered="#{preguntaMB.getfButtonModPub() ne false}">
+                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vasunto}" rows="4" cols="100" style="font-weight: normal;"
+                                                         counter="display0" maxlength="2000" counterTemplate="{0} caracteres restantes." />
+                                        <h:outputText id="display0"/>
+                                    </h:panelGrid>
+                                    <h:outputText value="#{preguntaMB.selectedPregunta.vasunto}" rendered="#{preguntaMB.getfButtonModPub() eq false}" />
 
                                     <h:outputText value="#{msgs.icon_asterisk}"/>
                                     <h:outputLabel value="Detalle:"/>
-                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
-                                                         counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
-                                        <h:outputText id="displayd"/>
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0" rendered="#{preguntaMB.getfButtonModPub() ne false}">
+                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="100" style="font-weight: normal;"
+                                                         counter="display1" maxlength="4000" counterTemplate="{0} caracteres restantes."/>
+                                        <h:outputText id="display1"/>
                                     </h:panelGrid>
-
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-
-                                    <h:outputText value="#{msgs.icon_asterisk}"/>
-                                    <h:outputLabel value="Respuesta"/>
-                                    <p:editor value="#{preguntaMB.selectedPregunta.vrespuesta}"/>
-                                    
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
+                                    <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}" rendered="#{preguntaMB.getfButtonModPub() eq false}" />
 
                                     <p:spacer width="10"/>
                                     <h:outputLabel value="Entidad" style="text-decoration: underline" />
@@ -77,17 +63,14 @@
                                     </h:panelGrid>
 
                                     <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-
-                                    <p:spacer width="10"/>
                                     <h:outputLabel value="Dato adicional:"/>
-                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0" rendered="#{preguntaMB.getfButtonModPub() ne false}">
                                         <p:inputTextarea id="tema" value="#{preguntaMB.selectedPregunta.vdatoadicional}" rows="4" cols="100" styleClass="Fs14"
-                                                         counter="display1" maxlength="2000" counterTemplate="{0} caracteres restantes." readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
-                                        <h:outputText id="display1"/>
+                                                         counter="display2" maxlength="2000" counterTemplate="{0} caracteres restantes."/>
+                                        <h:outputText id="display2"/>           
                                         <p:watermark for="tema" value="(Opcional) Este dato solo lo podra ver el especialista"/>
                                     </h:panelGrid>
+                                    <h:outputText value="#{preguntaMB.selectedPregunta.vdatoadicional}" rendered="#{preguntaMB.getfButtonModPub() eq false}" />
                                 </h:panelGrid>
                                 
                                 <p:spacer width="10"/>

@@ -4,7 +4,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
-    
+
     <style>
         .ui-picklist-filter {
             font-size: 14px !important;
@@ -18,10 +18,12 @@
                         <ui:include src="../froala.xhtml"/>
                         <!-- Initialize the editor. -->
                         <script>
-                            $(function() {
+                            $(function () {
                                 $('#descHtml').froalaEditor({
                                     key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
                                     language: 'es',
+                                    iframe: true,
+                                    toolbarSticky: false,
                                     fontFamily: {
                                         "FontAwesome,sans-serif": 'FontAwesome',
                                         'Arial,Helvetica,sans-serif': 'Arial',
@@ -32,23 +34,12 @@
                                         'Verdana,Geneva,sans-serif': 'Verdana'
                                     },
                                     fontFamilyDefaultSelection: 'FontAwesome',
-                                    fontFamilySelection: true
-                                });
-                            });
-                            $('#txtHtml').froalaEditor({
-                                    key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
-                                    language: 'es',
-                                    fontFamily: {
-                                        "FontAwesome,sans-serif": 'FontAwesome',
-                                        'Arial,Helvetica,sans-serif': 'Arial',
-                                        'Georgia,serif': 'Georgia',
-                                        'Impact,Charcoal,sans-serif': 'Impact',
-                                        'Tahoma,Geneva,sans-serif': 'Tahoma',
-                                        "'Times New Roman',Times,serif": 'Times New Roman',
-                                        'Verdana,Geneva,sans-serif': 'Verdana'
-                                    },
-                                    fontFamilyDefaultSelection: 'FontAwesome',
-                                    fontFamilySelection: true
+                                    fontFamilySelection: true,
+                                    imageUploadURL: '/gescon/UploadImage',
+                                    imageUploadParams: {
+                                        mb: 'bp\\',
+                                        sec: 'b'
+                                    }
                                 });
                                 secDialog = function () {
                                     $('#f\\:titulo').val('');
@@ -56,6 +47,8 @@
                                     $('#txtHtml').froalaEditor({
                                         key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
                                         language: 'es',
+                                        iframe: true,
+                                        toolbarSticky: false,
                                         fontFamily: {
                                             "FontAwesome,sans-serif": 'FontAwesome',
                                             'Arial,Helvetica,sans-serif': 'Arial',
@@ -66,7 +59,12 @@
                                             'Verdana,Geneva,sans-serif': 'Verdana'
                                         },
                                         fontFamilyDefaultSelection: 'FontAwesome',
-                                        fontFamilySelection: true
+                                        fontFamilySelection: true,
+                                        imageUploadURL: '/gescon/UploadImage',
+                                        imageUploadParams: {
+                                            mb: 'bp\\',
+                                            sec: 's'
+                                        }
                                     });
                                 };
                                 esecDialog = function () {
@@ -75,6 +73,8 @@
                                     $('#etxtHtml').froalaEditor({
                                         key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
                                         language: 'es',
+                                        iframe: true,
+                                        toolbarSticky: false,
                                         fontFamily: {
                                             "FontAwesome,sans-serif": 'FontAwesome',
                                             'Arial,Helvetica,sans-serif': 'Arial',
@@ -85,9 +85,15 @@
                                             'Verdana,Geneva,sans-serif': 'Verdana'
                                         },
                                         fontFamilyDefaultSelection: 'FontAwesome',
-                                        fontFamilySelection: true
+                                        fontFamilySelection: true,
+                                        imageUploadURL: '/gescon/UploadImage',
+                                        imageUploadParams: {
+                                            mb: 'bp\\',
+                                            sec: 's'
+                                        }
                                     });
                                 };
+                            });
                         </script>
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
@@ -103,7 +109,7 @@
                                         <p:spacer width="15"/>
                                         <h:outputText value="#{buenaPracticaMB.selectedCategoria.vnombre}" styleClass="Fs18 FontBold black"/>
                                     </h:panelGroup>
-                                    
+
                                     <h:panelGrid columns="6" cellpadding="0" cellspacing="0">
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
                                         <p:spacer width="5"/>
@@ -127,13 +133,13 @@
                                     </h:panelGroup>
                                     <textarea id="descHtml" name="descHtml">#{buenaPracticaMB.descripcionHtml}</textarea>
                                     <p:spacer/>
-                                    
+
                                     <h:panelGroup>
                                         <h:outputText value="#{msgs.icon_asterisk}"/>
                                         <p:spacer width="5"/>
                                         <h:outputText value="#{msgs.bp_lbl_detalle}"/>
                                     </h:panelGroup>
-                                    
+
                                     <p:fieldset id="fs">
                                         <p:commandButton id="btnSec" value="#{msgs.bp_btn_seccion}" actionListener="#{buenaPracticaMB.toAddSection}" oncomplete="secDialog();" update=":f:pgSec" styleClass="ui-link Fs14"/>
                                         <p:overlayPanel id="secPanel" widgetVar="secPanel" for="btnSec" hideEffect="fade" showCloseIcon="true" style="border: 2px solid black;">
@@ -370,7 +376,7 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
                         <p:dialog id="pickDlg" header="#{msgs.bp_lbl_pnlLinked}" widgetVar="pickDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" style="font-size: 10px;">
                             <h:form id="pickDialogForm">
                                 <h:panelGrid id="pgPick" columns="1">
@@ -404,7 +410,7 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
                         <p:dialog id="destDlg" header="#{msgs.bp_lbl_pnlDestacado}" widgetVar="destDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true" width="90%">
                             <h:form id="destDialogForm">
                                 <h:panelGrid id="pgDest" columns="1">
@@ -444,7 +450,7 @@
                                 </h:panelGrid>
                             </h:form>
                         </p:dialog>
-                        
+
                         <p:confirmDialog appendTo="@(body)" message="#{msgs.bp_msg_elidestacado}" header="#{msgs.bp_lbl_pnlEliDestacado}" widgetVar="confirmDelDlg" style="font-size: 10px;">
                             <h:form id="confirmDelDlgForm">
                                 <p:commandButton value="#{msgs.lbl_SI}" oncomplete="PF('confirmDelDlg').hide()" update=":destDialogForm:pgDest" actionListener="#{buenaPracticaMB.deleteOutstanding}"/>

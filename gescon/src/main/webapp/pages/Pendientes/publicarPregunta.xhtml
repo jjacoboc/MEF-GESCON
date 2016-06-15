@@ -16,7 +16,25 @@
                             $(function() {
                                 $('#descHtml').froalaEditor({
                                     key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
-                                    language: 'es'
+                                    language: 'es',
+                                    iframe: true,
+                                    toolbarSticky: false,
+                                    fontFamily: {
+                                        "FontAwesome,sans-serif": 'FontAwesome',
+                                        'Arial,Helvetica,sans-serif': 'Arial',
+                                        'Georgia,serif': 'Georgia',
+                                        'Impact,Charcoal,sans-serif': 'Impact',
+                                        'Tahoma,Geneva,sans-serif': 'Tahoma',
+                                        "'Times New Roman',Times,serif": 'Times New Roman',
+                                        'Verdana,Geneva,sans-serif': 'Verdana'
+                                    },
+                                    fontFamilyDefaultSelection: 'FontAwesome',
+                                    fontFamilySelection: true,
+                                    imageUploadURL: '/gescon/UploadImage',
+                                    imageUploadParams: {
+                                        mb: 'pr\\',
+                                        sec: 'b'
+                                    }
                                 });
                                 actualizar=function(){
                                     var value = $('#descHtml').val();
@@ -111,7 +129,7 @@
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
                                                         <h:outputText value="#{p.nombre}"/>
                                                     </p:column>
-                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                    <p:column style="width: 70%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}" escape="false"/>
                                                     </p:column>
                                                 </p:dataTable>
@@ -137,10 +155,10 @@
                                     </h:panelGrid>
                                 </p:fieldset>
                                 <br></br>
-                                <h:panelGrid columns="5" style="padding-left: 55px">
-                                    <p:commandButton value="Actualizar" rendered="#{pendienteMB.getfButtonModPub()}" oncomplete="actualizar();" />
-                                    <p:commandButton value="Publicar" rendered="#{pendienteMB.getfButtonModPub()}"  oncomplete="publicar();" />
-                                    <p:commandButton value="Regresar" rendered="#{pendienteMB.getfButtonModPub()}" ajax="false" action="/index.xhtml" />
+                                <h:panelGrid columns="5" >
+                                    <p:commandButton value="Actualizar" oncomplete="actualizar();" />
+                                    <p:commandButton value="Publicar" oncomplete="publicar();" />
+                                    <p:commandButton value="Regresar" ajax="false" action="/index.xhtml" />
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>

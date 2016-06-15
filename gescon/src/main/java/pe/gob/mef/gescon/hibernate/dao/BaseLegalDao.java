@@ -23,5 +23,6 @@ public interface BaseLegalDao {
     List<HashMap> getTbaselegalesLinkedById(BigDecimal id) throws Exception;
     List<HashMap> getTbaselegalesNotLinkedById(BigDecimal id) throws Exception;
     List<HashMap> obtenerBaseLegalxAsig(BigDecimal baselegalid,BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    List<HashMap> getTbaselegalesByLinkId(final BigDecimal id) throws Exception;
     void saveOrUpdate(Tbaselegal tbaselegal) throws Exception;
 }

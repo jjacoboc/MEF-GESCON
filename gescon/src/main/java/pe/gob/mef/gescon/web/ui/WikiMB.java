@@ -949,8 +949,20 @@ public class WikiMB implements Serializable {
         try {
             this.setIdTipoConocimiento(null);
             this.setListaSourceVinculos(new ArrayList());
+            if(CollectionUtils.isEmpty(this.getListaSourceVinculosBL())) { this.setListaSourceVinculosBL(new ArrayList()); }
+            if(CollectionUtils.isEmpty(this.getListaSourceVinculosBP())) { this.setListaSourceVinculosBP(new ArrayList()); }
+            if(CollectionUtils.isEmpty(this.getListaSourceVinculosCT())) { this.setListaSourceVinculosCT(new ArrayList()); } 
+            if(CollectionUtils.isEmpty(this.getListaSourceVinculosOM())) { this.setListaSourceVinculosOM(new ArrayList()); }
+            if(CollectionUtils.isEmpty(this.getListaSourceVinculosPR())) { this.setListaSourceVinculosPR(new ArrayList()); }
+            if(CollectionUtils.isEmpty(this.getListaSourceVinculosWK())) { this.setListaSourceVinculosWK(new ArrayList()); }
             this.setListaTargetVinculos(new ArrayList());
-            this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            if(CollectionUtils.isEmpty(this.getListaTargetVinculosBL())) { this.setListaTargetVinculosBL(new ArrayList()); }
+            if(CollectionUtils.isEmpty(this.getListaTargetVinculosBP())) { this.setListaTargetVinculosBP(new ArrayList()); }
+            if(CollectionUtils.isEmpty(this.getListaTargetVinculosCT())) { this.setListaTargetVinculosCT(new ArrayList()); }
+            if(CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) { this.setListaTargetVinculosOM(new ArrayList()); }
+            if(CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) { this.setListaTargetVinculosPR(new ArrayList()); }
+            if(CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) { this.setListaTargetVinculosWK(new ArrayList()); }
+            this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -969,25 +981,73 @@ public class WikiMB implements Serializable {
                     if (this.getSelectedWiki() != null) {
                         filters.put("nconocimientoid", this.getSelectedWiki().getNconocimientoid().toString());
                         this.setListaTargetVinculos(new ArrayList());
+                        List<Consulta> lista = service.getConcimientosVinculados(filters);
+                        Collections.sort(lista, Consulta.Comparators.ID);
                         if (id.equals(Constante.BASELEGAL)) {
-                            this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
+                            for(Consulta ele : lista){
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBL(), ele, Consulta.Comparators.ID);
+                                if(pos < 0) {
+                                    this.getListaTargetVinculosBL().add(ele);
+                                }
+                            }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
                         } else if (id.equals(Constante.PREGUNTAS)) {
-                            this.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
+                            for(Consulta ele : lista){
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosPR(), ele, Consulta.Comparators.ID);
+                                if(pos < 0) {
+                                    this.getListaTargetVinculosPR().add(ele);
+                                }
+                            }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
                         } else if (id.equals(Constante.WIKI)) {
-                            this.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
+                            for(Consulta ele : lista){
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosWK(), ele, Consulta.Comparators.ID);
+                                if(pos < 0) {
+                                    this.getListaTargetVinculosWK().add(ele);
+                                }
+                            }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
                         } else if (id.equals(Constante.CONTENIDO)) {
-                            this.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
+                            for(Consulta ele : lista){
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosCT(), ele, Consulta.Comparators.ID);
+                                if(pos < 0) {
+                                    this.getListaTargetVinculosCT().add(ele);
+                                }
+                            }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
                         } else if (id.equals(Constante.BUENAPRACTICA)) {
-                            this.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
+                            for(Consulta ele : lista){
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBP(), ele, Consulta.Comparators.ID);
+                                if(pos < 0) {
+                                    this.getListaTargetVinculosBP().add(ele);
+                                }
+                            }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
                         } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
-                            this.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
+                            for(Consulta ele : lista){
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosOM(), ele, Consulta.Comparators.ID);
+                                if(pos < 0) {
+                                    this.getListaTargetVinculosOM().add(ele);
+                                }
+                            }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
                         }
+                    } else {
+                        if (id.equals(Constante.BASELEGAL)) {
+                            this.setListaTargetVinculos(this.getListaTargetVinculosBL());
+                        } else if (id.equals(Constante.PREGUNTAS)) {
+                            this.setListaTargetVinculos(this.getListaTargetVinculosPR());
+                        } else if (id.equals(Constante.WIKI)) {
+                            this.setListaTargetVinculos(this.getListaTargetVinculosWK());
+                        } else if (id.equals(Constante.CONTENIDO)) {
+                            this.setListaTargetVinculos(this.getListaTargetVinculosCT());
+                        } else if (id.equals(Constante.BUENAPRACTICA)) {
+                            this.setListaTargetVinculos(this.getListaTargetVinculosBP());
+                        } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                            this.setListaTargetVinculos(this.getListaTargetVinculosOM());
+                        }
+                    }
+                    if(CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                         List<String> ids = new ArrayList<>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
@@ -997,8 +1057,6 @@ public class WikiMB implements Serializable {
                             filter = filter.concat(",").concat(this.getSelectedWiki().getNconocimientoid().toString());
                         }
                         filters.put("nconocimientovinc", filter);
-                    } else {
-                        this.setListaTargetVinculos(new ArrayList<Consulta>());
                     }
                     if (id.equals(Constante.BASELEGAL)) {
                         this.setListaSourceVinculosBL(service.getConcimientosDisponibles(filters));

@@ -17,7 +17,7 @@
       <column name="NTPOCONOCIMIENTOID" not-null="true" precision="22" scale="0"/>
     </property>
     <property name="vdescripcion" type="string">
-      <column length="400" name="VDESCRIPCION"/>
+      <column length="500" name="VDESCRIPCION"/>
     </property>
     <property name="vtitulo" type="string">
       <column length="100" name="VTITULO"/>

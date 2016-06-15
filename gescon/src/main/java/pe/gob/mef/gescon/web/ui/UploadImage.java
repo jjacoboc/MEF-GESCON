@@ -10,9 +10,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -21,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import org.apache.poi.util.IOUtils;
-import pe.gob.mef.gescon.common.Parameters;
 
 /**
  *
@@ -44,31 +44,32 @@ public class UploadImage extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
+        String temppath;
         try {
-            String mb = request.getParameter("mb");
             Part file = request.getPart("file");
-            
-            //getting fileserver path
-            ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
-            String temppath = bundle.getString("temppath");
+            String mb = request.getParameter("mb");
+            String sec = request.getParameter("sec");
+            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyHHmmssSSS");
+            String fileName = "fig" + sec + sdf.format(new Date()) + file.getSubmittedFileName().substring(file.getSubmittedFileName().lastIndexOf("."));
             
             ServletContext context = request.getSession().getServletContext();
-            temppath = context.getRealPath("/") + "\\resources\\uploads\\";
+            temppath = context.getRealPath("/") + "\\resources\\uploads\\" + mb;
             
             //saving file in fileserver
             File dir = new File(temppath);
             if(!dir.exists()) {
                 dir.mkdirs();
             }
-            File f = new File(temppath, file.getSubmittedFileName());
-            FileOutputStream fileOutStream = new FileOutputStream(f);
-            fileOutStream.write(IOUtils.toByteArray(file.getInputStream()));
-            fileOutStream.flush();
-            fileOutStream.close();
+            
+            File f = new File(temppath, fileName);
+            try (FileOutputStream fileOutStream = new FileOutputStream(f)) {
+                fileOutStream.write(IOUtils.toByteArray(file.getInputStream()));
+                fileOutStream.flush();
+            }
             
             //sending json to response
             Map<String, String> gson = new LinkedHashMap<>();
-            gson.put("link", "/gescon/faces/javax.faces.resource/"+file.getSubmittedFileName()+"?ln=uploads");
+            gson.put("link", "/gescon/faces/javax.faces.resource/"+fileName+"?ln=uploads/"+mb);
             String json = new Gson().toJson(gson);
             out.write(json);
         } finally {

@@ -48,6 +48,7 @@ import pe.gob.mef.gescon.service.CalificacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.ConsultaService;
+import pe.gob.mef.gescon.service.ContenidoService;
 import pe.gob.mef.gescon.service.DiscusionSeccionService;
 import pe.gob.mef.gescon.service.DiscusionService;
 import pe.gob.mef.gescon.service.HistorialService;
@@ -56,6 +57,8 @@ import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.SeccionService;
 import pe.gob.mef.gescon.service.TipoConocimientoService;
 import pe.gob.mef.gescon.service.UserService;
+import pe.gob.mef.gescon.service.VinculoBaselegalHistorialService;
+import pe.gob.mef.gescon.service.VinculoHistService;
 import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
@@ -73,6 +76,7 @@ import pe.gob.mef.gescon.web.bean.Pregunta;
 import pe.gob.mef.gescon.web.bean.Seccion;
 import pe.gob.mef.gescon.web.bean.TipoConocimiento;
 import pe.gob.mef.gescon.web.bean.User;
+import pe.gob.mef.gescon.web.bean.VinculoBaselegalHist;
 
 /**
  *
@@ -635,14 +639,23 @@ public class ConsultaMB implements Serializable {
                     ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
                     bl.getSelectedBaseLegal().setArchivo(aservice.getArchivoByBaseLegal(bl.getSelectedBaseLegal()));
                     bl.setListaTarget(service.getTbaselegalesLinkedById(bl.getSelectedBaseLegal().getNbaselegalid()));
+                    bl.setListaLinks(service.getTbaselegalesByLinkId(bl.getSelectedBaseLegal().getNbaselegalid()));
                     
                     BaseLegalHistorialService historialService = (BaseLegalHistorialService) ServiceFinder.findBean("BaseLegalHistorialService");
                     bl.setListaHistorial(historialService.getHistorialesByBaselegal(bl.getSelectedBaseLegal().getNbaselegalid()));
                     if(CollectionUtils.isNotEmpty(bl.getListaHistorial())) {
                         UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        VinculoBaselegalHistorialService vservice = (VinculoBaselegalHistorialService) ServiceFinder.findBean("VinculoBaselegalHistorialService");
                         for (BaselegalHist historial : bl.getListaHistorial()) {
                             User user = userService.getUserByLogin(historial.getVusuariocreacion());
                             historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                            historial.setListaVinculos(new ArrayList<BaseLegal>());
+                            List<VinculoBaselegalHist> lista = vservice.getVinculoHistsByBaselegalHist(historial.getNbaselegalid());
+                            if(CollectionUtils.isNotEmpty(lista)) {
+                                for(VinculoBaselegalHist ele : lista) {
+                                    historial.getListaVinculos().add(service.getBaselegalById(ele.getNbaselegalvinculadaid()));
+                                }
+                            }
                         }
                     }
                     CalificacionBaseLegalService calificacionService = (CalificacionBaseLegalService) ServiceFinder.findBean("CalificacionBaseLegalService");
@@ -796,9 +809,26 @@ public class ConsultaMB implements Serializable {
                     mb.setListaHistorial(historialService.getHistorialesByConocimiento(mb.getSelectedWiki().getNconocimientoid()));
                     if(CollectionUtils.isNotEmpty(mb.getListaHistorial())) {
                         UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
                         for (Historial historial : mb.getListaHistorial()) {
                             User user = userService.getUserByLogin(historial.getVusuariocreacion());
                             historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                            map = new HashMap();
+                            map.put("nhistorialid", historial.getId().getNhistorialid().toString());
+                            map.put("nconocimientoid", historial.getId().getNconocimientoid().toString());
+                            map.put("flag", true);
+                            map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+                            historial.setListaVinculosBL(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+                            historial.setListaVinculosPR(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+                            historial.setListaVinculosBP(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+                            historial.setListaVinculosCT(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+                            historial.setListaVinculosOM(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.WIKI.toString());
+                            historial.setListaVinculosWK(vinculoHistService.getConcimientosVinculadosByHistorial(map));
                         }
                     }
                     CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
@@ -833,25 +863,28 @@ public class ConsultaMB implements Serializable {
                     ContenidoMB ct = new ContenidoMB();
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     ct.setSelectedContenido(service.getConocimientoById(BigDecimal.valueOf(id)));
+                    ct.setContenidoHtml(GcmFileUtils.readStringFromFileServer(ct.getSelectedContenido().getVruta(), "html.txt"));
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     ct.setSelectedCategoria(categoriaService.getCategoriaById(ct.getSelectedContenido().getNcategoriaid()));
                     ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
                     ct.setListaArchivos(archivoservice.getArchivosByConocimiento(ct.getSelectedContenido().getNconocimientoid()));
-                    HashMap filters = new HashMap();
-                    filters.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid());
-                    filters.put("flag", true);
-                    filters.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
-                    ct.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
-                    filters.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
-                    ct.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
-                    filters.put("ntipoconocimientoid", Constante.WIKI.toString());
-                    ct.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
-                    filters.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
-                    ct.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
-                    filters.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
-                    ct.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
-                    filters.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
-                    ct.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
+                    ContenidoService contenidoService = (ContenidoService) ServiceFinder.findBean("ContenidoService");
+                    HashMap map = new HashMap();
+                    map.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid().toString());
+                    map.put("flag", true);
+                    map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+                    ct.setListaTargetVinculosBL(contenidoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+                    ct.setListaTargetVinculosPR(contenidoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+                    ct.setListaTargetVinculosBP(contenidoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+                    ct.setListaTargetVinculosCT(contenidoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+                    ct.setListaTargetVinculosOM(contenidoService.getConcimientosVinculados(map));
+                    map.put("ntipoconocimientoid", Constante.WIKI.toString());
+                    ct.setListaTargetVinculosWK(contenidoService.getConcimientosVinculados(map));
+                    
                     DiscusionService discusionService = (DiscusionService) ServiceFinder.findBean("DiscusionService");
                     List listaDiscusion = discusionService.getDiscusionesByConocimiento(ct.getSelectedContenido().getNconocimientoid());
                     if(CollectionUtils.isNotEmpty(listaDiscusion)) {
@@ -872,9 +905,26 @@ public class ConsultaMB implements Serializable {
                     ct.setListaHistorial(historialService.getHistorialesByConocimiento(ct.getSelectedContenido().getNconocimientoid()));
                     if(CollectionUtils.isNotEmpty(ct.getListaHistorial())) {
                         UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
                         for (Historial historial : ct.getListaHistorial()) {
                             User user = userService.getUserByLogin(historial.getVusuariocreacion());
                             historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                            map = new HashMap();
+                            map.put("nhistorialid", historial.getId().getNhistorialid().toString());
+                            map.put("nconocimientoid", historial.getId().getNconocimientoid().toString());
+                            map.put("flag", true);
+                            map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+                            historial.setListaVinculosBL(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+                            historial.setListaVinculosPR(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+                            historial.setListaVinculosBP(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+                            historial.setListaVinculosCT(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+                            historial.setListaVinculosOM(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.WIKI.toString());
+                            historial.setListaVinculosWK(vinculoHistService.getConcimientosVinculadosByHistorial(map));
                         }
                     }
                     CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
@@ -954,9 +1004,26 @@ public class ConsultaMB implements Serializable {
                     bp.setListaHistorial(historialService.getHistorialesByConocimiento(bp.getSelectedBuenaPractica().getNconocimientoid()));
                     if(CollectionUtils.isNotEmpty(bp.getListaHistorial())) {
                         UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
                         for (Historial historial : bp.getListaHistorial()) {
                             User user = userService.getUserByLogin(historial.getVusuariocreacion());
                             historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                            map = new HashMap();
+                            map.put("nhistorialid", historial.getId().getNhistorialid().toString());
+                            map.put("nconocimientoid", historial.getId().getNconocimientoid().toString());
+                            map.put("flag", true);
+                            map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+                            historial.setListaVinculosBL(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+                            historial.setListaVinculosPR(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+                            historial.setListaVinculosBP(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+                            historial.setListaVinculosCT(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+                            historial.setListaVinculosOM(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.WIKI.toString());
+                            historial.setListaVinculosWK(vinculoHistService.getConcimientosVinculadosByHistorial(map));
                         }
                     }
                     CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");
@@ -1036,9 +1103,26 @@ public class ConsultaMB implements Serializable {
                     om.setListaHistorial(historialService.getHistorialesByConocimiento(om.getSelectedOportunidad().getNconocimientoid()));
                     if(CollectionUtils.isNotEmpty(om.getListaHistorial())) {
                         UserService userService = (UserService) ServiceFinder.findBean("UserService");
+                        VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
                         for (Historial historial : om.getListaHistorial()) {
                             User user = userService.getUserByLogin(historial.getVusuariocreacion());
                             historial.setVnombreusuario(user.getVnombres()+" "+user.getVapellidos());
+                            map = new HashMap();
+                            map.put("nhistorialid", historial.getId().getNhistorialid().toString());
+                            map.put("nconocimientoid", historial.getId().getNconocimientoid().toString());
+                            map.put("flag", true);
+                            map.put("ntipoconocimientoid", Constante.BASELEGAL.toString());
+                            historial.setListaVinculosBL(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.PREGUNTAS.toString());
+                            historial.setListaVinculosPR(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.BUENAPRACTICA.toString());
+                            historial.setListaVinculosBP(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.CONTENIDO.toString());
+                            historial.setListaVinculosCT(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.OPORTUNIDADMEJORA.toString());
+                            historial.setListaVinculosOM(vinculoHistService.getConcimientosVinculadosByHistorial(map));
+                            map.put("ntipoconocimientoid", Constante.WIKI.toString());
+                            historial.setListaVinculosWK(vinculoHistService.getConcimientosVinculadosByHistorial(map));
                         }
                     }
                     CalificacionService calificacionService = (CalificacionService) ServiceFinder.findBean("CalificacionService");

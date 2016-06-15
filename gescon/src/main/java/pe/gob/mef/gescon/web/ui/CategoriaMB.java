@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -773,12 +774,9 @@ public class CategoriaMB implements Serializable {
 
                 File file = new File(dir.getUncPath(), categoria.getVimagennombre());
                 FileInputStream fis = new FileInputStream(file);
-                this.content = new DefaultStreamedContent(fis, categoria.getVimagentype(), categoria.getVimagennombre());
+                this.setContent(new DefaultStreamedContent(fis, categoria.getVimagentype(), categoria.getVimagennombre()));
             }
-        } catch (MalformedURLException e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } catch (MalformedURLException | FileNotFoundException e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }

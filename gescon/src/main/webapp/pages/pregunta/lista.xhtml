@@ -25,32 +25,32 @@
                                                 <p:dataExporter type="xls" target="tbl" fileName="preguntas" postProcessor="#{preguntaMB.postProcessXLS}"/>
                                             </h:commandLink>
                                         </f:facet>
-                                        <p:column style="width: 120px;" sortBy="#{row.vasunto}" filterBy="#{row.vasunto}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
+                                        <p:column style="width: 50%;" sortBy="#{row.vasunto}" filterBy="#{row.vasunto}" filterMatchMode="contains" filterStyle="width: 100px;text-transform: uppercase;" priority="1">
                                             <f:facet name="header"><h:outputText value="ASUNTO"/></f:facet>
                                             <p:commandLink id="grow" styleClass="GesconLink Fs14 Unselectable" global="false">
                                                 <h:outputText value="#{row.vasunto}"/>
                                             </p:commandLink>
                                             <p:tooltip id="toolTipGrow" for="grow" value="#{row.vdetalle}" showEffect="clip" hideEffect="explode" style="font-size: 9px;" />
                                         </p:column>
-                                        <p:column style="text-align: center; width: 100px;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
+                                        <p:column style="text-align: center; width: 11%;" sortBy="#{row.nactivo}" filterBy="#{row.nactivo}" filterOptions="#{listaSessionMB.filterEstado}" filterMatchMode="exact" filterStyleClass="ui-selectonemenu" priority="3">
                                             <f:facet name="header"><h:outputText value="ACTIVO"/></f:facet>
                                             <h:outputText value="#{row.nactivo}" >
                                                 <f:converter converterId="converterSiNo"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 140px;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains" priority="4">
+                                        <p:column style="text-align: center; width: 16%;" sortBy="#{row.dfechacreacion}" filterBy="#{row.dfechacreacion}" filterMatchMode="contains" priority="4">
                                             <f:facet name="header"><h:outputText value="FECHA CREACION"/></f:facet>
                                             <h:outputText value="#{row.dfechacreacion}" >
                                                 <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy HH:mm:ss"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 140px;" sortBy="#{row.nsituacionid}" filterBy="#{row.nsituacionid}" filterMatchMode="contains" priority="4">
+                                        <p:column style="text-align: center; width: 13%;" sortBy="#{row.nsituacionid}" filterBy="#{row.nsituacionid}" filterMatchMode="contains" priority="4">
                                             <f:facet name="header"><h:outputText value="SITUACION"/></f:facet>
                                             <h:outputText value="#{row.nsituacionid}" >
                                                 <f:converter converterId="converterSituacion"/>
                                             </h:outputText>
                                         </p:column>
-                                        <p:column style="text-align: center; width: 60px;" exportable="false">
+                                        <p:column style="text-align: center; width: 10%;" exportable="false">
                                             <f:facet name="header"><h:outputText value="ACCIONES"/></f:facet>
                                             <p:commandLink ajax="false" action="#{preguntaMB.toSee}"  styleClass="GesconLink" title="Ver Pregunta">
                                                 <h:outputText class="fa fa-search Fs16" />

@@ -13,60 +13,43 @@
                         <h:form id="f">
                             <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
                             <p:panel header="Ver Pregunta" styleClass="TexAlLeft">
-                                <h:panelGrid id="pgModPreg"  columns="2" width="500px">                           
+                                <h:panelGrid id="pgModPreg" columns="2" >                           
 
-                                    <h:outputLabel value="Categoría:"/>
-                                    <h:panelGrid  columns="3">
-                                        <p:spacer width="10"/>
-                                        <h:outputText id="catedit" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
-                                            <f:converter converterId="converterCategoria"/>
-                                        </h:outputText>
-                                    </h:panelGrid>
+                                    <h:outputText value="Categoría:"/>
+                                    <h:outputText id="catedit" value="#{preguntaMB.selectedPregunta.ncategoriaid}" >
+                                        <f:converter converterId="converterCategoria"/>
+                                    </h:outputText>
 
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
+                                    <h:outputText value="Asunto:"/>
+                                    <h:outputText value="#{preguntaMB.selectedPregunta.vasunto}"/>
 
-                                    <h:outputLabel value="Asunto:"/>
-                                    <p:inputText size="99" value="#{preguntaMB.selectedPregunta.vasunto}" readonly="#{preguntaMB.getfButtonModPub() eq false}" maxlength="80"/>
+                                    <h:outputText value="Detalle:"/>
+                                    <p:fieldset>
+                                        <h:outputText value="#{preguntaMB.selectedPregunta.vdetalle}" />
+                                    </p:fieldset>
 
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
+                                    <h:outputText value="Respuesta:"/>
+                                    <p:fieldset >
+                                        <h:outputText value="#{preguntaMB.selectedPregunta.vrespuesta}" escape="false"/>
+                                    </p:fieldset>
 
-                                    <h:outputLabel value="Detalle:"/>
-                                    <h:panelGrid columns="1" cellspacing="0" cellpadding="0">
-                                        <p:inputTextarea value="#{preguntaMB.selectedPregunta.vdetalle}" rows="4" cols="66" style="font-weight: normal;"
-                                                         counter="displayd" maxlength="400" counterTemplate="{0} caracteres restantes." readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
-                                        <h:outputText id="displayd"/>
-                                    </h:panelGrid>
-
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-
-                                    <h:outputLabel value="Respuesta"/>
-                                    <p:editor value="#{preguntaMB.selectedPregunta.vrespuesta}"/>
-                                    
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-
-                                    <h:outputLabel value="Entidad" style="text-decoration: underline" />
+                                    <h:outputText value="Entidad" style="text-decoration: underline" />
                                     <p:spacer/>
 
-                                    <h:outputLabel value="Codigo de Unidad Ejecutora:"/>
+                                    <h:outputText value="Codigo de Unidad Ejecutora:" style="white-space: nowrap;"/>
                                     <h:panelGrid columns="3">
-                                        <p:inputText size="5" value="#{preguntaMB.entidadId}" maxlength="5"/>
-                                        <h:outputLabel value="Nombre:"/>
-                                        <p:inputText id="ent" size="50" value="#{preguntaMB.entidad}" /> 
+                                        <h:outputText value="#{preguntaMB.entidadId}"/>
+                                        <h:outputLabel value=" - "/>
+                                        <h:outputText value="#{preguntaMB.entidad}" /> 
                                     </h:panelGrid>
 
-                                    <p:spacer width="10"/>
-                                    <p:spacer width="10"/>
-
-                                    <h:outputLabel value="Dato adicional:"/>
-                                    <p:inputText id="tema" size="99" value="#{preguntaMB.selectedPregunta.vdatoadicional}" maxlength="80" readonly="#{preguntaMB.getfButtonModPub() eq false}"/>
+                                    <h:outputText value="Dato adicional:" style="white-space: nowrap;"/>
+                                    <p:fieldset>
+                                        <h:outputText value="#{preguntaMB.selectedPregunta.vdatoadicional}" />
+                                    </p:fieldset>
+                                    
+                                    <h:outputText value="Vínculos:" style="white-space: nowrap; text-decoration: underline;"/>
                                 </h:panelGrid>
-                                
-                                <p:spacer width="10"/>
-                                <p:spacer width="10"/>
                                 
                                 <p:fieldset>
                                     <h:panelGrid id="pgNewVinc" columns="1" cellpadding="0" cellspacing="0" width="100%">
@@ -77,7 +60,7 @@
                                                     <p:column style="width: 30%;" headerText="#{msgs.bl_lbl_columna11}">
                                                         <h:outputText value="#{p.nombre}"/>
                                                     </p:column>
-                                                    <p:column style="width: 40%" headerText="#{msgs.bl_lbl_columna12}">
+                                                    <p:column style="width: 70%" headerText="#{msgs.bl_lbl_columna12}">
                                                         <h:outputText value="#{p.sumilla}"/>
                                                     </p:column>
                                                 </p:dataTable>

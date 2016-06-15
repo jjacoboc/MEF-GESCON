@@ -13,6 +13,64 @@
         }
     </style>
     <h:form id="fd">
+        <ui:include src="../froala.xhtml"/>
+        <!-- Initialize the editor. -->
+        <script>
+            $(function () {
+                secDialog = function () {
+                    $('#f\\:titulo').val('');
+                    $('#txtHtml').val('');
+                    $('#txtHtml').froalaEditor({
+                        key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
+                        language: 'es',
+                        iframe: true,
+                        toolbarSticky: false,
+                        fontFamily: {
+                            "FontAwesome,sans-serif": 'FontAwesome',
+                            'Arial,Helvetica,sans-serif': 'Arial',
+                            'Georgia,serif': 'Georgia',
+                            'Impact,Charcoal,sans-serif': 'Impact',
+                            'Tahoma,Geneva,sans-serif': 'Tahoma',
+                            "'Times New Roman',Times,serif": 'Times New Roman',
+                            'Verdana,Geneva,sans-serif': 'Verdana'
+                        },
+                        fontFamilyDefaultSelection: 'FontAwesome',
+                        fontFamilySelection: true,
+                        imageUploadURL: '/gescon/UploadImage',
+                        imageUploadParams: {
+                            mb: 'bp\\',
+                            sec: 'd'
+                        }
+                    });
+                };
+                esecDialog = function () {
+                    $('#f\\:etitulo').val(#{wikiMB.selectedSeccion.vtitulo});
+                    $('#etxtHtml').val(#{wikiMB.selectedSeccion.detalleHtml});
+                    $('#etxtHtml').froalaEditor({
+                        key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
+                        language: 'es',
+                        iframe: true,
+                        toolbarSticky: false,
+                        fontFamily: {
+                            "FontAwesome,sans-serif": 'FontAwesome',
+                            'Arial,Helvetica,sans-serif': 'Arial',
+                            'Georgia,serif': 'Georgia',
+                            'Impact,Charcoal,sans-serif': 'Impact',
+                            'Tahoma,Geneva,sans-serif': 'Tahoma',
+                            "'Times New Roman',Times,serif": 'Times New Roman',
+                            'Verdana,Geneva,sans-serif': 'Verdana'
+                        },
+                        fontFamilyDefaultSelection: 'FontAwesome',
+                        fontFamilySelection: true,
+                        imageUploadURL: '/gescon/UploadImage',
+                        imageUploadParams: {
+                            mb: 'bp\\',
+                            sec: 'd'
+                        }
+                    });
+                };
+            });
+        </script>
         <p:growl id="growl" globalOnly="true" showDetail="true" sticky="true" />
         <p:panel styleClass="TexAlLeft containerView">
             <f:facet name="header">
@@ -44,8 +102,37 @@
                     <h:outputText value="Por ello, abstente de escribir reflexiones personales o no enfocados a desarrollo y redacción del artículo; sé cortés y evita ataques personales."/>
                 </p:fieldset>
                 <p:spacer/>
-                <p:commandButton value="#{msgs.bp_btn_discusion}" actionListener="#{buenaPracticaMB.toAddDiscusion}" update=":tabview:disDialogForm:pgDis" 
-                                 oncomplete="PF('disDialog').show();" styleClass="ui-link Fs14" rendered="#{loginMB.user ne null}"/>
+                <p:commandButton id="btnDis" value="#{msgs.bp_btn_discusion}" actionListener="#{buenaPracticaMB.toAddDiscusion}" update=":tabview:fd:pgSec" 
+                                 oncomplete="secDialog();" styleClass="ui-link Fs14" rendered="#{loginMB.user ne null}"/>
+                <p:overlayPanel id="disPanel" widgetVar="disPanel" for="btnDis" hideEffect="fade" showCloseIcon="true" appendToBody="true" style="border: 2px solid black;">
+                    <h:panelGrid id="pgSec" columns="1">
+                            <h:panelGroup>
+                                <h:outputText value="#{msgs.icon_asterisk}"/>
+                                <p:spacer width="5"/>
+                                <h:outputText value="#{msgs.bp_lbl_tipodis}"/>
+                            </h:panelGroup>
+                            <p:selectOneMenu value="#{buenaPracticaMB.tipoDiscusion}" styleClass="Wid20">
+                                <f:selectItem itemValue="" itemLabel="Seleccione" />
+                                <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
+                            </p:selectOneMenu>
+
+                            <h:panelGroup>
+                                <h:outputText value="#{msgs.icon_asterisk}"/>
+                                <p:spacer width="5"/>
+                                <h:outputText value="#{msgs.bp_lbl_titulodis}"/>
+                            </h:panelGroup>
+                            <p:inputText value="#{buenaPracticaMB.tituloDiscusion}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
+
+                            <h:panelGroup>
+                                <h:outputText value="#{msgs.icon_asterisk}"/>
+                                <p:spacer width="5"/>
+                                <h:outputText value="#{msgs.bp_lbl_detalledis}"/>
+                            </h:panelGroup>
+                            <textarea id="txtHtml" name="txtHtml">#{buenaPracticaMB.discusionHtml}</textarea>
+
+                            <p:commandButton value="#{msgs.bp_btn_adddiscusion}" actionListener="#{buenaPracticaMB.addDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
+                        </h:panelGrid>
+                </p:overlayPanel>
             </h:panelGrid>
             <h:panelGrid id="pgDis" columns="1" cellpadding="0" cellspacing="0" width="100%">
                 <table class="Wid100">
@@ -57,8 +144,8 @@
                                 </h:outputText>
                                 <h:outputText value=": #{s.vtitulo}" styleClass="Fs14 FontBold black"/>
                                 <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
-                                <p:commandLink value="editar" actionListener="#{buenaPracticaMB.toEditDiscusion}" update=":tabview:edisDialogForm:pgEdis" 
-                                               oncomplete="PF('edisDialog').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
+                                <p:commandLink value="editar" actionListener="#{buenaPracticaMB.toEditDiscusion}" update=":tabview:fd:pgEdis" 
+                                               oncomplete="PF('edisPanel').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
                                     <f:param name="index" value="#{vs.index}"/>
                                 </p:commandLink>
                                 <h:outputText value="]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
@@ -74,79 +161,44 @@
                         <tr><td><p:spacer/></td></tr>
                     </ui:repeat>
                 </table>
+                <p:overlayPanel id="edisPanel" widgetVar="edisPanel" hideEffect="fade" showCloseIcon="true" onShow="esecDialog();" dynamic="true" style="border: 2px solid black;" >
+                    <h:panelGrid id="pgEdis" columns="1">
+                            <h:panelGroup>
+                                <h:outputText value="#{msgs.icon_asterisk}"/>
+                                <p:spacer width="5"/>
+                                <h:outputText value="#{msgs.bp_lbl_tipodis}"/>
+                            </h:panelGroup>
+                            <p:selectOneMenu value="#{buenaPracticaMB.selectedDiscusionSeccion.ntipodiscusion}" styleClass="Wid20">
+                                <f:selectItem itemValue="" itemLabel="Seleccione" />
+                                <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
+                            </p:selectOneMenu>
+
+                            <h:panelGroup>
+                                <h:outputText value="#{msgs.icon_asterisk}"/>
+                                <p:spacer width="5"/>
+                                <h:outputText value="#{msgs.bp_lbl_titulodis}"/>
+                            </h:panelGroup>
+                            <p:inputText value="#{buenaPracticaMB.selectedDiscusionSeccion.vtitulo}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
+
+                            <h:panelGroup>
+                                <h:outputText value="#{msgs.icon_asterisk}"/>
+                                <p:spacer width="5"/>
+                                <h:outputText value="#{msgs.bp_lbl_detalledis}"/>
+                            </h:panelGroup>
+                            <textarea id="etxtHtml" name="etxtHtml">#{buenaPracticaMB.selectedDiscusionSeccion.discusionHtml}</textarea>
+
+                            <p:commandButton value="#{msgs.bp_btn_editdiscusion}" actionListener="#{buenaPracticaMB.editDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
+                        </h:panelGrid>
+                </p:overlayPanel>
             </h:panelGrid>
         </p:panel>
         <h:panelGrid columns="1" width="100%">
             <h:panelGroup rendered="#{loginMB.user ne null}">
                 <p:commandButton value="Registrar" actionListener="#{buenaPracticaMB.saveOrUpdateDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl"/>
                 <p:spacer width="10"/>
-                
+
             </h:panelGroup>
             <p:commandButton value="Regresar" ajax="false" action="#{consultaMB.back}" rendered="#{loginMB.user eq null}"/>
         </h:panelGrid>
     </h:form>
-
-    <p:dialog id="disDlg" header="#{msgs.bp_lbl_pnlDiscusion}" widgetVar="disDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
-        <h:form id="disDialogForm">
-            <h:panelGrid id="pgDis" columns="1">
-                <h:panelGroup>
-                    <h:outputText value="#{msgs.icon_asterisk}"/>
-                    <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_tipodis}"/>
-                </h:panelGroup>
-                <p:selectOneMenu value="#{buenaPracticaMB.tipoDiscusion}" styleClass="Wid20">
-                    <f:selectItem itemValue="" itemLabel="Seleccione" />
-                    <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
-                </p:selectOneMenu>
-
-                <h:panelGroup>
-                    <h:outputText value="#{msgs.icon_asterisk}"/>
-                    <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_titulodis}"/>
-                </h:panelGroup>
-                <p:inputText value="#{buenaPracticaMB.tituloDiscusion}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
-
-                <h:panelGroup>
-                    <h:outputText value="#{msgs.icon_asterisk}"/>
-                    <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_detalledis}"/>
-                </h:panelGroup>
-                <p:editor id="txtHtml" value="#{buenaPracticaMB.discusionHtml}" />
-
-                <p:commandButton value="#{msgs.bp_btn_adddiscusion}" actionListener="#{buenaPracticaMB.addDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
-            </h:panelGrid>
-        </h:form>
-    </p:dialog>
-
-    <p:dialog id="edisDlg" header="#{msgs.bp_lbl_pnlDiscusione}" widgetVar="edisDialog" modal="true" appendTo="@(body)" showEffect="fade" hideEffect="fade" resizable="false" closable="true">
-        <h:form id="edisDialogForm">
-            <h:panelGrid id="pgEdis" columns="1">
-                <h:panelGroup>
-                    <h:outputText value="#{msgs.icon_asterisk}"/>
-                    <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_tipodis}"/>
-                </h:panelGroup>
-                <p:selectOneMenu value="#{buenaPracticaMB.selectedDiscusionSeccion.ntipodiscusion}" styleClass="Wid20">
-                    <f:selectItem itemValue="" itemLabel="Seleccione" />
-                    <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
-                </p:selectOneMenu>
-
-                <h:panelGroup>
-                    <h:outputText value="#{msgs.icon_asterisk}"/>
-                    <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_titulodis}"/>
-                </h:panelGroup>
-                <p:inputText value="#{buenaPracticaMB.selectedDiscusionSeccion.vtitulo}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
-
-                <h:panelGroup>
-                    <h:outputText value="#{msgs.icon_asterisk}"/>
-                    <p:spacer width="5"/>
-                    <h:outputText value="#{msgs.bp_lbl_detalledis}"/>
-                </h:panelGroup>
-                <p:editor id="txtHtml" value="#{buenaPracticaMB.selectedDiscusionSeccion.discusionHtml}" />
-
-                <p:commandButton value="#{msgs.bp_btn_editdiscusion}" actionListener="#{buenaPracticaMB.editDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
-            </h:panelGrid>
-        </h:form>
-    </p:dialog>
 </ui:composition>

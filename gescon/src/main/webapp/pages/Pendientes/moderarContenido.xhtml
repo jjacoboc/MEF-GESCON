@@ -20,7 +20,25 @@
                             $(function () {
                                 $('#descHtml').froalaEditor({
                                     key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
-                                    language: 'es'
+                                    language: 'es',
+                                    iframe: true,
+                                    toolbarSticky: false,
+                                    fontFamily: {
+                                        "FontAwesome,sans-serif": 'FontAwesome',
+                                        'Arial,Helvetica,sans-serif': 'Arial',
+                                        'Georgia,serif': 'Georgia',
+                                        'Impact,Charcoal,sans-serif': 'Impact',
+                                        'Tahoma,Geneva,sans-serif': 'Tahoma',
+                                        "'Times New Roman',Times,serif": 'Times New Roman',
+                                        'Verdana,Geneva,sans-serif': 'Verdana'
+                                    },
+                                    fontFamilyDefaultSelection: 'FontAwesome',
+                                    fontFamilySelection: true,
+                                    imageUploadURL: '/gescon/UploadImage',
+                                    imageUploadParams: {
+                                        mb: 'ct\\',
+                                        sec: 'b'
+                                    }
                                 });
                                 actualizar=function(){
                                     var value = $('#descHtml').val();
@@ -235,7 +253,7 @@
 
                                 <p:fieldset>
                                     <h:panelGrid id="pgNewVinc" columns="1" cellpadding="0" cellspacing="0" width="100%">
-                                        <p:commandButton value="#{msgs.wk_btn_vinculo}" actionListener="#{pendienteMB.toAddLink}" update=":pickDialogForm:pgPick" oncomplete="PF('pickDialog').show();" styleClass="ui-link Fs14"/>
+                                        <p:commandButton value="#{msgs.wk_btn_vinculo}" actionListener="#{pendienteMB.toAddLinkContenido}" update=":pickDialogForm:pgPick" oncomplete="PF('pickDialog').show();" styleClass="ui-link Fs14"/>
                                         <p:tabView id="tabview">
                                             <p:tab title="Bases Legales">
                                                 <p:dataTable value="#{pendienteMB.listaTargetVinculosBL}" var="p" scrollRows="5" scrollable="true" 

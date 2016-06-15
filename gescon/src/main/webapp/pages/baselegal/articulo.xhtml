@@ -53,14 +53,14 @@
                         </f:facet>
                     </p:lightBox>
                 </h:panelGrid>
-                
+
                 <h:panelGrid columns="2">
                     <h:outputText value="#{msgs.bl_lbl_fecha}" style="white-space: nowrap;"/>
                     <h:outputText value="#{baseLegalMB.selectedBaseLegal.dfechavigencia}" >
                         <f:convertDateTime dateStyle="medium" type="date" locale="es" pattern="dd/MM/yyyy" />
                     </h:outputText>
                 </h:panelGrid>
-                
+
                 <p:spacer/>
 
                 <h:outputText value="#{msgs.bl_lbl_ambito}" style="font-style: italic;"/>
@@ -70,7 +70,7 @@
                     <p:selectBooleanCheckbox value="#{baseLegalMB.chkGobLocal}" itemLabel="Gobierno Local" disabled="true"/>
                     <p:selectBooleanCheckbox value="#{baseLegalMB.chkMancomunidades}" itemLabel="Mancomunidades" disabled="true"/>
                 </h:panelGrid>
-                
+
                 <p:spacer/>
 
                 <h:outputText value="#{msgs.bl_lbl_sumilla}" style="font-style: italic;"/>
@@ -80,37 +80,72 @@
 
                 <p:spacer/>
                 <p:fieldset legend="Vinculos Relacionados" toggleable="true">
-                        <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" rowIndexVar="rowIndex"
-                                     emptyMessage="Ninguna base legal vinculada." 
-                                     rowStyleClass="#{t.nestadoid eq '4' ? 'blink' : null}">
-                            <p:column style="width: 25%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
-                                <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
-                                    <h:outputText value="#{t.vnumero}"/>
-                                    <f:param name="id" value="#{t.nbaselegalid}"/>
-                                    <f:param name="idTipo" value="1"/>
-                                    <f:param name="popup" value="false"/>
-                                    <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
-                                </h:commandLink>
-                            </p:column>
-                            <p:column style="width: 45%" headerText="#{msgs.bl_lbl_columna08}">
-                                <h:outputText value="#{t.vnombre}"/>
-                            </p:column>
-                            <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
-                                <h:outputText value="#{t.ncategoriaid}">
-                                    <f:converter converterId="converterCategoria"/>
-                                </h:outputText>
-                            </p:column>
-                            <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
-                                <h:outputText value="#{t.nestadoid}">
-                                    <f:converter converterId="converterEstadoBaseLegal"/>
-                                </h:outputText>
-                            </p:column>
-                        </p:dataTable>
+                    <p:dataTable value="#{baseLegalMB.listaTarget}" var="t" rowIndexVar="rowIndex"
+                                 emptyMessage="Ninguna base legal vinculada." 
+                                 rowStyleClass="#{t.nestadoid eq '4' ? 'blink' : null}">
+                        <p:column style="width: 25%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                            <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                <h:outputText value="#{t.vnumero}"/>
+                                <f:param name="id" value="#{t.nbaselegalid}"/>
+                                <f:param name="idTipo" value="1"/>
+                                <f:param name="popup" value="false"/>
+                                <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                            </h:commandLink>
+                        </p:column>
+                        <p:column style="width: 45%" headerText="#{msgs.bl_lbl_columna08}">
+                            <h:outputText value="#{t.vnombre}"/>
+                        </p:column>
+                        <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                            <h:outputText value="#{t.ncategoriaid}">
+                                <f:converter converterId="converterCategoria"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                            <h:outputText value="#{t.nestadoid}">
+                                <f:converter converterId="converterEstadoBaseLegal"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </p:fieldset>
+                
+                <p:spacer/>
+                <p:fieldset legend="Vinculos Registrados" toggleable="true">
+                    <p:dataTable value="#{baseLegalMB.listaLinks}" var="t" rowIndexVar="rowIndex"
+                                 emptyMessage="Ninguna base legal vinculada." 
+                                 rowStyleClass="#{t.nestadoid eq '4' ? 'blink' : null}">
+                        <p:column style="width: 20%; text-align: center;" headerText="#{msgs.bl_lbl_columna07}">
+                            <h:commandLink actionListener="#{consultaMB.view}" styleClass="GesconLink" >
+                                <h:outputText value="#{t.vnumero}"/>
+                                <f:param name="id" value="#{t.nbaselegalid}"/>
+                                <f:param name="idTipo" value="1"/>
+                                <f:param name="popup" value="false"/>
+                                <f:param name="tempPopup" value="#{consultaMB.tempPopup}"/>
+                            </h:commandLink>
+                        </p:column>
+                        <p:column style="width: 35%" headerText="#{msgs.bl_lbl_columna08}">
+                            <h:outputText value="#{t.vnombre}"/>
+                        </p:column>
+                        <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna09}">
+                            <h:outputText value="#{t.ncategoriaid}">
+                                <f:converter converterId="converterCategoria"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna02}">
+                            <h:outputText value="#{t.dfechavigencia}">
+                                <f:convertDateTime locale="es" pattern="dd/MM/yyyy" />
+                            </h:outputText>
+                        </p:column>
+                        <p:column style="width: 15%; text-align: center;" headerText="#{msgs.bl_lbl_columna10}">
+                            <h:outputText value="#{t.nestadoid}">
+                                <f:converter converterId="converterEstadoBaseLegal"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
                 </p:fieldset>
             </h:panelGrid>
         </p:panel>
         <h:panelGrid columns="1" cellpadding="0" cellspacing="0" width="100%">
-            
+
         </h:panelGrid>
     </h:form>
 

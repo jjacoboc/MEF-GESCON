@@ -23,5 +23,6 @@ public interface BaseLegalService {
     List<BaseLegal> getTbaselegalesLinkedById(final BigDecimal id) throws Exception;
     List<BaseLegal> getTbaselegalesNotLinkedById(final BigDecimal id) throws Exception;
     List<Asignacion> obtenerBaseLegalxAsig(BigDecimal baselegalid, BigDecimal usuarioid, BigDecimal tpoconocimientoid) throws Exception;
+    List<BaseLegal> getTbaselegalesByLinkId(final BigDecimal id) throws Exception;
     void saveOrUpdate(BaseLegal baseLegal) throws Exception;
 }

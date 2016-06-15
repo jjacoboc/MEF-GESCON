@@ -183,6 +183,40 @@ public class BaseLegalDaoImpl extends HibernateDaoSupport implements BaseLegalDa
         return (List<HashMap>) object;
 
     }
+    
+    @Override
+    public List<HashMap> getTbaselegalesByLinkId(final BigDecimal id) throws Exception {
+        final StringBuilder sql = new StringBuilder();
+        Object object = null;
+        try {
+            sql.append("SELECT a.nbaselegalid AS ID, a.vnumero AS NUMERO, a.vnombre AS NOMBRE, a.vsumilla AS SUMILLA, ");
+            sql.append("       a.ncategoriaid AS IDCATEGORIA, b.vnombre AS CATEGORIA, a.dfechavigencia AS FECHA, ");
+            sql.append("       e.ntipovinculo AS IDESTADO, c.vnombre AS ESTADO ");
+            sql.append("FROM TBASELEGAL a ");
+            sql.append("INNER JOIN MTCATEGORIA b ON a.ncategoriaid = b.ncategoriaid ");
+            sql.append("INNER JOIN TVINCULO_BASELEGAL e ON a.nbaselegalid = e.nbaselegalid AND e.nbaselegalvinculadaid = :ID ");
+            sql.append("INNER JOIN MTESTADO_BASELEGAL c ON e.ntipovinculo = c.nestadoid ");
+            sql.append("WHERE a.nactivo = :ACTIVO ");
+            sql.append("AND a.nbaselegalid IN(SELECT d.nbaselegalid FROM TVINCULO_BASELEGAL d WHERE d.nbaselegalvinculadaid = :ID)");
+            sql.append("ORDER BY a.vnumero ");
+
+            object = getHibernateTemplate().execute(
+                    new HibernateCallback() {
+                        @Override
+                        public Object doInHibernate(Session session) throws HibernateException {
+                            Query query = session.createSQLQuery(sql.toString());
+                            query.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+                            query.setParameter("ACTIVO", BigDecimal.ONE);
+                            query.setParameter("ID", id);
+                            return query.list();
+                        }
+                    });
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return (List<HashMap>) object;
+    }
 
     @Override
     @Transactional(readOnly = false)

@@ -41,7 +41,7 @@
 
                 <h:outputText value="#{contenidoMB.selectedContenido.vdescripcion}" escape="false" styleClass="Fs14"/>
                 <p:spacer/>
-                <h:outputText value="#{contenidoMB.selectedContenido.vcontenido}" escape="false" styleClass="Fs14"/>
+                <h:outputText value="#{contenidoMB.contenidoHtml}" escape="false" styleClass="Fs14"/>
 
                 <p:fieldset legend="Arhivos Relacionados" toggleable="true">
                     <p:dataTable id="tbl" value="#{contenidoMB.listaArchivos}" var="row" paginator="true" rows="10" rowIndexVar="rowIndex" 

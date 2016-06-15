@@ -382,19 +382,19 @@ public class PreguntaDaoImpl extends HibernateDaoSupport implements PreguntaDao{
     }
     
     @Override
+    @Transactional(readOnly = false)
     public void delete(final BigDecimal preguntaid) throws Exception {
         final StringBuilder sql = new StringBuilder();
         Object object = null;
         try {
-            sql.append("delete from TVINCULO_PREGUNTA where NPREGUNTAID=:PREGUNTA ");
+            sql.append("DELETE FROM TVINCULO_PREGUNTA WHERE NPREGUNTAID = ").append(preguntaid);
 
             object = getHibernateTemplate().execute(
                     new HibernateCallback() {
                         @Override
                         public Object doInHibernate(Session session) throws HibernateException {
                             Query query = session.createSQLQuery(sql.toString())
-                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP)
-                            .setParameter("PREGUNTA", preguntaid);
+                            .setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
                             return query.list();
                         }
                     });

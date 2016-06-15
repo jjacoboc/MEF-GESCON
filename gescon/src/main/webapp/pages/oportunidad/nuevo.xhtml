@@ -21,7 +21,25 @@
                             $(function() {
                                 $('#descHtml').froalaEditor({
                                     key: 'TB16B7A7B2D5C5F3F2C2B7B5A5C4==',
-                                    language: 'es'
+                                    language: 'es',
+                                    iframe: true,
+                                    toolbarSticky: false,
+                                    fontFamily: {
+                                        "FontAwesome,sans-serif": 'FontAwesome',
+                                        'Arial,Helvetica,sans-serif': 'Arial',
+                                        'Georgia,serif': 'Georgia',
+                                        'Impact,Charcoal,sans-serif': 'Impact',
+                                        'Tahoma,Geneva,sans-serif': 'Tahoma',
+                                        "'Times New Roman',Times,serif": 'Times New Roman',
+                                        'Verdana,Geneva,sans-serif': 'Verdana'
+                                    },
+                                    fontFamilyDefaultSelection: 'FontAwesome',
+                                    fontFamilySelection: true,
+                                    imageUploadURL: '/gescon/UploadImage',
+                                    imageUploadParams: {
+                                        mb: 'om\\',
+                                        sec: 'b'
+                                    }
                                 });
                             });
                         </script>

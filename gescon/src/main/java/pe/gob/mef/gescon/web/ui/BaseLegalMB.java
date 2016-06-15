@@ -99,7 +99,6 @@ import pe.gob.mef.gescon.web.bean.Vinculo;
 import pe.gob.mef.gescon.web.bean.VinculoBaselegal;
 import pe.gob.mef.gescon.web.bean.VinculoBaselegalHist;
 import pe.gob.mef.gescon.web.bean.VinculoHist;
-import pe.gob.mef.gescon.web.bean.Wiki;
 
 /**
  *
@@ -138,6 +137,7 @@ public class BaseLegalMB implements Serializable {
     private Categoria selectedCategoria;
     private List<BaseLegal> listaSource;
     private List<BaseLegal> listaTarget;
+    private List<BaseLegal> listaLinks;
     private DualListModel<BaseLegal> pickList;
     private List<CalificacionBaselegal> listaCalificacion;
     private CalificacionBaselegal selectedCalificacion;
@@ -464,6 +464,14 @@ public class BaseLegalMB implements Serializable {
      */
     public void setListaTarget(List<BaseLegal> listaTarget) {
         this.listaTarget = listaTarget;
+    }
+
+    public List<BaseLegal> getListaLinks() {
+        return listaLinks;
+    }
+
+    public void setListaLinks(List<BaseLegal> listaLinks) {
+        this.listaLinks = listaLinks;
     }
 
     /**

@@ -117,6 +117,7 @@ public class PendienteMB implements Serializable {
     private final String pathwk = "wk/";
     private final String pathbp = "bp/";
     private final String pathom = "om/";
+    private final String pathpr = "pr/";
     private BigDecimal cat_antigua, cat_nueva;
     private User user;
     private List<Consulta> listaNotificacionesAlerta;
@@ -1709,6 +1710,9 @@ public class PendienteMB implements Serializable {
                     this.setChkDestacado(BigDecimal.ONE.equals(this.getSelectedPregunta().getNdestacado()));
                     setListaAsignacion(service.obtenerPreguntaxAsig(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS));
                     setFlistaPregunta(service.obtenerPreguntas(this.getSelectedPregunta().getNpreguntaid(), mb.getUser().getNusuarioid(), Constante.PREGUNTAS));
+                    
+                    String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+                    this.getSelectedPregunta().setVrespuesta(GcmFileUtils.readStringFromFileServer(ruta0, "html.txt"));
 
                     this.setListaSourceVinculos(new ArrayList<Consulta>());
                     this.setListaTargetVinculos(new ArrayList<Consulta>());
@@ -2397,12 +2401,20 @@ public class PendienteMB implements Serializable {
             this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
             this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
             this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
-            this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta());
+            if (this.getSelectedPregunta().getVrespuesta().length() > 400) {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(this.getSelectedPregunta().getVrespuesta().substring(0, 300)));
+            }
             this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
             this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedPregunta().setDfechamodificacion(new Date());
             this.getSelectedPregunta().setVusuariomodificacion(user_savepreg.getVlogin());
             service.saveOrUpdate(this.getSelectedPregunta());
+            
+            String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
+            texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
 
             RespuestaHistService serviceresp = (RespuestaHistService) ServiceFinder.findBean("RespuestaHistService");
             RespuestaHist respuestahist = new RespuestaHist();
@@ -2496,12 +2508,20 @@ public class PendienteMB implements Serializable {
             this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
             this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
             this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
-            this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta());
+            if (this.getSelectedPregunta().getVrespuesta().length() > 400) {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(this.getSelectedPregunta().getVrespuesta().substring(0, 300)));
+            }
             this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
             this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedPregunta().setDfechamodificacion(new Date());
             this.getSelectedPregunta().setVusuariomodificacion(user_savepreg.getVlogin());
             service.saveOrUpdate(this.getSelectedPregunta());
+            
+            String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
+            texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
 
             RespuestaHistService serviceresp = (RespuestaHistService) ServiceFinder.findBean("RespuestaHistService");
             RespuestaHist respuestahist = new RespuestaHist();
@@ -2668,13 +2688,43 @@ public class PendienteMB implements Serializable {
         try {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
-                
+
             //this.getSelectedPregunta().setVrespuesta(JSFUtils.getRequestParameter("descHtml"));
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
+            if (this.getSelectedPregunta().getVrespuesta().length() > 400) {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(this.getSelectedPregunta().getVrespuesta().substring(0, 300)));
+            }
             this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 6));
             this.getSelectedPregunta().setDfechapublicacion(new Date());
             service.saveOrUpdate(this.getSelectedPregunta());
+            
+            String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
+            texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
+            
+            this.setListaTargetVinculos(new ArrayList<Consulta>());
+
+            if (!CollectionUtils.isEmpty(this.getListaTargetVinculosBL())) {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+            }
+            if (!CollectionUtils.isEmpty(this.getListaTargetVinculosBP())) {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+            }
+            if (!CollectionUtils.isEmpty(this.getListaTargetVinculosCT())) {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+            }
+            if (!CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+            }
+            if (!CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+            }
+            if (!CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
+                this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+            }
 
             if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                 VinculoPreguntaService vinculopreguntaService = (VinculoPreguntaService) ServiceFinder.findBean("VinculoPreguntaService");
@@ -2712,13 +2762,21 @@ public class PendienteMB implements Serializable {
     public void savePubEdit(ActionEvent event) throws Exception {
         try {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta());
+            if (this.getSelectedPregunta().getVrespuesta().length() > 400) {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(this.getSelectedPregunta().getVrespuesta().substring(0, 300)));
+            }
             this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
             this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
             this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
             this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
             this.getSelectedPregunta().setDfechamodificacion(new Date());
             service.saveOrUpdate(this.getSelectedPregunta());
+            
+            String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
+            texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             loginMB.refreshNotifications();
@@ -2745,13 +2803,21 @@ public class PendienteMB implements Serializable {
     public void saveRespEdit(ActionEvent event) throws Exception {
         try {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            this.getSelectedPregunta().setVrespuesta(this.getSelectedPregunta().getVrespuesta().toUpperCase());
+            if (this.getSelectedPregunta().getVrespuesta().length() > 400) {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(this.getSelectedPregunta().getVrespuesta().substring(0, 300)));
+            }
             this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
             this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
             this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
             this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
             this.getSelectedPregunta().setDfechamodificacion(new Date());
             service.saveOrUpdate(this.getSelectedPregunta());
+            
+            String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
+            texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
+            GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
 
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             loginMB.refreshNotifications();
@@ -2777,10 +2843,40 @@ public class PendienteMB implements Serializable {
 
                 PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
                 //this.getSelectedPregunta().setVrespuesta(JSFUtils.getRequestParameter("descHtml"));
+                if (Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().length() > 400) {
+                    this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().substring(0, 300)));
+                }
                 this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 5));
                 service.saveOrUpdate(this.getSelectedPregunta());
+                
+                String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+                String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+                GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
+                texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
+                GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
 
+                this.setListaTargetVinculos(new ArrayList<Consulta>());
+
+                if (!CollectionUtils.isEmpty(this.getListaTargetVinculosBL())) {
+                    this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+                }
+                if (!CollectionUtils.isEmpty(this.getListaTargetVinculosBP())) {
+                    this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+                }
+                if (!CollectionUtils.isEmpty(this.getListaTargetVinculosCT())) {
+                    this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+                }
+                if (!CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) {
+                    this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+                }
+                if (!CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) {
+                    this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+                }
+                if (!CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
+                    this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+                }
+            
                 if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                     VinculoPreguntaService vinculopreguntaService = (VinculoPreguntaService) ServiceFinder.findBean("VinculoPreguntaService");
                     service.delete(this.getSelectedPregunta().getNpreguntaid());
@@ -3116,8 +3212,8 @@ public class PendienteMB implements Serializable {
             Tbaselegal tbaselegal = new Tbaselegal();
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
 
-            String ruta0 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
-            String ruta1 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
+            String ruta0 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+            String ruta1 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "/" + baseHist.getNversion().toString() + "/";
 
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
             Archivo archivo = aservice.getArchivoByBaseLegal(this.getSelectedBaseLegal());
@@ -3411,8 +3507,8 @@ public class PendienteMB implements Serializable {
             Tbaselegal tbaselegal = new Tbaselegal();
             BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
 
-            String ruta0 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
-            String ruta1 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
+            String ruta0 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+            String ruta1 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "/" + baseHist.getNversion().toString() + "/";
 
             ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
             Archivo archivo = aservice.getArchivoByBaseLegal(this.getSelectedBaseLegal());
@@ -3696,8 +3792,8 @@ public class PendienteMB implements Serializable {
                 Tbaselegal tbaselegal = new Tbaselegal();
                 BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
 
-                String ruta0 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
-                String ruta1 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
+                String ruta0 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+                String ruta1 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "/" + baseHist.getNversion().toString() + "/";
 
                 ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
                 Archivo archivo = aservice.getArchivoByBaseLegal(this.getSelectedBaseLegal());
@@ -4011,8 +4107,8 @@ public class PendienteMB implements Serializable {
                 Tbaselegal tbaselegal = new Tbaselegal();
                 BeanUtils.copyProperties(tbaselegal, this.getSelectedBaseLegal());
 
-                String ruta0 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + BigDecimal.ZERO.toString() + "\\";
-                String ruta1 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "\\" + baseHist.getNversion().toString() + "\\";
+                String ruta0 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+                String ruta1 = path + this.getSelectedBaseLegal().getNbaselegalid().toString() + "/" + baseHist.getNversion().toString() + "/";
 
                 ArchivoService aservice = (ArchivoService) ServiceFinder.findBean("ArchivoService");
                 Archivo archivo = aservice.getArchivoByBaseLegal(this.getSelectedBaseLegal());
@@ -4423,7 +4519,7 @@ public class PendienteMB implements Serializable {
             if (this.getContenidoPlain().length() < 400) {
                 this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
             } else {
-                this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
             }
 
             if (this.getSelectedCategoria() == null) {
@@ -4464,7 +4560,7 @@ public class PendienteMB implements Serializable {
             if (this.getContenidoPlain().length() < 400) {
                 historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
             } else {
-                historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
             }
             historial.setNactivo(BigDecimal.ONE);
             historial.setNsituacionid(this.getSelectedContenido().getNsituacionid());
@@ -4603,7 +4699,7 @@ public class PendienteMB implements Serializable {
             if (this.getContenidoPlain().length() < 400) {
                 this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
             } else {
-                this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
             }
             this.getSelectedContenido().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedContenido().setDfechamodificacion(new Date());
@@ -4638,7 +4734,7 @@ public class PendienteMB implements Serializable {
             if (this.getContenidoPlain().length() < 400) {
                 historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
             } else {
-                historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
             }
             historial.setNactivo(BigDecimal.ONE);
             historial.setNsituacionid(this.getSelectedContenido().getNsituacionid());
@@ -4791,7 +4887,7 @@ public class PendienteMB implements Serializable {
                 if (this.getContenidoPlain().length() < 400) {
                     this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
                 } else {
-                    this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                    this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
                 }
                 this.getSelectedContenido().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
                 this.getSelectedContenido().setDfechamodificacion(new Date());
@@ -4824,7 +4920,7 @@ public class PendienteMB implements Serializable {
                 if (this.getContenidoPlain().length() < 400) {
                     historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
                 } else {
-                    historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                    historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
                 }
                 historial.setNactivo(BigDecimal.ONE);
                 historial.setNsituacionid(this.getSelectedContenido().getNsituacionid());
@@ -4966,7 +5062,7 @@ public class PendienteMB implements Serializable {
                 if (this.getContenidoPlain().length() < 400) {
                     this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
                 } else {
-                    this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                    this.getSelectedContenido().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
                 }
                 this.getSelectedContenido().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
                 this.getSelectedContenido().setDfechamodificacion(new Date());
@@ -4999,7 +5095,7 @@ public class PendienteMB implements Serializable {
                 if (this.getContenidoPlain().length() < 400) {
                     historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
                 } else {
-                    historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                    historial.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
                 }
                 historial.setNactivo(BigDecimal.ONE);
                 historial.setNsituacionid(this.getSelectedContenido().getNsituacionid());
@@ -5152,7 +5248,7 @@ public class PendienteMB implements Serializable {
                 if (this.getDescripcionPlain().length() < 400) {
                     this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
                 } else {
-                    this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                    this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 399)));
                 }
                 this.getSelectedWiki().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedWiki().setDfechamodificacion(new Date());
@@ -5327,7 +5423,7 @@ public class PendienteMB implements Serializable {
                 if (this.getDescripcionPlain().length() < 400) {
                     this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
                 } else {
-                    this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                    this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 399)));
                 }
                 this.getSelectedBpractica().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedBpractica().setDfechamodificacion(new Date());
@@ -5503,7 +5599,7 @@ public class PendienteMB implements Serializable {
                 if (this.getContenidoPlain().length() < 400) {
                     this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
                 } else {
-                    this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                    this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
                 }
                 this.getSelectedOmejora().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedOmejora().setDfechamodificacion(new Date());
@@ -5681,7 +5777,7 @@ public class PendienteMB implements Serializable {
                 if (this.getDescripcionPlain().length() < 400) {
                     this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
                 } else {
-                    this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                    this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 399)));
                 }
                 this.getSelectedWiki().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedWiki().setDfechamodificacion(new Date());
@@ -5857,7 +5953,7 @@ public class PendienteMB implements Serializable {
                 if (this.getDescripcionPlain().length() < 400) {
                     this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
                 } else {
-                    this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                    this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 399)));
                 }
                 this.getSelectedBpractica().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedBpractica().setDfechamodificacion(new Date());
@@ -6034,7 +6130,7 @@ public class PendienteMB implements Serializable {
                 if (this.getContenidoPlain().length() < 400) {
                     this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
                 } else {
-                    this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                    this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
                 }
                 this.getSelectedOmejora().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedOmejora().setDfechamodificacion(new Date());
@@ -6313,7 +6409,7 @@ public class PendienteMB implements Serializable {
             if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 399)));
             }
             this.getSelectedWiki().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedWiki().setDfechamodificacion(new Date());
@@ -6473,7 +6569,7 @@ public class PendienteMB implements Serializable {
             if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 399)));
             }
             this.getSelectedBpractica().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBpractica().setDfechamodificacion(new Date());
@@ -6633,7 +6729,7 @@ public class PendienteMB implements Serializable {
             if (this.getContenidoPlain().length() < 400) {
                 this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
             } else {
-                this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
             }
             this.getSelectedOmejora().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedOmejora().setDfechamodificacion(new Date());
@@ -6877,7 +6973,7 @@ public class PendienteMB implements Serializable {
             if (this.getContenidoPlain().length() < 400) {
                 implementacion.setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
             } else {
-                implementacion.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                implementacion.setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
             }
             implementacion.setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
 
@@ -7012,7 +7108,7 @@ public class PendienteMB implements Serializable {
             if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                this.getSelectedBpractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 399)));
             }
             this.getSelectedBpractica().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBpractica().setDfechamodificacion(new Date());
@@ -7195,7 +7291,7 @@ public class PendienteMB implements Serializable {
             if (this.getContenidoPlain().length() < 400) {
                 this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain()));
             } else {
-                this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 400)));
+                this.getSelectedOmejora().setVcontenido(StringUtils.capitalize(this.getContenidoPlain().substring(0, 399)));
             }
             this.getSelectedOmejora().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedOmejora().setDfechamodificacion(new Date());
@@ -7379,7 +7475,7 @@ public class PendienteMB implements Serializable {
             if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
-                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
+                this.getSelectedWiki().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 399)));
             }
             this.getSelectedWiki().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedWiki().setDfechamodificacion(new Date());
@@ -7542,8 +7638,44 @@ public class PendienteMB implements Serializable {
         try {
             this.setIdTipoConocimiento(null);
             this.setListaSourceVinculos(new ArrayList());
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosBL())) {
+                this.setListaSourceVinculosBL(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosBP())) {
+                this.setListaSourceVinculosBP(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosCT())) {
+                this.setListaSourceVinculosCT(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosOM())) {
+                this.setListaSourceVinculosOM(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosPR())) {
+                this.setListaSourceVinculosPR(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosWK())) {
+                this.setListaSourceVinculosWK(new ArrayList());
+            }
             this.setListaTargetVinculos(new ArrayList());
-            this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosBL())) {
+                this.setListaTargetVinculosBL(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosBP())) {
+                this.setListaTargetVinculosBP(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosCT())) {
+                this.setListaTargetVinculosCT(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) {
+                this.setListaTargetVinculosOM(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) {
+                this.setListaTargetVinculosPR(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
+                this.setListaTargetVinculosWK(new ArrayList());
+            }
+            this.setPickListPregunta(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -7554,8 +7686,44 @@ public class PendienteMB implements Serializable {
         try {
             this.setIdTipoConocimiento(null);
             this.setListaSourceVinculos(new ArrayList());
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosBL())) {
+                this.setListaSourceVinculosBL(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosBP())) {
+                this.setListaSourceVinculosBP(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosCT())) {
+                this.setListaSourceVinculosCT(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosOM())) {
+                this.setListaSourceVinculosOM(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosPR())) {
+                this.setListaSourceVinculosPR(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosWK())) {
+                this.setListaSourceVinculosWK(new ArrayList());
+            }
             this.setListaTargetVinculos(new ArrayList());
-            this.setPickListWiki(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosBL())) {
+                this.setListaTargetVinculosBL(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosBP())) {
+                this.setListaTargetVinculosBP(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosCT())) {
+                this.setListaTargetVinculosCT(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) {
+                this.setListaTargetVinculosOM(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) {
+                this.setListaTargetVinculosPR(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
+                this.setListaTargetVinculosWK(new ArrayList());
+            }
+            this.setPickListWiki(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -7566,8 +7734,92 @@ public class PendienteMB implements Serializable {
         try {
             this.setIdTipoConocimiento(null);
             this.setListaSourceVinculos(new ArrayList());
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosBL())) {
+                this.setListaSourceVinculosBL(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosBP())) {
+                this.setListaSourceVinculosBP(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosCT())) {
+                this.setListaSourceVinculosCT(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosOM())) {
+                this.setListaSourceVinculosOM(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosPR())) {
+                this.setListaSourceVinculosPR(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosWK())) {
+                this.setListaSourceVinculosWK(new ArrayList());
+            }
             this.setListaTargetVinculos(new ArrayList());
-            this.setPickListBpractica(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosBL())) {
+                this.setListaTargetVinculosBL(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosBP())) {
+                this.setListaTargetVinculosBP(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosCT())) {
+                this.setListaTargetVinculosCT(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) {
+                this.setListaTargetVinculosOM(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) {
+                this.setListaTargetVinculosPR(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
+                this.setListaTargetVinculosWK(new ArrayList());
+            }
+            this.setPickListBpractica(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+    
+    public void toAddLinkContenido(ActionEvent event) {
+        try {
+            this.setIdTipoConocimiento(null);
+            this.setListaSourceVinculos(new ArrayList());
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosBL())) {
+                this.setListaSourceVinculosBL(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosBP())) {
+                this.setListaSourceVinculosBP(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosCT())) {
+                this.setListaSourceVinculosCT(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosOM())) {
+                this.setListaSourceVinculosOM(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosPR())) {
+                this.setListaSourceVinculosPR(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosWK())) {
+                this.setListaSourceVinculosWK(new ArrayList());
+            }
+            this.setListaTargetVinculos(new ArrayList());
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosBL())) {
+                this.setListaTargetVinculosBL(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosBP())) {
+                this.setListaTargetVinculosBP(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosCT())) {
+                this.setListaTargetVinculosCT(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) {
+                this.setListaTargetVinculosOM(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) {
+                this.setListaTargetVinculosPR(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
+                this.setListaTargetVinculosWK(new ArrayList());
+            }
+            this.setPickListContenido(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -7578,7 +7830,43 @@ public class PendienteMB implements Serializable {
         try {
             this.setIdTipoConocimiento(null);
             this.setListaSourceVinculos(new ArrayList());
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosBL())) {
+                this.setListaSourceVinculosBL(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosBP())) {
+                this.setListaSourceVinculosBP(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosCT())) {
+                this.setListaSourceVinculosCT(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosOM())) {
+                this.setListaSourceVinculosOM(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosPR())) {
+                this.setListaSourceVinculosPR(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaSourceVinculosWK())) {
+                this.setListaSourceVinculosWK(new ArrayList());
+            }
             this.setListaTargetVinculos(new ArrayList());
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosBL())) {
+                this.setListaTargetVinculosBL(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosBP())) {
+                this.setListaTargetVinculosBP(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosCT())) {
+                this.setListaTargetVinculosCT(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) {
+                this.setListaTargetVinculosOM(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) {
+                this.setListaTargetVinculosPR(new ArrayList());
+            }
+            if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
+                this.setListaTargetVinculosWK(new ArrayList());
+            }
             this.setPickListOmejora(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
@@ -7597,36 +7885,84 @@ public class PendienteMB implements Serializable {
                     filters.put("npreguntaid", this.getSelectedPregunta().getNpreguntaid());
                     PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
                     if (this.getSelectedPregunta() != null) {
+                        filters.put("nconocimientoid", this.getSelectedPregunta().getNpreguntaid().toString());
+                        this.setListaTargetVinculos(new ArrayList());
+                        List<Consulta> lista = service.getConcimientosVinculados(filters);
+                        Collections.sort(lista, Consulta.Comparators.ID);
                         if (id.equals(Constante.BASELEGAL)) {
-                            this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBL(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosBL().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+                        } else if (id.equals(Constante.PREGUNTAS)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosPR(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosPR().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+                        } else if (id.equals(Constante.WIKI)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosWK(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosWK().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+                        } else if (id.equals(Constante.CONTENIDO)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosCT(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosCT().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+                        } else if (id.equals(Constante.BUENAPRACTICA)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBP(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosBP().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+                        } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosOM(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosOM().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+                        }
+                    } else {
+                        if (id.equals(Constante.BASELEGAL)) {
                             this.setListaTargetVinculos(this.getListaTargetVinculosBL());
                         } else if (id.equals(Constante.PREGUNTAS)) {
-                            this.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosPR());
                         } else if (id.equals(Constante.WIKI)) {
-                            this.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosWK());
                         } else if (id.equals(Constante.CONTENIDO)) {
-                            this.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosCT());
                         } else if (id.equals(Constante.BUENAPRACTICA)) {
-                            this.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosBP());
                         } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
-                            this.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosOM());
                         }
+                    }
+                    if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                         List<String> ids = new ArrayList<>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
                         String filter = StringUtils.join(ids, ',');
-//                        if (id.equals(Constante.PREGUNTAS)) {
-//                            filter = filter.concat(",").concat(this.getSelectedPregunta().getNpreguntaid().toString());
-//                        }
+                        if (id.equals(Constante.WIKI)) {
+                            filter = filter.concat(",").concat(this.getSelectedPregunta().getNpreguntaid().toString());
+                        }
                         filters.put("nconocimientovinc", filter);
-                    } else {
-                        this.setListaTargetVinculos(new ArrayList<Consulta>());
                     }
                     if (id.equals(Constante.BASELEGAL)) {
                         this.setListaSourceVinculosBL(service.getConcimientosDisponibles(filters));
@@ -7702,31 +8038,22 @@ public class PendienteMB implements Serializable {
                     this.setListaSourceVinculosOM(this.getListaSourceVinculos());
                     this.setListaTargetVinculosOM(this.getListaTargetVinculos());
                 }
+                
+                this.setListaTargetVinculosConocimiento(new ArrayList<Consulta>());
 
-                this.listaTargetVinculosConocimiento = new ArrayList<>();
-
-                if (this.getListaTargetVinculosBL() == null) {
-                } else {
+                if (this.getListaTargetVinculosBL() != null) {
                     this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBL());
                 }
-                if (this.getListaTargetVinculosBP() == null) {
-                } else {
+                if (this.getListaTargetVinculosBP() != null) {
                     this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosBP());
                 }
-                if (this.getListaTargetVinculosCT() == null) {
-                } else {
+                if (this.getListaTargetVinculosCT() != null) {
                     this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosCT());
                 }
-                if (this.getListaTargetVinculosOM() == null) {
-                } else {
+                if (this.getListaTargetVinculosOM() != null) {
                     this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosOM());
                 }
-//                if (this.getListaTargetVinculosPR() == null) {
-//                } else {
-//                    this.getListaTargetVinculosPR().addAll(this.getListaTargetVinculosPR());
-//                }
-                if (this.getListaTargetVinculosWK() == null) {
-                } else {
+                if (this.getListaTargetVinculosWK() != null) {
                     this.getListaTargetVinculosConocimiento().addAll(this.getListaTargetVinculosWK());
                 }
 
@@ -7830,47 +8157,87 @@ public class PendienteMB implements Serializable {
                 this.setIdTipoConocimiento(id);
                 if (id != null) {
                     HashMap filters = new HashMap();
-                    filters.put("ntipoconocimientoid", id.toString());
+                    filters.put("ntipoconocimientoid", id);
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     if (this.getSelectedWiki() != null) {
                         filters.put("nconocimientoid", this.getSelectedWiki().getNconocimientoid().toString());
+                        this.setListaTargetVinculos(new ArrayList());
+                        List<Consulta> lista = service.getConcimientosVinculados(filters);
+                        Collections.sort(lista, Consulta.Comparators.ID);
                         if (id.equals(Constante.BASELEGAL)) {
-                            this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBL(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosBL().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+                        } else if (id.equals(Constante.PREGUNTAS)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosPR(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosPR().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+                        } else if (id.equals(Constante.WIKI)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosWK(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosWK().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+                        } else if (id.equals(Constante.CONTENIDO)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosCT(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosCT().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+                        } else if (id.equals(Constante.BUENAPRACTICA)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBP(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosBP().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+                        } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosOM(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosOM().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+                        }
+                    } else {
+                        if (id.equals(Constante.BASELEGAL)) {
                             this.setListaTargetVinculos(this.getListaTargetVinculosBL());
                         } else if (id.equals(Constante.PREGUNTAS)) {
-                            this.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosPR());
                         } else if (id.equals(Constante.WIKI)) {
-                            this.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosWK());
                         } else if (id.equals(Constante.CONTENIDO)) {
-                            this.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosCT());
                         } else if (id.equals(Constante.BUENAPRACTICA)) {
-                            this.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosBP());
                         } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
-                            this.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosOM());
                         }
-                        List<String> ids = new ArrayList<String>();
+                    }
+                    if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                        List<String> ids = new ArrayList<>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
                         String filter = StringUtils.join(ids, ',');
-                        if (filter.isEmpty()) {
-                            if (id.equals(Constante.WIKI)) {
-                                filter = filter.concat(this.getSelectedWiki().getNconocimientoid().toString());
-                            }
-                        } else {
-                            if (id.equals(Constante.WIKI)) {
-                                filter = filter.concat(",").concat(this.getSelectedWiki().getNconocimientoid().toString());
-                            }
+                        if (id.equals(Constante.WIKI)) {
+                            filter = filter.concat(",").concat(this.getSelectedWiki().getNconocimientoid().toString());
                         }
-
                         filters.put("nconocimientovinc", filter);
-                    } else {
-                        this.setListaTargetVinculos(new ArrayList<Consulta>());
                     }
                     if (id.equals(Constante.BASELEGAL)) {
                         this.setListaSourceVinculosBL(service.getConcimientosDisponibles(filters));
@@ -7907,47 +8274,87 @@ public class PendienteMB implements Serializable {
                 this.setIdTipoConocimiento(id);
                 if (id != null) {
                     HashMap filters = new HashMap();
-                    filters.put("ntipoconocimientoid", id.toString());
+                    filters.put("ntipoconocimientoid", id);
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     if (this.getSelectedBpractica() != null) {
                         filters.put("nconocimientoid", this.getSelectedBpractica().getNconocimientoid().toString());
+                        this.setListaTargetVinculos(new ArrayList());
+                        List<Consulta> lista = service.getConcimientosVinculados(filters);
+                        Collections.sort(lista, Consulta.Comparators.ID);
                         if (id.equals(Constante.BASELEGAL)) {
-                            this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBL(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosBL().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+                        } else if (id.equals(Constante.PREGUNTAS)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosPR(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosPR().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+                        } else if (id.equals(Constante.WIKI)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosWK(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosWK().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+                        } else if (id.equals(Constante.CONTENIDO)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosCT(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosCT().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+                        } else if (id.equals(Constante.BUENAPRACTICA)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBP(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosBP().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+                        } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosOM(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosOM().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+                        }
+                    } else {
+                        if (id.equals(Constante.BASELEGAL)) {
                             this.setListaTargetVinculos(this.getListaTargetVinculosBL());
                         } else if (id.equals(Constante.PREGUNTAS)) {
-                            this.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosPR());
                         } else if (id.equals(Constante.WIKI)) {
-                            this.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosWK());
                         } else if (id.equals(Constante.CONTENIDO)) {
-                            this.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosCT());
                         } else if (id.equals(Constante.BUENAPRACTICA)) {
-                            this.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosBP());
                         } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
-                            this.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosOM());
                         }
+                    }
+                    if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                         List<String> ids = new ArrayList<>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
                         String filter = StringUtils.join(ids, ',');
-                        if (filter.isEmpty()) {
-                            if (id.equals(Constante.BUENAPRACTICA)) {
-                                filter = filter.concat(this.getSelectedBpractica().getNconocimientoid().toString());
-                            }
-                        } else {
-                            if (id.equals(Constante.BUENAPRACTICA)) {
-                                filter = filter.concat(",").concat(this.getSelectedBpractica().getNconocimientoid().toString());
-                            }
+                        if (id.equals(Constante.WIKI)) {
+                            filter = filter.concat(",").concat(this.getSelectedBpractica().getNconocimientoid().toString());
                         }
-
                         filters.put("nconocimientovinc", filter);
-                    } else {
-                        this.setListaTargetVinculos(new ArrayList<Consulta>());
                     }
                     if (id.equals(Constante.BASELEGAL)) {
                         this.setListaSourceVinculosBL(service.getConcimientosDisponibles(filters));
@@ -7984,47 +8391,87 @@ public class PendienteMB implements Serializable {
                 this.setIdTipoConocimiento(id);
                 if (id != null) {
                     HashMap filters = new HashMap();
-                    filters.put("ntipoconocimientoid", id.toString());
+                    filters.put("ntipoconocimientoid", id);
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     if (this.getSelectedOmejora() != null) {
                         filters.put("nconocimientoid", this.getSelectedOmejora().getNconocimientoid().toString());
+                        this.setListaTargetVinculos(new ArrayList());
+                        List<Consulta> lista = service.getConcimientosVinculados(filters);
+                        Collections.sort(lista, Consulta.Comparators.ID);
                         if (id.equals(Constante.BASELEGAL)) {
-                            this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBL(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosBL().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+                        } else if (id.equals(Constante.PREGUNTAS)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosPR(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosPR().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+                        } else if (id.equals(Constante.WIKI)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosWK(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosWK().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+                        } else if (id.equals(Constante.CONTENIDO)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosCT(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosCT().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+                        } else if (id.equals(Constante.BUENAPRACTICA)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBP(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosBP().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+                        } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosOM(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosOM().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+                        }
+                    } else {
+                        if (id.equals(Constante.BASELEGAL)) {
                             this.setListaTargetVinculos(this.getListaTargetVinculosBL());
                         } else if (id.equals(Constante.PREGUNTAS)) {
-                            this.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosPR());
                         } else if (id.equals(Constante.WIKI)) {
-                            this.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosWK());
                         } else if (id.equals(Constante.CONTENIDO)) {
-                            this.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosCT());
                         } else if (id.equals(Constante.BUENAPRACTICA)) {
-                            this.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosBP());
                         } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
-                            this.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosOM());
                         }
+                    }
+                    if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                         List<String> ids = new ArrayList<>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
                         String filter = StringUtils.join(ids, ',');
-                        if (filter.isEmpty()) {
-                            if (id.equals(Constante.OPORTUNIDADMEJORA)) {
-                                filter = filter.concat(this.getSelectedOmejora().getNconocimientoid().toString());
-                            }
-                        } else {
-                            if (id.equals(Constante.BUENAPRACTICA)) {
-                                filter = filter.concat(",").concat(this.getSelectedOmejora().getNconocimientoid().toString());
-                            }
+                        if (id.equals(Constante.WIKI)) {
+                            filter = filter.concat(",").concat(this.getSelectedOmejora().getNconocimientoid().toString());
                         }
-
                         filters.put("nconocimientovinc", filter);
-                    } else {
-                        this.setListaTargetVinculos(new ArrayList<Consulta>());
                     }
                     if (id.equals(Constante.BASELEGAL)) {
                         this.setListaSourceVinculosBL(service.getConcimientosDisponibles(filters));
@@ -8221,36 +8668,86 @@ public class PendienteMB implements Serializable {
                 if (id != null) {
                     HashMap filters = new HashMap();
                     filters.put("ntipoconocimientoid", id);
-                    filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid());
-                    ContenidoService service = (ContenidoService) ServiceFinder.findBean("ContenidoService");
+                    ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     if (this.getSelectedContenido() != null) {
+                        filters.put("nconocimientoid", this.getSelectedContenido().getNconocimientoid().toString());
+                        this.setListaTargetVinculos(new ArrayList());
+                        List<Consulta> lista = service.getConcimientosVinculados(filters);
+                        Collections.sort(lista, Consulta.Comparators.ID);
                         if (id.equals(Constante.BASELEGAL)) {
-                            this.setListaTargetVinculosBL(service.getConcimientosVinculados(filters));
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBL(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosBL().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
+                        } else if (id.equals(Constante.PREGUNTAS)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosPR(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosPR().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
+                        } else if (id.equals(Constante.WIKI)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosWK(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosWK().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
+                        } else if (id.equals(Constante.CONTENIDO)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosCT(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosCT().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
+                        } else if (id.equals(Constante.BUENAPRACTICA)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosBP(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosBP().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
+                        } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
+                            for (Consulta ele : lista) {
+                                int pos = Collections.binarySearch(this.getListaTargetVinculosOM(), ele, Consulta.Comparators.ID);
+                                if (pos < 0) {
+                                    this.getListaTargetVinculosOM().add(ele);
+                                }
+                            }
+                            this.getListaTargetVinculos().addAll(this.getListaTargetVinculosOM());
+                        }
+                    } else {
+                        if (id.equals(Constante.BASELEGAL)) {
                             this.setListaTargetVinculos(this.getListaTargetVinculosBL());
                         } else if (id.equals(Constante.PREGUNTAS)) {
-                            this.setListaTargetVinculosPR(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosPR());
                         } else if (id.equals(Constante.WIKI)) {
-                            this.setListaTargetVinculosWK(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosWK());
                         } else if (id.equals(Constante.CONTENIDO)) {
-                            this.setListaTargetVinculosCT(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosCT());
                         } else if (id.equals(Constante.BUENAPRACTICA)) {
-                            this.setListaTargetVinculosBP(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosBP());
                         } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
-                            this.setListaTargetVinculosOM(service.getConcimientosVinculados(filters));
                             this.setListaTargetVinculos(this.getListaTargetVinculosOM());
                         }
+                    }
+                    if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
                         List<String> ids = new ArrayList<>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
                         String filter = StringUtils.join(ids, ',');
+                        if (id.equals(Constante.WIKI)) {
+                            filter = filter.concat(",").concat(this.getSelectedContenido().getNconocimientoid().toString());
+                        }
                         filters.put("nconocimientovinc", filter);
-                    } else {
-                        this.setListaTargetVinculos(new ArrayList<Consulta>());
                     }
                     if (id.equals(Constante.BASELEGAL)) {
                         this.setListaSourceVinculosBL(service.getConcimientosDisponibles(filters));
