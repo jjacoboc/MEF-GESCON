@@ -45,6 +45,7 @@ import org.primefaces.model.UploadedFile;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.common.Parameters;
+import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.UserService;
@@ -580,8 +581,18 @@ public class CategoriaMB implements Serializable {
             this.setFlagom(this.getSelectedCategoria().getNflagom().equals(BigDecimal.ONE));
             this.setFlagpr(this.getSelectedCategoria().getNflagpr().equals(BigDecimal.ONE));
             this.setFlagwiki(this.getSelectedCategoria().getNflagwiki().equals(BigDecimal.ONE));
-            this.setEspecialista(this.getSelectedCategoria().getNespecialista());
-            this.setModerador(this.getSelectedCategoria().getNmoderador());
+            if (this.getSelectedCategoria().getNespecialista() == null)
+            {
+                this.setEspecialista(this.getSelectedCategoriaPadre().getNespecialista());
+            }else{
+                this.setEspecialista(this.getSelectedCategoria().getNespecialista());
+            }
+            if (this.getSelectedCategoria().getNmoderador() == null)
+            {
+                this.setModerador(this.getSelectedCategoriaPadre().getNmoderador());
+            }else{
+                this.setModerador(this.getSelectedCategoria().getNmoderador());
+            }
             this.readImage(this.getSelectedCategoria());
         } catch (Exception e) {
             e.getMessage();
@@ -631,13 +642,13 @@ public class CategoriaMB implements Serializable {
                 this.getSelectedCategoria().setNflagwiki(this.isFlagwiki() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedCategoria().setDfechamodificacion(new Date());
                 this.getSelectedCategoria().setVusuariomodificacion(user.getVlogin());
-                if (this.getSelectedCategoria().getNnivel().intValue() < (int) 3) {
-                    this.getSelectedCategoria().setNespecialista(this.getEspecialista());
-                    this.getSelectedCategoria().setNmoderador(this.getModerador());
-                } else {
-                    this.getSelectedCategoria().setNespecialista(this.getSelectedCategoria().getNespecialista());
-                    this.getSelectedCategoria().setNmoderador(this.getSelectedCategoria().getNmoderador());
-                }
+//                if (this.getSelectedCategoria().getNnivel().intValue() < (int) 3) {
+                this.getSelectedCategoria().setNespecialista(this.getEspecialista());
+                this.getSelectedCategoria().setNmoderador(this.getModerador());
+//                } else {
+//                    this.getSelectedCategoria().setNespecialista(this.getSelectedCategoria().getNespecialista());
+//                    this.getSelectedCategoria().setNmoderador(this.getSelectedCategoria().getNmoderador());
+//                }
                 if (this.getContent() != null) {
                     this.getSelectedCategoria().setVimagennombre(this.getContent().getName());
                     this.getSelectedCategoria().setVimagentype(this.getContent().getContentType());

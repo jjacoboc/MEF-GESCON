@@ -53,15 +53,6 @@
                                                 <f:param name="index" value="#{rowIndex}"/>
                                             </p:commandLink>
                                             <p:spacer width="5px;"/>
-                                            <p:commandLink actionListener="#{maestroMB.setSelectedRow}" oncomplete="PF('confirmActDlg').show();" title="activar maestro" styleClass="GesconLink" rendered="#{row.nactivo eq 0}">
-                                                <h:outputText class="fa fa-check Fs16" />
-                                                <f:param name="index" value="#{rowIndex}"/>
-                                            </p:commandLink>
-                                            <p:commandLink actionListener="#{maestroMB.setSelectedRow}" oncomplete="PF('confirmDesDlg').show();" title="desactivar maestro" styleClass="GesconLink" rendered="#{row.nactivo eq 1}">
-                                                <h:outputText class="fa fa-close Fs16" />
-                                                <f:param name="index" value="#{rowIndex}"/>
-                                            </p:commandLink>
-                                            <p:spacer width="5px;"/>
                                             <p:commandLink actionListener="#{maestroMB.getDetalles}" oncomplete="PF('detailDialog').show();" 
                                                            update=":detailDialogForm:pgDetail" styleClass="GesconLink" title="gestionar detalles">
                                                 <h:outputText class="fa fa-list-alt Fs16" />
@@ -107,12 +98,6 @@
                                                          counter="display" maxlength="400" counterTemplate="{0} caracteres restantes." />
                                         <h:outputText id="display"/>
                                     </h:panelGrid>
-
-                                    <h:outputLabel value="*"/>
-                                    <h:outputLabel value="Activo:"/>
-                                    <p:selectOneMenu value="#{maestroMB.selectedMaestro.nactivo}" styleClass="Wid10">
-                                        <f:selectItems value="#{listaSessionMB.listaSiNo}"/>
-                                    </p:selectOneMenu>
                                 </h:panelGrid>
                                 <p:commandButton  value="Actualizar" actionListener="#{maestroMB.update}" update=":f:growl, :f:tbl"/>
                             </h:form>

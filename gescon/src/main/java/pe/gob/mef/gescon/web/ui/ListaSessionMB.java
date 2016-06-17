@@ -55,6 +55,18 @@ public class ListaSessionMB implements Serializable{
     private List<SelectItem> listaPerfilActivo;
     private List<SelectItem> listaProfesion;
     private List<SelectItem> listaProfesionActiva;
+    private List<SelectItem> listaCargo;
+    private List<SelectItem> listaCargoActivo;
+    private List<SelectItem> listaPliego;
+    private List<SelectItem> listaPliegoActivo;
+    private List<SelectItem> listaArea;
+    private List<SelectItem> listaAreaActivo;
+    private List<SelectItem> listaSector;
+    private List<SelectItem> listaSectorActivo;
+    private List<SelectItem> listaGobierno;
+    private List<SelectItem> listaGobiernoActivo;
+    private List<SelectItem> listaEntidad;
+    private List<SelectItem> listaEntidadActivo;
     private List<SelectItem> listaTipoDocumentos;
     private List<SelectItem> listaTipoDocumentosActivos;
     private List<SelectItem> listaTipoVideos;
@@ -376,6 +388,246 @@ public class ListaSessionMB implements Serializable{
 
     public void setListaProfesionActiva(List<SelectItem> listaProfesionActiva) {
         this.listaProfesionActiva = listaProfesionActiva;
+    }
+
+    /**
+     * @return the listaCargo
+     */
+    public List<SelectItem> getListaCargo() throws Exception {
+        if(listaCargo == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_CARGO);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaCargo =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaCargo;
+    }
+
+    /**
+     * @param listaCargo the listaCargo to set
+     */
+    public void setListaCargo(List<SelectItem> listaCargo) {
+        this.listaCargo = listaCargo;
+    }
+
+    /**
+     * @return the listaCargoActivo
+     */
+    public List<SelectItem> getListaCargoActivo() throws Exception{
+        if(listaCargoActivo == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_CARGO);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaCargoActivo =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaCargoActivo;
+    }
+
+    /**
+     * @param listaCargoActivo the listaCargoActivo to set
+     */
+    public void setListaCargoActivo(List<SelectItem> listaCargoActivo) {
+        this.listaCargoActivo = listaCargoActivo;
+    }
+
+    /**
+     * @return the listaPliego
+     */
+    public List<SelectItem> getListaPliego() throws Exception{
+        if(listaPliego == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_PLIEGO);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaPliego =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaPliego;
+    }
+
+    /**
+     * @param listaPliego the listaPliego to set
+     */
+    public void setListaPliego(List<SelectItem> listaPliego) {
+        this.listaPliego = listaPliego;
+    }
+
+    /**
+     * @return the listaPliegoActivo
+     */
+    public List<SelectItem> getListaPliegoActivo() throws Exception{
+        if(listaPliegoActivo == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_PLIEGO);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaPliegoActivo =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaPliegoActivo;
+    }
+
+    /**
+     * @param listaPliegoActivo the listaPliegoActivo to set
+     */
+    public void setListaPliegoActivo(List<SelectItem> listaPliegoActivo) {
+        this.listaPliegoActivo = listaPliegoActivo;
+    }
+
+    /**
+     * @return the listaArea
+     */
+    public List<SelectItem> getListaArea() throws Exception{
+        if(listaArea == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_AREA);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaArea =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaArea;
+    }
+
+    /**
+     * @param listaArea the listaArea to set
+     */
+    public void setListaArea(List<SelectItem> listaArea) {
+        this.listaArea = listaArea;
+    }
+
+    /**
+     * @return the listaAreaActivo
+     */
+    public List<SelectItem> getListaAreaActivo() throws Exception{
+        if(listaAreaActivo == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_AREA);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaAreaActivo =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaAreaActivo;
+    }
+
+    /**
+     * @param listaAreaActivo the listaAreaActivo to set
+     */
+    public void setListaAreaActivo(List<SelectItem> listaAreaActivo) {
+        this.listaAreaActivo = listaAreaActivo;
+    }
+
+    /**
+     * @return the listaSector
+     */
+    public List<SelectItem> getListaSector() throws Exception{
+        if(listaSector == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_SECTOR);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaSector =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaSector;
+    }
+
+    /**
+     * @param listaSector the listaSector to set
+     */
+    public void setListaSector(List<SelectItem> listaSector) {
+        this.listaSector = listaSector;
+    }
+
+    /**
+     * @return the listaSectorActivo
+     */
+    public List<SelectItem> getListaSectorActivo() throws Exception{
+        if(listaSectorActivo == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_SECTOR);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaSectorActivo =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaSectorActivo;
+    }
+
+    /**
+     * @param listaSectorActivo the listaSectorActivo to set
+     */
+    public void setListaSectorActivo(List<SelectItem> listaSectorActivo) {
+        this.listaSectorActivo = listaSectorActivo;
+    }
+
+    /**
+     * @return the listaGobierno
+     */
+    public List<SelectItem> getListaGobierno() throws Exception{
+        if(listaGobierno == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_GOBIERNO);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaGobierno =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaGobierno;
+    }
+
+    /**
+     * @param listaGobierno the listaGobierno to set
+     */
+    public void setListaGobierno(List<SelectItem> listaGobierno) {
+        this.listaGobierno = listaGobierno;
+    }
+
+    /**
+     * @return the listaGobiernoActivo
+     */
+    public List<SelectItem> getListaGobiernoActivo() throws Exception{
+        if(listaGobiernoActivo == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_GOBIERNO);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaGobiernoActivo =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaGobiernoActivo;
+    }
+
+    /**
+     * @param listaGobiernoActivo the listaGobiernoActivo to set
+     */
+    public void setListaGobiernoActivo(List<SelectItem> listaGobiernoActivo) {
+        this.listaGobiernoActivo = listaGobiernoActivo;
+    }
+
+    /**
+     * @return the listaEntidad
+     */
+    public List<SelectItem> getListaEntidad() throws Exception{
+        if(listaEntidad == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_ENTIDAD);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaEntidad =  new Items(service.getDetallesByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaEntidad;
+    }
+
+    /**
+     * @param listaEntidad the listaEntidad to set
+     */
+    public void setListaEntidad(List<SelectItem> listaEntidad) {
+        this.listaEntidad = listaEntidad;
+    }
+
+    /**
+     * @return the listaEntidadActivo
+     */
+    public List<SelectItem> getListaEntidadActivo() throws Exception{
+        if(listaEntidadActivo == null){
+            Maestro maestro = new Maestro();
+            maestro.setNmaestroid(Constante.MAESTRO_ENTIDAD);
+            MaestroDetalleService service = (MaestroDetalleService) ServiceFinder.findBean("MaestroDetalleService");
+            listaEntidadActivo =  new Items(service.getDetallesActivosByMaestro(maestro), null, "ndetalleid","vnombre").getItems();
+        }
+        return listaEntidadActivo;
+    }
+
+    /**
+     * @param listaEntidadActivo the listaEntidadActivo to set
+     */
+    public void setListaEntidadActivo(List<SelectItem> listaEntidadActivo) {
+        this.listaEntidadActivo = listaEntidadActivo;
     }
 
     public List<SelectItem> getListaTipoDocumentos() throws Exception {

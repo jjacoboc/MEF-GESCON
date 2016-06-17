@@ -91,6 +91,12 @@ public class Constante implements Serializable {
     public static BigDecimal MAESTRO_TIPOARCHIVOS = new BigDecimal(9);
     public static BigDecimal MAESTRO_TIPOLINKS = new BigDecimal(10);
     public static BigDecimal MAESTRO_TIPOOTROSARCHIVOS = new BigDecimal(11);
+    public static BigDecimal MAESTRO_CARGO = new BigDecimal(12);
+    public static BigDecimal MAESTRO_PLIEGO = new BigDecimal(13);
+    public static BigDecimal MAESTRO_AREA = new BigDecimal(14);
+    public static BigDecimal MAESTRO_SECTOR = new BigDecimal(15);
+    public static BigDecimal MAESTRO_GOBIERNO = new BigDecimal(16);
+    public static BigDecimal MAESTRO_ENTIDAD = new BigDecimal(17);
     // Modulos del Sistema (Maestro Detalle)
     public static BigDecimal MODULO_ADMINISTRACION = new BigDecimal(1);
     public static BigDecimal MODULO_BASELEGAL = new BigDecimal(2);

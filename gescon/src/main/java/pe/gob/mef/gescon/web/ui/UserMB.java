@@ -596,6 +596,8 @@ public class UserMB implements Serializable {
         this.setProvincia(StringUtils.EMPTY);
         this.setDistrito(StringUtils.EMPTY);
         this.setProfesion(StringUtils.EMPTY);
+        this.setCargo(StringUtils.EMPTY);
+        
         Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
         if (iter.hasNext() == true) {
             iter.remove();
@@ -1038,6 +1040,13 @@ public class UserMB implements Serializable {
             this.getSelectedUser().setNperfilid(BigDecimal.valueOf(Long.parseLong(this.getPerfil())));
             this.getSelectedUser().setDfechamodificacion(new Date());
             this.getSelectedUser().setVusuariomodificacion(user.getVlogin());
+            this.getSelectedUser().setVcargo(this.getSelectedUser().getVcargo());
+            this.getSelectedUser().setVprofesion(this.getSelectedUser().getVprofesion());
+            this.getSelectedUser().setVentidad(this.getSelectedUser().getVentidad());
+            this.getSelectedUser().setVsector(this.getSelectedUser().getVsector());
+            this.getSelectedUser().setVgobierno(this.getSelectedUser().getVgobierno());
+            this.getSelectedUser().setVarea(this.getSelectedUser().getVarea());
+            this.getSelectedUser().setVpliego(this.getSelectedUser().getVpliego());
             UserService service = (UserService) ServiceFinder.findBean("UserService");
             service.saveOrUpdate(this.getSelectedUser());
 
