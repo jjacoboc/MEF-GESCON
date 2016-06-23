@@ -27,7 +27,7 @@ public class ConsultaServiceImpl implements ConsultaService{
 
     @Override
     public List<Consulta> getQueryFilter(HashMap filters) {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista = new ArrayList<Consulta>();
         try {
             ConsultaDao consultaDao = (ConsultaDao) ServiceFinder.findBean("ConsultaDao");
             List<HashMap> consulta = consultaDao.getQueryFilter(filters);
@@ -65,7 +65,7 @@ public class ConsultaServiceImpl implements ConsultaService{
     
     @Override
     public List<Consulta> getDestacadosByTipoConocimiento(HashMap filters) {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista = new ArrayList<Consulta>();
         try {
             ConsultaDao consultaDao = (ConsultaDao) ServiceFinder.findBean("ConsultaDao");
             List<HashMap> consulta = consultaDao.getDestacadosByTipoConocimiento(filters);
@@ -106,13 +106,13 @@ public class ConsultaServiceImpl implements ConsultaService{
     
     @Override
     public List<HashMap<String,Object>> listarReporte(HashMap filters) {
-        List<HashMap<String,Object>> lista = new ArrayList<>();
+        List<HashMap<String,Object>> lista = new ArrayList<HashMap<String,Object>>();
         try {
             ConsultaDao consultaDao = (ConsultaDao) ServiceFinder.findBean("ConsultaDao");
             List<HashMap<String,Object>> consulta = consultaDao.listarReporte(filters);
             if(!CollectionUtils.isEmpty(consulta)) {
                 for(HashMap<String,Object> r : consulta) {
-                    HashMap<String,Object> map = new HashMap<>();
+                    HashMap<String,Object> map = new HashMap<String,Object>();
                     map.put("ID", r.get("ID"));
                     map.put("NOMBRE", r.get("NOMBRE"));
                     map.put("SUMILLA", r.get("SUMILLA"));

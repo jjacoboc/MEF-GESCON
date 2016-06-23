@@ -44,7 +44,7 @@ public class VinculoHistServiceImpl implements VinculoHistService{
 
     @Override
     public List<VinculoHist> getVinculoHists() throws Exception {
-        List<VinculoHist> vinculosHists = new ArrayList<>();
+        List<VinculoHist> vinculosHists = new ArrayList<VinculoHist>();
         VinculoHistDao vinculoHistDao = (VinculoHistDao) ServiceFinder.findBean("VinculoHistDao");
         List<TvinculoHist> lista = vinculoHistDao.getTvinculoHists();
         for (TvinculoHist tvinculoHist : lista) {
@@ -57,7 +57,7 @@ public class VinculoHistServiceImpl implements VinculoHistService{
 
     @Override
     public List<VinculoHist> getVinculoHistsByHistorial(BigDecimal idhistorial) throws Exception {
-        List<VinculoHist> vinculosHists = new ArrayList<>();
+        List<VinculoHist> vinculosHists = new ArrayList<VinculoHist>();
         VinculoHistDao vinculoHistDao = (VinculoHistDao) ServiceFinder.findBean("VinculoHistDao");
         List<TvinculoHist> lista = vinculoHistDao.getTvinculoHistsByThistorial(idhistorial);
         for (TvinculoHist tvinculoHist : lista) {
@@ -78,7 +78,7 @@ public class VinculoHistServiceImpl implements VinculoHistService{
     
     @Override
     public List<Consulta> getConcimientosVinculadosByHistorial(HashMap filters) throws Exception {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista = new ArrayList<Consulta>();
         try {
             VinculoHistDao vinculoHistDao = (VinculoHistDao) ServiceFinder.findBean("VinculoHistDao");
             List<HashMap> consulta = vinculoHistDao.getConcimientosVinculadosByHistorial(filters);

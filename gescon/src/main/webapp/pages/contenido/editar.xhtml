@@ -357,7 +357,7 @@
 
                                 <h:panelGrid columns="2" width="100%">
                                     <h:panelGroup>
-                                        <p:commandButton value="Actualizar" ajax="false" action="/pages/contenido/lista.xhtml" actionListener="#{contenidoMB.edit}"/>
+                                        <p:commandButton value="Actualizar" actionListener="#{contenidoMB.edit}" update=":f:growl"/>
                                         <p:spacer width="10"/>
                                         <p:commandButton value="Cancelar" ajax="false" action="/pages/contenido/lista.xhtml"/>
                                     </h:panelGroup>

@@ -857,7 +857,7 @@ public class ContenidoMB implements Serializable {
             this.setListaArchivos(new ArrayList<ArchivoConocimiento>());
             this.setListaSourceVinculos(new ArrayList<Consulta>());
             this.setListaTargetVinculos(new ArrayList<Consulta>());
-            this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
             ListaSessionMB listaSessionMB = (ListaSessionMB) JSFUtils.getSessionAttribute("listaSessionMB");
             listaSessionMB = listaSessionMB != null ? listaSessionMB : new ListaSessionMB();
             for(SelectItem s : listaSessionMB.getListaTipoDocumentosActivos()) {
@@ -914,7 +914,7 @@ public class ContenidoMB implements Serializable {
             this.setListaArchivos(new ArrayList());
             this.setListaDestacados(new ArrayList<Consulta>());
             this.setSelectedDestacado(null);
-            this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
             Iterator<FacesMessage> iter = FacesContext.getCurrentInstance().getMessages();
             if (iter.hasNext() == true) {
                 iter.remove();
@@ -928,7 +928,7 @@ public class ContenidoMB implements Serializable {
 
     public void clearDiscusion() {
         try {
-            this.setSelectedDiscusionSeccion(null);
+//            this.setSelectedDiscusionSeccion(new DiscusionSeccion());
             this.setTituloDiscusion(StringUtils.EMPTY);
             this.setTipoDiscusion(null);
             this.setDiscusionHtml(StringUtils.EMPTY);
@@ -1092,7 +1092,7 @@ public class ContenidoMB implements Serializable {
                     return;
                 }
                 
-                ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+                ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getMessages());
                 String tipoDocumento = bundle.getString("tipoDocumento");
                 String tipoVideo = bundle.getString("tipoVideo");
                 String tipoAudio = bundle.getString("tipoAudio");
@@ -1187,7 +1187,10 @@ public class ContenidoMB implements Serializable {
                 archivoconocimiento.setContent(new DefaultStreamedContent(new FileInputStream(archivoconocimiento.getFile()), contentType, filename));
                 this.getListaArchivos().add(archivoconocimiento);
             }
-        } catch(NumberFormatException | FileNotFoundException e) {
+        } catch(NumberFormatException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        } catch(FileNotFoundException e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
@@ -1440,7 +1443,7 @@ public class ContenidoMB implements Serializable {
             if(CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) { this.setListaTargetVinculosOM(new ArrayList()); }
             if(CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) { this.setListaTargetVinculosPR(new ArrayList()); }
             if(CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) { this.setListaTargetVinculosWK(new ArrayList()); }
-            this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -1526,7 +1529,7 @@ public class ContenidoMB implements Serializable {
                         }
                     }
                     if(CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-                        List<String> ids = new ArrayList<>();
+                        List<String> ids = new ArrayList<String>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
@@ -1555,7 +1558,7 @@ public class ContenidoMB implements Serializable {
                         this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
                         this.setListaSourceVinculos(this.getListaSourceVinculosOM());
                     }
-                    this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
                 }
             }
         } catch (Exception e) {
@@ -1588,7 +1591,10 @@ public class ContenidoMB implements Serializable {
             fileOutStream.close();
             File temp = new File(bundle.getString("temppath"), archivoconocimiento.getVnombre());
             temp.delete();
-        } catch (NumberFormatException | IOException e) {
+        } catch (NumberFormatException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }
@@ -1898,7 +1904,6 @@ public class ContenidoMB implements Serializable {
             ArchivoConocimientoService aservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
             service.deleteArchivos(this.getSelectedContenido().getNconocimientoid());
             for (ArchivoConocimiento v : this.getListaArchivos()) {
-
                 ArchivoConocimiento archivoconocimiento = new ArchivoConocimiento();
                 archivoconocimiento.setNarchivoid(aservice.getNextPK());
                 archivoconocimiento.setNtipoconocimientoid(Constante.CONTENIDO);
@@ -1912,11 +1917,9 @@ public class ContenidoMB implements Serializable {
                 archivoconocimiento.setDfechacreacion(new Date());
                 aservice.saveOrUpdate(archivoconocimiento);
                 saveFile(archivoconocimiento);
-
             }
-
-            listaContenido = service.getContenidos();
-
+            this.setListaContenido(service.getContenidos());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/lista.xhtml");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -2130,9 +2133,8 @@ public class ContenidoMB implements Serializable {
                 saveFile(archivoconocimiento);
 
             }
-
-            listaContenido = service.getContenidos();
-
+            this.setListaContenido(service.getContenidos());
+            FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/lista.xhtml");
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -2223,6 +2225,7 @@ public class ContenidoMB implements Serializable {
 
     public void addDiscusion(ActionEvent event) {
         try {
+            this.setDiscusionHtml(JSFUtils.getRequestParameter("txtHtml"));
             if (this.getTipoDiscusion() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -2248,7 +2251,7 @@ public class ContenidoMB implements Serializable {
                 this.setListaDiscusionSeccion(new ArrayList());
             }
             this.getListaDiscusionSeccion().add(discusionSeccion);
-            RequestContext.getCurrentInstance().execute("PF('disDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('dlgSec').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -2268,6 +2271,7 @@ public class ContenidoMB implements Serializable {
 
     public void editDiscusion(ActionEvent event) {
         try {
+            this.getSelectedDiscusionSeccion().setDiscusionHtml(JSFUtils.getRequestParameter("etxtHtml"));
             if (this.getSelectedDiscusionSeccion().getNtipodiscusion() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -2284,7 +2288,8 @@ public class ContenidoMB implements Serializable {
                 return;
             }
             this.getSelectedDiscusionSeccion().setVtitulo(StringUtils.upperCase(this.getSelectedDiscusionSeccion().getVtitulo().trim()));
-            RequestContext.getCurrentInstance().execute("PF('edisDialog').hide();");
+            this.getSelectedDiscusionSeccion().setDiscusionPlain(Jsoup.parse(this.getSelectedDiscusionSeccion().getDiscusionHtml()).text());
+            RequestContext.getCurrentInstance().execute("PF('dlgEsec').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -2310,6 +2315,7 @@ public class ContenidoMB implements Serializable {
                 discusionHist = new DiscusionHist();
                 discusionHist.setNnumversion(BigDecimal.ONE);
             } else {
+                discusion = this.getSelectedDiscusion();
                 discusionHist = discusionHistService.getDiscusionHistByConocimiento(this.getSelectedContenido().getNconocimientoid());
                 int version = discusionHist.getNnumversion().intValue() + 1;
                 discusionHist.setNnumversion(BigDecimal.valueOf(version));
@@ -2394,6 +2400,21 @@ public class ContenidoMB implements Serializable {
                 }
                 this.setSelectedHistorialLeft(this.getSelectedHistoriales().get(0));
                 this.setSelectedHistorialRight(this.getSelectedHistoriales().get(1));
+                ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+                String path = bundle.getString("path");
+                ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
+                this.getSelectedHistorialLeft().setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedHistorialLeft().getId().getNconocimientoid()));
+                if(CollectionUtils.isNotEmpty(this.getSelectedHistorialLeft().getListaArchivos())) {
+                    for(ArchivoConocimiento ac : this.getSelectedHistorialLeft().getListaArchivos()) {
+                        ac.setContent(new DefaultStreamedContent(new FileInputStream(new File(path + ac.getVruta())), ac.getVcontenttype(), ac.getVnombre()));
+                    }
+                }
+                this.getSelectedHistorialRight().setListaArchivos(archivoservice.getArchivosByConocimiento(this.getSelectedHistorialRight().getId().getNconocimientoid()));
+                if(CollectionUtils.isNotEmpty(this.getSelectedHistorialRight().getListaArchivos())) {
+                    for(ArchivoConocimiento ac : this.getSelectedHistorialRight().getListaArchivos()) {
+                        ac.setContent(new DefaultStreamedContent(new FileInputStream(new File(path + ac.getVruta())), ac.getVcontenttype(), ac.getVnombre()));
+                    }
+                }
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/contenido/historialCompare.xhtml");
             }
         } catch (Exception e) {

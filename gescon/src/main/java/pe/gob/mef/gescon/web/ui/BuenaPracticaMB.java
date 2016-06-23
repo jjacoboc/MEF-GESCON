@@ -82,8 +82,8 @@ import pe.gob.mef.gescon.web.bean.VinculoHist;
  */
 @ManagedBean
 @SessionScoped
-public class BuenaPracticaMB implements Serializable{
-    
+public class BuenaPracticaMB implements Serializable {
+
     private final String path = "bp/";
     private List<Conocimiento> listaBuenaPractica;
     private List<Conocimiento> filteredListaBuenaPractica;
@@ -134,9 +134,9 @@ public class BuenaPracticaMB implements Serializable{
     private String selectedSwitch;
     private List<Consulta> listaDestacados;
     private Consulta selectedDestacado;
-    
+
     public BuenaPracticaMB() {
-        
+
     }
 
     public List<Conocimiento> getListaBuenaPractica() {
@@ -530,7 +530,7 @@ public class BuenaPracticaMB implements Serializable{
     public void setSelectedDestacado(Consulta selectedDestacado) {
         this.selectedDestacado = selectedDestacado;
     }
-    
+
     @PostConstruct
     public void init() {
         try {
@@ -544,7 +544,7 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void setSelectedRow(ActionEvent event) {
         try {
             if (event != null) {
@@ -593,7 +593,7 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void clearSection() {
         try {
             this.setSelectedSeccion(new Seccion());
@@ -610,10 +610,10 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void clearDiscusion() {
         try {
-            this.setSelectedDiscusionSeccion(null);
+            this.setSelectedDiscusionSeccion(new DiscusionSeccion());
             this.setTituloDiscusion(StringUtils.EMPTY);
             this.setTipoDiscusion(null);
             this.setDiscusionHtml(StringUtils.EMPTY);
@@ -628,7 +628,7 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void clearCalificacion() {
         try {
             this.setSelectedCalificacion(null);
@@ -712,7 +712,7 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void toAddSection(ActionEvent event) {
         try {
             this.clearSection();
@@ -725,12 +725,12 @@ public class BuenaPracticaMB implements Serializable{
     public void addSection(ActionEvent event) {
         try {
             this.setDetalleHtml(JSFUtils.getRequestParameter("txtHtml"));
-            if(StringUtils.isBlank(this.getTitulo())) {
+            if (StringUtils.isBlank(this.getTitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título de la sección requerido. Ingrese el título de la sección a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDetalleHtml())) {
+            if (StringUtils.isBlank(this.getDetalleHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Detalle de la sección requerido. Ingrese el detalle de la sección a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -763,16 +763,16 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void editSection(ActionEvent event) {
         try {
             this.getSelectedSeccion().setDetalleHtml(JSFUtils.getRequestParameter("etxtHtml"));
-            if(StringUtils.isBlank(this.getSelectedSeccion().getVtitulo())) {
+            if (StringUtils.isBlank(this.getSelectedSeccion().getVtitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título de la sección requerido. Ingrese el título de la sección a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedSeccion().getDetalleHtml())) {
+            if (StringUtils.isBlank(this.getSelectedSeccion().getDetalleHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Detalle de la sección requerido. Ingrese el detalle de la sección a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -783,7 +783,7 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void toAddDiscusion(ActionEvent event) {
         try {
             this.clearDiscusion();
@@ -792,20 +792,21 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void addDiscusion(ActionEvent event) {
         try {
-            if(this.getTipoDiscusion() == null) {
+            this.setDiscusionHtml(JSFUtils.getRequestParameter("txtHtml"));
+            if (this.getTipoDiscusion() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getTituloDiscusion())) {
+            if (StringUtils.isBlank(this.getTituloDiscusion())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título de la discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDiscusionHtml())) {
+            if (StringUtils.isBlank(this.getDiscusionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el detalle de la discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
@@ -816,17 +817,17 @@ public class BuenaPracticaMB implements Serializable{
             discusionSeccion.setDiscusionHtml(this.getDiscusionHtml());
             discusionSeccion.setDiscusionPlain(Jsoup.parse(discusionSeccion.getDiscusionHtml()).text());
             discusionSeccion.setDfechacreacion(new Date());
-            if(this.getListaDiscusionSeccion() == null) {
+            if (this.getListaDiscusionSeccion() == null) {
                 this.setListaDiscusionSeccion(new ArrayList());
             }
             this.getListaDiscusionSeccion().add(discusionSeccion);
-            RequestContext.getCurrentInstance().execute("PF('disDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('dlgSec').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public void toEditDiscusion(ActionEvent event) {
         try {
             this.clearDiscusion();
@@ -837,32 +838,34 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void editDiscusion(ActionEvent event) {
         try {
-            if(this.getSelectedDiscusionSeccion().getNtipodiscusion() == null) {
+            this.getSelectedDiscusionSeccion().setDiscusionHtml(JSFUtils.getRequestParameter("etxtHtml"));
+            if (this.getSelectedDiscusionSeccion().getNtipodiscusion() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedDiscusionSeccion().getVtitulo())) {
+            if (StringUtils.isBlank(this.getSelectedDiscusionSeccion().getVtitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título de la discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedDiscusionSeccion().getDiscusionHtml())) {
+            if (StringUtils.isBlank(this.getSelectedDiscusionSeccion().getDiscusionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el detalle de la discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
             this.getSelectedDiscusionSeccion().setVtitulo(StringUtils.upperCase(this.getSelectedDiscusionSeccion().getVtitulo().trim()));
-            RequestContext.getCurrentInstance().execute("PF('edisDialog').hide();");
+            this.getSelectedDiscusionSeccion().setDiscusionPlain(Jsoup.parse(this.getSelectedDiscusionSeccion().getDiscusionHtml()).text());
+            RequestContext.getCurrentInstance().execute("PF('dlgEsec').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
     }
-    
+
     public void saveOrUpdateDiscusion(ActionEvent event) {
         Discusion discusion = null;
         DiscusionHist discusionHist;
@@ -871,17 +874,18 @@ public class BuenaPracticaMB implements Serializable{
             User user = loginMB.getUser();
             DiscusionService discusionService = (DiscusionService) ServiceFinder.findBean("DiscusionService");
             DiscusionHistService discusionHistService = (DiscusionHistService) ServiceFinder.findBean("DiscusionHistService");
-            if(this.getSelectedDiscusion() == null) {
+            if (this.getSelectedDiscusion() == null) {
                 discusion = new Discusion();
                 discusion.setNdiscusionid(discusionService.getNextPK());
                 discusion.setNconocimientoid(this.getSelectedBuenaPractica().getNconocimientoid());
                 discusion.setDfechacreacion(new Date());
                 discusion.setVusuariocreacion(user.getVlogin());
                 discusionService.saveOrUpdate(discusion);
-                
+
                 discusionHist = new DiscusionHist();
                 discusionHist.setNnumversion(BigDecimal.ONE);
             } else {
+                discusion = this.getSelectedDiscusion();
                 discusionHist = discusionHistService.getDiscusionHistByConocimiento(this.getSelectedBuenaPractica().getNconocimientoid());
                 int version = discusionHist.getNnumversion().intValue() + 1;
                 discusionHist.setNnumversion(BigDecimal.valueOf(version));
@@ -891,14 +895,14 @@ public class BuenaPracticaMB implements Serializable{
             discusionHist.setDfechacreacion(new Date());
             discusionHist.setVusuariocreacion(user.getVlogin());
             discusionHistService.saveOrUpdate(discusionHist);
-            
-            if(CollectionUtils.isNotEmpty(this.getListaDiscusionSeccion())) {
+
+            if (CollectionUtils.isNotEmpty(this.getListaDiscusionSeccion())) {
                 String url0 = this.path.concat(this.getSelectedBuenaPractica().getNconocimientoid().toString()).concat("/0/d/").concat(BigDecimal.ZERO.toString()).concat("/s");
                 String url1 = this.path.concat(this.getSelectedBuenaPractica().getNconocimientoid().toString()).concat("/0/d/").concat(discusionHist.getNnumversion().toString()).concat("/s");
                 DiscusionSeccionService discusionSeccionService = (DiscusionSeccionService) ServiceFinder.findBean("DiscusionSeccionService");
                 DiscusionSeccionHistService discusionSeccionHistService = (DiscusionSeccionHistService) ServiceFinder.findBean("DiscusionSeccionHistService");
                 for (DiscusionSeccion seccion : this.getListaDiscusionSeccion()) {
-                    if(seccion.getNdiscusionseccionid() == null) {
+                    if (seccion.getNdiscusionseccionid() == null) {
                         seccion.setNdiscusionseccionid(discusionSeccionService.getNextPK());
                         seccion.setNdiscusionid(discusion.getNdiscusionid());
                         seccion.setDfechacreacion(new Date());
@@ -913,10 +917,10 @@ public class BuenaPracticaMB implements Serializable{
                     seccion.setVruta(ruta0);
                     seccion.setDiscusionPlain(Jsoup.parse(seccion.getDiscusionHtml()).text());
                     discusionSeccionService.saveOrUpdate(seccion);
-                    
+
                     GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", seccion.getDiscusionHtml());
                     GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", seccion.getDiscusionPlain());
-                    
+
                     String ruta1 = url1.concat(seccion.getNdiscusionseccionid().toString()).concat("/");
                     DiscusionSeccionHist seccionHist = new DiscusionSeccionHist();
                     seccionHist.setNdiscusionseccionhid(discusionSeccionHistService.getNextPK());
@@ -927,7 +931,7 @@ public class BuenaPracticaMB implements Serializable{
                     seccionHist.setDfechacreacion(new Date());
                     seccionHist.setVusuariocreacion(user.getVlogin());
                     discusionSeccionHistService.saveOrUpdate(seccionHist);
-                    
+
                     GcmFileUtils.writeStringToFileServer(ruta1, "html.txt", seccion.getDiscusionHtml());
                     GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", seccion.getDiscusionPlain());
                 }
@@ -939,25 +943,49 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void toAddLink(ActionEvent event) {
         try {
             this.setIdTipoConocimiento(null);
             this.setListaSourceVinculos(new ArrayList());
-            if(CollectionUtils.isEmpty(this.getListaSourceVinculosBL())) { this.setListaSourceVinculosBL(new ArrayList()); }
-            if(CollectionUtils.isEmpty(this.getListaSourceVinculosBP())) { this.setListaSourceVinculosBP(new ArrayList()); }
-            if(CollectionUtils.isEmpty(this.getListaSourceVinculosCT())) { this.setListaSourceVinculosCT(new ArrayList()); } 
-            if(CollectionUtils.isEmpty(this.getListaSourceVinculosOM())) { this.setListaSourceVinculosOM(new ArrayList()); }
-            if(CollectionUtils.isEmpty(this.getListaSourceVinculosPR())) { this.setListaSourceVinculosPR(new ArrayList()); }
-            if(CollectionUtils.isEmpty(this.getListaSourceVinculosWK())) { this.setListaSourceVinculosWK(new ArrayList()); }
+            if (CollectionUtils.isEmpty(this.getListaSourceVinculosBL())) {
+                this.setListaSourceVinculosBL(new ArrayList());
+            }
+            if (CollectionUtils.isEmpty(this.getListaSourceVinculosBP())) {
+                this.setListaSourceVinculosBP(new ArrayList());
+            }
+            if (CollectionUtils.isEmpty(this.getListaSourceVinculosCT())) {
+                this.setListaSourceVinculosCT(new ArrayList());
+            }
+            if (CollectionUtils.isEmpty(this.getListaSourceVinculosOM())) {
+                this.setListaSourceVinculosOM(new ArrayList());
+            }
+            if (CollectionUtils.isEmpty(this.getListaSourceVinculosPR())) {
+                this.setListaSourceVinculosPR(new ArrayList());
+            }
+            if (CollectionUtils.isEmpty(this.getListaSourceVinculosWK())) {
+                this.setListaSourceVinculosWK(new ArrayList());
+            }
             this.setListaTargetVinculos(new ArrayList());
-            if(CollectionUtils.isEmpty(this.getListaTargetVinculosBL())) { this.setListaTargetVinculosBL(new ArrayList()); }
-            if(CollectionUtils.isEmpty(this.getListaTargetVinculosBP())) { this.setListaTargetVinculosBP(new ArrayList()); }
-            if(CollectionUtils.isEmpty(this.getListaTargetVinculosCT())) { this.setListaTargetVinculosCT(new ArrayList()); }
-            if(CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) { this.setListaTargetVinculosOM(new ArrayList()); }
-            if(CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) { this.setListaTargetVinculosPR(new ArrayList()); }
-            if(CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) { this.setListaTargetVinculosWK(new ArrayList()); }
-            this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            if (CollectionUtils.isEmpty(this.getListaTargetVinculosBL())) {
+                this.setListaTargetVinculosBL(new ArrayList());
+            }
+            if (CollectionUtils.isEmpty(this.getListaTargetVinculosBP())) {
+                this.setListaTargetVinculosBP(new ArrayList());
+            }
+            if (CollectionUtils.isEmpty(this.getListaTargetVinculosCT())) {
+                this.setListaTargetVinculosCT(new ArrayList());
+            }
+            if (CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) {
+                this.setListaTargetVinculosOM(new ArrayList());
+            }
+            if (CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) {
+                this.setListaTargetVinculosPR(new ArrayList());
+            }
+            if (CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
+                this.setListaTargetVinculosWK(new ArrayList());
+            }
+            this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -973,55 +1001,55 @@ public class BuenaPracticaMB implements Serializable{
                     HashMap filters = new HashMap();
                     filters.put("ntipoconocimientoid", id);
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
-                    if (this.getSelectedBuenaPractica()!= null) {
+                    if (this.getSelectedBuenaPractica() != null) {
                         filters.put("nconocimientoid", this.getSelectedBuenaPractica().getNconocimientoid().toString());
                         this.setListaTargetVinculos(new ArrayList());
                         List<Consulta> lista = service.getConcimientosVinculados(filters);
                         Collections.sort(lista, Consulta.Comparators.ID);
                         if (id.equals(Constante.BASELEGAL)) {
-                            for(Consulta ele : lista){
+                            for (Consulta ele : lista) {
                                 int pos = Collections.binarySearch(this.getListaTargetVinculosBL(), ele, Consulta.Comparators.ID);
-                                if(pos < 0) {
+                                if (pos < 0) {
                                     this.getListaTargetVinculosBL().add(ele);
                                 }
                             }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBL());
                         } else if (id.equals(Constante.PREGUNTAS)) {
-                            for(Consulta ele : lista){
+                            for (Consulta ele : lista) {
                                 int pos = Collections.binarySearch(this.getListaTargetVinculosPR(), ele, Consulta.Comparators.ID);
-                                if(pos < 0) {
+                                if (pos < 0) {
                                     this.getListaTargetVinculosPR().add(ele);
                                 }
                             }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosPR());
                         } else if (id.equals(Constante.WIKI)) {
-                            for(Consulta ele : lista){
+                            for (Consulta ele : lista) {
                                 int pos = Collections.binarySearch(this.getListaTargetVinculosWK(), ele, Consulta.Comparators.ID);
-                                if(pos < 0) {
+                                if (pos < 0) {
                                     this.getListaTargetVinculosWK().add(ele);
                                 }
                             }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosWK());
                         } else if (id.equals(Constante.CONTENIDO)) {
-                            for(Consulta ele : lista){
+                            for (Consulta ele : lista) {
                                 int pos = Collections.binarySearch(this.getListaTargetVinculosCT(), ele, Consulta.Comparators.ID);
-                                if(pos < 0) {
+                                if (pos < 0) {
                                     this.getListaTargetVinculosCT().add(ele);
                                 }
                             }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosCT());
                         } else if (id.equals(Constante.BUENAPRACTICA)) {
-                            for(Consulta ele : lista){
+                            for (Consulta ele : lista) {
                                 int pos = Collections.binarySearch(this.getListaTargetVinculosBP(), ele, Consulta.Comparators.ID);
-                                if(pos < 0) {
+                                if (pos < 0) {
                                     this.getListaTargetVinculosBP().add(ele);
                                 }
                             }
                             this.getListaTargetVinculos().addAll(this.getListaTargetVinculosBP());
                         } else if (id.equals(Constante.OPORTUNIDADMEJORA)) {
-                            for(Consulta ele : lista){
+                            for (Consulta ele : lista) {
                                 int pos = Collections.binarySearch(this.getListaTargetVinculosOM(), ele, Consulta.Comparators.ID);
-                                if(pos < 0) {
+                                if (pos < 0) {
                                     this.getListaTargetVinculosOM().add(ele);
                                 }
                             }
@@ -1042,8 +1070,8 @@ public class BuenaPracticaMB implements Serializable{
                             this.setListaTargetVinculos(this.getListaTargetVinculosOM());
                         }
                     }
-                    if(CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-                        List<String> ids = new ArrayList<>();
+                    if (CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
+                        List<String> ids = new ArrayList<String>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
@@ -1072,7 +1100,7 @@ public class BuenaPracticaMB implements Serializable{
                         this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
                         this.setListaSourceVinculos(this.getListaSourceVinculosOM());
                     }
-                    this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
                 }
             }
         } catch (Exception e) {
@@ -1133,24 +1161,24 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void toDeleteOutstanding(ActionEvent event) {
         try {
-            if(event != null) {
+            if (event != null) {
                 int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
                 this.setSelectedDestacado(this.getListaDestacados().get(index));
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
         }
     }
-    
+
     public void deleteOutstanding(ActionEvent event) {
         try {
-            if(event != null) {
+            if (event != null) {
                 ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("BaseLegalService");
                 Conocimiento conocimiento = service.getConocimientoById(this.getSelectedDestacado().getIdconocimiento());
-                if(conocimiento != null) {
+                if (conocimiento != null) {
                     LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
                     User user = loginMB.getUser();
                     conocimiento.setNdestacado(BigDecimal.ZERO);
@@ -1159,15 +1187,15 @@ public class BuenaPracticaMB implements Serializable{
                     service.saveOrUpdate(conocimiento);
                     ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                     HashMap filter = new HashMap();
-                    filter.put("ntipoconocimientoid", Constante.BUENAPRACTICA);                
+                    filter.put("ntipoconocimientoid", Constante.BUENAPRACTICA);
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.getMessage();
         }
     }
-    
+
     public String toSave() {
         try {
             this.clearAll();
@@ -1181,36 +1209,36 @@ public class BuenaPracticaMB implements Serializable{
     public void save(ActionEvent event) {
         try {
             this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
-            if(this.getSelectedCategoria() == null) {
+            if (this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione la categoría de la buena práctica a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getNombre())) {
+            if (StringUtils.isBlank(this.getNombre())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese el título de la buena práctica a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDescripcionHtml())) {
+            if (StringUtils.isBlank(this.getDescripcionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese la descripción de la buena práctica a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(CollectionUtils.isEmpty(this.getListaSeccion())) {
+            if (CollectionUtils.isEmpty(this.getListaSeccion())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese al menos un (01) paso a seguir.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
             /* Validando si exiten vínculos de bases legales derogadas */
             int contador = 0;
-            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
-                for(Consulta c : this.getListaTargetVinculosBL()) {
-                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+            if (CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for (Consulta c : this.getListaTargetVinculosBL()) {
+                    if (c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
                         contador++;
                     }
                 }
             }
-            
+
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
@@ -1221,12 +1249,12 @@ public class BuenaPracticaMB implements Serializable{
             conocimiento.setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             conocimiento.setNdestacado(BigDecimal.ZERO);
             conocimiento.setVtitulo(StringUtils.upperCase(this.getNombre()));
-            if(this.getDescripcionPlain().length() < 400) {
+            if (this.getDescripcionPlain().length() < 400) {
                 conocimiento.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 conocimiento.setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
-            if(contador > 0) {
+            if (contador > 0) {
                 conocimiento.setNflgvinculo(BigDecimal.ONE);
             } else {
                 conocimiento.setNflgvinculo(BigDecimal.ZERO);
@@ -1267,7 +1295,7 @@ public class BuenaPracticaMB implements Serializable{
 
             GcmFileUtils.writeStringToFileServer(np1, "html.txt", this.getDescripcionHtml());
             GcmFileUtils.writeStringToFileServer(np1, "plain.txt", this.getDescripcionPlain());
-            
+
             if (CollectionUtils.isNotEmpty(this.getListaSeccion())) {
                 String url0 = this.path.concat(conocimiento.getNconocimientoid().toString()).concat("/0/s");
                 String url1 = this.path.concat(conocimiento.getNconocimientoid().toString()).concat("/1/s");
@@ -1324,7 +1352,7 @@ public class BuenaPracticaMB implements Serializable{
                     vinculo.setDfechacreacion(new Date());
                     vinculo.setVusuariocreacion(user.getVlogin());
                     vinculoService.saveOrUpdate(vinculo);
-                    
+
                     TvinculoHistId vinculoHistId = new TvinculoHistId();
                     vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
                     vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
@@ -1337,23 +1365,21 @@ public class BuenaPracticaMB implements Serializable{
                     vinculoHistService.saveOrUpdate(vinculoHist);
                 }
             }
-            
-            
-            if(this.getSelectedCategoria().getNflagbp().toString().equals("1"))
-            {
-            Asignacion asignacion = new Asignacion();
-            AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
-            asignacion.setNasignacionid(serviceasig.getNextPK());
-            asignacion.setNtipoconocimientoid(Constante.BUENAPRACTICA);
-            asignacion.setNconocimientoid(conocimiento.getNconocimientoid());
-            asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
-            CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
-            asignacion.setNusuarioid(categoriaService.getCategoriaById(conocimiento.getNcategoriaid()).getNmoderador());
-            asignacion.setDfechaasignacion(new Date());
-            asignacion.setDfechacreacion(new Date());
-            serviceasig.saveOrUpdate(asignacion);
+
+            if (this.getSelectedCategoria().getNflagbp().toString().equals("1")) {
+                Asignacion asignacion = new Asignacion();
+                AsignacionService serviceasig = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+                asignacion.setNasignacionid(serviceasig.getNextPK());
+                asignacion.setNtipoconocimientoid(Constante.BUENAPRACTICA);
+                asignacion.setNconocimientoid(conocimiento.getNconocimientoid());
+                asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("1")));
+                CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
+                asignacion.setNusuarioid(categoriaService.getCategoriaById(conocimiento.getNcategoriaid()).getNmoderador());
+                asignacion.setDfechaasignacion(new Date());
+                asignacion.setDfechacreacion(new Date());
+                serviceasig.saveOrUpdate(asignacion);
             }
-            
+
             this.setListaBuenaPractica(conocimientoService.getConocimientosByType(Constante.BUENAPRACTICA));
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/lista.xhtml");
         } catch (Exception e) {
@@ -1361,12 +1387,12 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public String toView() {
         try {
             this.clearAll();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            if(!CollectionUtils.isEmpty(this.getFilteredListaBuenaPractica())) {
+            if (!CollectionUtils.isEmpty(this.getFilteredListaBuenaPractica())) {
                 this.setSelectedBuenaPractica(this.getFilteredListaBuenaPractica().get(index));
             } else {
                 this.setSelectedBuenaPractica(this.getListaBuenaPractica().get(index));
@@ -1410,7 +1436,7 @@ public class BuenaPracticaMB implements Serializable{
         try {
             this.clearAll();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            if(!CollectionUtils.isEmpty(this.getFilteredListaBuenaPractica())) {
+            if (!CollectionUtils.isEmpty(this.getFilteredListaBuenaPractica())) {
                 this.setSelectedBuenaPractica(this.getFilteredListaBuenaPractica().get(index));
             } else {
                 this.setSelectedBuenaPractica(this.getListaBuenaPractica().get(index));
@@ -1453,32 +1479,32 @@ public class BuenaPracticaMB implements Serializable{
     public void edit(ActionEvent event) {
         try {
             this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
-            if(this.getSelectedCategoria() == null) {
+            if (this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedBuenaPractica().getVtitulo())) {
+            if (StringUtils.isBlank(this.getSelectedBuenaPractica().getVtitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título del wiki requerido. Ingrese el título del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDescripcionHtml())) {
+            if (StringUtils.isBlank(this.getDescripcionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción del wiki requerido. Ingrese la descripción del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(CollectionUtils.isEmpty(this.getListaSeccion())) {
+            if (CollectionUtils.isEmpty(this.getListaSeccion())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese al menos un (01) paso a seguir.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(this.getSelectedBuenaPractica().getNdestacado().equals(BigDecimal.ZERO) && this.getChkDestacado()) {
+            if (this.getSelectedBuenaPractica().getNdestacado().equals(BigDecimal.ZERO) && this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
                 filter.put("ntipoconocimientoid", Constante.BUENAPRACTICA);
                 BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
-                if(cant.intValue() >= 10) {
+                if (cant.intValue() >= 10) {
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                     RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
                     return;
@@ -1486,14 +1512,14 @@ public class BuenaPracticaMB implements Serializable{
             }
             /* Validando si exiten vínculos de bases legales derogadas */
             int contador = 0;
-            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
-                for(Consulta c : this.getListaTargetVinculosBL()) {
-                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+            if (CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for (Consulta c : this.getListaTargetVinculosBL()) {
+                    if (c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
                         contador++;
                     }
                 }
             }
-            
+
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
@@ -1501,12 +1527,12 @@ public class BuenaPracticaMB implements Serializable{
             this.getSelectedBuenaPractica().setNcategoriaid(this.getSelectedCategoria().getNcategoriaid());
             this.getSelectedBuenaPractica().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBuenaPractica().setVtitulo(StringUtils.upperCase(this.getSelectedBuenaPractica().getVtitulo().trim()));
-            if(this.getDescripcionPlain().length() < 400) {
+            if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
-            if(contador > 0) {
+            if (contador > 0) {
                 this.getSelectedBuenaPractica().setNflgvinculo(BigDecimal.ONE);
             } else {
                 this.getSelectedBuenaPractica().setNflgvinculo(BigDecimal.ZERO);
@@ -1521,7 +1547,7 @@ public class BuenaPracticaMB implements Serializable{
             HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
             Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedBuenaPractica().getNconocimientoid());
             int lastversion;
-            if(lastHistorial != null) {
+            if (lastHistorial != null) {
                 lastversion = lastHistorial.getNnumversion().intValue();
             } else {
                 lastversion = 0;
@@ -1546,7 +1572,7 @@ public class BuenaPracticaMB implements Serializable{
 
             GcmFileUtils.writeStringToFileServer(url, "html.txt", this.getDescripcionHtml());
             GcmFileUtils.writeStringToFileServer(url, "plain.txt", this.getDescripcionPlain());
-            
+
             if (CollectionUtils.isNotEmpty(this.getListaSeccion())) {
                 String url0 = this.getSelectedBuenaPractica().getVruta().concat("s");
                 String url1 = url.concat("s");
@@ -1610,7 +1636,7 @@ public class BuenaPracticaMB implements Serializable{
                     vinculo.setDfechacreacion(new Date());
                     vinculo.setVusuariocreacion(user.getVlogin());
                     vinculoService.saveOrUpdate(vinculo);
-                    
+
                     TvinculoHistId vinculoHistId = new TvinculoHistId();
                     vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
                     vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
@@ -1630,12 +1656,12 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public String toPost() {
         try {
             this.clearAll();
             int index = Integer.parseInt((String) JSFUtils.getRequestParameter("index"));
-            if(!CollectionUtils.isEmpty(this.getFilteredListaBuenaPractica())) {
+            if (!CollectionUtils.isEmpty(this.getFilteredListaBuenaPractica())) {
                 this.setSelectedBuenaPractica(this.getFilteredListaBuenaPractica().get(index));
             } else {
                 this.setSelectedBuenaPractica(this.getListaBuenaPractica().get(index));
@@ -1674,50 +1700,50 @@ public class BuenaPracticaMB implements Serializable{
         }
         return "/pages/buenapractica/publicar?faces-redirect=true";
     }
-    
+
     public void post(ActionEvent event) {
         try {
             this.setDescripcionHtml(JSFUtils.getRequestParameter("descHtml"));
-            if(this.getSelectedCategoria() == null) {
+            if (this.getSelectedCategoria() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Categoría del wiki requerida. Seleccione la categoría del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getSelectedBuenaPractica().getVtitulo())) {
+            if (StringUtils.isBlank(this.getSelectedBuenaPractica().getVtitulo())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Título del wiki requerido. Ingrese el título del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(StringUtils.isBlank(this.getDescripcionHtml())) {
+            if (StringUtils.isBlank(this.getDescripcionHtml())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Descripción del wiki requerido. Ingrese la descripción del wiki a registrar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(CollectionUtils.isEmpty(this.getListaSeccion())) {
+            if (CollectionUtils.isEmpty(this.getListaSeccion())) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Ingrese al menos un (01) paso a seguir.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
                 return;
             }
-            if(this.getSelectedBuenaPractica().getNdestacado().equals(BigDecimal.ZERO) && this.getChkDestacado()) {
+            if (this.getSelectedBuenaPractica().getNdestacado().equals(BigDecimal.ZERO) && this.getChkDestacado()) {
                 ConsultaService consultaService = (ConsultaService) ServiceFinder.findBean("ConsultaService");
                 HashMap filter = new HashMap();
                 filter.put("ntipoconocimientoid", Constante.BUENAPRACTICA);
                 BigDecimal cant = consultaService.countDestacadosByTipoConocimiento(filter);
-                if(cant.intValue() >= 10) {
+                if (cant.intValue() >= 10) {
                     this.setListaDestacados(consultaService.getDestacadosByTipoConocimiento(filter));
                     RequestContext.getCurrentInstance().execute("PF('destDialog').show();");
                     return;
                 }
             }
             int contador = 0;
-            if(CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
-                for(Consulta c : this.getListaTargetVinculosBL()) {
-                    if(c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
+            if (CollectionUtils.isNotEmpty(this.getListaTargetVinculosBL())) {
+                for (Consulta c : this.getListaTargetVinculosBL()) {
+                    if (c.getIdEstado().toString().equals(Constante.ESTADO_BASELEGAL_DEROGADA)) {
                         contador++;
                     }
                 }
             }
-            
+
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
@@ -1726,12 +1752,12 @@ public class BuenaPracticaMB implements Serializable{
             this.getSelectedBuenaPractica().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
             this.getSelectedBuenaPractica().setNsituacionid(BigDecimal.valueOf(Long.parseLong(Constante.SITUACION_PUBLICADO)));
             this.getSelectedBuenaPractica().setVtitulo(StringUtils.upperCase(this.getSelectedBuenaPractica().getVtitulo().trim()));
-            if(this.getDescripcionPlain().length() < 400) {
+            if (this.getDescripcionPlain().length() < 400) {
                 this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain()));
             } else {
                 this.getSelectedBuenaPractica().setVdescripcion(StringUtils.capitalize(this.getDescripcionPlain().substring(0, 400)));
             }
-            if(contador > 0) {
+            if (contador > 0) {
                 this.getSelectedBuenaPractica().setNflgvinculo(BigDecimal.ONE);
             } else {
                 this.getSelectedBuenaPractica().setNflgvinculo(BigDecimal.ZERO);
@@ -1740,14 +1766,14 @@ public class BuenaPracticaMB implements Serializable{
             this.getSelectedBuenaPractica().setDfechamodificacion(new Date());
             this.getSelectedBuenaPractica().setVusuariomodificacion(user.getVlogin());
             conocimientoService.saveOrUpdate(this.getSelectedBuenaPractica());
-            
+
             GcmFileUtils.writeStringToFileServer(this.getSelectedBuenaPractica().getVruta(), "html.txt", this.getDescripcionHtml());
             GcmFileUtils.writeStringToFileServer(this.getSelectedBuenaPractica().getVruta(), "plain.txt", this.getDescripcionPlain());
 
             HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
             Historial lastHistorial = historialService.getLastHistorialByConocimiento(this.getSelectedBuenaPractica().getNconocimientoid());
             int lastversion;
-            if(lastHistorial != null) {
+            if (lastHistorial != null) {
                 lastversion = lastHistorial.getNnumversion().intValue();
             } else {
                 lastversion = 0;
@@ -1772,7 +1798,7 @@ public class BuenaPracticaMB implements Serializable{
 
             GcmFileUtils.writeStringToFileServer(url, "html.txt", this.getDescripcionHtml());
             GcmFileUtils.writeStringToFileServer(url, "plain.txt", this.getDescripcionPlain());
-            
+
             if (CollectionUtils.isNotEmpty(this.getListaSeccion())) {
                 String url0 = this.getSelectedBuenaPractica().getVruta().concat("s");
                 String url1 = url.concat("s");
@@ -1836,7 +1862,7 @@ public class BuenaPracticaMB implements Serializable{
                     vinculo.setDfechacreacion(new Date());
                     vinculo.setVusuariocreacion(user.getVlogin());
                     vinculoService.saveOrUpdate(vinculo);
-                    
+
                     TvinculoHistId vinculoHistId = new TvinculoHistId();
                     vinculoHistId.setNvinculohid(vinculoHistService.getNextPK());
                     vinculoHistId.setNconocimientoid(thistorialId.getNconocimientoid());
@@ -1849,20 +1875,20 @@ public class BuenaPracticaMB implements Serializable{
                     vinculoHistService.saveOrUpdate(vinculoHist);
                 }
             }
-            
+
             AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
             List<Asignacion> listaAsignacion = conocimientoService.obtenerBpracticaxAsig(this.getSelectedBuenaPractica().getNconocimientoid(), user.getNusuarioid(), Constante.BUENAPRACTICA);
-            if(CollectionUtils.isNotEmpty(listaAsignacion)) {
+            if (CollectionUtils.isNotEmpty(listaAsignacion)) {
                 Asignacion asignacion = listaAsignacion.get(0);
                 asignacion.setNestadoid(BigDecimal.valueOf(Long.parseLong("2")));
-                if(asignacion.getDfecharecepcion() == null) {
+                if (asignacion.getDfecharecepcion() == null) {
                     asignacion.setDfecharecepcion(new Date());
                 }
                 asignacion.setDfechaatencion(new Date());
                 asignacion.setNaccionid(BigDecimal.valueOf(Long.parseLong("8")));
                 asignacionService.saveOrUpdate(asignacion);
             }
-            
+
             this.setListaBuenaPractica(conocimientoService.getConocimientosByType(Constante.BUENAPRACTICA));
             FacesContext.getCurrentInstance().getExternalContext().redirect("/gescon/pages/buenapractica/lista.xhtml");
         } catch (Exception e) {
@@ -1917,23 +1943,23 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
-    public void toCompare(ActionEvent event){
+
+    public void toCompare(ActionEvent event) {
         try {
             if (event != null) {
-                if(CollectionUtils.isEmpty(this.getSelectedHistoriales())){
+                if (CollectionUtils.isEmpty(this.getSelectedHistoriales())) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Debe seleccionar dos versiones para comparar.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
-                if(CollectionUtils.isNotEmpty(this.getSelectedHistoriales()) && this.getSelectedHistoriales().size() != 2){
+                if (CollectionUtils.isNotEmpty(this.getSelectedHistoriales()) && this.getSelectedHistoriales().size() != 2) {
                     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Sólo se puede comparar dos versiones a la vez.");
                     FacesContext.getCurrentInstance().addMessage(null, message);
                     return;
                 }
                 SeccionHistService seccionHistService = (SeccionHistService) ServiceFinder.findBean("SeccionHistService");
                 VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
-                for(Historial historial : this.getSelectedHistoriales()) {
+                for (Historial historial : this.getSelectedHistoriales()) {
                     historial.setDescripcionHtml(GcmFileUtils.readStringFromFileServer(historial.getVruta(), "html.txt"));
                     historial.setListaSeccionHist(seccionHistService.getSeccionHistsByHistorial(historial.getId().getNhistorialid()));
                     if (CollectionUtils.isNotEmpty(historial.getListaSeccionHist())) {
@@ -1951,14 +1977,14 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void switchHistory(ActionEvent event) {
         try {
             LoginMB loginMB = (LoginMB) JSFUtils.getSessionAttribute("loginMB");
             User user = loginMB.getUser();
             HistorialService historialService = (HistorialService) ServiceFinder.findBean("HistorialService");
-            if(CollectionUtils.isNotEmpty(this.getListaHistorial())) {
-                for(Historial h : this.getListaHistorial()) {
+            if (CollectionUtils.isNotEmpty(this.getListaHistorial())) {
+                for (Historial h : this.getListaHistorial()) {
                     h.setNversionactual(BigDecimal.ZERO);
                     historialService.saveOrUpdate(h);
                 }
@@ -1976,7 +2002,7 @@ public class BuenaPracticaMB implements Serializable{
                     seccionHist.setDetallePlain(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "plain.txt"));
                 }
             }
-            
+
             this.getSelectedBuenaPractica().setNcategoriaid(hist.getNcategoriaid());
             this.getSelectedBuenaPractica().setNdias(hist.getNdias());
             this.getSelectedBuenaPractica().setVcontenido(hist.getVcontenido());
@@ -1989,12 +2015,12 @@ public class BuenaPracticaMB implements Serializable{
             this.getSelectedBuenaPractica().setVtitulo(hist.getVtitulo());
             this.getSelectedBuenaPractica().setDfechamodificacion(new Date());
             this.getSelectedBuenaPractica().setVusuariomodificacion(user.getVlogin());
-            
+
             ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
             conocimientoService.saveOrUpdate(this.getSelectedBuenaPractica());
             GcmFileUtils.writeStringToFileServer(this.getSelectedBuenaPractica().getVruta(), "html.txt", html);
             GcmFileUtils.writeStringToFileServer(this.getSelectedBuenaPractica().getVruta(), "plain.txt", plain);
-            
+
             SeccionService seccionService = (SeccionService) ServiceFinder.findBean("SeccionService");
             seccionService.deleteSeccionesByConocimiento(this.getSelectedBuenaPractica().getNconocimientoid());
             if (CollectionUtils.isNotEmpty(hist.getListaSeccionHist())) {
@@ -2010,13 +2036,13 @@ public class BuenaPracticaMB implements Serializable{
                     seccion.setDetalleHtml(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "html.txt"));
                     seccion.setDetallePlain(GcmFileUtils.readStringFromFileServer(seccionHist.getVruta(), "plain.txt"));
                     seccionService.saveOrUpdate(seccion);
-                    
+
                     String ruta1 = this.getSelectedBuenaPractica().getVruta().concat(seccion.getNorden().toString()).concat("/");
                     GcmFileUtils.writeStringToFileServer(ruta1, "html.txt", seccion.getDetalleHtml());
                     GcmFileUtils.writeStringToFileServer(ruta1, "plain.txt", seccion.getDetallePlain());
                 }
             }
-            
+
             VinculoService vinculoService = (VinculoService) ServiceFinder.findBean("VinculoService");
             vinculoService.deleteByConocimiento(this.getSelectedBuenaPractica().getNconocimientoid());
             VinculoHistService vinculoHistService = (VinculoHistService) ServiceFinder.findBean("VinculoHistService");
@@ -2039,7 +2065,7 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void toAddCalificacion(ActionEvent event) {
         try {
             this.clearCalificacion();
@@ -2161,7 +2187,7 @@ public class BuenaPracticaMB implements Serializable{
             e.printStackTrace();
         }
     }
-    
+
     public void postProcessXLS(Object document) {
         HSSFWorkbook wb = (HSSFWorkbook) document;
         HSSFSheet sheet = wb.getSheetAt(0);
@@ -2169,29 +2195,29 @@ public class BuenaPracticaMB implements Serializable{
         //Para los datos
         HSSFCellStyle centerStyle = wb.createCellStyle();
         centerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        
+
         HSSFCellStyle centerGrayStyle = wb.createCellStyle();
         centerGrayStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
         centerGrayStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
         centerGrayStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-        
+
         HSSFCellStyle grayBG = wb.createCellStyle();
         grayBG.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
         grayBG.setFillPattern(CellStyle.SOLID_FOREGROUND);
         int i = 1;
-        for(Conocimiento c : this.getListaBuenaPractica()) {
+        for (Conocimiento c : this.getListaBuenaPractica()) {
             HSSFRow row = sheet.getRow(i);
             for (int j = 0; j < row.getPhysicalNumberOfCells(); j++) {
                 HSSFCell cell = row.getCell(j);
-                if(i % 2 == 0 ) {
-                    if(j > 0) {
+                if (i % 2 == 0) {
+                    if (j > 0) {
                         cell.setCellStyle(centerGrayStyle);
                     } else {
                         cell.setCellStyle(grayBG);
                         cell.setCellValue(c.getVtitulo());
                     }
                 } else {
-                    if(j > 0) {
+                    if (j > 0) {
                         cell.setCellStyle(centerStyle);
                     } else {
                         cell.setCellValue(c.getVtitulo());
@@ -2200,7 +2226,7 @@ public class BuenaPracticaMB implements Serializable{
             }
             i++;
         }
-        
+
         // Para la cabecera
         HSSFRow header = sheet.getRow(0);
         HSSFCellStyle headerStyle = wb.createCellStyle();
@@ -2212,7 +2238,7 @@ public class BuenaPracticaMB implements Serializable{
         headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
         headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
         headerStyle.setFont(font);
-        
+
         for (int j = 0; j < header.getPhysicalNumberOfCells(); j++) {
             HSSFCell cell = header.getCell(j);
             cell.setCellStyle(headerStyle);

@@ -77,7 +77,7 @@ public class AsignacionServiceImpl implements AsignacionService {
 
     @Override
     public List<Consulta> getNotificationsAssignedPanelByUser(User user) {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista = new ArrayList<Consulta>();
         try {
             Mtuser mtuser = new Mtuser();
             BeanUtils.copyProperties(mtuser, user);
@@ -111,7 +111,7 @@ public class AsignacionServiceImpl implements AsignacionService {
 
     @Override
     public List<Consulta> getNotificationsReceivedPanelByUser(User user) {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista = new ArrayList<Consulta>();
         try {
             Mtuser mtuser = new Mtuser();
             BeanUtils.copyProperties(mtuser, user);
@@ -145,7 +145,7 @@ public class AsignacionServiceImpl implements AsignacionService {
 
     @Override
     public List<Consulta> getNotificationsServedPanelByUser(User user) {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista = new ArrayList<Consulta>();
         try {
             Mtuser mtuser = new Mtuser();
             BeanUtils.copyProperties(mtuser, user);
@@ -180,7 +180,7 @@ public class AsignacionServiceImpl implements AsignacionService {
     
     @Override
     public List<Consulta> getNotificationsPublicPanelByUser(User user) {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista = new ArrayList<Consulta>();
         try {
             Mtuser mtuser = new Mtuser();
             BeanUtils.copyProperties(mtuser, user);
@@ -212,7 +212,7 @@ public class AsignacionServiceImpl implements AsignacionService {
     
     @Override
     public List<Consulta> getNotificationsAlertPanelByMtuser(User user) {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista = new ArrayList<Consulta>();
         try {
             Mtuser mtuser = new Mtuser();
             BeanUtils.copyProperties(mtuser, user);

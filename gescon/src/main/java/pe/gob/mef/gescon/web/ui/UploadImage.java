@@ -62,13 +62,12 @@ public class UploadImage extends HttpServlet {
             }
             
             File f = new File(temppath, fileName);
-            try (FileOutputStream fileOutStream = new FileOutputStream(f)) {
-                fileOutStream.write(IOUtils.toByteArray(file.getInputStream()));
-                fileOutStream.flush();
-            }
+            FileOutputStream fileOutStream = new FileOutputStream(f);
+            fileOutStream.write(IOUtils.toByteArray(file.getInputStream()));
+            fileOutStream.flush();
             
             //sending json to response
-            Map<String, String> gson = new LinkedHashMap<>();
+            Map<String, String> gson = new LinkedHashMap<String, String>();
             gson.put("link", "/gescon/faces/javax.faces.resource/"+fileName+"?ln=uploads/"+mb);
             String json = new Gson().toJson(gson);
             out.write(json);

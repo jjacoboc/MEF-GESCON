@@ -22,6 +22,7 @@ public interface UserService {
     List<User> getUsersInternal() throws Exception;
     List<User> getUsersExternal() throws Exception;
     List<User> getUsersByPerfil(BigDecimal perfil) throws Exception;
+    List<User> getUsersActivedByPerfil(BigDecimal perfil) throws Exception;
     User getUserByDNI(String dni) throws Exception;
     User getUserByEmail(String email) throws Exception;
     User getUserByLogin(String login) throws Exception;

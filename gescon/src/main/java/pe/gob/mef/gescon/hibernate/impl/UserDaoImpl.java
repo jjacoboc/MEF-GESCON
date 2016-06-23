@@ -86,6 +86,14 @@ public class UserDaoImpl extends HibernateDaoSupport implements UserDao{
     }
     
     @Override
+    public List<Mtuser> getMtuserActivedByPerfil(BigDecimal perfil) throws Exception {
+        DetachedCriteria criteria = DetachedCriteria.forClass(Mtuser.class);
+        criteria.add(Restrictions.eq("nactivo", BigDecimal.ONE));
+        criteria.add(Restrictions.eq("nperfilid", perfil));
+        return (List<Mtuser>) getHibernateTemplate().findByCriteria(criteria);
+    }
+    
+    @Override
     public Mtuser getMtuserByDNI(String dni) throws Exception {
         DetachedCriteria criteria = DetachedCriteria.forClass(Mtuser.class);
         criteria.add(Restrictions.eq("vdni", dni));

@@ -102,38 +102,9 @@
                     <h:outputText value="Por ello, abstente de escribir reflexiones personales o no enfocados a desarrollo y redacción del artículo; sé cortés y evita ataques personales."/>
                 </p:fieldset>
                 <p:spacer/>
-                <p:commandButton id="btnDis" value="#{msgs.om_btn_discusion}" actionListener="#{oportunidadMB.toAddDiscusion}" update=":tabview:fd:pgSec" 
-                                 oncomplete="secDialog();" styleClass="ui-link Fs14" rendered="#{loginMB.user ne null}"/>
-                <p:overlayPanel id="disPanel" widgetVar="disPanel" for="btnDis" hideEffect="fade" showCloseIcon="true" appendToBody="true" style="border: 2px solid black;">
-                    <h:panelGrid id="pgSec" columns="1">
-                        <h:panelGroup>
-                            <h:outputText value="#{msgs.icon_asterisk}"/>
-                            <p:spacer width="5"/>
-                            <h:outputText value="#{msgs.om_lbl_tipodis}"/>
-                        </h:panelGroup>
-                        <p:selectOneMenu value="#{oportunidadMB.tipoDiscusion}" styleClass="Wid20">
-                            <f:selectItem itemValue="" itemLabel="Seleccione" />
-                            <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
-                        </p:selectOneMenu>
-
-                        <h:panelGroup>
-                            <h:outputText value="#{msgs.icon_asterisk}"/>
-                            <p:spacer width="5"/>
-                            <h:outputText value="#{msgs.om_lbl_titulodis}"/>
-                        </h:panelGroup>
-                        <p:inputText value="#{oportunidadMB.tituloDiscusion}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
-
-                        <h:panelGroup>
-                            <h:outputText value="#{msgs.icon_asterisk}"/>
-                            <p:spacer width="5"/>
-                            <h:outputText value="#{msgs.om_lbl_detalledis}"/>
-                        </h:panelGroup>
-                        <textarea id="txtHtml" name="txtHtml">#{oportunidadMB.discusionHtml}</textarea>
-
-                        <p:commandButton value="#{msgs.om_btn_adddiscusion}" actionListener="#{oportunidadMB.addDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
-                    </h:panelGrid>
-                </p:overlayPanel>
+                <p:commandButton value="#{msgs.om_btn_discusion}" actionListener="#{oportunidadMB.toAddDiscusion}" oncomplete="PF('dlgSec').show();" update=":tabview:fSec:pgSec" styleClass="ui-link Fs14" rendered="#{loginMB.user ne null}"/>
             </h:panelGrid>
+            
             <h:panelGrid id="pgDis" columns="1" cellpadding="0" cellspacing="0" width="100%">
                 <table class="Wid100">
                     <ui:repeat value="#{oportunidadMB.listaDiscusionSeccion}" var="s" varStatus="vs">
@@ -144,8 +115,8 @@
                                 </h:outputText>
                                 <h:outputText value=": #{s.vtitulo}" styleClass="Fs14 FontBold black"/>
                                 <h:outputText value=" [ " styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
-                                <p:commandLink value="editar" actionListener="#{oportunidadMB.toEditDiscusion}" update=":tabview:fd:pgEdis" 
-                                               oncomplete="PF('edisPanel').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
+                                <p:commandLink value="editar" actionListener="#{oportunidadMB.toEditDiscusion}" update=":tabview:fEsec:pgEsec" 
+                                               oncomplete="PF('dlgEsec').show();" styleClass="ui-link Fs12" rendered="#{loginMB.user ne null}">
                                     <f:param name="index" value="#{vs.index}"/>
                                 </p:commandLink>
                                 <h:outputText value="]" styleClass="FontBold black" rendered="#{loginMB.user ne null}"/>
@@ -161,35 +132,6 @@
                         <tr><td><p:spacer/></td></tr>
                     </ui:repeat>
                 </table>
-                <p:overlayPanel id="edisPanel" widgetVar="edisPanel" hideEffect="fade" showCloseIcon="true" onShow="esecDialog();" dynamic="true" style="border: 2px solid black;" >
-                    <h:panelGrid id="pgEdis" columns="1">
-                        <h:panelGroup>
-                            <h:outputText value="#{msgs.icon_asterisk}"/>
-                            <p:spacer width="5"/>
-                            <h:outputText value="#{msgs.om_lbl_tipodis}"/>
-                        </h:panelGroup>
-                        <p:selectOneMenu value="#{oportunidadMB.selectedDiscusionSeccion.ntipodiscusion}" styleClass="Wid20">
-                            <f:selectItem itemValue="" itemLabel="Seleccione" />
-                            <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
-                        </p:selectOneMenu>
-
-                        <h:panelGroup>
-                            <h:outputText value="#{msgs.icon_asterisk}"/>
-                            <p:spacer width="5"/>
-                            <h:outputText value="#{msgs.om_lbl_titulodis}"/>
-                        </h:panelGroup>
-                        <p:inputText value="#{oportunidadMB.selectedDiscusionSeccion.vtitulo}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
-
-                        <h:panelGroup>
-                            <h:outputText value="#{msgs.icon_asterisk}"/>
-                            <p:spacer width="5"/>
-                            <h:outputText value="#{msgs.om_lbl_detalledis}"/>
-                        </h:panelGroup>
-                        <textarea id="etxtHtml" name="etxtHtml">#{buenaPracticaMB.selectedDiscusionSeccion.discusionHtml}</textarea>
-
-                        <p:commandButton value="#{msgs.om_btn_editdiscusion}" actionListener="#{oportunidadMB.editDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
-                    </h:panelGrid>
-                </p:overlayPanel>
             </h:panelGrid>
         </p:panel>
         <h:panelGrid columns="1" width="100%">
@@ -201,4 +143,68 @@
             <p:commandButton value="Regresar" ajax="false" action="#{consultaMB.back}" rendered="#{loginMB.user eq null}"/>
         </h:panelGrid>
     </h:form>
+
+    <p:dialog id="dlgSec" widgetVar="dlgSec" onShow="secDialog();" width="80%">
+        <h:form id="fSec">
+            <h:panelGrid id="pgSec" columns="1">
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_tipodis}"/>
+                </h:panelGroup>
+                <p:selectOneMenu value="#{oportunidadMB.tipoDiscusion}" styleClass="Wid20">
+                    <f:selectItem itemValue="" itemLabel="Seleccione" />
+                    <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
+                </p:selectOneMenu>
+
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_titulodis}"/>
+                </h:panelGroup>
+                <p:inputText value="#{oportunidadMB.tituloDiscusion}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
+
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_detalledis}"/>
+                </h:panelGroup>
+                <textarea id="txtHtml" name="txtHtml">#{oportunidadMB.discusionHtml}</textarea>
+
+                <p:commandButton value="#{msgs.om_btn_adddiscusion}" actionListener="#{oportunidadMB.addDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+
+    <p:dialog id="dlgEsec" widgetVar="dlgEsec" onShow="esecDialog();" width="80%">
+        <h:form id="fEsec">
+            <h:panelGrid id="pgEsec" columns="1">
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_tipodis}"/>
+                </h:panelGroup>
+                <p:selectOneMenu value="#{oportunidadMB.selectedDiscusionSeccion.ntipodiscusion}" styleClass="Wid20">
+                    <f:selectItem itemValue="" itemLabel="Seleccione" />
+                    <f:selectItems value="#{listaSessionMB.listaTipoDiscusionActivo}"/>
+                </p:selectOneMenu>
+
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_titulodis}"/>
+                </h:panelGroup>
+                <p:inputText value="#{oportunidadMB.selectedDiscusionSeccion.vtitulo}" size="100" styleClass="Fs14" maxlength="100" style="text-transform: uppercase;"/>
+
+                <h:panelGroup>
+                    <h:outputText value="#{msgs.icon_asterisk}"/>
+                    <p:spacer width="5"/>
+                    <h:outputText value="#{msgs.om_lbl_detalledis}"/>
+                </h:panelGroup>
+                <textarea id="etxtHtml" name="etxtHtml">#{buenaPracticaMB.selectedDiscusionSeccion.discusionHtml}</textarea>
+
+                <p:commandButton value="#{msgs.om_btn_editdiscusion}" actionListener="#{oportunidadMB.editDiscusion}" update=":tabview:fd:pgDis, :tabview:fd:growl" styleClass="ui-link Fs14"/>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
 </ui:composition>

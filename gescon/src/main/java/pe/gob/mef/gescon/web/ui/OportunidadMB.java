@@ -674,7 +674,7 @@ public class OportunidadMB implements Serializable {
     
     public void clearDiscusion() {
         try {
-            this.setSelectedDiscusionSeccion(null);
+            this.setSelectedDiscusionSeccion(new DiscusionSeccion());
             this.setTituloDiscusion(StringUtils.EMPTY);
             this.setTipoDiscusion(null);
             this.setDiscusionHtml(StringUtils.EMPTY);
@@ -854,6 +854,7 @@ public class OportunidadMB implements Serializable {
     
     public void addDiscusion(ActionEvent event) {
         try {
+            this.setDiscusionHtml(JSFUtils.getRequestParameter("txtHtml"));
             if(this.getTipoDiscusion() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a agregar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -879,7 +880,7 @@ public class OportunidadMB implements Serializable {
                 this.setListaDiscusionSeccion(new ArrayList());
             }
             this.getListaDiscusionSeccion().add(discusionSeccion);
-            RequestContext.getCurrentInstance().execute("PF('disDialog').hide();");
+            RequestContext.getCurrentInstance().execute("PF('dlgSec').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -899,6 +900,7 @@ public class OportunidadMB implements Serializable {
     
     public void editDiscusion(ActionEvent event) {
         try {
+            this.getSelectedDiscusionSeccion().setDiscusionHtml(JSFUtils.getRequestParameter("etxtHtml"));
             if(this.getSelectedDiscusionSeccion().getNtipodiscusion() == null) {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR.", "Seleccione el tipo de discusión a editar.");
                 FacesContext.getCurrentInstance().addMessage(null, message);
@@ -915,7 +917,8 @@ public class OportunidadMB implements Serializable {
                 return;
             }
             this.getSelectedDiscusionSeccion().setVtitulo(StringUtils.upperCase(this.getSelectedDiscusionSeccion().getVtitulo().trim()));
-            RequestContext.getCurrentInstance().execute("PF('edisDialog').hide();");
+            this.getSelectedDiscusionSeccion().setDiscusionPlain(Jsoup.parse(this.getSelectedDiscusionSeccion().getDiscusionHtml()).text());
+            RequestContext.getCurrentInstance().execute("PF('dlgEsec').hide();");
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -941,6 +944,7 @@ public class OportunidadMB implements Serializable {
                 discusionHist = new DiscusionHist();
                 discusionHist.setNnumversion(BigDecimal.ONE);
             } else {
+                discusion = this.getSelectedDiscusion();
                 discusionHist = discusionHistService.getDiscusionHistByConocimiento(this.getSelectedOportunidad().getNconocimientoid());
                 int version = discusionHist.getNnumversion().intValue() + 1;
                 discusionHist.setNnumversion(BigDecimal.valueOf(version));
@@ -1016,7 +1020,7 @@ public class OportunidadMB implements Serializable {
             if(CollectionUtils.isEmpty(this.getListaTargetVinculosOM())) { this.setListaTargetVinculosOM(new ArrayList()); }
             if(CollectionUtils.isEmpty(this.getListaTargetVinculosPR())) { this.setListaTargetVinculosPR(new ArrayList()); }
             if(CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) { this.setListaTargetVinculosWK(new ArrayList()); }
-            this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -1102,7 +1106,7 @@ public class OportunidadMB implements Serializable {
                         }
                     }
                     if(CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-                        List<String> ids = new ArrayList<>();
+                        List<String> ids = new ArrayList<String>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
@@ -1131,7 +1135,7 @@ public class OportunidadMB implements Serializable {
                         this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
                         this.setListaSourceVinculos(this.getListaSourceVinculosOM());
                     }
-                    this.setPickList(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickList(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
                 }
             }
         } catch (Exception e) {

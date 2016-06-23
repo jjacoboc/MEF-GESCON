@@ -149,7 +149,7 @@ public class ConocimientoServiceImpl implements ConocimientoService {
     
     @Override
     public List<Consulta> getConcimientosDisponibles(HashMap filters) {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista = new ArrayList<Consulta>();
         try {
             ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
             List<HashMap> consulta = conocimientoDao.getConcimientosDisponibles(filters);
@@ -179,7 +179,7 @@ public class ConocimientoServiceImpl implements ConocimientoService {
     
     @Override
     public List<Consulta> getConcimientosByVinculoBaseLegalId(BigDecimal id) {
-        List<Consulta> lista = new ArrayList<>();
+        List<Consulta> lista = new ArrayList<Consulta>();
         try {
             ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
             List<HashMap> consulta = conocimientoDao.getConcimientosByVinculoBaseLegalId(id);
@@ -208,7 +208,7 @@ public class ConocimientoServiceImpl implements ConocimientoService {
     
     @Override
     public List<Asignacion> obtenerBpracticaxAsig(final BigDecimal bpracticaid, final BigDecimal usuarioid,BigDecimal tpoconocimientoid) throws Exception {
-        List<Asignacion> asignacions = new ArrayList<>();
+        List<Asignacion> asignacions = new ArrayList<Asignacion>();
         ConocimientoDao conocimientoDao = (ConocimientoDao) ServiceFinder.findBean("ConocimientoDao");
         List<HashMap> lista = conocimientoDao.obtenerBpracticaxAsig(bpracticaid,usuarioid,tpoconocimientoid);
         for (HashMap bean : lista) {

@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -45,7 +44,6 @@ import org.primefaces.model.UploadedFile;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Items;
 import pe.gob.mef.gescon.common.Parameters;
-import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.CategoriaService;
 import pe.gob.mef.gescon.service.ConsultaService;
 import pe.gob.mef.gescon.service.UserService;
@@ -787,7 +785,10 @@ public class CategoriaMB implements Serializable {
                 FileInputStream fis = new FileInputStream(file);
                 this.setContent(new DefaultStreamedContent(fis, categoria.getVimagentype(), categoria.getVimagennombre()));
             }
-        } catch (MalformedURLException | FileNotFoundException e) {
+        } catch (MalformedURLException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }

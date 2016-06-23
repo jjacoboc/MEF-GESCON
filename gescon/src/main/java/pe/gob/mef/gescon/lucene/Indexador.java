@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,15 +44,20 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import pe.gob.mef.gescon.common.Constante;
 import pe.gob.mef.gescon.common.Parameters;
+import pe.gob.mef.gescon.service.AsignacionService;
 import pe.gob.mef.gescon.service.BaseLegalService;
 import pe.gob.mef.gescon.service.ConocimientoService;
 import pe.gob.mef.gescon.service.PreguntaService;
 import pe.gob.mef.gescon.service.SeccionService;
+import pe.gob.mef.gescon.service.UserService;
+import pe.gob.mef.gescon.util.MailUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.Conocimiento;
+import pe.gob.mef.gescon.web.bean.Consulta;
 import pe.gob.mef.gescon.web.bean.Pregunta;
 import pe.gob.mef.gescon.web.bean.Seccion;
+import pe.gob.mef.gescon.web.bean.User;
 
 /**
  *
@@ -59,8 +65,6 @@ import pe.gob.mef.gescon.web.bean.Seccion;
  */
 public class Indexador {
 
-    private static final String INDEX_DIRECTORY = "\\\\192.168.1.11\\lucene\\";
-//    private static final String INDEX_DIRECTORY = "\\\\10.2.20.58\\lucene\\";
     private static final String FIELD_PATH = "path";
     private static final String FIELD_CONTENTS = "contents";
     private static final String FIELD_FILENAME = "filename";
@@ -70,12 +74,151 @@ public class Indexador {
 
     public static void main(String args[]) {
         try {
-//            JSFUtils.getSession().invalidate();
             indexDirectory();
+            notificar();
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
         }
+    }
+    
+    public static void notificar() {
+        try {
+            UserService usuarioService = (UserService) ServiceFinder.findBean("UserService");
+            AsignacionService asignacionService = (AsignacionService) ServiceFinder.findBean("AsignacionService");
+            List<User> moderadores = usuarioService.getUsersActivedByPerfil(BigDecimal.valueOf(Constante.MODERADOR));
+            if (CollectionUtils.isNotEmpty(moderadores)) {                
+                for (User user : moderadores) {
+                    List<Consulta> lista = asignacionService.getNotificationsAlertPanelByMtuser(user);
+                    if (CollectionUtils.isNotEmpty(lista)) {
+                        String body = getBody(user, lista);
+                        MailUtils.sendMail(user.getVcorreo(), "GESCON - Notificaciones", body);
+                    }
+                }
+            }
+            List<User> especialistas = usuarioService.getUsersActivedByPerfil(BigDecimal.valueOf(Constante.ESPECIALISTA));
+            if (CollectionUtils.isNotEmpty(especialistas)) {
+                for (User user : especialistas) {
+                    List<Consulta> lista = asignacionService.getNotificationsAlertPanelByMtuser(user);
+                    if (CollectionUtils.isNotEmpty(lista)) {
+                        String body = getBody(user, lista);
+                        MailUtils.sendMail(user.getVcorreo(), "GESCON - Notificaciones", body);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+    }
+
+    public static String getBody(User user, List<Consulta> lista) {
+        StringBuilder body = new StringBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        try {
+            body.append("<table>");
+            body.append("<tr>");
+            body.append("<td>");
+                body.append("<table>");
+                body.append("<tr>");
+                body.append("<td>");
+                body.append("<img src='cid:banner'>");
+                body.append("</td>");
+                body.append("</tr>");
+                body.append("<tr style='font-size: 30px; font-weight: bold; height: 50px;'>");
+                body.append("<td colspan='6' style='text-align: center;'>");
+                body.append("Actividades Pendientes");
+                body.append("</td>");
+                body.append("</tr>");
+                body.append("<tr style='font-size: 12px; height: 40px;'>");
+                body.append("<td colspan='6' style='text-align: center;'>");
+                body.append("Con el fin de ayudarte a planificar y gestionar tus operaciones dentro de la plataforma, GESCON realiza un seguimiento del estado de tus tareas:");
+                body.append("</td>");
+                body.append("</tr>");
+                body.append("</table>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr>");
+            body.append("<td>");
+                body.append("<table style='border: 1px black solid; width: 100%;'>");
+                body.append("<tr style='font-weight: bold; font-size: 12px; border: 1px black solid; background: #CCCCCC;'>");
+                body.append("<td style='text-align: center; border: 1px black solid;'>");
+                body.append("NOMBRE");
+                body.append("</td>");
+                body.append("<td style='text-align: center; border: 1px black solid;'>");
+                body.append("TIPO CONOCIMIENTO");
+                body.append("</td>");
+                body.append("<td style='text-align: center; border: 1px black solid;'>");
+                body.append("CATEGORÍA");
+                body.append("</td>");
+                body.append("<td style='text-align: center; border: 1px black solid;'>");
+                body.append("FECHA PUBLICACIÓN");
+                body.append("</td>");
+                body.append("<td style='text-align: center; border: 1px black solid;'>");
+                body.append("ESTADO");
+                body.append("</td>");
+                body.append("<td style='text-align: center; border: 1px black solid;'>");
+                body.append("DÍAS RETRASO");
+                body.append("</td>");
+                body.append("</tr>");
+                if(CollectionUtils.isNotEmpty(lista)){
+                    for (int i = 0; i < lista.size(); i++) {
+                        Consulta c = (Consulta) lista.get(i);
+                        if((i+1) % 2 == 0) {
+                            body.append("<tr style='font-size: 10px; background: #CCCCCC;'>");
+                        } else {
+                            body.append("<tr style='font-size: 10px;'>");
+                        }
+                        body.append("<td>");
+                        if (StringUtils.isNotBlank(c.getCodigo())) {
+                            body.append(c.getCodigo());
+                        } else {
+                            body.append(c.getNombre());
+                        }
+                        body.append("</td>");
+                        body.append("<td>");
+                        body.append(c.getTipoConocimiento());
+                        body.append("</td>");
+                        body.append("<td>");
+                        body.append(c.getCategoria());
+                        body.append("</td>");
+                        body.append("<td style='text-align: center;'>");
+                        body.append(sdf.format(c.getFechaPublicacion()));
+                        body.append("</td>");
+                        body.append("<td style='text-align: center;'>");
+                        body.append(c.getEstado());
+                        body.append("</td>");
+                        body.append("<td style='text-align: center;'>");
+                        body.append(c.getSemaforo());
+                        body.append("</td>");
+                        body.append("</tr>");
+                    }
+                }
+                body.append("</table>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("<tr>");
+            body.append("<td>");
+                body.append("<table>");
+                body.append("<tr style='font-size: 12px; height: 40px;'>");
+                body.append("<td colspan='6' style='text-align: center;'>");
+                body.append("Haz clic en el link de abajo para poder ingresar a la plataforma, y administrar tus actividades. Recuerda no acumules tareas pendientes, el conocimiento comienza ahora.");
+                body.append("</td>");
+                body.append("</tr>");
+                body.append("<tr>");
+                body.append("<td style='text-align:center;vertical-align:top;'>");
+                body.append("<a href='http://192.168.1.11:8180/gescon/'><img src='cid:boton'></a>");
+                body.append("</td>");
+                body.append("</tr>");
+                body.append("</table>");
+            body.append("</td>");
+            body.append("</tr>");
+            body.append("</table>");
+        } catch (Exception e) {
+            e.getMessage();
+            e.printStackTrace();
+        }
+        return body.toString();
     }
 
     public static void indexDirectory() {

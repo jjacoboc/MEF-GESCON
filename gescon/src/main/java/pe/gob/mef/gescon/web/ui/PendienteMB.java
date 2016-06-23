@@ -1662,7 +1662,7 @@ public class PendienteMB implements Serializable {
                     this.setSelectedCategoria(categoriaService.getCategoriaById(this.getSelectedBaseLegal().getNcategoriaid()));
                     this.setListaSource(servicebl.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
                     this.setListaTarget(servicebl.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
-                    this.setPickList(new DualListModel<>(this.getListaSource(), this.getListaTarget()));
+                    this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
                     setListaAsignacion(servicebl.obtenerBaseLegalxAsig(this.getSelectedBaseLegal().getNbaselegalid(), mb.getUser().getNusuarioid(), Constante.BASELEGAL));
                     setSelectedAsignacion(getListaAsignacion().get(0));
 
@@ -1716,7 +1716,7 @@ public class PendienteMB implements Serializable {
 
                     this.setListaSourceVinculos(new ArrayList<Consulta>());
                     this.setListaTargetVinculos(new ArrayList<Consulta>());
-                    this.setPickListPregunta(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
 
                     HashMap filters = new HashMap();
                     filters.put("ntipoconocimientoid", Constante.BASELEGAL);
@@ -1880,14 +1880,14 @@ public class PendienteMB implements Serializable {
 
                     this.setListaSourceVinculos(new ArrayList<Consulta>());
                     this.setListaTargetVinculos(new ArrayList<Consulta>());
-                    this.setPickListWiki(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickListWiki(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
 
-                    this.listaTargetVinculosBL = new ArrayList<>();
-                    this.listaTargetVinculosPR = new ArrayList<>();
-                    this.listaTargetVinculosWK = new ArrayList<>();
-                    this.listaTargetVinculosCT = new ArrayList<>();
-                    this.listaTargetVinculosBP = new ArrayList<>();
-                    this.listaTargetVinculosOM = new ArrayList<>();
+                    this.listaTargetVinculosBL = new ArrayList<Consulta>();
+                    this.listaTargetVinculosPR = new ArrayList<Consulta>();
+                    this.listaTargetVinculosWK = new ArrayList<Consulta>();
+                    this.listaTargetVinculosCT = new ArrayList<Consulta>();
+                    this.listaTargetVinculosBP = new ArrayList<Consulta>();
+                    this.listaTargetVinculosOM = new ArrayList<Consulta>();
 
                     ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     HashMap map = new HashMap();
@@ -1959,14 +1959,14 @@ public class PendienteMB implements Serializable {
 
                     this.setListaSourceVinculos(new ArrayList<Consulta>());
                     this.setListaTargetVinculos(new ArrayList<Consulta>());
-                    this.setPickListContenido(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickListContenido(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
 
-                    this.listaTargetVinculosBL = new ArrayList<>();
-                    this.listaTargetVinculosPR = new ArrayList<>();
-                    this.listaTargetVinculosWK = new ArrayList<>();
-                    this.listaTargetVinculosCT = new ArrayList<>();
-                    this.listaTargetVinculosBP = new ArrayList<>();
-                    this.listaTargetVinculosOM = new ArrayList<>();
+                    this.listaTargetVinculosBL = new ArrayList<Consulta>();
+                    this.listaTargetVinculosPR = new ArrayList<Consulta>();
+                    this.listaTargetVinculosWK = new ArrayList<Consulta>();
+                    this.listaTargetVinculosCT = new ArrayList<Consulta>();
+                    this.listaTargetVinculosBP = new ArrayList<Consulta>();
+                    this.listaTargetVinculosOM = new ArrayList<Consulta>();
 
                     HashMap filters = new HashMap();
                     filters.put("ntipoconocimientoid", BigDecimal.valueOf(Long.parseLong("1")));
@@ -2051,14 +2051,14 @@ public class PendienteMB implements Serializable {
 
                     this.setListaSourceVinculos(new ArrayList<Consulta>());
                     this.setListaTargetVinculos(new ArrayList<Consulta>());
-                    this.setPickListBpractica(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickListBpractica(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
 
-                    this.listaTargetVinculosBL = new ArrayList<>();
-                    this.listaTargetVinculosPR = new ArrayList<>();
-                    this.listaTargetVinculosWK = new ArrayList<>();
-                    this.listaTargetVinculosCT = new ArrayList<>();
-                    this.listaTargetVinculosBP = new ArrayList<>();
-                    this.listaTargetVinculosOM = new ArrayList<>();
+                    this.listaTargetVinculosBL = new ArrayList<Consulta>();
+                    this.listaTargetVinculosPR = new ArrayList<Consulta>();
+                    this.listaTargetVinculosWK = new ArrayList<Consulta>();
+                    this.listaTargetVinculosCT = new ArrayList<Consulta>();
+                    this.listaTargetVinculosBP = new ArrayList<Consulta>();
+                    this.listaTargetVinculosOM = new ArrayList<Consulta>();
 
                     ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     HashMap map = new HashMap();
@@ -2135,14 +2135,14 @@ public class PendienteMB implements Serializable {
 
                     this.setListaSourceVinculos(new ArrayList<Consulta>());
                     this.setListaTargetVinculos(new ArrayList<Consulta>());
-                    this.setPickListOmejora(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickListOmejora(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
 
-                    this.listaTargetVinculosBL = new ArrayList<>();
-                    this.listaTargetVinculosPR = new ArrayList<>();
-                    this.listaTargetVinculosWK = new ArrayList<>();
-                    this.listaTargetVinculosCT = new ArrayList<>();
-                    this.listaTargetVinculosBP = new ArrayList<>();
-                    this.listaTargetVinculosOM = new ArrayList<>();
+                    this.listaTargetVinculosBL = new ArrayList<Consulta>();
+                    this.listaTargetVinculosPR = new ArrayList<Consulta>();
+                    this.listaTargetVinculosWK = new ArrayList<Consulta>();
+                    this.listaTargetVinculosCT = new ArrayList<Consulta>();
+                    this.listaTargetVinculosBP = new ArrayList<Consulta>();
+                    this.listaTargetVinculosOM = new ArrayList<Consulta>();
 
                     ConocimientoService conocimientoService = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     HashMap map = new HashMap();
@@ -2401,8 +2401,11 @@ public class PendienteMB implements Serializable {
             this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
             this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
             this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
-            if (this.getSelectedPregunta().getVrespuesta().length() > 400) {
-                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(this.getSelectedPregunta().getVrespuesta().substring(0, 300)));
+            String html = this.getSelectedPregunta().getVrespuesta();
+            if (Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().length() > 400) {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().substring(0, 300)));
+            } else {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString()));
             }
             this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
             this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
@@ -2411,7 +2414,7 @@ public class PendienteMB implements Serializable {
             service.saveOrUpdate(this.getSelectedPregunta());
             
             String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
-            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + html;
             GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
             texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
             GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
@@ -2508,8 +2511,11 @@ public class PendienteMB implements Serializable {
             this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
             this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
             this.getSelectedPregunta().setNentidadid(this.getSelectedPregunta().getNentidadid());
-            if (this.getSelectedPregunta().getVrespuesta().length() > 400) {
-                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(this.getSelectedPregunta().getVrespuesta().substring(0, 300)));
+            String html = this.getSelectedPregunta().getVrespuesta();
+            if (Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().length() > 400) {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().substring(0, 300)));
+            } else {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString()));
             }
             this.getSelectedPregunta().setVdatoadicional(this.getSelectedPregunta().getVdatoadicional().trim());
             this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
@@ -2518,7 +2524,7 @@ public class PendienteMB implements Serializable {
             service.saveOrUpdate(this.getSelectedPregunta());
             
             String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
-            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + html;
             GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
             texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
             GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
@@ -2692,15 +2698,18 @@ public class PendienteMB implements Serializable {
             //this.getSelectedPregunta().setVrespuesta(JSFUtils.getRequestParameter("descHtml"));
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
             this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
-            if (this.getSelectedPregunta().getVrespuesta().length() > 400) {
-                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(this.getSelectedPregunta().getVrespuesta().substring(0, 300)));
+            String html = this.getSelectedPregunta().getVrespuesta();
+            if (Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().length() > 400) {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().substring(0, 300)));
+            } else {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString()));
             }
             this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 6));
             this.getSelectedPregunta().setDfechapublicacion(new Date());
             service.saveOrUpdate(this.getSelectedPregunta());
             
             String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
-            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + html;
             GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
             texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
             GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
@@ -2762,8 +2771,11 @@ public class PendienteMB implements Serializable {
     public void savePubEdit(ActionEvent event) throws Exception {
         try {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            if (this.getSelectedPregunta().getVrespuesta().length() > 400) {
-                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(this.getSelectedPregunta().getVrespuesta().substring(0, 300)));
+            String html = this.getSelectedPregunta().getVrespuesta();
+            if (Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().length() > 400) {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().substring(0, 300)));
+            } else {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString()));
             }
             this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
             this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
@@ -2773,7 +2785,7 @@ public class PendienteMB implements Serializable {
             service.saveOrUpdate(this.getSelectedPregunta());
             
             String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
-            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + html;
             GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
             texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
             GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
@@ -2803,8 +2815,11 @@ public class PendienteMB implements Serializable {
     public void saveRespEdit(ActionEvent event) throws Exception {
         try {
             PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
-            if (this.getSelectedPregunta().getVrespuesta().length() > 400) {
-                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(this.getSelectedPregunta().getVrespuesta().substring(0, 300)));
+            String html = this.getSelectedPregunta().getVrespuesta();
+            if (Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().length() > 400) {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().substring(0, 300)));
+            } else {
+                this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString()));
             }
             this.getSelectedPregunta().setVasunto(this.getSelectedPregunta().getVasunto().trim());
             this.getSelectedPregunta().setVdetalle(this.getSelectedPregunta().getVdetalle().trim());
@@ -2814,7 +2829,7 @@ public class PendienteMB implements Serializable {
             service.saveOrUpdate(this.getSelectedPregunta());
             
             String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
-            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+            String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + html;
             GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
             texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
             GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
@@ -2843,15 +2858,18 @@ public class PendienteMB implements Serializable {
 
                 PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
                 //this.getSelectedPregunta().setVrespuesta(JSFUtils.getRequestParameter("descHtml"));
+                String html = this.getSelectedPregunta().getVrespuesta();
                 if (Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().length() > 400) {
                     this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString().substring(0, 300)));
+                } else {
+                    this.getSelectedPregunta().setVrespuesta(StringUtils.capitalize(Jsoup.parse(this.getSelectedPregunta().getVrespuesta()).toString()));
                 }
                 this.getSelectedPregunta().setNdestacado(this.getChkDestacado() ? BigDecimal.ONE : BigDecimal.ZERO);
                 this.getSelectedPregunta().setNsituacionid(BigDecimal.valueOf((long) 5));
                 service.saveOrUpdate(this.getSelectedPregunta());
                 
                 String ruta0 = this.pathpr + this.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
-                String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + this.getSelectedPregunta().getVrespuesta();
+                String texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + html;
                 GcmFileUtils.writeStringToFileServer(ruta0, "html.txt", texto);
                 texto = this.getSelectedPregunta().getVasunto() + " \n " + this.getSelectedPregunta().getVdetalle() + " \n " + Jsoup.parse(this.getSelectedPregunta().getVrespuesta());
                 GcmFileUtils.writeStringToFileServer(ruta0, "plain.txt", texto);
@@ -7675,7 +7693,7 @@ public class PendienteMB implements Serializable {
             if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
                 this.setListaTargetVinculosWK(new ArrayList());
             }
-            this.setPickListPregunta(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -7723,7 +7741,7 @@ public class PendienteMB implements Serializable {
             if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
                 this.setListaTargetVinculosWK(new ArrayList());
             }
-            this.setPickListWiki(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickListWiki(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -7771,7 +7789,7 @@ public class PendienteMB implements Serializable {
             if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
                 this.setListaTargetVinculosWK(new ArrayList());
             }
-            this.setPickListBpractica(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickListBpractica(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -7819,7 +7837,7 @@ public class PendienteMB implements Serializable {
             if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
                 this.setListaTargetVinculosWK(new ArrayList());
             }
-            this.setPickListContenido(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickListContenido(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -7867,7 +7885,7 @@ public class PendienteMB implements Serializable {
             if (org.apache.commons.collections.CollectionUtils.isEmpty(this.getListaTargetVinculosWK())) {
                 this.setListaTargetVinculosWK(new ArrayList());
             }
-            this.setPickListOmejora(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+            this.setPickListOmejora(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -7954,7 +7972,7 @@ public class PendienteMB implements Serializable {
                         }
                     }
                     if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-                        List<String> ids = new ArrayList<>();
+                        List<String> ids = new ArrayList<String>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
@@ -7983,7 +8001,7 @@ public class PendienteMB implements Serializable {
                         this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
                         this.setListaSourceVinculos(this.getListaSourceVinculosOM());
                     }
-                    this.setPickListPregunta(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickListPregunta(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
                 }
             }
         } catch (Exception e) {
@@ -8229,7 +8247,7 @@ public class PendienteMB implements Serializable {
                         }
                     }
                     if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-                        List<String> ids = new ArrayList<>();
+                        List<String> ids = new ArrayList<String>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
@@ -8258,7 +8276,7 @@ public class PendienteMB implements Serializable {
                         this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
                         this.setListaSourceVinculos(this.getListaSourceVinculosOM());
                     }
-                    this.setPickListWiki(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickListWiki(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
                 }
             }
         } catch (Exception e) {
@@ -8346,7 +8364,7 @@ public class PendienteMB implements Serializable {
                         }
                     }
                     if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-                        List<String> ids = new ArrayList<>();
+                        List<String> ids = new ArrayList<String>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
@@ -8375,7 +8393,7 @@ public class PendienteMB implements Serializable {
                         this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
                         this.setListaSourceVinculos(this.getListaSourceVinculosOM());
                     }
-                    this.setPickListBpractica(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickListBpractica(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
                 }
             }
         } catch (Exception e) {
@@ -8463,7 +8481,7 @@ public class PendienteMB implements Serializable {
                         }
                     }
                     if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-                        List<String> ids = new ArrayList<>();
+                        List<String> ids = new ArrayList<String>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
@@ -8492,7 +8510,7 @@ public class PendienteMB implements Serializable {
                         this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
                         this.setListaSourceVinculos(this.getListaSourceVinculosOM());
                     }
-                    this.setPickListOmejora(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickListOmejora(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
                 }
             }
         } catch (Exception e) {
@@ -8739,7 +8757,7 @@ public class PendienteMB implements Serializable {
                         }
                     }
                     if (org.apache.commons.collections.CollectionUtils.isNotEmpty(this.getListaTargetVinculos())) {
-                        List<String> ids = new ArrayList<>();
+                        List<String> ids = new ArrayList<String>();
                         for (Consulta c : this.getListaTargetVinculos()) {
                             ids.add(c.getIdconocimiento().toString());
                         }
@@ -8768,7 +8786,7 @@ public class PendienteMB implements Serializable {
                         this.setListaSourceVinculosOM(service.getConcimientosDisponibles(filters));
                         this.setListaSourceVinculos(this.getListaSourceVinculosOM());
                     }
-                    this.setPickListContenido(new DualListModel<>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
+                    this.setPickListContenido(new DualListModel<Consulta>(this.getListaSourceVinculos(), this.getListaTargetVinculos()));
                 }
             }
         } catch (Exception e) {
@@ -8959,9 +8977,11 @@ public class PendienteMB implements Serializable {
                 archivoconocimiento.setFile(new File(archivoconocimiento.getVruta()));
                 archivoconocimiento.setContent(new DefaultStreamedContent(new FileInputStream(archivoconocimiento.getFile()), contentType, filename));
                 this.getListaArchivos().add(archivoconocimiento);
-                System.out.println("filename: " + filename);
             }
-        } catch (NumberFormatException | FileNotFoundException e) {
+        } catch (NumberFormatException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
             log.error(e.getMessage());
             e.printStackTrace();
         }

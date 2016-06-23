@@ -614,7 +614,7 @@ public class BaseLegalMB implements Serializable {
             }
             this.setListaSource(new ArrayList<BaseLegal>());
             this.setListaTarget(new ArrayList<BaseLegal>());
-            this.setPickList(new DualListModel<>(this.getListaSource(), this.getListaTarget()));
+            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();
@@ -1220,10 +1220,9 @@ public class BaseLegalMB implements Serializable {
                 File direc = new File(newPath);
                 direc.mkdirs();
                 this.setFile(new File(newPath, this.getUploadFile().getFileName()));
-                try (FileOutputStream fileOutStream = new FileOutputStream(this.getFile())) {
-                    fileOutStream.write(this.getUploadFile().getContents());
-                    fileOutStream.flush();
-                }
+                FileOutputStream fileOutStream = new FileOutputStream(this.getFile());
+                fileOutStream.write(this.getUploadFile().getContents());
+                fileOutStream.flush();
                 File temp = new File(temppath, this.getUploadFile().getFileName());
                 temp.delete();
             }
@@ -1262,7 +1261,7 @@ public class BaseLegalMB implements Serializable {
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
-            this.setPickList(new DualListModel<>(this.getListaSource(), this.getListaTarget()));
+            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
             this.setFilteredListaBaseLegal(new ArrayList());
             this.setUploadFile(null);
             this.setFile(null);
@@ -1631,7 +1630,7 @@ public class BaseLegalMB implements Serializable {
             BaseLegalService service = (BaseLegalService) ServiceFinder.findBean("BaseLegalService");
             this.setListaSource(service.getTbaselegalesNotLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
             this.setListaTarget(service.getTbaselegalesLinkedById(this.getSelectedBaseLegal().getNbaselegalid()));
-            this.setPickList(new DualListModel<>(this.getListaSource(), this.getListaTarget()));
+            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
             this.setFilteredListaBaseLegal(new ArrayList());
         } catch (Exception e) {
             e.getMessage();
@@ -2033,7 +2032,7 @@ public class BaseLegalMB implements Serializable {
                     this.setListaTarget(new ArrayList<BaseLegal>());
                 }
             }
-            this.setPickList(new DualListModel<>(this.getListaSource(), this.getListaTarget()));
+            this.setPickList(new DualListModel<BaseLegal>(this.getListaSource(), this.getListaTarget()));
         } catch (Exception e) {
             e.getMessage();
             e.printStackTrace();

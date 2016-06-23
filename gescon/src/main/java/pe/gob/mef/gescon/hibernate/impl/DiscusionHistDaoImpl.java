@@ -12,6 +12,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DataAccessUtils;
@@ -60,9 +62,12 @@ public class DiscusionHistDaoImpl extends HibernateDaoSupport implements Discusi
 
     @Override
     public TdiscusionHist getTdiscusionHistByTconocimiento(BigDecimal idconocimiento) throws Exception {
+        DetachedCriteria proj = DetachedCriteria.forClass(TdiscusionHist.class);
+        proj.setProjection(Projections.max("nnumversion"));
+        proj.add(Restrictions.eq("nconocimientoid", idconocimiento));
         DetachedCriteria criteria = DetachedCriteria.forClass(TdiscusionHist.class);
         criteria.add(Restrictions.eq("nconocimientoid", idconocimiento));
-        criteria.addOrder(Order.desc("dfechacreacion"));
+        criteria.add(Property.forName("nnumversion").eq(proj));
         return (TdiscusionHist) DataAccessUtils.uniqueResult(getHibernateTemplate().findByCriteria(criteria));
     }
 

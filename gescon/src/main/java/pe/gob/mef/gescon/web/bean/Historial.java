@@ -53,6 +53,7 @@ public class Historial implements Serializable {
     private List<Consulta> listaVinculosOM;
     private List<Consulta> listaVinculosBP;
     private List<Consulta> listaVinculosCT;
+    private List<ArchivoConocimiento> listaArchivos;
     
     public Historial(){
         
@@ -328,5 +329,13 @@ public class Historial implements Serializable {
 
     public void setListaVinculosCT(List<Consulta> listaVinculosCT) {
         this.listaVinculosCT = listaVinculosCT;
+    }
+
+    public List<ArchivoConocimiento> getListaArchivos() {
+        return listaArchivos;
+    }
+
+    public void setListaArchivos(List<ArchivoConocimiento> listaArchivos) {
+        this.listaArchivos = listaArchivos;
     }
 }

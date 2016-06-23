@@ -6,6 +6,7 @@
 package pe.gob.mef.gescon.web.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ResourceBundle;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -33,10 +35,12 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import pe.gob.mef.gescon.common.Constante;
+import pe.gob.mef.gescon.common.Parameters;
 import pe.gob.mef.gescon.lucene.Indexador;
 import pe.gob.mef.gescon.service.ArchivoConocimientoService;
 import pe.gob.mef.gescon.service.ArchivoService;
@@ -62,6 +66,7 @@ import pe.gob.mef.gescon.service.VinculoHistService;
 import pe.gob.mef.gescon.util.GcmFileUtils;
 import pe.gob.mef.gescon.util.JSFUtils;
 import pe.gob.mef.gescon.util.ServiceFinder;
+import pe.gob.mef.gescon.web.bean.ArchivoConocimiento;
 import pe.gob.mef.gescon.web.bean.BaseLegal;
 import pe.gob.mef.gescon.web.bean.BaselegalHist;
 import pe.gob.mef.gescon.web.bean.Calificacion;
@@ -690,6 +695,8 @@ public class ConsultaMB implements Serializable {
                     PreguntaMB pr = new PreguntaMB();
                     PreguntaService service = (PreguntaService) ServiceFinder.findBean("PreguntaService");
                     pr.setSelectedPregunta(service.getPreguntaById(BigDecimal.valueOf(id)));
+                    String ruta0 = "pr/" + pr.getSelectedPregunta().getNpreguntaid().toString() + "/" + BigDecimal.ZERO.toString() + "/";
+                    pr.getSelectedPregunta().setVrespuesta(GcmFileUtils.readStringFromFileServer(ruta0, "html.txt"));
                     CategoriaService categoriaService = (CategoriaService) ServiceFinder.findBean("CategoriaService");
                     pr.setSelectedCategoria(categoriaService.getCategoriaById(pr.getSelectedPregunta().getNcategoriaid()));
                     pr.setEntidad(service.getNomEntidadbyIdEntidad(pr.getSelectedPregunta().getNentidadid()));
@@ -860,6 +867,8 @@ public class ConsultaMB implements Serializable {
                     break;
                 }
                 case 4: { //Contenido
+                    ResourceBundle bundle = ResourceBundle.getBundle(Parameters.getParameters());
+                    String path = bundle.getString("path");
                     ContenidoMB ct = new ContenidoMB();
                     ConocimientoService service = (ConocimientoService) ServiceFinder.findBean("ConocimientoService");
                     ct.setSelectedContenido(service.getConocimientoById(BigDecimal.valueOf(id)));
@@ -868,6 +877,11 @@ public class ConsultaMB implements Serializable {
                     ct.setSelectedCategoria(categoriaService.getCategoriaById(ct.getSelectedContenido().getNcategoriaid()));
                     ArchivoConocimientoService archivoservice = (ArchivoConocimientoService) ServiceFinder.findBean("ArchivoConocimientoService");
                     ct.setListaArchivos(archivoservice.getArchivosByConocimiento(ct.getSelectedContenido().getNconocimientoid()));
+                    if(CollectionUtils.isNotEmpty(ct.getListaArchivos())) {
+                        for(ArchivoConocimiento ac : ct.getListaArchivos()) {
+                            ac.setContent(new DefaultStreamedContent(new FileInputStream(new File(path + ac.getVruta())), ac.getVcontenttype(), ac.getVnombre()));
+                        }
+                    }
                     ContenidoService contenidoService = (ContenidoService) ServiceFinder.findBean("ContenidoService");
                     HashMap map = new HashMap();
                     map.put("nconocimientoid", ct.getSelectedContenido().getNconocimientoid().toString());

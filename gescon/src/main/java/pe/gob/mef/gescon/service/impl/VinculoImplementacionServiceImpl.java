@@ -32,7 +32,7 @@ public class VinculoImplementacionServiceImpl implements VinculoImplementacionSe
 
     @Override
     public List<VinculoImplementacion> getVinculos() throws Exception {
-        List<VinculoImplementacion> vinculos = new ArrayList<>();
+        List<VinculoImplementacion> vinculos = new ArrayList<VinculoImplementacion>();
         VinculoImplementacionDao vinculoDao = (VinculoImplementacionDao) ServiceFinder.findBean("VinculoImplementacionDao");
         List<TvinculoImplementacion> lista = vinculoDao.getTvinculos();
         for (TvinculoImplementacion tvinculo : lista) {
@@ -45,7 +45,7 @@ public class VinculoImplementacionServiceImpl implements VinculoImplementacionSe
 
     @Override
     public List<VinculoImplementacion> getVinculosByConocimiento(BigDecimal idconocimiento) throws Exception {
-        List<VinculoImplementacion> vinculos = new ArrayList<>();
+        List<VinculoImplementacion> vinculos = new ArrayList<VinculoImplementacion>();
         VinculoImplementacionDao vinculoDao = (VinculoImplementacionDao) ServiceFinder.findBean("VinculoImplementacionDao");
         List<TvinculoImplementacion> lista = vinculoDao.getTvinculosByTconocimiento(idconocimiento);
         for (TvinculoImplementacion tvinculo : lista) {

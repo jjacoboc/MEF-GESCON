@@ -104,7 +104,7 @@
                 </p:selectManyCheckbox>
             </p:fieldset>
             <p:fieldset rendered="#{loginMB.politicas[msgs.REGISTRAR_PREGUNTAS]}">
-                <p:commandButton value="Formular Pregunta" ajax="false" action="/pages/pregunta/nuevo.xhtml" />
+                <p:commandButton value="Formular Pregunta" action="#{preguntaMB.toSave()}" />
             </p:fieldset>
             <p:fieldset>
                 <p:commandButton  value="Imprimir" action="#{consultaMB.reporte}" ajax="false"/>

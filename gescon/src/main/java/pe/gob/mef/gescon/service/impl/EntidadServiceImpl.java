@@ -48,7 +48,7 @@ public class EntidadServiceImpl implements EntidadService{
     
     @Override
     public List<Entidad> getEntidadesUbigeo() {
-        List<Entidad> lista = new ArrayList<>();
+        List<Entidad> lista = new ArrayList<Entidad>();
         try {
 
             EntidadDao entidadDao = (EntidadDao) ServiceFinder.findBean("EntidadDao");
